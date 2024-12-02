@@ -3,8 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SessionProvider } from "./SessionContext";
-import { Auth } from "./Auth";
+import { SessionProvider } from "./auth/SessionContext"; // Updated import path
+import { Auth } from "./auth/Auth"; // Assuming Auth is in the same /auth directory
 import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
