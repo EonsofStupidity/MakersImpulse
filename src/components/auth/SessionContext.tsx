@@ -18,11 +18,13 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     fetchSession();
 
-    const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
 
-    return () => subscription?.unsubscribe();
+    return () => {
+      data?.subscription.unsubscribe();
+    };
   }, []);
 
   return (

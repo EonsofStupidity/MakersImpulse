@@ -59,7 +59,11 @@ export const Navigation = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 transform ${
         isVisible ? "translate-y-0" : "-translate-y-full"
-      } ${isScrolled ? "glass py-4" : "py-6"}`}
+      } ${
+        isScrolled 
+          ? "bg-[#1A1F2C]/80 backdrop-blur-lg border-b border-white/10 py-4" 
+          : "bg-transparent py-6"
+      }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link 
@@ -69,42 +73,34 @@ export const Navigation = () => {
           MakersImpulse
         </Link>
 
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden md:flex items-center space-x-12">
           <Link 
             to="/builds" 
-            className="nav-link group"
+            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
           >
-            <span className="relative">
-              Builds
-              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-            </span>
+            <span>Builds</span>
+            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
           </Link>
           <Link 
             to="/parts" 
-            className="nav-link group"
+            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
           >
-            <span className="relative">
-              Parts
-              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-            </span>
+            <span>Parts</span>
+            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
           </Link>
           <Link 
             to="/guides" 
-            className="nav-link group"
+            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
           >
-            <span className="relative">
-              Guides
-              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-            </span>
+            <span>Guides</span>
+            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
           </Link>
           <Link 
             to="/reviews" 
-            className="nav-link group"
+            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
           >
-            <span className="relative">
-              Reviews
-              <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-            </span>
+            <span>Reviews</span>
+            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
           </Link>
         </div>
 
@@ -112,10 +108,10 @@ export const Navigation = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="hover:bg-white/10"
+            className="hover:bg-white/10 transition-colors duration-200"
             onClick={() => setOpen(true)}
           >
-            <Search className="h-5 w-5" />
+            <Search className="h-5 w-5 text-white" />
             <span className="sr-only">Search</span>
           </Button>
 
@@ -124,25 +120,21 @@ export const Navigation = () => {
               <Button 
                 variant="ghost" 
                 size="icon"
-                className="hover:bg-white/10"
+                className="hover:bg-white/10 transition-colors duration-200"
               >
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback>
-                    <User className="h-5 w-5" />
+                <Avatar className="h-8 w-8 border-2 border-white/20">
+                  <AvatarFallback className="bg-white/10 text-white">
+                    <User className="h-4 w-4" />
                   </AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Link to="/login" className="flex items-center">
-                  Sign In
-                </Link>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuItem asChild>
+                <Link to="/login" className="w-full">Sign In</Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Link to="/register" className="flex items-center">
-                  Sign Up
-                </Link>
+              <DropdownMenuItem asChild>
+                <Link to="/register" className="w-full">Sign Up</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
