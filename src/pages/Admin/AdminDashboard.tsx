@@ -1,6 +1,6 @@
 import React from "react";
-import PostEditor from "../components/cms/PostEditor";
-import MediaLibrary from "../components/cms/MediaLibrary";
+import PostEditor from "../../pages/cms/PostEditor";
+import MediaLibrary from "./MediaLibrary";
 
 const AdminDashboard = () => {
   return (

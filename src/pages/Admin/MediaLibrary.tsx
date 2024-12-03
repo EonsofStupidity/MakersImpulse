@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { uploadMedia } from "../../utils/supabase";
-import { createClient } from "@supabase/supabase-js";
-
-const supabase = createClient('<SUPABASE_URL>', '<SUPABASE_ANON_KEY>');
+import { uploadMedia, supabase } from "../../utils/supabase";
 
 const MediaLibrary = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [uploadedMedia, setUploadedMedia] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch existing media
   useEffect(() => {
     const fetchMedia = async () => {
       const { data, error } = await supabase.from("media").select("*");
       if (error) console.error("Error fetching media:", error);
-      else setUploadedMedia(data);
+      else setUploadedMedia(data || []);
     };
 
     fetchMedia();
