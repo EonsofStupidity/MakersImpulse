@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionProvider } from "@/components/auth/SessionContext";
+import { Navigation } from "@/components/Navigation";
 
 // Pages
 import Index from "./pages/Index";
@@ -30,6 +31,8 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/media" element={<MediaLibrary />} />
             <Route path="/admin/post-editor" element={<PostEditor />} />
+            <Route path="/admin/posts" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminDashboard />} />
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
