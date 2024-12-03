@@ -129,12 +129,15 @@ export const Navigation = () => {
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuContent align="end" className="w-56 bg-gray-800/95 backdrop-blur-sm border-white/10">
               <DropdownMenuItem asChild>
-                <Link to="/login" className="w-full">Sign In</Link>
+                <Link to="/login" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Sign In</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/register" className="w-full">Sign Up</Link>
+                <Link to="/register" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Sign Up</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/admin" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Admin Dashboard</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
