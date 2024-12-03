@@ -9,8 +9,8 @@ import { SessionProvider } from "@/components/auth/SessionContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
-import MediaLibraryPage from "./pages/Admin/MediaLibraryPage";
-import PostEditor from "./pages/Admin/PostEditor";
+import MediaLibrary from "./pages/Admin/MediaLibrary";
+import PostEditor from "./pages/cms/PostEditor";
 
 const queryClient = new QueryClient();
 
@@ -28,7 +28,7 @@ const App = () => (
 
             {/* Admin Routes */}
             <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/media" element={<MediaLibraryPage />} />
+            <Route path="/admin/media" element={<MediaLibrary />} />
             <Route path="/admin/post-editor" element={<PostEditor />} />
           </Routes>
         </BrowserRouter>
