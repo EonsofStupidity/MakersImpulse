@@ -3,11 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useTags } from "@/components/PostEditor/hooks/useTags";
-import { useImages } from "@/components/PostEditor/hooks/useImages";
-import { useSavePost } from "@/components/PostEditor/hooks/useSavePost";
-import { Tag } from import { Tag } from "@/components/PostEditor/components/Tag";
-import { Thumbnail } from "@/components/PostEditor/components/Thumbnail";
+import { useTags } from "@/components/hooks/useTags";
+import { useImages } from "@/components/hooks/useImages";
+import { useSavePost } from "@/components/hooks/useSavePost";
+import { Tag } from "@/components/PostEditor/component/Tag";
+import { Thumbnail } from "@/components/PostEditor/component/thumbnail";
 
 const PostEditor = () => {
   const { tags, currentTag, addTag, removeTag, setCurrentTag } = useTags();
@@ -18,9 +18,14 @@ const PostEditor = () => {
     <div className="min-h-screen bg-[#1a1a1a] py-8">
       <div className="container mx-auto p-6">
         <Card className="p-8 space-y-6 bg-black/40 border border-white/10">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-[#41f0db] to-[#ff0abe] bg-clip-text text-transparent">
-            Create New Post
-          </h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-3xl font-bold bg-gradient-to-r from-[#41f0db] to-[#ff0abe] bg-clip-text text-transparent">
+              Create New Post
+            </h2>
+            <Button onClick={savePost} className="py-2">
+              Save Post
+            </Button>
+          </div>
 
           <div className="space-y-6">
             <Input
@@ -28,15 +33,16 @@ const PostEditor = () => {
               placeholder="Post Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              className="w-[42%]"
             />
             <Input
               id="slug"
               placeholder="post-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
+              className="w-[42%]"
             />
 
-            {/* Tags Section */}
             <div>
               <div className="flex gap-2 mb-2">
                 {tags.map((tag, index) => (
@@ -48,18 +54,18 @@ const PostEditor = () => {
                 value={currentTag}
                 onChange={(e) => setCurrentTag(e.target.value)}
                 onKeyDown={(e) => addTag(e)}
+                className="w-[42%]"
               />
             </div>
 
-            {/* Content Section */}
             <Textarea
               id="content"
               placeholder="Write your post content here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
+              className="w-[75%]"
             />
 
-            {/* Image Upload Section */}
             <div className="flex flex-col items-center space-y-4">
               <Button
                 as="label"
@@ -77,7 +83,7 @@ const PostEditor = () => {
                 />
               </Button>
 
-              <div className="w-[65%] h-[25vh] border border-dashed">
+              <div className="w-[65%] h-[25vh] border border-dashed border-white/20 rounded-lg flex items-center justify-center text-white/50">
                 Drop Images Here or Use Upload Button
               </div>
 
@@ -87,11 +93,6 @@ const PostEditor = () => {
                 ))}
               </div>
             </div>
-
-            {/* Save Button */}
-            <Button onClick={savePost} className="w-[27%] py-2">
-              Save Post
-            </Button>
           </div>
         </Card>
       </div>
