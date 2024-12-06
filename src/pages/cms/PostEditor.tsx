@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
+import ImageUploadZone from "@/components/cms/ImageUploadZone";
 
 // Tag Component
 const Tag = ({ tag, onRemove }: { tag: string; onRemove: (tag: string) => void }) => (
@@ -16,29 +17,6 @@ const Tag = ({ tag, onRemove }: { tag: string; onRemove: (tag: string) => void }
       <X size={14} />
     </button>
   </span>
-);
-
-// Thumbnail Component
-const Thumbnail = ({
-  file,
-  onDelete,
-}: {
-  file: File;
-  onDelete: () => void;
-}) => (
-  <div className="relative group">
-    <img
-      src={URL.createObjectURL(file)}
-      alt="Thumbnail"
-      className="w-full h-full object-cover rounded"
-    />
-    <button
-      onClick={onDelete}
-      className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-    >
-      <X size={18} />
-    </button>
-  </div>
 );
 
 const PostEditor = () => {
@@ -62,31 +40,6 @@ const PostEditor = () => {
 
   const handleRemoveTag = (tagToRemove: string) => {
     setTags(tags.filter((tag) => tag !== tagToRemove));
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const uploadedFiles = Array.from(e.target.files);
-      setImages((prev) => [...prev, ...uploadedFiles]);
-    }
-  };
-
-  const handleImageDelete = (index: number) => {
-    toast({
-      title: "Warning!",
-      description: "Are you absolutely sure you want to delete this image?",
-      action: (
-        <Button
-          variant="destructive"
-          size="sm"
-          onClick={() => {
-            setImages(images.filter((_, i) => i !== index));
-          }}
-        >
-          Yes
-        </Button>
-      ),
-    });
   };
 
   const validateForm = () => {
@@ -192,38 +145,10 @@ const PostEditor = () => {
               className="min-h-[200px] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
             />
 
-            <div className="flex flex-col items-center space-y-4">
-              <Button
-                asChild
-                className="w-[22%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
-              >
-                <label htmlFor="image-upload">
-                  Upload Image
-                  <input
-                    id="image-upload"
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                  />
-                </label>
-              </Button>
-
-              <div className="w-[65%] h-[25vh] border border-dashed border-[#41f0db] bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm">
-                Drop Images Here or Use Upload Button
-              </div>
-
-              <div className="grid grid-cols-4 gap-2 w-full">
-                {images.map((file, index) => (
-                  <Thumbnail
-                    key={index}
-                    file={file}
-                    onDelete={() => handleImageDelete(index)}
-                  />
-                ))}
-              </div>
-            </div>
+            <ImageUploadZone 
+              images={images}
+              onImagesChange={setImages}
+            />
           </div>
         </Card>
       </div>
