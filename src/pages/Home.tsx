@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Navigation } from "@/components/layout/Navigation";
-import ImageCarousel from "@/components/features/ImageCarousel";
+import { Navigation } from "@/components/shared/layout/Navigation";
+import ImageCarousel from "@/components/shared/ImageCarousel";
 
 // Mock data - replace with actual API call
 const updates = [
