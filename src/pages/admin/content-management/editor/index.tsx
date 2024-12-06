@@ -18,17 +18,16 @@ const PostEditor = () => {
       return;
     }
 
-    const { data, error } = await supabase.from("posts").insert({
+    const { data, error } = await supabase.from("blog_posts").insert({
       title,
       slug: slug || title.toLowerCase().replace(/ /g, "-"),
       content,
-      is_published: true,
-      author_id: "user_id", // Replace with actual user ID
-      published_at: new Date(),
+      status: 'draft'
     });
 
     if (error) {
       toast.error("Error saving post");
+      console.error("Error saving post:", error);
     } else {
       toast.success("Post saved successfully");
       setTitle("");
@@ -38,11 +37,11 @@ const PostEditor = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 pt-20 p-8">
+    <div className="min-h-screen bg-[#1a1a1a] pt-20 p-8">
       <AdminNav />
       <div className="container mx-auto">
-        <Card className="bg-gray-800/50 border-white/10 p-6">
-          <h1 className="text-3xl font-bold text-white mb-8">Create/Edit Post</h1>
+        <Card className="glass border-white/10 p-6">
+          <h1 className="text-3xl font-bold text-white mb-8">Create New Post</h1>
           
           <div className="space-y-6">
             <div>
@@ -51,7 +50,7 @@ const PostEditor = () => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-gray-700/50 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white"
                 placeholder="Enter post title"
               />
             </div>
@@ -62,7 +61,7 @@ const PostEditor = () => {
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="bg-gray-700/50 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white"
                 placeholder="Enter URL slug"
               />
             </div>
@@ -72,20 +71,29 @@ const PostEditor = () => {
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="bg-gray-700/50 border-white/10 text-white min-h-[300px]"
+                className="bg-white/5 border-white/10 text-white min-h-[300px]"
                 placeholder="Write your post content here..."
               />
             </div>
 
             <div className="flex justify-end gap-4">
-              <Button variant="outline" onClick={() => {
-                setTitle("");
-                setSlug("");
-                setContent("");
-              }}>
+              <Button 
+                variant="outline" 
+                onClick={() => {
+                  setTitle("");
+                  setSlug("");
+                  setContent("");
+                }}
+                className="border-white/10 text-white hover:bg-white/5"
+              >
                 Clear
               </Button>
-              <Button onClick={handleSave}>Save Post</Button>
+              <Button 
+                onClick={handleSave}
+                className="bg-[#41f0db] text-black hover:bg-[#41f0db]/80"
+              >
+                Save Post
+              </Button>
             </div>
           </div>
         </Card>

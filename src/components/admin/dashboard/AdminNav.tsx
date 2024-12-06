@@ -8,7 +8,7 @@ export const AdminNav = () => {
       <ul className="flex flex-wrap gap-4 justify-center md:justify-start items-center">
         <li>
           <Link 
-            to="/admin/post-editor" 
+            to="/admin/content-management/editor" 
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
           >
             <MessageSquare className="w-4 h-4" />
