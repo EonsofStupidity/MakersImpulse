@@ -1,3 +1,4 @@
+// Moving the Hero component to the features folder
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
 

@@ -1,5 +1,5 @@
-import { Navigation } from "@/components/Navigation";
-import { Hero } from "@/components/Hero";
+import { Navigation } from "@/components/layout/Navigation";
+import { Hero } from "@/components/features/Hero";
 import { motion } from "framer-motion";
 
 const Index = () => {
