@@ -28,7 +28,7 @@
 
 @layer components {
   .glass {
-    @apply bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl;
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg;
   }
   
   .nav-link {
@@ -40,7 +40,7 @@
   }
 
   .letter-hover span {
-    @apply relative inline-block transition-colors duration-300;
+    @apply relative inline-block transition-all duration-300;
   }
 
   .letter-hover:hover span {
@@ -51,9 +51,14 @@
   @keyframes letterColorChange {
     0% {
       color: inherit;
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-2px);
     }
     100% {
       color: #ff0abe;
+      transform: translateY(0);
     }
   }
 
