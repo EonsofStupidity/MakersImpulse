@@ -87,8 +87,8 @@ const App = () => (
 
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/media" element={<MediaLibrary />} />
-                  <Route path="/admin/post-editor" element={<PostEditor />} />
+                  <Route path="/admin/content-management/media" element={<MediaLibrary />} />
+                  <Route path="/admin/content-management/editor" element={<PostEditor />} />
                   <Route path="/admin/content-management/categories" element={<CategoriesManagement />} />
                   <Route path="/admin/content-management/templates" element={<TemplatesManagement />} />
                   <Route path="/admin/content-management/workflows" element={<WorkflowsManagement />} />
