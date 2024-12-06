@@ -54,15 +54,6 @@
     transition-delay: calc(var(--index) * 0.05s);
   }
 
-  @keyframes glitchEffect {
-    0% { transform: translate(0); }
-    20% { transform: translate(-2px, 2px); }
-    40% { transform: translate(2px, -2px); }
-    60% { transform: translate(-2px, -2px); }
-    80% { transform: translate(2px, 2px); }
-    100% { transform: translate(0); }
-  }
-
   .glass {
     @apply rounded-xl;
     background: rgba(255, 255, 255, 0.05);

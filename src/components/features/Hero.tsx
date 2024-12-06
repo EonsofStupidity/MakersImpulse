@@ -24,11 +24,13 @@ export const Hero = () => {
           className="text-center relative"
         >
           <h1 className="text-[#41f0db] text-4xl md:text-6xl font-bold mb-6 animate-float">
-            Welcome to <span className="letter-hover">MakersImpulse</span>
+            <span className="letter-hover">Welcome to MakersImpulse</span>
           </h1>
           
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto letter-hover">
-            Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
+          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+            <span className="letter-hover">
+              Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
+            </span>
           </p>
 
           <div className="max-w-2xl mx-auto mb-12">
@@ -46,26 +48,26 @@ export const Hero = () => {
             <motion.button 
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="glass px-8 py-3 text-white bg-gradient-to-r from-[#8000ff] to-[#8000ff]/70 backdrop-blur-xl border border-[#8000ff] hover:bg-[#8000ff]/20 transition-all duration-300 letter-hover"
+              className="glass px-8 py-3 text-white bg-gradient-to-r from-[#8000ff] to-[#8000ff]/70 backdrop-blur-xl hover:bg-[#8000ff]/20 transition-all duration-300"
             >
-              Explore Builds
+              <span className="letter-hover">Explore Builds</span>
             </motion.button>
             
             <motion.button 
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 backdrop-blur-xl border border-[#8000ff] transition-all duration-300 letter-hover"
+              className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 backdrop-blur-xl transition-all duration-300"
             >
-              Join Now
+              <span className="letter-hover">Join Now</span>
             </motion.button>
             
             <motion.a 
               href="/"
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
-              className="glass px-8 py-3 text-[#26ffbe] hover:text-[#26f1ff] bg-white/5 backdrop-blur-xl border border-[#8000ff] transition-all duration-300 letter-hover"
+              className="glass px-8 py-3 text-[#26ffbe] hover:text-[#26f1ff] bg-white/5 backdrop-blur-xl transition-all duration-300"
             >
-              Home
+              <span className="letter-hover">Home</span>
             </motion.a>
           </div>
         </motion.div>
