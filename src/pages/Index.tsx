@@ -1,4 +1,3 @@
-import { Navigation } from "@/components/layout/Navigation";
 import { Hero } from "@/components/features/Hero";
 import { motion } from "framer-motion";
 
@@ -46,7 +45,6 @@ const Index = () => {
         </div>
       </div>
       
-      <Navigation />
       <Hero />
       
       {/* Enhanced depth gradient with multiple layers */}
