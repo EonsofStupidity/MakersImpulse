@@ -25,11 +25,6 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
   }
-
-  /* Make all text elements automatically use the letter hover effect */
-  h1, h2, h3, h4, h5, h6, p, span, a, button {
-    @apply letter-hover;
-  }
 }
 
 @layer components {
@@ -47,24 +42,23 @@
   }
 
   .letter-hover {
-    @apply relative inline-block cursor-default;
+    display: inline-block;
   }
 
   .letter-span {
-    @apply relative inline-block;
+    display: inline-block;
+    position: relative;
     transition: color 0.3s ease, transform 0.3s ease;
-    color: inherit;
+    cursor: default;
   }
 
   .letter-hover:hover .letter-span {
-    @apply text-[#ff0abe];
-    transform: translateY(-2px);
+    color: #ff0abe;
   }
 
-  /* Make the effect more pronounced */
   .letter-hover .letter-span:hover {
-    @apply text-[#ff0abe];
-    transform: translateY(-2px) scale(1.1);
+    color: #ff0abe;
+    transform: translateY(-2px);
     z-index: 1;
   }
 

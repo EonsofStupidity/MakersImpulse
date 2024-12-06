@@ -1,65 +1,83 @@
 const splitTextIntoLetters = (element: HTMLElement) => {
-  // Don't process elements that have already been processed
-  if (element.querySelector('.letter-span')) return;
+  console.log('Attempting to split text for element:', element);
+  
+  // Skip if already processed or if it's a child of a processed element
+  if (element.closest('.letter-hover')) {
+    console.log('Element already processed or child of processed element, skipping');
+    return;
+  }
   
   const text = element.textContent || '';
-  element.textContent = ''; // Clear the element
+  console.log('Processing text:', text);
+  
+  // Only process if there's actual text content
+  if (!text.trim()) return;
+  
+  // Create a wrapper if needed
+  const wrapper = document.createElement('span');
+  wrapper.className = 'letter-hover';
   
   // Create spans for each letter
-  [...text].forEach((char) => {
+  const letters = text.split('').map(char => {
     const span = document.createElement('span');
-    span.textContent = char === ' ' ? '\u00A0' : char; // Preserve spaces
+    span.textContent = char === ' ' ? '\u00A0' : char;
     span.className = 'letter-span';
-    element.appendChild(span);
+    return span;
   });
+  
+  // Clear and append
+  element.textContent = '';
+  letters.forEach(span => wrapper.appendChild(span));
+  element.appendChild(wrapper);
+  
+  console.log('Successfully split text into letters');
 };
 
 // Initialize on page load
 const initializeLetterEffects = () => {
-  // Select all text elements
-  const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button');
-  textElements.forEach(element => {
+  console.log('Initializing letter effects');
+  const elements = document.querySelectorAll('h1:not(.letter-hover), h2:not(.letter-hover), p:not(.letter-hover)');
+  console.log('Found elements to process:', elements.length);
+  
+  elements.forEach(element => {
     if (element instanceof HTMLElement) {
       splitTextIntoLetters(element);
     }
   });
 };
 
-// Setup mutation observer for dynamically added elements
-const setupObserver = () => {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (node instanceof HTMLElement) {
-          splitTextIntoLetters(node);
-          const newElements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button');
-          newElements.forEach(element => {
-            if (element instanceof HTMLElement) {
-              splitTextIntoLetters(element);
-            }
-          });
-        }
-      });
+// Wait for React to finish rendering
+setTimeout(initializeLetterEffects, 100);
+
+// Also set up a mutation observer for dynamic content
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach(mutation => {
+    mutation.addedNodes.forEach(node => {
+      if (node instanceof HTMLElement) {
+        const elements = node.querySelectorAll('h1:not(.letter-hover), h2:not(.letter-hover), p:not(.letter-hover)');
+        elements.forEach(element => {
+          if (element instanceof HTMLElement) {
+            splitTextIntoLetters(element);
+          }
+        });
+      }
     });
   });
+});
 
+// Start observing once the document is ready
+if (document.readyState !== 'loading') {
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
-};
-
-// Run initialization
-document.addEventListener('DOMContentLoaded', () => {
-  initializeLetterEffects();
-  setupObserver();
-});
-
-// Also run initialization now in case the DOM is already loaded
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initializeLetterEffects);
 } else {
-  initializeLetterEffects();
+  document.addEventListener('DOMContentLoaded', () => {
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  });
 }
 
 export {};
