@@ -64,7 +64,7 @@ export const Navigation = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-2">
-            <Link to="/blog" className={navLinkClass}>
+            <Link to="/blog/latest-updates" className={navLinkClass}>
               <Home className="inline-block mr-2 h-4 w-4" />
               Blog
             </Link>
