@@ -106,4 +106,8 @@
     50% { border-color: rgba(128, 0, 255, 1); }
     100% { border-color: rgba(128, 0, 255, 0.5); }
   }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#41f0db] via-[#ff0abe] to-[#8000ff];
+  }
 }
