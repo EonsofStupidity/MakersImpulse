@@ -3,11 +3,11 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useTags } from "@/components/PostEditor/hooks/useTags";
-import { useImages } from "@/components/PostEditor/hooks/useImages";
-import { useSavePost } from "@/components/PostEditor/hooks/useSavePost";
-import { Tag } from "@/components/PostEditor/components/Tag";
-import { Thumbnail } from "@/components/PostEditor/components/Thumbnail";
+import { useTags } from "@/components/hooks/useTags";
+import { useImages } from "@/components/hooks/useImages";
+import { useSavePost } from "@/components/hooks/useSavePost";
+import { Tag } from "@/components/PostEditor/component/Tag";
+import { Thumbnail } from "@/components/PostEditor/component/thumbnail";
 
 const PostEditor = () => {
   const { tags, currentTag, addTag, removeTag, setCurrentTag } = useTags();
