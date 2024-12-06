@@ -1,4 +1,4 @@
-import { Hero } from "@/components/shared/Hero";
+import { HeroSection } from "@/pages/site/landing/components/HeroSection";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
 
@@ -43,7 +43,7 @@ const MakerSpace = () => {
         transition={{ duration: 0.8 }}
         className="relative z-10"
       >
-        <Hero />
+        <HeroSection />
       </motion.div>
 
       <motion.div
