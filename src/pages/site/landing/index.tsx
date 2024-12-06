@@ -1,24 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect } from "react";
-import { Search } from "lucide-react";
-
-const transitions = [
-  {
-    initial: { opacity: 0, scale: 0.95, filter: "blur(8px)" },
-    animate: { opacity: 1, scale: 1, filter: "blur(0px)" },
-    exit: { opacity: 0, scale: 1.05, filter: "blur(8px)" },
-  },
-  {
-    initial: { opacity: 0, x: -100, rotateY: -30 },
-    animate: { opacity: 1, x: 0, rotateY: 0 },
-    exit: { opacity: 0, x: 100, rotateY: 30 },
-  },
-  {
-    initial: { opacity: 0, y: 50, scale: 0.9 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, y: -50, scale: 0.9 },
-  }
-];
+import { Search, Users, Book, Tools, Star, TrendingUp, MessageCircle } from "lucide-react";
 
 const LandingPage = () => {
   const { scrollY } = useScroll();
@@ -42,82 +24,124 @@ const LandingPage = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  const CTAButton = ({ icon: Icon, text, image, color = "cyan" }) => (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      className="relative group overflow-hidden rounded-xl"
+    >
+      <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/20 to-[#ff0abe]/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="glass p-6 flex items-center gap-4 relative z-10">
+        <div className="w-16 h-16 rounded-full overflow-hidden">
+          <img src={image} alt={text} className="w-full h-full object-cover" />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-white mb-1 group-hover:text-[#41f0db] transition-colors">
+            {text}
+          </h3>
+          <div className="flex items-center gap-2 text-white/60">
+            <Icon className="w-4 h-4" />
+            <span>Explore Now</span>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+
   return (
     <div 
       ref={containerRef}
       className="min-h-screen relative overflow-hidden bg-[#1a1a1a]"
     >
-      {/* Cyberpunk Grid Background */}
+      {/* Background Elements */}
       <motion.div 
         style={{ y: backgroundY }}
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#41f0db]/10 via-[#ff0abe]/10 to-[#8000ff]/10" />
-        
-        {/* Animated Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/5 via-[#ff0abe]/5 to-[#8000ff]/5 animate-gradient-flow" />
       </motion.div>
 
-      {/* Main Content */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
-        className="relative z-10"
-      >
-        <div className="container mx-auto px-6 pt-24">
+      {/* Hero Section */}
+      <div className="relative z-10 pt-32 pb-20">
+        <div className="container mx-auto px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="text-center relative"
+            className="text-center"
           >
-            {/* Hero Title */}
-            <h1 className="text-[#41f0db] text-4xl md:text-6xl font-bold mb-6 animate-float">
-              <span className="letter-hover">Build your 3D Printer Dream</span>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#41f0db] to-[#ff0abe] animate-float">
+              Build your 3D Printer Dream
             </h1>
             
-            {/* Glass Card Sections */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-              {/* Feature Card 1 */}
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="glass p-8 backdrop-blur-xl bg-gradient-to-br from-[#41f0db]/10 to-[#ff0abe]/10 border border-[#41f0db]/20"
-              >
-                <h2 className="text-2xl font-bold text-[#41f0db] mb-4">Innovate</h2>
-                <p className="text-white/80">Create groundbreaking designs with cutting-edge tools and technology.</p>
-              </motion.div>
+            <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+              Join our community of makers and bring your ideas to life
+            </p>
 
-              {/* Feature Card 2 */}
-              <motion.div 
-                whileHover={{ scale: 1.02 }}
-                className="glass p-8 backdrop-blur-xl bg-gradient-to-br from-[#ff0abe]/10 to-[#8000ff]/10 border border-[#ff0abe]/20"
-              >
-                <h2 className="text-2xl font-bold text-[#ff0abe] mb-4">Create</h2>
-                <p className="text-white/80">Bring your ideas to life with precision and expertise.</p>
-              </motion.div>
+            {/* Search Bar */}
+            <div className="max-w-2xl mx-auto mb-12">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Search builds, parts, or guides..."
+                  className="w-full px-6 py-4 bg-white/5 backdrop-blur-xl border border-[#41f0db] rounded-xl text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#41f0db] transition-all duration-300"
+                />
+                <Search className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white/50" />
+              </div>
             </div>
 
-            {/* CTA Section */}
+            {/* Featured Image */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-              className="mt-12"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.3 }}
+              className="max-w-4xl mx-auto mb-20"
             >
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                className="px-8 py-3 text-white bg-gradient-to-r from-[#41f0db] to-[#ff0abe] rounded-lg shadow-lg hover:shadow-[#41f0db]/20 transition-all duration-300"
-              >
-                Get Started
-              </motion.button>
+              <img 
+                src="/lovable-uploads/08249147-939f-4ee3-94ab-3c2bb85daaaf.png"
+                alt="3D Printer"
+                className="w-full h-auto rounded-xl shadow-2xl"
+              />
             </motion.div>
+
+            {/* CTAs Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+              <CTAButton 
+                icon={MessageCircle}
+                text="Join Forums"
+                image="/lovable-uploads/935d5733-15e9-40b1-90f7-8f0b396452ec.png"
+              />
+              <CTAButton 
+                icon={Tools}
+                text="Explore Builds"
+                image="/lovable-uploads/0a568f5e-da09-445b-8b37-e014edf76c51.png"
+              />
+              <CTAButton 
+                icon={Star}
+                text="Browse Parts"
+                image="/lovable-uploads/293dada8-67ab-4da3-8f66-2f83623340b5.png"
+              />
+              <CTAButton 
+                icon={Book}
+                text="Read Guides"
+                image="/lovable-uploads/71f960d6-8f95-4f76-87b9-1987d2afb370.png"
+              />
+              <CTAButton 
+                icon={Users}
+                text="Join Community"
+                image="/lovable-uploads/935d5733-15e9-40b1-90f7-8f0b396452ec.png"
+              />
+              <CTAButton 
+                icon={TrendingUp}
+                text="Latest Trends"
+                image="/lovable-uploads/08249147-939f-4ee3-94ab-3c2bb85daaaf.png"
+              />
+            </div>
           </motion.div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* Scroll Indicator */}
+      {/* Gradient Footer */}
       <motion.div
         style={{ y: textY }}
         className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#1a1a1a] to-transparent z-20"
