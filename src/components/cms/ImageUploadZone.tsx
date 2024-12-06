@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { validateImageFile, validateImageCount } from "@/utils/validation/imageValidation";
+import { validateImageFile, validateMaxCount } from "@/utils/validation";
 
 interface ImageUploadZoneProps {
   images: File[];
@@ -40,7 +40,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
     setDragActive(false);
 
     const files = Array.from(e.dataTransfer.files).filter(file => 
-      validateImageFile(file) && validateImageCount(images.length)
+      validateImageFile(file) && validateMaxCount(images.length)
     );
     
     if (files.length > 0) {
@@ -51,7 +51,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files).filter(file => 
-        validateImageFile(file) && validateImageCount(images.length)
+        validateImageFile(file) && validateMaxCount(images.length)
       );
       onImagesChange([...images, ...newFiles].slice(0, 7));
     }
@@ -78,7 +78,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
               id="image-upload"
               type="file"
               multiple
-              accept="image/*"
+              accept={ACCEPTED_IMAGE_FORMATS.join(',')}
               onChange={handleFileChange}
               className="hidden"
             />
