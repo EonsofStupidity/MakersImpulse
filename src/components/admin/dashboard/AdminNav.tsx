@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FileText, Image, Users, MessageSquare, Layers, FileTemplate, GitBranch, Settings } from "lucide-react";
+import { FileText, Image, Users, MessageSquare, Layers, FileType, GitBranch, Settings } from "lucide-react";
 
 export const AdminNav = () => {
   return (
@@ -29,7 +29,7 @@ export const AdminNav = () => {
             to="/admin/content-management/templates" 
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
           >
-            <FileTemplate className="w-4 h-4" />
+            <FileType className="w-4 h-4" />
             <span>Templates</span>
           </Link>
         </li>
