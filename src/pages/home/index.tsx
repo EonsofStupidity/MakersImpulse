@@ -1,4 +1,4 @@
-import { Hero } from "@/components/features/Hero";
+import { Hero } from "@/components/shared/Hero";
 import { motion } from "framer-motion";
 
 const Index = () => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { uploadMedia, supabase } from "../../utils/supabase";
+import { supabase } from "@/utils/supabase";
+import { uploadMedia } from "@/utils/supabase";
 
 const MediaLibrary = () => {
   const [files, setFiles] = useState<File[]>([]);

@@ -1,8 +1,8 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AdminNav } from "@/components/admin/AdminNav";
-import { Navigation } from "@/components/layout/Navigation";
+import { AdminNav } from "@/components/admin/dashboard/AdminNav";
+import { Navigation } from "@/components/shared/layout/Navigation";
 import {
   LineChart,
   Line,
