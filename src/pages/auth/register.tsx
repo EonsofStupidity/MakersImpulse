@@ -41,10 +41,10 @@ const Register = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] px-4">
-      <Card className="w-full max-w-md glass animate-fade-in">
+      <Card className="w-full max-w-md bg-white shadow-lg rounded-xl animate-fade-in">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-white">Create an account</CardTitle>
-          <CardDescription className="text-center text-gray-400">
+          <CardTitle className="text-2xl font-bold text-center text-gray-800">Create an account</CardTitle>
+          <CardDescription className="text-center text-gray-500">
             Enter your email below to create your account
           </CardDescription>
         </CardHeader>
@@ -56,7 +56,7 @@ const Register = () => {
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                className="bg-white border-gray-200 text-gray-900 placeholder:text-gray-400"
                 required
               />
             </div>
@@ -66,7 +66,7 @@ const Register = () => {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
+                className="bg-white border-gray-200 text-gray-900 placeholder:text-gray-400"
                 required
               />
             </div>
@@ -74,16 +74,16 @@ const Register = () => {
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="w-full bg-[#4EEAB1] hover:bg-[#4EEAB1]/90 text-gray-800"
               disabled={isLoading}
             >
               {isLoading ? "Creating account..." : "Create account"}
             </Button>
-            <p className="text-sm text-center text-gray-400">
+            <p className="text-sm text-center text-gray-500">
               Already have an account?{" "}
               <Button
                 variant="link"
-                className="text-primary hover:text-primary/90 p-0"
+                className="text-[#4EEAB1] hover:text-[#4EEAB1]/90 p-0"
                 onClick={() => navigate("/login")}
               >
                 Sign in
