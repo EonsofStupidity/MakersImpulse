@@ -1,15 +1,30 @@
 import { motion } from "framer-motion";
 import { Search } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export const Hero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const textElements = container.querySelectorAll('*:not(script):not(style)');
+    textElements.forEach(element => {
+      if (element instanceof HTMLElement) {
+        element.dataset.content = element.textContent || '';
+      }
+    });
+  }, []);
+
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
       <div className="absolute inset-0 bg-[#1A1F2C]">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       </div>
       
       <div 
-        className="absolute inset-0 opacity-20 bg-cover bg-center scale-80"
+        className="absolute inset-0 opacity-20 bg-cover bg-center"
         style={{
           backgroundImage: "url('/lovable-uploads/4edf410a-5bd3-426b-8efe-fb8acb60e39c.png')",
           backgroundPosition: "center 40%",
@@ -25,18 +40,11 @@ export const Hero = () => {
           className="text-center relative"
         >
           <h1 className="mb-6 animate-float">
-            Welcome to{" "}
-            <span className="text-[#41f0db] letter-hover">
-              {"MakersImpulse".split('').map((letter, index) => (
-                <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-              ))}
-            </span>
+            Welcome to MakersImpulse
           </h1>
           
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto letter-hover">
-            {"Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.".split('').map((letter, index) => (
-              <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-            ))}
+          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+            Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
           </p>
 
           <div className="max-w-2xl mx-auto mb-12">
@@ -56,11 +64,7 @@ export const Hero = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-gradient-to-r from-[#24e3dd] to-[#24e3dd]/70 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Explore Builds".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Explore Builds
             </motion.button>
             
             <motion.button 
@@ -68,11 +72,7 @@ export const Hero = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 backdrop-blur-xl border border-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Join Now".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Join Now
             </motion.button>
             
             <motion.button 
@@ -80,11 +80,7 @@ export const Hero = () => {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Home".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Home
             </motion.button>
           </div>
         </motion.div>
