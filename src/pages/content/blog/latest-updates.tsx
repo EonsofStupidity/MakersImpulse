@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { Navigation } from "@/components/shared/layout/Navigation";
-import ImageCarousel from "@/components/shared/ImageCarousel";
+import { Navigation } from "@/components/shared/ui/Navigation";
+import ImageCarousel from "@/components/shared/content-blocks/ImageCarousel";
 
 // Featured blog posts data structure
 const featuredPosts = [

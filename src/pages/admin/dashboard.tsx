@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
-import { Navigation } from "@/components/shared/layout/Navigation";
+import { Navigation } from "@/components/shared/ui/Navigation";
 import {
   LineChart,
   Line,
