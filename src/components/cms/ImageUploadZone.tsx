@@ -106,7 +106,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 flex-1">
+      <div className="grid grid-cols-2 gap-1 flex-1">
         {images.map((file, index) => (
           <div key={index} className="relative group w-[150px] h-[150px]">
             <img
