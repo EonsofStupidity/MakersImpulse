@@ -4,67 +4,87 @@
 
 @layer base {
   :root {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* ... keep existing code */
+  }
+
+  /* Apply letter hover effect to all text elements */
+  h1, h2, h3, h4, h5, h6, p, a, button, span {
+    @apply letter-hover;
   }
 }
 
 @layer components {
-  .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-[#8000ff] rounded-2xl shadow-lg;
-  }
-  
-  .nav-link {
-    @apply relative px-4 py-2 transition-all duration-300;
+  .glass-nav {
+    @apply fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-white/10;
+    background-image: 
+      linear-gradient(to bottom, rgba(255,255,255,0.05), transparent),
+      linear-gradient(to right, rgba(128,0,255,0.05), transparent);
+    box-shadow: 
+      0 4px 30px rgba(0, 0, 0, 0.1),
+      inset 0 0 30px rgba(128, 0, 255, 0.05);
   }
 
-  /* Enhanced letter hover effect */
+  .glass-nav::before {
+    content: "";
+    @apply absolute inset-0 pointer-events-none;
+    background: 
+      repeating-linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03) 0px,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px,
+        transparent 30px
+      );
+  }
+
+  .nav-glitch {
+    @apply relative overflow-hidden;
+  }
+
+  .nav-glitch::after {
+    content: "";
+    @apply absolute inset-0 opacity-0 pointer-events-none;
+    background: linear-gradient(45deg, 
+      rgba(128,0,255,0.2),
+      rgba(255,10,190,0.2)
+    );
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-glitch:hover::after {
+    @apply opacity-100;
+    animation: glitchEffect 0.3s ease-out;
+  }
+
   .letter-hover {
     @apply relative inline-block;
   }
 
   .letter-hover > span {
-    @apply relative inline-block transition-all duration-300;
+    @apply relative inline-block transition-all duration-500;
   }
 
   .letter-hover:hover span {
-    animation: letterWave 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: letterWave 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
-  /* Apply different delays to each letter */
+  /* Refined letter animation delays */
   .letter-hover span:nth-child(1) { animation-delay: 0s; }
-  .letter-hover span:nth-child(2) { animation-delay: 0.05s; }
-  .letter-hover span:nth-child(3) { animation-delay: 0.1s; }
-  .letter-hover span:nth-child(4) { animation-delay: 0.15s; }
-  .letter-hover span:nth-child(5) { animation-delay: 0.2s; }
-  .letter-hover span:nth-child(6) { animation-delay: 0.25s; }
-  .letter-hover span:nth-child(7) { animation-delay: 0.3s; }
-  .letter-hover span:nth-child(8) { animation-delay: 0.35s; }
-  .letter-hover span:nth-child(9) { animation-delay: 0.4s; }
-  .letter-hover span:nth-child(10) { animation-delay: 0.45s; }
-  /* Add more if needed for longer words */
+  .letter-hover span:nth-child(2) { animation-delay: 0.08s; }
+  .letter-hover span:nth-child(3) { animation-delay: 0.16s; }
+  .letter-hover span:nth-child(4) { animation-delay: 0.24s; }
+  .letter-hover span:nth-child(5) { animation-delay: 0.32s; }
+  .letter-hover span:nth-child(6) { animation-delay: 0.40s; }
+  .letter-hover span:nth-child(7) { animation-delay: 0.48s; }
+  .letter-hover span:nth-child(8) { animation-delay: 0.56s; }
+  .letter-hover span:nth-child(9) { animation-delay: 0.64s; }
+  .letter-hover span:nth-child(10) { animation-delay: 0.72s; }
 
   @keyframes letterWave {
     0% {
       color: inherit;
       transform: translateY(0);
+      text-shadow: none;
     }
     50% {
       color: #ff0abe;
@@ -78,52 +98,18 @@
     }
   }
 
-  .card {
-    @apply glass p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-white/15;
+  @keyframes glitchEffect {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    60% { transform: translate(-2px, -2px); }
+    80% { transform: translate(2px, 2px); }
+    100% { transform: translate(0); }
   }
 
-  h1 {
-    @apply text-[#41f0db] text-4xl md:text-6xl font-bold;
-  }
-
-  h2 {
-    @apply text-[#ff0073] text-3xl md:text-5xl font-bold;
-  }
-
-  h3 {
-    @apply text-[#ff4a26] text-2xl md:text-4xl font-bold;
-  }
-
-  .link-hover {
-    @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-[#26ffbe] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left hover:text-[#26ffbe];
-  }
+  /* ... keep existing code */
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
-
-  .animate-pulse-border {
-    animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse-border {
-    0% { border-color: rgba(128, 0, 255, 0.5); }
-    50% { border-color: rgba(128, 0, 255, 1); }
-    100% { border-color: rgba(128, 0, 255, 0.5); }
-  }
-
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-[#41f0db] via-[#ff0abe] to-[#8000ff];
-  }
+  /* ... keep existing code */
 }
