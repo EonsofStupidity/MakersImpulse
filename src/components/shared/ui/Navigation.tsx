@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { MegaMenu } from "./navigation/MegaMenu";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,15 +34,7 @@ export const Navigation = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-6">
-            <Link to="/blog" className="text-white hover:text-[#41f0db] transition-colors">Blog</Link>
-            <Link to="/maker-space/builds" className="text-white hover:text-[#41f0db] transition-colors">Builds</Link>
-            <Link to="/maker-space/parts" className="text-white hover:text-[#41f0db] transition-colors">Parts</Link>
-            <Link to="/forums" className="text-white hover:text-[#41f0db] transition-colors">Forums</Link>
-            <Link to="/maker-space/guides" className="text-white hover:text-[#41f0db] transition-colors">Guides</Link>
-            <Link to="/maker-space/reviews" className="text-white hover:text-[#41f0db] transition-colors">Reviews</Link>
-            <Link to="/site" className="text-white hover:text-[#41f0db] transition-colors">Site</Link>
-          </div>
+          <MegaMenu />
 
           <div className="flex items-center space-x-4">
             <Button
