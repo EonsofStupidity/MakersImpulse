@@ -67,21 +67,21 @@ const PostEditor = () => {
             />
 
             <div className="flex flex-col items-center space-y-4">
-              <Button
-                as="label"
-                htmlFor="image-upload"
-                className="w-[22%] py-2"
-              >
-                Upload Img
-                <input
-                  id="image-upload"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={(e) => uploadImage(e)}
-                  className="hidden"
-                />
-              </Button>
+              <div className="relative w-[22%]">
+                <Button className="w-full py-2" asChild>
+                  <label htmlFor="image-upload">
+                    Upload Img
+                    <input
+                      id="image-upload"
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => uploadImage(e)}
+                      className="hidden"
+                    />
+                  </label>
+                </Button>
+              </div>
 
               <div className="w-[65%] h-[25vh] border border-dashed border-white/20 rounded-lg flex items-center justify-center text-white/50">
                 Drop Images Here or Use Upload Button
