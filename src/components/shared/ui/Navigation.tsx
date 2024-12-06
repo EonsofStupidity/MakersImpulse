@@ -45,10 +45,13 @@ export const Navigation = () => {
     before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#41f0db]/20 before:via-[#8B5CF6]/20 before:to-[#ff0abe]/20 
     before:opacity-0 before:transition-opacity hover:before:opacity-100 before:backdrop-blur-xl before:rounded-lg
     hover:text-white hover:shadow-[0_0_15px_rgba(65,240,219,0.3)]
-    after:absolute after:inset-0 after:rounded-lg after:border after:border-[#8B5CF6]/0
-    after:transition-all after:duration-500 hover:after:border-[#8B5CF6]
+    after:absolute after:inset-0 after:rounded-lg
+    after:transition-all after:duration-500
     group overflow-hidden
     [&:hover]:before:animate-gradient-flow
+    backdrop-blur-md bg-white/10
+    shadow-[inset_0_0.5px_1px_rgba(255,255,255,0.3)]
+    hover:bg-white/20
   `;
 
   return (
@@ -65,10 +68,6 @@ export const Navigation = () => {
             <Link to="/blog" className={navLinkClass}>
               <Home className="inline-block mr-2 h-4 w-4" />
               Blog
-              <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_forwards] opacity-0 group-hover:opacity-100" />
-              <div className="absolute bottom-0 right-0 w-[1px] h-full bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.25s_forwards] opacity-0 group-hover:opacity-100" />
-              <div className="absolute top-0 right-0 w-full h-[1px] bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.5s_forwards] opacity-0 group-hover:opacity-100" />
-              <div className="absolute top-0 left-0 w-[1px] h-full bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.75s_forwards] opacity-0 group-hover:opacity-100" />
             </Link>
 
             {["Builds", "Parts", "Forums", "Guides", "Reviews", "Site"].map((item) => (
@@ -81,10 +80,6 @@ export const Navigation = () => {
                   {item === 'Site' ? <Globe className="inline-block mr-2 h-4 w-4" /> : null}
                   {item}
                 </span>
-                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_forwards] opacity-0 group-hover:opacity-100" />
-                <div className="absolute bottom-0 right-0 w-[1px] h-full bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.25s_forwards] opacity-0 group-hover:opacity-100" />
-                <div className="absolute top-0 right-0 w-full h-[1px] bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.5s_forwards] opacity-0 group-hover:opacity-100" />
-                <div className="absolute top-0 left-0 w-[1px] h-full bg-[#8B5CF6] animate-[neon-line_1s_ease-in-out_0.75s_forwards] opacity-0 group-hover:opacity-100" />
               </Link>
             ))}
           </div>
