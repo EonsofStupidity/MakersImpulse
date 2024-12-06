@@ -28,27 +28,23 @@
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl shadow-lg;
+    @apply bg-white/5 backdrop-blur-xl border border-[#8000ff] rounded-2xl shadow-lg;
   }
   
   .nav-link {
     @apply relative px-4 py-2 transition-all duration-300;
   }
 
-  /* Apply the letter hover effect globally to all text elements */
-  p, h1, h2, h3, h4, h5, h6, a, span, button {
-    @apply letter-hover;
-  }
-
   .letter-hover {
-    @apply relative inline-block;
+    @apply relative;
   }
 
   .letter-hover > span {
-    @apply relative inline-block transition-all duration-500;
+    @apply relative inline-block transition-colors duration-300;
   }
 
-  .letter-hover:hover > span {
+  .letter-hover:hover span {
+    @apply text-[#ff0abe];
     animation: letterColorChange 0.5s forwards;
   }
 
@@ -106,7 +102,8 @@
   }
 
   @keyframes pulse-border {
-    0%, 100% { border-color: rgba(128, 0, 255, 0.5); }
+    0% { border-color: rgba(128, 0, 255, 0.5); }
     50% { border-color: rgba(128, 0, 255, 1); }
+    100% { border-color: rgba(128, 0, 255, 0.5); }
   }
 }
