@@ -37,7 +37,7 @@ export const Navigation = () => {
       }`}
       onMouseMove={handleMouseMove}
       style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.15), rgba(128, 0, 255, 0.15))`,
+        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.08), rgba(128, 0, 255, 0.08))`,
         backdropFilter: "blur(10px)",
         borderBottom: "1px solid rgba(128, 0, 255, 0.3)",
       }}
@@ -56,8 +56,8 @@ export const Navigation = () => {
               to="/blog/latest-updates"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group"
             >
-              <span className="relative z-10">Blog</span>
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/20 to-[#8000ff]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+              <span className="relative z-10 text-white font-medium">Blog</span>
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
             </Link>
             <MegaMenu />
@@ -70,7 +70,7 @@ export const Navigation = () => {
               className="relative group hover:bg-transparent"
             >
               <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/20 to-[#8000ff]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
             </Button>
 
             <DropdownMenu>
@@ -81,18 +81,18 @@ export const Navigation = () => {
                       <User className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/20 to-[#8000ff]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
                 <DropdownMenuItem asChild>
-                  <Link to="/login" className="w-full hover:text-[#41f0db] transition-colors duration-300">Sign In</Link>
+                  <Link to="/login" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign In</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/register" className="w-full hover:text-[#41f0db] transition-colors duration-300">Sign Up</Link>
+                  <Link to="/register" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign Up</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/admin" className="w-full hover:text-[#41f0db] transition-colors duration-300">Admin Dashboard</Link>
+                  <Link to="/admin" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Admin Dashboard</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
