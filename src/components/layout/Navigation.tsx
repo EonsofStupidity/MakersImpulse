@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Search, User } from "lucide-react";
+import { Search, User, Home } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -21,7 +21,6 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -40,15 +39,8 @@ export const Navigation = () => {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    setMousePosition({ x: e.clientX, y: e.clientY });
-  };
-
   return (
-    <nav
-      className={`glass-nav nav-glitch py-4 ${isScrolled ? "shadow-lg" : ""}`}
-      onMouseMove={handleMouseMove}
-    >
+    <nav className={`glass-nav nav-glitch py-4 ${isScrolled ? "shadow-lg" : ""}`}>
       <div className="container mx-auto px-6">
         <div className="relative flex items-center justify-between">
           <Link to="/" className="relative group">
@@ -58,11 +50,28 @@ export const Navigation = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-12">
+            <Link
+              to="/home"
+              className="nav-link-home relative px-4 py-2 text-white/90 transition-all duration-300 rounded-lg 
+                before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#41f0db]/20 before:to-[#ff0abe]/20 before:opacity-0 
+                before:transition-opacity hover:before:opacity-100 before:backdrop-blur-xl before:rounded-lg
+                hover:text-white hover:shadow-[0_0_15px_rgba(65,240,219,0.3)]"
+            >
+              <Home className="inline-block mr-2 h-4 w-4" />
+              Home
+            </Link>
+
             {["Builds", "Parts", "Guides", "Reviews"].map((item) => (
               <Link
                 key={item}
                 to={`/${item.toLowerCase()}`}
-                className="text-white/90 hover:text-[#ff0abe] transition-colors duration-300"
+                className="nav-link-bevel relative px-4 py-2 text-white/90 transition-all duration-300 rounded-lg
+                  before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#41f0db]/10 before:to-[#ff0abe]/10 
+                  before:opacity-0 before:transition-opacity hover:before:opacity-100 
+                  before:backdrop-blur-xl before:rounded-lg before:border before:border-white/10
+                  hover:text-white hover:shadow-[0_0_15px_rgba(255,10,190,0.2)]
+                  after:absolute after:inset-0 after:bg-black/20 after:opacity-0 after:transition-opacity 
+                  hover:after:opacity-100 after:rounded-lg"
               >
                 {item}
               </Link>
