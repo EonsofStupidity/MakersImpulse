@@ -49,19 +49,19 @@ export const Navigation = () => {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center space-x-7">
             <Link
-              to="/home"
+              to="/blog"
               className="nav-link-home relative px-4 py-2 text-white/90 transition-all duration-300 rounded-lg 
                 before:absolute before:inset-0 before:bg-gradient-to-r before:from-[#41f0db]/20 before:to-[#ff0abe]/20 before:opacity-0 
                 before:transition-opacity hover:before:opacity-100 before:backdrop-blur-xl before:rounded-lg
                 hover:text-white hover:shadow-[0_0_15px_rgba(65,240,219,0.3)]"
             >
               <Home className="inline-block mr-2 h-4 w-4" />
-              Home
+              Blog
             </Link>
 
-            {["Builds", "Parts", "Guides", "Reviews"].map((item) => (
+            {["Builds", "Parts", "Forums", "Guides", "Reviews"].map((item) => (
               <Link
                 key={item}
                 to={`/${item.toLowerCase()}`}
