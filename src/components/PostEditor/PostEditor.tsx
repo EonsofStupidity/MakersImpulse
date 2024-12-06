@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useTags } from "@/components/PostEditor/hooks/useTags";
 import { useImages } from "@/components/PostEditor/hooks/useImages";
 import { useSavePost } from "@/components/PostEditor/hooks/useSavePost";
-import { Tag } from "@/components/PostEditor/components/Tag";
+import { Tag } from import { Tag } from "@/components/PostEditor/components/Tag";
 import { Thumbnail } from "@/components/PostEditor/components/Thumbnail";
 
 const PostEditor = () => {
