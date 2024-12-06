@@ -18,6 +18,7 @@ import CategoriesManagement from "./pages/admin/content-management/categories";
 import TemplatesManagement from "./pages/admin/content-management/templates";
 import WorkflowsManagement from "./pages/admin/content-management/workflows";
 import ContentTypesSettings from "./pages/admin/settings/content-types";
+import LandingPage from "./pages/site/landing";
 
 // Site Pages
 import AboutPage from "./pages/site/about";
@@ -86,7 +87,8 @@ const App = () => (
               <PageTransition>
                 <Routes>
                   {/* Public Routes */}
-                  <Route path="/" element={<MakerSpace />} />
+                  <Route path="/" element={<LandingPage />} />
+                  <Route path="/maker-space" element={<MakerSpace />} />
                   <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                   <Route path="/login" element={<Login />} />
 
@@ -116,4 +118,3 @@ const App = () => (
 );
 
 export default App;
-
