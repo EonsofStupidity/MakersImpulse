@@ -84,7 +84,42 @@ const PostEditor = () => {
     });
   };
 
+  const validateForm = () => {
+    const errors = [];
+
+    if (!title.trim()) {
+      errors.push("Title is required");
+    }
+
+    if (!slug.trim()) {
+      errors.push("Post slug is required");
+    }
+
+    if (tags.length === 0) {
+      errors.push("At least one tag is required");
+    }
+
+    if (content.length < 141) {
+      errors.push("Content must be at least 141 characters");
+    }
+
+    return errors;
+  };
+
   const handleSave = async () => {
+    const errors = validateForm();
+    
+    if (errors.length > 0) {
+      errors.forEach(error => {
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: error,
+        });
+      });
+      return;
+    }
+
     // Save post logic
   };
 
@@ -96,18 +131,27 @@ const PostEditor = () => {
     >
       <div className="container mx-auto p-6 relative z-10">
         <Card className="p-8 space-y-6 bg-black/40 backdrop-blur-xl border border-white/10 shadow-[0_0_15px_rgba(65,240,219,0.1)]">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-[#41f0db] to-[#ff0abe] bg-clip-text text-transparent">
+          <h2 className="text-3xl font-bold text-white">
             Create New Post
           </h2>
 
           <div className="space-y-6">
+            <div className="flex justify-end mb-4">
+              <Button
+                onClick={handleSave}
+                className="w-[27%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
+              >
+                Save Post
+              </Button>
+            </div>
+
             <Input
               id="title"
               type="text"
               placeholder="Post Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+              className="w-[35%] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
             />
 
             <Input
@@ -116,7 +160,7 @@ const PostEditor = () => {
               placeholder="post-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+              className="w-[35%] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
             />
 
             <div>
@@ -131,7 +175,7 @@ const PostEditor = () => {
                 value={currentTag}
                 onChange={(e) => setCurrentTag(e.target.value)}
                 onKeyDown={handleAddTag}
-                className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+                className="w-[35%] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
               />
             </div>
 
@@ -150,9 +194,7 @@ const PostEditor = () => {
                 htmlFor="image-upload"
                 className="w-[22%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
               >
-                <span className="transition-all hover:bg-gradient-to-r hover:from-[#ff0abe] hover:to-[#41f0db]">
-                  Upload Img
-                </span>
+                Upload Image
                 <input
                   id="image-upload"
                   type="file"
@@ -163,9 +205,7 @@ const PostEditor = () => {
                 />
               </Button>
 
-              <div
-                className="w-[65%] h-[25vh] border border-dashed border-[#41f0db] bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm"
-              >
+              <div className="w-[65%] h-[25vh] border border-dashed border-[#41f0db] bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm">
                 Drop Images Here or Use Upload Button
               </div>
 
@@ -179,13 +219,6 @@ const PostEditor = () => {
                 ))}
               </div>
             </div>
-
-            <Button
-              onClick={handleSave}
-              className="w-[27%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
-            >
-              Save Post
-            </Button>
           </div>
         </Card>
       </div>
