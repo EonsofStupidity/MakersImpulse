@@ -4,10 +4,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionProvider } from "@/components/auth/SessionContext";
-import { Navigation } from "@/components/shared/layout/Navigation";
+import { Navigation } from "@/components/shared/ui/Navigation";
 
 // Pages
-import Home from "./pages/home/index";
+import MakerSpace from "./pages/content/maker-space/index";
 import LatestUpdates from "./pages/content/blog/latest-updates";
 import Login from "./pages/auth/login";
 import AdminDashboard from "./pages/admin/dashboard";
@@ -26,7 +26,7 @@ const App = () => (
             <main className="flex-1">
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<MakerSpace />} />
                 <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                 <Route path="/login" element={<Login />} />
 
