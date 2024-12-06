@@ -28,7 +28,6 @@ export const Navigation = () => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       
-      // Show/hide based on scroll direction
       if (currentScrollY > lastScrollY) {
         setIsVisible(false);
       } else {
@@ -61,47 +60,30 @@ export const Navigation = () => {
         isVisible ? "translate-y-0" : "-translate-y-full"
       } ${
         isScrolled 
-          ? "bg-[#1A1F2C]/80 backdrop-blur-lg border-b border-white/10 py-4" 
+          ? "bg-[#1A1F2C]/60 backdrop-blur-lg border-b border-white/10 py-4" 
           : "bg-transparent py-6"
       }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link 
           to="/" 
-          className="text-2xl font-bold text-white hover:text-primary transition-colors duration-200"
+          className="text-2xl font-bold text-[#41f0db]"
         >
-          MakersImpulse
+          <span className="letter-hover">MakersImpulse</span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-12">
-          <Link 
-            to="/builds" 
-            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
-          >
-            <span>Builds</span>
-            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-          </Link>
-          <Link 
-            to="/parts" 
-            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
-          >
-            <span>Parts</span>
-            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-          </Link>
-          <Link 
-            to="/guides" 
-            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
-          >
-            <span>Guides</span>
-            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-          </Link>
-          <Link 
-            to="/reviews" 
-            className="relative text-white/90 hover:text-white transition-colors duration-200 group"
-          >
-            <span>Reviews</span>
-            <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-primary transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
-          </Link>
+          {["Builds", "Parts", "Guides", "Reviews"].map((item) => (
+            <Link 
+              key={item}
+              to={`/${item.toLowerCase()}`} 
+              className="nav-link"
+            >
+              <span className="letter-hover text-white/90">
+                {item}
+              </span>
+            </Link>
+          ))}
         </div>
 
         <div className="flex items-center space-x-4">
@@ -111,7 +93,7 @@ export const Navigation = () => {
             className="hover:bg-white/10 transition-colors duration-200"
             onClick={() => setOpen(true)}
           >
-            <Search className="h-5 w-5 text-white" />
+            <Search className="h-5 w-5 text-white hover:text-[#ff0abe] transition-colors duration-300" />
             <span className="sr-only">Search</span>
           </Button>
 
@@ -131,13 +113,13 @@ export const Navigation = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 bg-gray-800/95 backdrop-blur-sm border-white/10">
               <DropdownMenuItem asChild>
-                <Link to="/login" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Sign In</Link>
+                <Link to="/login" className="w-full text-gradient-hover">Sign In</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/register" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Sign Up</Link>
+                <Link to="/register" className="w-full text-gradient-hover">Sign Up</Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link to="/admin" className="w-full text-white/90 hover:text-[#ff69b4] transition-colors">Admin Dashboard</Link>
+                <Link to="/admin" className="w-full text-gradient-hover">Admin Dashboard</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
