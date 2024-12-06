@@ -1,11 +1,19 @@
-import { createContext, useEffect, useState, ReactNode } from 'react';
-import { supabase } from './supabaseClient';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface SessionContextType {
   session: any;
 }
 
 export const SessionContext = createContext<SessionContextType | null>(null);
+
+export const useSession = () => {
+  const context = useContext(SessionContext);
+  if (!context) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return context;
+};
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<any>(null);
