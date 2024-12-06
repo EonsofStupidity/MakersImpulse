@@ -23,25 +23,26 @@ export const Navigation = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30 py-4 ${
-        isScrolled ? "shadow-lg" : ""
+      className={`fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30 py-4 transition-all duration-300 ${
+        isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
             <span className="text-2xl font-bold">
-              <span className="text-[#41f0db]">Makers</span>
-              <span className="text-[#ff0abe]">Impulse</span>
+              <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
+              <span className="text-[#ff0abe] animate-neon-glow">Impulse</span>
             </span>
           </Link>
 
           <div className="hidden md:flex items-center space-x-4">
             <Link 
               to="/blog/latest-updates"
-              className="text-white hover:text-[#41f0db] transition-colors duration-300"
+              className="text-white hover:text-[#41f0db] transition-all duration-300 relative group"
             >
               Blog
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-[#41f0db] transition-all duration-300 group-hover:w-full opacity-0 group-hover:opacity-100" />
             </Link>
             <MegaMenu />
           </div>
@@ -67,13 +68,13 @@ export const Navigation = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
                 <DropdownMenuItem asChild>
-                  <Link to="/login" className="w-full">Sign In</Link>
+                  <Link to="/login" className="w-full hover:text-[#41f0db] transition-colors duration-300">Sign In</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/register" className="w-full">Sign Up</Link>
+                  <Link to="/register" className="w-full hover:text-[#41f0db] transition-colors duration-300">Sign Up</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link to="/admin" className="w-full">Admin Dashboard</Link>
+                  <Link to="/admin" className="w-full hover:text-[#41f0db] transition-colors duration-300">Admin Dashboard</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

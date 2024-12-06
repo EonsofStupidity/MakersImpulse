@@ -9,7 +9,7 @@ export const BuildsMenu = () => (
     initial="hidden"
     animate="visible"
     exit="exit"
-    className="grid w-[400px] gap-3 p-4 bg-black/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl"
+    className="grid w-[400px] gap-3 p-4 bg-black/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl shadow-[#8000ff]/5"
   >
     <ListItem href="/maker-space/builds" title="Featured Builds">
       Explore our curated collection of outstanding 3D printer builds

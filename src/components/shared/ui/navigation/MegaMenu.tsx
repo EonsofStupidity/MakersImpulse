@@ -25,7 +25,7 @@ export function MegaMenu() {
       <NavigationMenuList className="flex items-center gap-1">
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
           >
             <Hammer className="w-4 h-4 mr-2" />
             Builds
@@ -38,7 +38,7 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
           >
             <Wrench className="w-4 h-4 mr-2" />
             Parts
@@ -51,7 +51,7 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
           >
             <BookOpen className="w-4 h-4 mr-2" />
             Guides
@@ -64,7 +64,7 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
           >
             <Globe className="w-4 h-4 mr-2" />
             Site
