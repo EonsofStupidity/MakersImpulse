@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const FilterSystem = () => {
+export const FilterSystem: React.FC = () => {
   return (
     <motion.div 
       initial={{ opacity: 0 }}

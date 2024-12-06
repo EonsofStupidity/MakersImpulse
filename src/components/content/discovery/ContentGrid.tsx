@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const ContentGrid = () => {
+export const ContentGrid: React.FC = () => {
   return (
     <motion.div 
       initial={{ opacity: 0 }}

@@ -2,9 +2,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect } from "react";
 import { Search, Database, Box, Users, TrendingUp, BookOpen } from "lucide-react";
 import { Link } from "react-router-dom";
-import BuildCard from "@/components/maker-space/builds/BuildCard";
-import PartCard from "@/components/maker-space/parts/PartCard";
-import GuideCard from "@/components/maker-space/guides/GuideCard";
 import { ContentGrid } from "@/components/content/discovery/ContentGrid";
 import { FilterSystem } from "@/components/content/discovery/FilterSystem";
 import { useToast } from "@/components/ui/use-toast";
@@ -65,7 +62,6 @@ const LandingPage = () => {
 
   return (
     <div ref={containerRef} className="min-h-screen relative overflow-hidden bg-[#1a1a1a]">
-      {/* Cyberpunk Grid Overlay */}
       <motion.div 
         style={{ y: backgroundY }}
         className="absolute inset-0 z-0"
@@ -74,7 +70,6 @@ const LandingPage = () => {
         <div className="absolute inset-0 bg-gradient-to-b from-[#41f0db]/10 via-[#ff0abe]/10 to-[#8000ff]/10" />
       </motion.div>
 
-      {/* Hero Section */}
       <motion.div 
         style={{ y: parallaxY }}
         className="relative z-10 pt-32 pb-20"
@@ -94,15 +89,12 @@ const LandingPage = () => {
               Join our community of makers and bring your ideas to life
             </p>
 
-            {/* Search Bar with FilterSystem Integration */}
             <div className="max-w-2xl mx-auto mb-12">
               <FilterSystem />
             </div>
 
-            {/* Content Grid Integration */}
             <ContentGrid />
 
-            {/* Featured Sections */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto mb-20">
               <FeaturePanel
                 icon={Database}
@@ -148,7 +140,6 @@ const LandingPage = () => {
         </div>
       </motion.div>
 
-      {/* Gradient Footer */}
       <motion.div
         style={{ y: textY }}
         className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#1a1a1a] to-transparent z-20"
