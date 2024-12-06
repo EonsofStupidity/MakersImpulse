@@ -35,28 +35,30 @@
     @apply relative px-4 py-2 transition-all duration-300;
   }
 
-  .nav-link span {
+  .letter-hover {
+    @apply relative inline-block;
+  }
+
+  .letter-hover span {
     @apply relative inline-block transition-colors duration-300;
   }
 
-  .nav-link span:hover {
-    @apply text-[#ff0abe];
+  .letter-hover:hover span {
+    animation: letterColorChange 0.5s forwards;
+    animation-delay: calc(0.05s * var(--letter-index));
+  }
+
+  @keyframes letterColorChange {
+    0% {
+      color: inherit;
+    }
+    100% {
+      color: #ff0abe;
+    }
   }
 
   .card {
     @apply glass p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-white/15;
-  }
-
-  .text-gradient-hover {
-    @apply relative inline-block;
-    background-clip: text;
-    -webkit-background-clip: text;
-    transition: color 0.3s ease;
-  }
-
-  .text-gradient-hover:hover {
-    color: #ff0abe;
-    transition: color 0.3s ease;
   }
 
   h1 {

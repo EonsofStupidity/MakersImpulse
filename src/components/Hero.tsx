@@ -8,6 +8,14 @@ export const Hero = () => {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       </div>
       
+      <div 
+        className="absolute inset-0 opacity-20 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/lovable-uploads/4edf410a-5bd3-426b-8efe-fb8acb60e39c.png')",
+          backgroundPosition: "center 40%"
+        }}
+      />
+      
       <div className="container mx-auto px-6 pt-24 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -15,19 +23,14 @@ export const Hero = () => {
           transition={{ duration: 0.6 }}
           className="text-center relative"
         >
-          <div className="relative mb-8">
-            <img 
-              src="/lovable-uploads/4edf410a-5bd3-426b-8efe-fb8acb60e39c.png"
-              alt="MakersImpulse Mascot"
-              className="w-48 h-48 mx-auto object-contain"
-            />
-          </div>
-
           <h1 className="mb-6 animate-float">
-            Welcome to <span className="text-[#41f0db] text-gradient-hover">MakersImpulse</span>
+            Welcome to{" "}
+            <span className="text-[#41f0db] letter-hover">
+              MakersImpulse
+            </span>
           </h1>
           
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto text-gradient-hover">
+          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto letter-hover">
             Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
           </p>
 
@@ -45,15 +48,21 @@ export const Hero = () => {
           <div className="flex flex-col md:flex-row items-center justify-center gap-6">
             <motion.button 
               whileHover={{ scale: 1.05 }}
-              className="glass px-8 py-3 text-white hover:bg-white/20 transition-colors duration-200 bevel-border text-gradient-hover"
+              className="glass px-8 py-3 text-white bg-gradient-to-r from-[#24e3dd] to-[#24e3dd]/70 backdrop-blur-lg border border-white/20 hover:bg-white/20 transition-all duration-200"
             >
-              Explore Builds
+              <span className="letter-hover">Explore Builds</span>
             </motion.button>
             <motion.button 
               whileHover={{ scale: 1.05 }}
-              className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 transition-colors duration-200 bevel-border text-gradient-hover"
+              className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 transition-colors duration-200"
             >
-              Join Now
+              <span className="letter-hover">Join Now</span>
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.25 }}
+              className="glass px-8 py-3 text-white bg-white/10 backdrop-blur-lg border border-white/20 transition-all duration-300"
+            >
+              <span className="letter-hover">Home</span>
             </motion.button>
           </div>
         </motion.div>

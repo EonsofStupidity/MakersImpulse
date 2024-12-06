@@ -67,9 +67,9 @@ export const Navigation = () => {
       <div className="container mx-auto px-6 flex items-center justify-between">
         <Link 
           to="/" 
-          className="text-2xl font-bold text-[#41f0db] hover:text-[#ff0abe] transition-colors duration-300"
+          className="text-2xl font-bold text-[#41f0db]"
         >
-          MakersImpulse
+          <span className="letter-hover">MakersImpulse</span>
         </Link>
 
         <div className="hidden md:flex items-center space-x-12">
@@ -79,7 +79,7 @@ export const Navigation = () => {
               to={`/${item.toLowerCase()}`} 
               className="nav-link"
             >
-              <span className="text-gradient-hover text-white/90">
+              <span className="letter-hover text-white/90">
                 {item}
               </span>
             </Link>
