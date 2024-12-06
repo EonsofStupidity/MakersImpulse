@@ -12,7 +12,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import MediaLibrary from "./pages/Admin/MediaLibrary";
-import PostEditor from "./pages/cms/PostEditor";
+import PostEditor from "./components/PostEditor/PostEditor";
 
 const queryClient = new QueryClient();
 
