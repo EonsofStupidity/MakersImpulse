@@ -1,6 +1,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef, useEffect } from "react";
-import { Search, Users, Book, Tools, Star, TrendingUp, MessageCircle } from "lucide-react";
+import { Search, Users, Book, Wrench, Star, TrendingUp, MessageCircle } from "lucide-react";
 
 const LandingPage = () => {
   const { scrollY } = useScroll();
@@ -112,7 +112,7 @@ const LandingPage = () => {
                 image="/lovable-uploads/935d5733-15e9-40b1-90f7-8f0b396452ec.png"
               />
               <CTAButton 
-                icon={Tools}
+                icon={Wrench}
                 text="Explore Builds"
                 image="/lovable-uploads/0a568f5e-da09-445b-8b37-e014edf76c51.png"
               />
