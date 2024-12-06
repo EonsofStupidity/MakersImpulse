@@ -28,9 +28,7 @@ export const Hero = () => {
           </h1>
           
           <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
-            <span className="letter-hover">
-              Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
-            </span>
+            Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
           </p>
 
           <div className="max-w-2xl mx-auto mb-12">
@@ -50,7 +48,7 @@ export const Hero = () => {
               transition={{ duration: 0.3 }}
               className="glass px-8 py-3 text-white bg-gradient-to-r from-[#8000ff] to-[#8000ff]/70 backdrop-blur-xl hover:bg-[#8000ff]/20 transition-all duration-300"
             >
-              <span className="letter-hover">Explore Builds</span>
+              Explore Builds
             </motion.button>
             
             <motion.button 
@@ -58,7 +56,7 @@ export const Hero = () => {
               transition={{ duration: 0.3 }}
               className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 backdrop-blur-xl transition-all duration-300"
             >
-              <span className="letter-hover">Join Now</span>
+              Join Now
             </motion.button>
             
             <motion.a 
@@ -67,7 +65,7 @@ export const Hero = () => {
               transition={{ duration: 0.3 }}
               className="glass px-8 py-3 text-[#26ffbe] hover:text-[#26f1ff] bg-white/5 backdrop-blur-xl transition-all duration-300"
             >
-              <span className="letter-hover">Home</span>
+              Home
             </motion.a>
           </div>
         </motion.div>
