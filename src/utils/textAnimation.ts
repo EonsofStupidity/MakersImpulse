@@ -14,9 +14,10 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-  const elements = document.querySelectorAll('.letter-hover');
-  elements.forEach(element => {
-    if (element instanceof HTMLElement) {
+  // Select all text elements
+  const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button');
+  textElements.forEach(element => {
+    if (element instanceof HTMLElement && !element.querySelector('.letter-span')) {
       splitTextIntoLetters(element);
     }
   });
@@ -26,9 +27,9 @@ document.addEventListener('DOMContentLoaded', () => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
         if (node instanceof HTMLElement) {
-          const newElements = node.querySelectorAll('.letter-hover');
+          const newElements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, a, button');
           newElements.forEach(element => {
-            if (element instanceof HTMLElement) {
+            if (element instanceof HTMLElement && !element.querySelector('.letter-span')) {
               splitTextIntoLetters(element);
             }
           });

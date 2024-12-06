@@ -25,6 +25,11 @@
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
   }
+
+  /* Make all text elements automatically use the letter hover effect */
+  h1, h2, h3, h4, h5, h6, p, span, a, button {
+    @apply letter-hover;
+  }
 }
 
 @layer components {
@@ -42,12 +47,17 @@
   }
 
   .letter-hover {
-    @apply relative inline-block;
+    @apply relative inline-block cursor-default;
   }
 
   .letter-span {
-    @apply relative inline-block transition-all duration-500;
-    transition-delay: var(--index);
+    @apply relative inline-block transition-all duration-300;
+    transition-property: color, transform;
+  }
+
+  /* Enhanced hover effect that follows mouse position */
+  .letter-hover .letter-span {
+    transition: color 0.3s ease, transform 0.3s ease;
   }
 
   .letter-hover:hover .letter-span {
