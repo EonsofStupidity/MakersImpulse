@@ -29,6 +29,33 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   element.textContent = '';
   letters.forEach(span => wrapper.appendChild(span));
   element.appendChild(wrapper);
+
+  // Add mousemove handler for the color spread effect
+  wrapper.addEventListener('mousemove', (e) => {
+    const rect = wrapper.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    
+    letters.forEach((span, index) => {
+      const spanRect = span.getBoundingClientRect();
+      const spanCenter = spanRect.left + spanRect.width / 2 - rect.left;
+      const distance = Math.abs(mouseX - spanCenter);
+      
+      // Set custom property for transition delay
+      span.style.setProperty('--distance', Math.abs(index - letters.length).toString());
+      
+      // Add or remove active class based on distance
+      if (distance < 50) { // Adjust this value to control spread distance
+        span.classList.add('active');
+      } else {
+        span.classList.remove('active');
+      }
+    });
+  });
+
+  // Reset on mouse leave
+  wrapper.addEventListener('mouseleave', () => {
+    letters.forEach(span => span.classList.remove('active'));
+  });
   
   console.log('Successfully split text into letters');
 };

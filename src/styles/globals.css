@@ -52,27 +52,17 @@
     cursor: default;
   }
 
+  .letter-hover .letter-span {
+    color: inherit;
+    transition: color 0.3s ease;
+  }
+
   .letter-hover:hover .letter-span {
+    transition-delay: calc(var(--distance) * 0.05s);
+  }
+
+  .letter-hover:hover .letter-span.active {
     color: #ff0abe;
-  }
-
-  .letter-hover .letter-span:hover {
-    color: #ff0abe;
-    transform: translateY(-2px);
-    z-index: 1;
-  }
-
-  .nav-link {
-    @apply relative text-white/90 hover:text-[#ff0abe] transition-all duration-300;
-  }
-
-  .nav-link::after {
-    content: '';
-    @apply absolute bottom-0 left-0 w-0 h-0.5 bg-[#ff0abe] transition-all duration-300;
-  }
-
-  .nav-link:hover::after {
-    @apply w-full;
   }
 }
 
