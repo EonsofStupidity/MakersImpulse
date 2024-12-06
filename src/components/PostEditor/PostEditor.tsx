@@ -3,9 +3,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useTags } from "./hooks/useTags";
-import { useImages } from "./hooks/useImages";
-import { useSavePost } from "./hooks/useSavePost";
+import { useTags } from "@/components/PostEditor/hooks/useTags";
+import { useImages } from "@/components/PostEditor/hooks/useImages";
+import { useSavePost } from "@/components/PostEditor/hooks/useSavePost";
 import { Tag } from "./components/Tag";
 import { Thumbnail } from "./components/Thumbnail";
 
