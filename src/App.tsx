@@ -14,6 +14,10 @@ import Login from "./pages/auth/login";
 import AdminDashboard from "./pages/admin/dashboard";
 import MediaLibrary from "./pages/admin/content-management/media";
 import PostEditor from "./pages/admin/content-management/editor";
+import CategoriesManagement from "./pages/admin/content-management/categories";
+import TemplatesManagement from "./pages/admin/content-management/templates";
+import WorkflowsManagement from "./pages/admin/content-management/workflows";
+import ContentTypesSettings from "./pages/admin/settings/content-types";
 
 const queryClient = new QueryClient();
 
@@ -85,8 +89,10 @@ const App = () => (
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/media" element={<MediaLibrary />} />
                   <Route path="/admin/post-editor" element={<PostEditor />} />
-                  <Route path="/admin/posts" element={<AdminDashboard />} />
-                  <Route path="/admin/users" element={<AdminDashboard />} />
+                  <Route path="/admin/content-management/categories" element={<CategoriesManagement />} />
+                  <Route path="/admin/content-management/templates" element={<TemplatesManagement />} />
+                  <Route path="/admin/content-management/workflows" element={<WorkflowsManagement />} />
+                  <Route path="/admin/settings/content-types" element={<ContentTypesSettings />} />
                 </Routes>
               </PageTransition>
             </main>

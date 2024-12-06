@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FileText, Image, Users, MessageSquare } from "lucide-react";
+import { FileText, Image, Users, MessageSquare, Layers, FileTemplate, GitBranch, Settings } from "lucide-react";
 
 export const AdminNav = () => {
   return (
@@ -17,11 +17,29 @@ export const AdminNav = () => {
         </li>
         <li>
           <Link 
-            to="/admin/posts" 
+            to="/admin/content-management/categories" 
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
           >
-            <FileText className="w-4 h-4" />
-            <span>Manage Posts</span>
+            <Layers className="w-4 h-4" />
+            <span>Categories</span>
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/admin/content-management/templates" 
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
+          >
+            <FileTemplate className="w-4 h-4" />
+            <span>Templates</span>
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/admin/content-management/workflows" 
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
+          >
+            <GitBranch className="w-4 h-4" />
+            <span>Workflows</span>
           </Link>
         </li>
         <li>
@@ -35,11 +53,11 @@ export const AdminNav = () => {
         </li>
         <li>
           <Link 
-            to="/admin/users" 
+            to="/admin/settings/content-types" 
             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff69b4] transition-all duration-200"
           >
-            <Users className="w-4 h-4" />
-            <span>Manage Users</span>
+            <Settings className="w-4 h-4" />
+            <span>Content Types</span>
           </Link>
         </li>
       </ul>
