@@ -5,8 +5,8 @@ import { Link } from "react-router-dom";
 import BuildCard from "@/components/maker-space/builds/BuildCard";
 import PartCard from "@/components/maker-space/parts/PartCard";
 import GuideCard from "@/components/maker-space/guides/GuideCard";
-import { ContentGrid } from "@/components/content/discovery/ContentGrid";
-import { FilterSystem } from "@/components/content/discovery/FilterSystem";
+import ContentGrid from "@/components/content/discovery/ContentGrid";
+import FilterSystem from "@/components/content/discovery/FilterSystem";
 import { useToast } from "@/components/ui/use-toast";
 
 const LandingPage = () => {
