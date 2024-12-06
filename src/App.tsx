@@ -8,7 +8,7 @@ import { Navigation } from "@/components/layout/Navigation";
 
 // Pages
 import Index from "./pages/Index";
-import Home from "./pages/Home";
+import LatestUpdates from "./pages/blog/latest-updates";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/Admin/AdminDashboard";
 import MediaLibrary from "./pages/Admin/MediaLibrary";
@@ -27,7 +27,7 @@ const App = () => (
               <Routes>
                 {/* Public Routes */}
                 <Route path="/" element={<Index />} />
-                <Route path="/home" element={<Home />} />
+                <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                 <Route path="/login" element={<Login />} />
 
                 {/* Admin Routes */}
