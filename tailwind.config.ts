@@ -69,7 +69,17 @@ export default {
         "neon-line": {
           "0%": { transform: "scale(0)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" }
-        }
+        },
+        "gradient-flow": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -77,6 +87,7 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         float: "float 3s ease-in-out infinite",
         "neon-line": "neon-line 0.3s ease-out forwards",
+        "gradient-flow": "gradient-flow 3s ease infinite",
       },
     },
   },
