@@ -32,11 +32,31 @@
   }
   
   .nav-link {
-    @apply relative px-4 py-2 text-white/80 hover:text-[#ff0abe] transition-all duration-300;
+    @apply relative px-4 py-2 transition-all duration-300;
+  }
+
+  .nav-link span {
+    @apply relative inline-block transition-colors duration-300;
+  }
+
+  .nav-link span:hover {
+    @apply text-[#ff0abe];
   }
 
   .card {
     @apply glass p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-white/15;
+  }
+
+  .text-gradient-hover {
+    @apply relative inline-block;
+    background-clip: text;
+    -webkit-background-clip: text;
+    transition: color 0.3s ease;
+  }
+
+  .text-gradient-hover:hover {
+    color: #ff0abe;
+    transition: color 0.3s ease;
   }
 
   h1 {
@@ -53,10 +73,6 @@
 
   .link-hover {
     @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-[#26ffbe] after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left hover:text-[#26ffbe];
-  }
-
-  .bevel-border {
-    @apply relative before:absolute before:inset-0 before:border-2 before:border-white/20 before:rounded-xl before:transform before:rotate-1 before:-z-10;
   }
 }
 
