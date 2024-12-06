@@ -4,15 +4,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SessionProvider } from "@/components/auth/SessionContext";
-import { Navigation } from "@/components/layout/Navigation";
+import { Navigation } from "@/components/shared/layout/Navigation";
 
 // Pages
-import Index from "./pages/Index";
-import LatestUpdates from "./pages/blog/latest-updates";
-import Login from "./pages/Login";
-import AdminDashboard from "./pages/Admin/AdminDashboard";
-import MediaLibrary from "./pages/Admin/MediaLibrary";
-import PostEditor from "./pages/cms/PostEditor";
+import Home from "./pages/home/index";
+import LatestUpdates from "./pages/content/blog/latest-updates";
+import Login from "./pages/auth/login";
+import AdminDashboard from "./pages/admin/dashboard";
+import MediaLibrary from "./pages/admin/content-management/media";
+import PostEditor from "./pages/admin/content-management/editor";
 
 const queryClient = new QueryClient();
 
@@ -26,7 +26,7 @@ const App = () => (
             <main className="flex-1">
               <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<Index />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                 <Route path="/login" element={<Login />} />
 
