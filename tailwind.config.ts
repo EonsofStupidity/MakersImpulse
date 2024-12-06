@@ -36,6 +36,11 @@ export default {
           DEFAULT: "#E6E6FA",
           foreground: "#1A1F2C",
         },
+        neon: {
+          cyan: "#41f0db",
+          pink: "#ff0abe",
+          purple: "#8000ff",
+        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -80,6 +85,22 @@ export default {
             "background-position": "right center",
           },
         },
+        "neon-pulse": {
+          "0%, 100%": {
+            "box-shadow": "0 0 5px #41f0db, 0 0 10px #41f0db, 0 0 15px #41f0db",
+          },
+          "50%": {
+            "box-shadow": "0 0 10px #41f0db, 0 0 20px #41f0db, 0 0 30px #41f0db",
+          },
+        },
+        "neon-glow": {
+          "0%, 100%": {
+            "text-shadow": "0 0 5px #ff0abe, 0 0 10px #ff0abe, 0 0 15px #ff0abe",
+          },
+          "50%": {
+            "text-shadow": "0 0 10px #ff0abe, 0 0 20px #ff0abe, 0 0 30px #ff0abe",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -88,6 +109,8 @@ export default {
         float: "float 3s ease-in-out infinite",
         "neon-line": "neon-line 0.3s ease-out forwards",
         "gradient-flow": "gradient-flow 3s ease infinite",
+        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
+        "neon-glow": "neon-glow 2s ease-in-out infinite",
       },
     },
   },
