@@ -25,18 +25,11 @@ export const Hero = () => {
           className="text-center relative"
         >
           <h1 className="mb-6 animate-float">
-            Welcome to{" "}
-            <span className="text-[#41f0db] letter-hover">
-              {"MakersImpulse".split('').map((letter, index) => (
-                <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-              ))}
-            </span>
+            Welcome to <span className="text-[#41f0db]">MakersImpulse</span>
           </h1>
           
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto letter-hover">
-            {"Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.".split('').map((letter, index) => (
-              <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-            ))}
+          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+            Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
           </p>
 
           <div className="max-w-2xl mx-auto mb-12">
@@ -56,11 +49,7 @@ export const Hero = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-gradient-to-r from-[#24e3dd] to-[#24e3dd]/70 backdrop-blur-xl border border-white/10 hover:bg-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Explore Builds".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Explore Builds
             </motion.button>
             
             <motion.button 
@@ -68,11 +57,7 @@ export const Hero = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-[#ff0abe]/20 hover:bg-[#ff0abe]/30 backdrop-blur-xl border border-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Join Now".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Join Now
             </motion.button>
             
             <motion.button 
@@ -80,11 +65,7 @@ export const Hero = () => {
               transition={{ duration: 0.4, ease: "easeInOut" }}
               className="glass px-8 py-3 text-white bg-white/5 backdrop-blur-xl border border-white/10 transition-all duration-300"
             >
-              <span className="letter-hover">
-                {"Home".split('').map((letter, index) => (
-                  <span key={index} style={{ '--letter-index': index }}>{letter}</span>
-                ))}
-              </span>
+              Home
             </motion.button>
           </div>
         </motion.div>

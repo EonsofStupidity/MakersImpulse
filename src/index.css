@@ -35,17 +35,21 @@
     @apply relative px-4 py-2 transition-all duration-300;
   }
 
+  /* Apply the letter hover effect globally to all text elements */
+  p, h1, h2, h3, h4, h5, h6, a, span, button {
+    @apply letter-hover;
+  }
+
   .letter-hover {
     @apply relative inline-block;
   }
 
-  .letter-hover span {
-    @apply relative inline-block transition-all duration-300;
+  .letter-hover > span {
+    @apply relative inline-block transition-all duration-500;
   }
 
-  .letter-hover:hover span {
+  .letter-hover:hover > span {
     animation: letterColorChange 0.5s forwards;
-    animation-delay: calc(0.05s * var(--letter-index));
   }
 
   @keyframes letterColorChange {
