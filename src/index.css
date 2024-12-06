@@ -23,7 +23,6 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
-    --letter-index: 0;
   }
 }
 
@@ -35,83 +34,59 @@
   .nav-link {
     @apply relative px-4 py-2 transition-all duration-300;
   }
+}
 
-  /* Global text animation styles */
+/* Global text animation setup */
+@layer base {
+  /* Apply to all text elements */
   p, h1, h2, h3, h4, h5, h6, span, a, button {
     @apply relative inline-block;
   }
 
+  /* Split text into individual characters */
   p span, h1 span, h2 span, h3 span, h4 span, h5 span, h6 span, a span, button span {
-    @apply relative inline-block transition-all duration-300;
-  }
-
-  /* Enhanced letter hover effect */
-  .letter-hover {
-    @apply relative inline-block cursor-default;
-  }
-
-  .letter-hover span {
-    @apply relative inline-block transition-all duration-300;
-    animation-fill-mode: both;
-  }
-
-  .letter-hover:hover span {
-    animation: letterColorChange 0.5s forwards;
-  }
-
-  .letter-hover span {
-    animation-delay: calc(0.05s * var(--letter-index));
-  }
-
-  @keyframes letterColorChange {
-    0% {
-      color: inherit;
-      transform: translateY(0);
-    }
-    50% {
-      transform: translateY(-2px);
-    }
-    100% {
-      color: #ff0abe;
-      transform: translateY(0);
-    }
-  }
-
-  .card {
-    @apply glass p-6 transition-all duration-300 hover:scale-[1.02] hover:bg-white/15;
+    @apply relative inline-block transition-all duration-500;
   }
 }
 
+/* Enhanced letter hover effect */
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .text-gradient-hover {
+    @apply relative cursor-default;
   }
 
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
+  .text-gradient-hover span {
+    @apply relative inline-block transition-all duration-500;
   }
 
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+  /* Hover effect animation */
+  .text-gradient-hover:hover span {
+    animation: letterColorChange 0.8s forwards;
+    transform-origin: center;
   }
 
-  .animate-pulse-border {
-    animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  }
-
-  @keyframes pulse-border {
-    0%, 100% { border-color: rgba(128, 0, 255, 0.5); }
-    50% { border-color: rgba(128, 0, 255, 1); }
+  /* Apply different delays based on character position */
+  .text-gradient-hover span {
+    animation-delay: calc(0.05s * var(--char-index));
   }
 }
 
-/* Global text wrapper */
-#root {
-  @apply relative;
+/* Letter color change animation */
+@keyframes letterColorChange {
+  0% {
+    color: inherit;
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+  100% {
+    color: #ff0abe;
+    transform: translateY(0);
+  }
 }
 
-/* Initialize all text elements for animation */
+/* Initialize text elements for animation */
 #root * {
   @apply relative;
 }
@@ -124,7 +99,7 @@
 /* Text content animation setup */
 #root *:not(script):not(style)::before {
   content: attr(data-content);
-  @apply absolute inset-0 text-[#ff0abe] opacity-0 transition-opacity duration-300 pointer-events-none overflow-hidden whitespace-pre;
+  @apply absolute inset-0 text-[#ff0abe] opacity-0 transition-opacity duration-500 pointer-events-none overflow-hidden whitespace-pre;
   width: 0;
 }
 
@@ -132,5 +107,28 @@
 #root *:not(script):not(style):hover::before {
   @apply opacity-100;
   width: 100%;
-  transition: width 0.3s ease-out;
+  transition: width 0.8s ease-out;
+}
+
+/* Utility classes */
+.text-balance {
+  text-wrap: balance;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-pulse-border {
+  animation: pulse-border 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% { border-color: rgba(128, 0, 255, 0.5); }
+  50% { border-color: rgba(128, 0, 255, 1); }
 }
