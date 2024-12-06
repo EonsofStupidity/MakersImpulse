@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { validateImageFile, validateMaxCount } from "@/utils/validation";
+import { validateImageFile, validateMaxCount, ACCEPTED_IMAGE_FORMATS } from "@/utils/validation";
 
 interface ImageUploadZoneProps {
   images: File[];
