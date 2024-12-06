@@ -25,10 +25,13 @@ export function MegaMenu() {
       <NavigationMenuList className="flex items-center gap-1">
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-gradient-to-r hover:from-[#41f0db]/20 hover:to-[#8000ff]/20 hover:text-[#41f0db] transition-all duration-300"
           >
             <Hammer className="w-4 h-4 mr-2" />
-            Builds
+            <span className="relative">
+              Builds
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover/nav-trigger:w-full" />
+            </span>
             <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -38,10 +41,13 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-gradient-to-r hover:from-[#41f0db]/20 hover:to-[#8000ff]/20 hover:text-[#41f0db] transition-all duration-300"
           >
             <Wrench className="w-4 h-4 mr-2" />
-            Parts
+            <span className="relative">
+              Parts
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover/nav-trigger:w-full" />
+            </span>
             <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -51,10 +57,13 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-gradient-to-r hover:from-[#41f0db]/20 hover:to-[#8000ff]/20 hover:text-[#41f0db] transition-all duration-300"
           >
             <BookOpen className="w-4 h-4 mr-2" />
-            Guides
+            <span className="relative">
+              Guides
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover/nav-trigger:w-full" />
+            </span>
             <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
@@ -64,10 +73,13 @@ export function MegaMenu() {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db] transition-all duration-300"
+            className="h-9 px-4 py-2 group/nav-trigger bg-transparent data-[state=open]:bg-white/5 hover:bg-gradient-to-r hover:from-[#41f0db]/20 hover:to-[#8000ff]/20 hover:text-[#41f0db] transition-all duration-300"
           >
             <Globe className="w-4 h-4 mr-2" />
-            Site
+            <span className="relative">
+              Site
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover/nav-trigger:w-full" />
+            </span>
             <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
