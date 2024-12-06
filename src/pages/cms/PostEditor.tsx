@@ -8,16 +8,50 @@ import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 
+// Tag Component
+const Tag = ({ tag, onRemove }: { tag: string; onRemove: (tag: string) => void }) => (
+  <span className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#41f0db]/10 text-[#41f0db] border border-[#41f0db]/20">
+    {tag}
+    <button onClick={() => onRemove(tag)} className="ml-2 hover:text-[#ff0abe]">
+      <X size={14} />
+    </button>
+  </span>
+);
+
+// Thumbnail Component
+const Thumbnail = ({
+  file,
+  onDelete,
+}: {
+  file: File;
+  onDelete: () => void;
+}) => (
+  <div className="relative group">
+    <img
+      src={URL.createObjectURL(file)}
+      alt="Thumbnail"
+      className="w-full h-full object-cover rounded"
+    />
+    <button
+      onClick={onDelete}
+      className="absolute top-2 right-2 bg-black/50 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+    >
+      <X size={18} />
+    </button>
+  </div>
+);
+
 const PostEditor = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [currentTag, setCurrentTag] = useState("");
+  const [images, setImages] = useState<File[]>([]);
   const { toast } = useToast();
 
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && currentTag.trim()) {
+    if (e.key === "Enter" && currentTag.trim()) {
       e.preventDefault();
       if (!tags.includes(currentTag.trim())) {
         setTags([...tags, currentTag.trim()]);
@@ -27,124 +61,68 @@ const PostEditor = () => {
   };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove));
+    setTags(tags.filter((tag) => tag !== tagToRemove));
   };
 
-  const handleSave = async () => {
-    try {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session?.user?.id) {
-        toast({
-          title: "Error",
-          description: "You must be logged in to create a post",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      const { data, error } = await supabase.from("posts").insert({
-        title,
-        slug,
-        content,
-        tags,
-        is_published: true,
-        author_id: session.user.id,
-        published_at: new Date().toISOString()
-      });
-
-      if (error) {
-        toast({
-          title: "Error saving post",
-          description: error.message,
-          variant: "destructive"
-        });
-        console.error("Error saving post:", error);
-      } else {
-        toast({
-          title: "Success",
-          description: "Post saved successfully"
-        });
-        setTitle("");
-        setSlug("");
-        setContent("");
-        setTags([]);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive"
-      });
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const uploadedFiles = Array.from(e.target.files);
+      setImages((prev) => [...prev, ...uploadedFiles]);
     }
   };
 
+  const handleImageDelete = (index: number) => {
+    toast({
+      title: "Warning!",
+      description: "Are you absolutely sure you want to delete this image?",
+      action: {
+        label: "Yes",
+        onClick: () => {
+          setImages(images.filter((_, i) => i !== index));
+        },
+      },
+    });
+  };
+
+  const handleSave = async () => {
+    // Save post logic
+  };
+
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen bg-[#1a1a1a] relative overflow-hidden py-8"
     >
-      {/* Background patterns */}
-      <div className="fixed inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a15] to-[#1a1a1a]" />
-      </div>
-
       <div className="container mx-auto p-6 relative z-10">
         <Card className="p-8 space-y-6 bg-black/40 backdrop-blur-xl border border-white/10 shadow-[0_0_15px_rgba(65,240,219,0.1)]">
           <h2 className="text-3xl font-bold bg-gradient-to-r from-[#41f0db] to-[#ff0abe] bg-clip-text text-transparent">
             Create New Post
           </h2>
-          
+
           <div className="space-y-6">
-            <div>
-              <label htmlFor="title" className="block text-[#41f0db] text-sm font-medium mb-2">
-                Title
-              </label>
-              <Input
-                id="title"
-                type="text"
-                placeholder="Post Title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="slug" className="block text-[#41f0db] text-sm font-medium mb-2">
-                Slug
-              </label>
-              <Input
-                id="slug"
-                type="text"
-                placeholder="post-slug"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-                className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
-              />
-            </div>
+            <Input
+              id="title"
+              type="text"
+              placeholder="Post Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+            />
+
+            <Input
+              id="slug"
+              type="text"
+              placeholder="post-slug"
+              value={slug}
+              onChange={(e) => setSlug(e.target.value)}
+              className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+            />
 
             <div>
-              <label htmlFor="tags" className="block text-[#41f0db] text-sm font-medium mb-2">
-                Tags
-              </label>
-              <div className="flex flex-wrap gap-2 mb-2">
+              <div className="flex gap-2 mb-2">
                 {tags.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-[#41f0db]/10 text-[#41f0db] border border-[#41f0db]/20"
-                  >
-                    {tag}
-                    <button
-                      onClick={() => handleRemoveTag(tag)}
-                      className="ml-2 hover:text-[#ff0abe]"
-                    >
-                      <X size={14} />
-                    </button>
-                  </span>
+                  <Tag key={index} tag={tag} onRemove={handleRemoveTag} />
                 ))}
               </div>
               <Input
@@ -156,23 +134,55 @@ const PostEditor = () => {
                 className="bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
               />
             </div>
-            
-            <div>
-              <label htmlFor="content" className="block text-[#41f0db] text-sm font-medium mb-2">
-                Content
-              </label>
-              <Textarea
-                id="content"
-                placeholder="Write your post content here..."
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="min-h-[200px] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
-              />
+
+            <Textarea
+              id="content"
+              placeholder="Write your post content here..."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className="min-h-[200px] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
+            />
+
+            {/* Image Upload Section */}
+            <div className="flex flex-col items-center space-y-4">
+              <Button
+                as="label"
+                htmlFor="image-upload"
+                className="w-[22%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
+              >
+                <span className="transition-all hover:bg-gradient-to-r hover:from-[#ff0abe] hover:to-[#41f0db]">
+                  Upload Img
+                </span>
+                <input
+                  id="image-upload"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </Button>
+
+              <div
+                className="w-[65%] h-[25vh] border border-dashed border-[#41f0db] bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm"
+              >
+                Drop Images Here or Use Upload Button
+              </div>
+
+              <div className="grid grid-cols-4 gap-2 w-full">
+                {images.map((file, index) => (
+                  <Thumbnail
+                    key={index}
+                    file={file}
+                    onDelete={() => handleImageDelete(index)}
+                  />
+                ))}
+              </div>
             </div>
 
             <Button
               onClick={handleSave}
-              className="w-full bg-gradient-to-r from-[#41f0db]/20 to-[#ff0abe]/20 hover:from-[#41f0db]/30 hover:to-[#ff0abe]/30 text-white border border-white/10 backdrop-blur-xl"
+              className="w-[27%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
             >
               Save Post
             </Button>
