@@ -40,8 +40,8 @@ const PostEditor = () => {
     <div className="min-h-screen bg-[#1a1a1a] pt-20 p-8">
       <AdminNav />
       <div className="container mx-auto">
-        <Card className="glass border-white/10 p-6">
-          <h1 className="text-3xl font-bold text-white mb-8">Create New Post</h1>
+        <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)]">
+          <h1 className="text-3xl font-bold text-white mb-8 animate-fade-in">Create New Post</h1>
           
           <div className="space-y-6">
             <div>
@@ -50,7 +50,7 @@ const PostEditor = () => {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white focus:border-[#41f0db] focus:ring-[#41f0db]/20 transition-all duration-300"
                 placeholder="Enter post title"
               />
             </div>
@@ -61,7 +61,7 @@ const PostEditor = () => {
                 type="text"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
-                className="bg-white/5 border-white/10 text-white"
+                className="bg-white/5 border-white/10 text-white focus:border-[#41f0db] focus:ring-[#41f0db]/20 transition-all duration-300"
                 placeholder="Enter URL slug"
               />
             </div>
@@ -71,7 +71,7 @@ const PostEditor = () => {
               <Textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
-                className="bg-white/5 border-white/10 text-white min-h-[300px]"
+                className="bg-white/5 border-white/10 text-white min-h-[300px] focus:border-[#41f0db] focus:ring-[#41f0db]/20 transition-all duration-300"
                 placeholder="Write your post content here..."
               />
             </div>
@@ -84,13 +84,13 @@ const PostEditor = () => {
                   setSlug("");
                   setContent("");
                 }}
-                className="border-white/10 text-white hover:bg-white/5"
+                className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300"
               >
                 Clear
               </Button>
               <Button 
                 onClick={handleSave}
-                className="bg-[#41f0db] text-black hover:bg-[#41f0db]/80"
+                className="bg-[#41f0db]/20 backdrop-blur-sm text-white border border-[#41f0db]/50 hover:bg-[#41f0db]/30 hover:border-[#41f0db] transition-all duration-300 shadow-[0_0_10px_rgba(65,240,219,0.3)]"
               >
                 Save Post
               </Button>
