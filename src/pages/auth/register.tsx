@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,28 +6,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const Login = () => {
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signUp({
       email,
       password,
     });
@@ -41,9 +31,9 @@ const Login = () => {
     } else {
       toast({
         title: "Success",
-        description: "You have been logged in successfully.",
+        description: "Please check your email to confirm your account.",
       });
-      navigate("/");
+      navigate("/login");
     }
 
     setIsLoading(false);
@@ -53,12 +43,12 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] px-4">
       <Card className="w-full max-w-md glass animate-fade-in">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-white">Welcome back</CardTitle>
+          <CardTitle className="text-2xl font-bold text-center text-white">Create an account</CardTitle>
           <CardDescription className="text-center text-gray-400">
-            Enter your credentials to access your account
+            Enter your email below to create your account
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleRegister}>
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <Input
@@ -87,16 +77,16 @@ const Login = () => {
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign in"}
+              {isLoading ? "Creating account..." : "Create account"}
             </Button>
             <p className="text-sm text-center text-gray-400">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <Button
                 variant="link"
                 className="text-primary hover:text-primary/90 p-0"
-                onClick={() => navigate("/register")}
+                onClick={() => navigate("/login")}
               >
-                Sign up
+                Sign in
               </Button>
             </p>
           </CardFooter>
@@ -106,4 +96,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

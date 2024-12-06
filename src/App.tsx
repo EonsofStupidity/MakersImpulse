@@ -6,11 +6,13 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { SessionProvider } from "@/components/auth/SessionContext";
 import { Navigation } from "@/components/shared/ui/Navigation";
 import { AnimatePresence, motion } from "framer-motion";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 // Pages
 import MakerSpace from "./pages/content/maker-space/index";
 import LatestUpdates from "./pages/content/blog/latest-updates";
 import Login from "./pages/auth/login";
+import Register from "./pages/auth/register";
 import AdminDashboard from "./pages/admin/dashboard";
 import MediaLibrary from "./pages/admin/content-management/media";
 import PostEditor from "./pages/admin/content-management/editor";
@@ -88,23 +90,24 @@ const App = () => (
                 <Routes>
                   {/* Public Routes */}
                   <Route path="/" element={<LandingPage />} />
-                  <Route path="/maker-space" element={<MakerSpace />} />
-                  <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                   <Route path="/login" element={<Login />} />
-
-                  {/* Site Routes */}
+                  <Route path="/register" element={<Register />} />
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/privacy" element={<PrivacyPage />} />
 
+                  {/* Protected Routes */}
+                  <Route path="/maker-space" element={<AuthGuard><MakerSpace /></AuthGuard>} />
+                  <Route path="/blog/latest-updates" element={<AuthGuard><LatestUpdates /></AuthGuard>} />
+                  
                   {/* Admin Routes */}
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/content-management/media" element={<MediaLibrary />} />
-                  <Route path="/admin/content-management/editor" element={<PostEditor />} />
-                  <Route path="/admin/content-management/categories" element={<CategoriesManagement />} />
-                  <Route path="/admin/content-management/templates" element={<TemplatesManagement />} />
-                  <Route path="/admin/content-management/workflows" element={<WorkflowsManagement />} />
-                  <Route path="/admin/settings/content-types" element={<ContentTypesSettings />} />
+                  <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
+                  <Route path="/admin/content-management/media" element={<AuthGuard><MediaLibrary /></AuthGuard>} />
+                  <Route path="/admin/content-management/editor" element={<AuthGuard><PostEditor /></AuthGuard>} />
+                  <Route path="/admin/content-management/categories" element={<AuthGuard><CategoriesManagement /></AuthGuard>} />
+                  <Route path="/admin/content-management/templates" element={<AuthGuard><TemplatesManagement /></AuthGuard>} />
+                  <Route path="/admin/content-management/workflows" element={<AuthGuard><WorkflowsManagement /></AuthGuard>} />
+                  <Route path="/admin/settings/content-types" element={<AuthGuard><ContentTypesSettings /></AuthGuard>} />
                 </Routes>
               </PageTransition>
             </main>
