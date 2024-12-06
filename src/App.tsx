@@ -19,6 +19,11 @@ import TemplatesManagement from "./pages/admin/content-management/templates";
 import WorkflowsManagement from "./pages/admin/content-management/workflows";
 import ContentTypesSettings from "./pages/admin/settings/content-types";
 
+// Site Pages
+import AboutPage from "./pages/site/about";
+import TermsPage from "./pages/site/terms";
+import PrivacyPage from "./pages/site/privacy";
+
 const queryClient = new QueryClient();
 
 // Pool of trendy transitions
@@ -85,6 +90,11 @@ const App = () => (
                   <Route path="/blog/latest-updates" element={<LatestUpdates />} />
                   <Route path="/login" element={<Login />} />
 
+                  {/* Site Routes */}
+                  <Route path="/about" element={<AboutPage />} />
+                  <Route path="/terms" element={<TermsPage />} />
+                  <Route path="/privacy" element={<PrivacyPage />} />
+
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AdminDashboard />} />
                   <Route path="/admin/content-management/media" element={<MediaLibrary />} />
@@ -106,3 +116,4 @@ const App = () => (
 );
 
 export default App;
+
