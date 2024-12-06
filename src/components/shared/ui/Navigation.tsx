@@ -49,9 +49,8 @@ export const Navigation = () => {
     after:transition-all after:duration-500
     group overflow-hidden
     [&:hover]:before:animate-gradient-flow
-    backdrop-blur-md bg-white/10
+    backdrop-blur-md
     shadow-[inset_0_0.5px_1px_rgba(255,255,255,0.3)]
-    hover:bg-white/20
   `;
 
   return (
@@ -89,16 +88,16 @@ export const Navigation = () => {
               variant="ghost"
               size="icon"
               onClick={() => setOpen(true)}
-              className="relative group"
+              className="relative group hover:bg-transparent"
             >
-              <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#ff0abe]" />
+              <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative group">
+                <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
                   <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
-                    <AvatarFallback className="bg-white/10 text-white">
+                    <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
                       <User className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>

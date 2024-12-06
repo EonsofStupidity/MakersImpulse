@@ -24,7 +24,7 @@ export const Hero = () => {
           className="text-center relative"
         >
           <h1 className="text-[#41f0db] text-4xl md:text-6xl font-bold mb-6 animate-float">
-            <span className="letter-hover">Welcome to MakersImpulse</span>
+            <span className="letter-hover">Build your 3D Printer Dream</span>
           </h1>
           
           <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
