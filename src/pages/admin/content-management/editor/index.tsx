@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ImageUploadZone } from "@/components/uploads";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
 
@@ -11,6 +12,7 @@ const PostEditor = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
+  const [images, setImages] = useState<File[]>([]);
 
   const handleSave = async () => {
     if (!title || !content) {
@@ -33,6 +35,7 @@ const PostEditor = () => {
       setTitle("");
       setSlug("");
       setContent("");
+      setImages([]);
     }
   };
 
@@ -40,10 +43,15 @@ const PostEditor = () => {
     <div className="min-h-screen bg-[#1a1a1a] pt-20 p-8">
       <AdminNav />
       <div className="container mx-auto">
-        <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)]">
-          <h1 className="text-3xl font-bold text-white mb-8 animate-fade-in">Create New Post</h1>
+        <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)] animate-fade-in">
+          <h1 className="text-3xl font-bold text-white mb-8">Create New Post</h1>
           
           <div className="space-y-6">
+            <ImageUploadZone 
+              images={images} 
+              onImagesChange={setImages} 
+            />
+
             <div>
               <label className="text-white/80 block mb-2">Title</label>
               <Input
@@ -83,6 +91,7 @@ const PostEditor = () => {
                   setTitle("");
                   setSlug("");
                   setContent("");
+                  setImages([]);
                 }}
                 className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300"
               >

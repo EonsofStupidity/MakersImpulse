@@ -62,7 +62,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-6 animate-fade-in">
       <div className="flex flex-col items-center space-y-4 w-[22%]">
         <Button
           asChild
@@ -105,30 +105,30 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-1 flex-1">
+      <div className="grid grid-cols-2 gap-4 flex-1">
         {images.map((file, index) => (
-          <div key={index} className="relative group w-[150px] h-[150px]">
+          <div key={index} className="relative group">
             <img
               src={URL.createObjectURL(file)}
               alt={`Upload ${index + 1}`}
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-[150px] object-cover rounded-lg transition-transform duration-200 group-hover:scale-[1.02]"
             />
             <button
               onClick={() => setDeleteIndex(index)}
-              className="absolute top-2 right-2 p-1 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              className="absolute top-2 right-2 p-1.5 bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
             >
-              <X size={20} className="text-white hover:text-[#ff0abe]" />
+              <X size={16} className="text-white hover:text-[#ff0abe]" />
             </button>
           </div>
         ))}
       </div>
 
       <AlertDialog open={deleteIndex !== null} onOpenChange={() => setDeleteIndex(null)}>
-        <AlertDialogContent>
+        <AlertDialogContent className="bg-black/80 backdrop-blur-xl border border-white/10">
           <AlertDialogHeader>
-            <AlertDialogTitle className="text-[#ff0abe]">WARNING!</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you absolutely sure you want to delete this image?!
+            <AlertDialogTitle className="text-[#ff0abe]">Delete Image</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/80">
+              Are you sure you want to delete this image?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="flex items-center space-x-2 my-4">
@@ -137,18 +137,18 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
               checked={confirmDelete}
               onCheckedChange={(checked) => setConfirmDelete(checked as boolean)}
             />
-            <label htmlFor="confirm-delete">
-              Yes, I am sure I want to delete this image
+            <label htmlFor="confirm-delete" className="text-white/80">
+              Yes, I want to delete this image
             </label>
           </div>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setConfirmDelete(false)}>
+            <AlertDialogCancel className="bg-white/5 border-white/10 text-white hover:bg-white/10">
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={!confirmDelete}
-              className="bg-red-500 hover:bg-red-600"
+              className="bg-red-500/20 text-white border border-red-500/50 hover:bg-red-500/30"
             >
               Delete
             </AlertDialogAction>
