@@ -75,12 +75,17 @@ const PostEditor = () => {
     toast({
       title: "Warning!",
       description: "Are you absolutely sure you want to delete this image?",
-      action: {
-        label: "Yes",
-        onClick: () => {
-          setImages(images.filter((_, i) => i !== index));
-        },
-      },
+      action: (
+        <Button
+          variant="destructive"
+          size="sm"
+          onClick={() => {
+            setImages(images.filter((_, i) => i !== index));
+          }}
+        >
+          Yes
+        </Button>
+      ),
     });
   };
 
@@ -187,22 +192,22 @@ const PostEditor = () => {
               className="min-h-[200px] bg-black/30 border-white/10 focus:border-[#ff0abe] text-white"
             />
 
-            {/* Image Upload Section */}
             <div className="flex flex-col items-center space-y-4">
               <Button
-                as="label"
-                htmlFor="image-upload"
+                asChild
                 className="w-[22%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
               >
-                Upload Image
-                <input
-                  id="image-upload"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
+                <label htmlFor="image-upload">
+                  Upload Image
+                  <input
+                    id="image-upload"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
               </Button>
 
               <div className="w-[65%] h-[25vh] border border-dashed border-[#41f0db] bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm">
