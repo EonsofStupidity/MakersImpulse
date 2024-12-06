@@ -64,7 +64,7 @@ const PostEditor = () => {
     return errors;
   };
 
-  const handleSave = async () => {
+  const handleSaveAsDraft = async () => {
     const errors = validateForm();
     
     if (errors.length > 0) {
@@ -78,7 +78,44 @@ const PostEditor = () => {
       return;
     }
 
-    // Save post logic
+    toast({
+      title: `Saving ${title}...`,
+      description: "Please wait while we save your draft.",
+    });
+
+    // Draft saving logic here
+
+    toast({
+      title: "Draft Saved!",
+      description: `${title} is now available under drafts.`,
+    });
+  };
+
+  const handlePublish = async () => {
+    const errors = validateForm();
+    
+    if (errors.length > 0) {
+      errors.forEach(error => {
+        toast({
+          variant: "destructive",
+          title: "Validation Error",
+          description: error,
+        });
+      });
+      return;
+    }
+
+    toast({
+      title: "Spinning up the presses",
+      description: "Please wait while we publish your post...",
+    });
+
+    // Publishing logic here
+
+    toast({
+      title: "Published!",
+      description: `${title} is now available for viewing!`,
+    });
   };
 
   return (
@@ -94,15 +131,26 @@ const PostEditor = () => {
           </h2>
 
           <div className="space-y-6">
-            <div className="flex justify-end mb-4">
+            <div className="flex justify-end gap-4 mb-4">
               <Button
-                onClick={handleSave}
-                className="w-[27%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
+                onClick={handleSaveAsDraft}
+                className="w-[20%] py-2 bg-[#260747] border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
               >
-                Save Post
+                Save as Draft
+              </Button>
+              <Button
+                onClick={handlePublish}
+                className="w-[15%] py-2 bg-[#260747] border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
+              >
+                Publish
               </Button>
             </div>
 
+            <div className="flex gap-2 mb-2">
+              {tags.map((tag, index) => (
+                <Tag key={index} tag={tag} onRemove={handleRemoveTag} />
+              ))}
+            </div>
             <Input
               id="title"
               type="text"
@@ -122,11 +170,6 @@ const PostEditor = () => {
             />
 
             <div>
-              <div className="flex gap-2 mb-2">
-                {tags.map((tag, index) => (
-                  <Tag key={index} tag={tag} onRemove={handleRemoveTag} />
-                ))}
-              </div>
               <Input
                 type="text"
                 placeholder="Add tags (press Enter)"

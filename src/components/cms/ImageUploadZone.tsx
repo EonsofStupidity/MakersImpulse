@@ -63,48 +63,50 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <Button
-        asChild
-        className="w-[22%] py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
-      >
-        <label htmlFor="image-upload">
-          Upload Image
-          <input
-            id="image-upload"
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-          />
-        </label>
-      </Button>
+    <div className="flex gap-6">
+      <div className="flex flex-col items-center space-y-4 w-[22%]">
+        <Button
+          asChild
+          className="w-full py-2 bg-black/30 border border-white/10 text-white rounded-lg backdrop-blur-md hover:shadow-[0_0_12px_rgba(255,0,171,0.8)] transition-all hover:text-[#ff0abe]"
+        >
+          <label htmlFor="image-upload">
+            Upload Image
+            <input
+              id="image-upload"
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+          </label>
+        </Button>
 
-      <div
-        className={`w-[58.5%] h-[22.5vh] border-2 border-dashed ${
-          dragActive ? 'border-[#ff0abe]' : 'border-[#41f0db]'
-        } bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm relative transition-all ${
-          dragActive ? 'scale-105' : ''
-        }`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-      >
-        <div className="flex flex-col items-center">
-          <X 
-            size={40} 
-            className={`mb-2 ${dragActive ? 'animate-pulse text-[#ff0abe]' : ''}`}
-          />
-          Drop Images Here or Use Upload Button
-          {images.length >= 7 && (
-            <p className="text-[#ff0abe] mt-2">Maximum images (7) reached</p>
-          )}
+        <div
+          className={`w-full h-[22.5vh] border-2 border-dashed ${
+            dragActive ? 'border-[#ff0abe]' : 'border-[#41f0db]'
+          } bg-black/30 rounded-lg flex items-center justify-center text-[#41f0db] text-sm relative transition-all ${
+            dragActive ? 'scale-105' : ''
+          }`}
+          onDragEnter={handleDrag}
+          onDragLeave={handleDrag}
+          onDragOver={handleDrag}
+          onDrop={handleDrop}
+        >
+          <div className="flex flex-col items-center">
+            <X 
+              size={40} 
+              className={`mb-2 ${dragActive ? 'animate-pulse text-[#ff0abe]' : ''}`}
+            />
+            Drop Images Here
+            {images.length >= 7 && (
+              <p className="text-[#ff0abe] mt-2">Maximum images (7) reached</p>
+            )}
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 w-full max-w-[65%]">
+      <div className="grid grid-cols-2 gap-4 flex-1">
         {images.map((file, index) => (
           <div key={index} className="relative group aspect-square">
             <img
