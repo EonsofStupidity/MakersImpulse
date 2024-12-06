@@ -5,7 +5,6 @@ import {
   Wrench, 
   BookOpen, 
   Globe,
-  Home,
   ChevronDown 
 } from 'lucide-react';
 import {
@@ -22,15 +21,15 @@ import { SiteMenu } from './menu-items/SiteMenu';
 
 export function MegaMenu() {
   return (
-    <NavigationMenu className="hidden md:flex">
+    <NavigationMenu>
       <NavigationMenuList className="flex items-center gap-1">
         <NavigationMenuItem>
           <NavigationMenuTrigger 
-            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5"
+            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
           >
             <Hammer className="w-4 h-4 mr-2" />
             Builds
-            <ChevronDown className="w-3 h-3 ml-1 transition-transform group-data-[state=open]/nav-trigger:rotate-180" />
+            <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <BuildsMenu />
@@ -38,10 +37,12 @@ export function MegaMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5">
+          <NavigationMenuTrigger 
+            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+          >
             <Wrench className="w-4 h-4 mr-2" />
             Parts
-            <ChevronDown className="w-3 h-3 ml-1 transition-transform group-data-[state=open]/nav-trigger:rotate-180" />
+            <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <PartsMenu />
@@ -49,10 +50,12 @@ export function MegaMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5">
+          <NavigationMenuTrigger 
+            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+          >
             <BookOpen className="w-4 h-4 mr-2" />
             Guides
-            <ChevronDown className="w-3 h-3 ml-1 transition-transform group-data-[state=open]/nav-trigger:rotate-180" />
+            <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <GuidesMenu />
@@ -60,24 +63,16 @@ export function MegaMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5">
+          <NavigationMenuTrigger 
+            className="h-9 px-4 py-2 group/nav-trigger data-[state=open]:bg-white/5 hover:bg-white/5 hover:text-[#41f0db]"
+          >
             <Globe className="w-4 h-4 mr-2" />
             Site
-            <ChevronDown className="w-3 h-3 ml-1 transition-transform group-data-[state=open]/nav-trigger:rotate-180" />
+            <ChevronDown className="w-3 h-3 ml-1 transition-transform duration-300 group-data-[state=open]/nav-trigger:rotate-180" />
           </NavigationMenuTrigger>
           <NavigationMenuContent>
             <SiteMenu />
           </NavigationMenuContent>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link 
-            to="/blog/latest-updates"
-            className="group/nav-link inline-flex h-9 px-4 py-2 items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-white/5 hover:text-neon-cyan focus:bg-white/5 focus:text-neon-cyan"
-          >
-            <Home className="w-4 h-4 mr-2" />
-            Blog
-          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

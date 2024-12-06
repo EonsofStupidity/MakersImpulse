@@ -13,13 +13,13 @@ export const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors",
-            "hover:bg-white/5 hover:text-neon-cyan focus:bg-white/5 focus:text-neon-cyan",
+            "hover:bg-white/5 hover:text-[#41f0db] focus:bg-white/5 focus:text-[#41f0db]",
             "group/nav-item relative",
             className
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none group-hover/nav-item:text-neon-cyan">
+          <div className="text-sm font-medium leading-none group-hover/nav-item:text-[#41f0db]">
             {title}
           </div>
           <p className="line-clamp-2 text-sm leading-snug text-white/70 group-hover/nav-item:text-white/90">

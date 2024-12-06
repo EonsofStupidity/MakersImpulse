@@ -22,9 +22,11 @@ export const Navigation = () => {
   }, []);
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30 py-4 ${
-      isScrolled ? "shadow-lg" : ""
-    }`}>
+    <nav 
+      className={`fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30 py-4 ${
+        isScrolled ? "shadow-lg" : ""
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between">
           <Link to="/" className="flex items-center">
@@ -34,7 +36,15 @@ export const Navigation = () => {
             </span>
           </Link>
 
-          <MegaMenu />
+          <div className="hidden md:flex items-center space-x-4">
+            <Link 
+              to="/blog/latest-updates"
+              className="text-white hover:text-[#41f0db] transition-colors duration-300"
+            >
+              Blog
+            </Link>
+            <MegaMenu />
+          </div>
 
           <div className="flex items-center space-x-4">
             <Button
