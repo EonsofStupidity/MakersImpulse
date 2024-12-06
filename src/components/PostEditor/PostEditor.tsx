@@ -33,14 +33,14 @@ const PostEditor = () => {
               placeholder="Post Title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-[42%]"
+              className="w-[22%]"
             />
             <Input
               id="slug"
               placeholder="post-slug"
               value={slug}
               onChange={(e) => setSlug(e.target.value)}
-              className="w-[42%]"
+              className="w-[22%]"
             />
 
             <div>
@@ -54,7 +54,7 @@ const PostEditor = () => {
                 value={currentTag}
                 onChange={(e) => setCurrentTag(e.target.value)}
                 onKeyDown={(e) => addTag(e)}
-                className="w-[42%]"
+                className="w-[22%]"
               />
             </div>
 
