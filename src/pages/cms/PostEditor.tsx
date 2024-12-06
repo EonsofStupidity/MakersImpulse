@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
-import ImageUploadZone from "@/components/cms/ImageUploadZone";
+import { ImageUploadZone } from "@/components/uploads";
 
 // Tag Component
 const Tag = ({ tag, onRemove }: { tag: string; onRemove: (tag: string) => void }) => (
