@@ -1,27 +1,17 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Search, User } from "lucide-react";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MegaMenu } from "./navigation/MegaMenu";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -30,34 +20,33 @@ export const Navigation = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen((open) => !open);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
   return (
-    <nav className={`glass-nav nav-glitch py-4 ${isScrolled ? "shadow-lg" : ""}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30 py-4 ${
+      isScrolled ? "shadow-lg" : ""
+    }`}>
       <div className="container mx-auto px-4">
-        <div className="relative flex items-center justify-between">
-          <Link to="/" className="relative group">
-            <span className="text-2xl font-bold bg-gradient-to-r from-[#41f0db] via-[#ff0abe] to-[#8000ff] bg-clip-text text-transparent">
-              MakersImpulse
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center">
+            <span className="text-2xl font-bold">
+              <span className="text-[#41f0db]">Makers</span>
+              <span className="text-[#ff0abe]">Impulse</span>
             </span>
           </Link>
 
-          <MegaMenu />
+          <div className="hidden md:flex items-center space-x-6">
+            <Link to="/blog" className="text-white hover:text-[#41f0db] transition-colors">Blog</Link>
+            <Link to="/maker-space/builds" className="text-white hover:text-[#41f0db] transition-colors">Builds</Link>
+            <Link to="/maker-space/parts" className="text-white hover:text-[#41f0db] transition-colors">Parts</Link>
+            <Link to="/forums" className="text-white hover:text-[#41f0db] transition-colors">Forums</Link>
+            <Link to="/maker-space/guides" className="text-white hover:text-[#41f0db] transition-colors">Guides</Link>
+            <Link to="/maker-space/reviews" className="text-white hover:text-[#41f0db] transition-colors">Reviews</Link>
+            <Link to="/site" className="text-white hover:text-[#41f0db] transition-colors">Site</Link>
+          </div>
 
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setOpen(true)}
               className="relative group hover:bg-transparent"
             >
               <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
@@ -88,19 +77,6 @@ export const Navigation = () => {
           </div>
         </div>
       </div>
-
-      <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Search MakersImpulse..." />
-        <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Suggestions">
-            <CommandItem>Popular Builds</CommandItem>
-            <CommandItem>Latest Parts</CommandItem>
-            <CommandItem>Featured Guides</CommandItem>
-            <CommandItem>Top Reviews</CommandItem>
-          </CommandGroup>
-        </CommandList>
-      </CommandDialog>
     </nav>
   );
 };
