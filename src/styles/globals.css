@@ -35,30 +35,46 @@
     @apply relative px-4 py-2 transition-all duration-300;
   }
 
+  /* Enhanced letter hover effect */
   .letter-hover {
-    @apply relative;
+    @apply relative inline-block;
   }
 
   .letter-hover > span {
-    @apply relative inline-block transition-colors duration-300;
+    @apply relative inline-block transition-all duration-300;
   }
 
   .letter-hover:hover span {
-    @apply text-[#ff0abe];
-    animation: letterColorChange 0.5s forwards;
+    animation: letterWave 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
   }
 
-  @keyframes letterColorChange {
+  /* Apply different delays to each letter */
+  .letter-hover span:nth-child(1) { animation-delay: 0s; }
+  .letter-hover span:nth-child(2) { animation-delay: 0.05s; }
+  .letter-hover span:nth-child(3) { animation-delay: 0.1s; }
+  .letter-hover span:nth-child(4) { animation-delay: 0.15s; }
+  .letter-hover span:nth-child(5) { animation-delay: 0.2s; }
+  .letter-hover span:nth-child(6) { animation-delay: 0.25s; }
+  .letter-hover span:nth-child(7) { animation-delay: 0.3s; }
+  .letter-hover span:nth-child(8) { animation-delay: 0.35s; }
+  .letter-hover span:nth-child(9) { animation-delay: 0.4s; }
+  .letter-hover span:nth-child(10) { animation-delay: 0.45s; }
+  /* Add more if needed for longer words */
+
+  @keyframes letterWave {
     0% {
       color: inherit;
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-2px);
+      color: #ff0abe;
+      transform: translateY(-4px) scale(1.1);
+      text-shadow: 0 0 8px rgba(255, 10, 190, 0.5);
     }
     100% {
       color: #ff0abe;
       transform: translateY(0);
+      text-shadow: 0 0 4px rgba(255, 10, 190, 0.3);
     }
   }
 
