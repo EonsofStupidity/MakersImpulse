@@ -65,7 +65,7 @@ export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
               {post.updated_at ? format(new Date(post.updated_at), 'MMM dd, yyyy') : 'N/A'}
             </TableCell>
             <TableCell className="text-muted-foreground">
-              {post.author_display_name || post.author_username || 'Unknown'}
+              {post.profiles?.display_name || post.profiles?.username || 'Unknown'}
             </TableCell>
             <TableCell>
               {getStatusBadge(post.status)}

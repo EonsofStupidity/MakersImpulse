@@ -13,8 +13,10 @@ export interface Post {
 }
 
 export interface PostWithAuthor extends Post {
-  author_display_name: string | null;
-  author_username: string | null;
+  profiles: {
+    display_name: string | null;
+    username: string | null;
+  };
 }
 
 export const usePostsQuery = () => {
@@ -23,58 +25,57 @@ export const usePostsQuery = () => {
     queryFn: async () => {
       console.log('Starting posts fetch operation...');
       
-      // First, let's try to get the raw query response
-      const { data: rawData, error: rawError } = await supabase
-        .from('blog_posts')
-        .select(`
-          *,
-          profiles (
-            display_name,
-            username
-          )
-        `)
-        .order('updated_at', { ascending: false });
+      try {
+        console.log('Executing Supabase query with profiles join...');
+        const { data: rawData, error: rawError } = await supabase
+          .from('blog_posts')
+          .select(`
+            *,
+            profiles (
+              display_name,
+              username
+            )
+          `)
+          .order('updated_at', { ascending: false });
 
-      console.log('Raw Supabase Response:', { data: rawData, error: rawError });
+        console.log('Raw Supabase Response:', { data: rawData, error: rawError });
 
-      if (rawError) {
-        console.error('Error in Supabase query:', rawError);
-        toast.error('Failed to load posts');
-        throw rawError;
-      }
-
-      if (!rawData) {
-        console.warn('No data returned from Supabase');
-        return [];
-      }
-
-      // Transform the data
-      console.log('Transforming posts data...');
-      const transformedData: PostWithAuthor[] = rawData.map(post => {
-        const transformed = {
-          ...post,
-          author_display_name: null as string | null,
-          author_username: null as string | null,
-        };
-
-        // Separate logging for profile data
-        console.log('Post profile data:', {
-          postId: post.id,
-          profiles: post.profiles,
-          authorId: post.author_id
-        });
-
-        // If we have profile data, try to extract it
-        if (post.profiles && Array.isArray(post.profiles) && post.profiles[0]) {
-          transformed.author_display_name = post.profiles[0].display_name;
-          transformed.author_username = post.profiles[0].username;
+        if (rawError) {
+          console.error('Error in Supabase query:', rawError);
+          toast.error('Failed to load posts');
+          throw rawError;
         }
 
-        return transformed;
-      });
+        if (!rawData) {
+          console.warn('No data returned from Supabase');
+          return [];
+        }
 
-      console.log('Successfully transformed posts:', transformedData);
-      return transformedData;
+        // Transform the data
+        console.log('Transforming posts data...');
+        const transformedData: PostWithAuthor[] = rawData.map(post => {
+          // Log each post's profile data for debugging
+          console.log('Post profile data:', {
+            postId: post.id,
+            profiles: post.profiles,
+            authorId: post.author_id
+          });
+
+          return {
+            ...post,
+            profiles: post.profiles || {
+              display_name: null,
+              username: null
+            }
+          };
+        });
+
+        console.log('Successfully transformed posts:', transformedData);
+        return transformedData;
+      } catch (error) {
+        console.error('Unexpected error in posts query:', error);
+        throw error;
+      }
     },
   });
 };
