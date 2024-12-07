@@ -28,19 +28,23 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const hasMoreContent = post.content.length > 350;
 
   const images = post.images || [];
+  console.log('Images in BlogPostCard:', images); // Debug log
+
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
+  console.log('Featured image:', featuredImage); // Debug log
 
   const handleImageClick = (index: number) => {
+    console.log('Image clicked:', index); // Debug log
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
 
   return (
-    <>
+    <div className="relative w-full mb-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible h-[544px] w-full"
+        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]"
       >
         {featuredImage && (
           <div className="absolute inset-0 rounded-xl overflow-hidden">
@@ -67,7 +71,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
               {post.title}
             </h3>
             
-            <div className="text-white/80 mb-6 line-clamp-3">
+            <div className="text-white/80 mb-6">
               {displayContent}
               {hasMoreContent && (
                 <Button 
@@ -82,7 +86,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
 
           <div className="mt-auto">
-            <div className="flex justify-between items-center text-sm mb-8">
+            <div className="flex justify-between items-center text-sm mb-4">
               <span className="text-[#ff0abe]">
                 {post.published_at ? 
                   formatDistanceToNow(new Date(post.published_at), { addSuffix: true }) :
@@ -95,15 +99,18 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                 </span>
               )}
             </div>
-
-            {images.length > 0 && (
-              <ImageThumbnails 
-                images={images} 
-                onImageClick={handleImageClick} 
-              />
-            )}
           </div>
         </div>
+
+        {/* Image Thumbnails - Now positioned absolutely at the bottom */}
+        {images.length > 0 && (
+          <div className="absolute -bottom-12 left-0 right-0 px-8">
+            <ImageThumbnails 
+              images={images} 
+              onImageClick={handleImageClick} 
+            />
+          </div>
+        )}
       </motion.div>
 
       <ExpandedPost
@@ -119,7 +126,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         currentIndex={currentImageIndex}
         onIndexChange={setCurrentImageIndex}
       />
-    </>
+    </div>
   );
 };
 

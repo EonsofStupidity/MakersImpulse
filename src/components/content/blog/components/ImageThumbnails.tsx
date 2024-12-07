@@ -7,20 +7,20 @@ interface ImageThumbnailsProps {
 }
 
 const ImageThumbnails: React.FC<ImageThumbnailsProps> = ({ images, onImageClick }) => {
+  console.log('Rendering ImageThumbnails with images:', images); // Debug log
+  
   return (
-    <motion.div 
-      className="absolute left-8 right-8 -bottom-8 grid grid-cols-5 gap-2"
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.2 }}
-    >
+    <div className="grid grid-cols-5 gap-2 w-full">
       {images.slice(0, 5).map((image, index) => (
         <motion.div 
           key={index} 
-          className="relative aspect-square overflow-hidden rounded-lg border border-[#ff0abe]/20 shadow-lg shadow-[#ff0abe]/10 cursor-pointer"
+          className="relative aspect-square overflow-hidden rounded-lg border border-[#ff0abe]/20 shadow-lg shadow-[#ff0abe]/10 cursor-pointer bg-black/40"
           whileHover={{ y: -5, scale: 1.05 }}
           transition={{ duration: 0.2 }}
-          onClick={() => onImageClick(index)}
+          onClick={() => {
+            console.log('Thumbnail clicked:', index, image); // Debug log
+            onImageClick(index);
+          }}
         >
           <motion.div
             className="absolute inset-0 bg-[#ff0abe]/20 mix-blend-overlay"
@@ -28,12 +28,12 @@ const ImageThumbnails: React.FC<ImageThumbnailsProps> = ({ images, onImageClick 
           />
           <img 
             src={image} 
-            alt="" 
+            alt={`Thumbnail ${index + 1}`}
             className="w-full h-full object-cover"
           />
         </motion.div>
       ))}
-    </motion.div>
+    </div>
   );
 };
 
