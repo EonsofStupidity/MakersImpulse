@@ -100,20 +100,20 @@ const App = () => (
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/privacy" element={<PrivacyPage />} />
-                  <Route path="/blog" element={<LatestUpdates />} /> {/* Updated blog route */}
+                  <Route path="/blog" element={<LatestUpdates />} />
                   <Route path="/blog/latest-updates" element={<LatestUpdates />} />
 
                   {/* Protected Routes */}
                   <Route path="/maker-space" element={<AuthGuard><MakerSpace /></AuthGuard>} />
                   
-                  {/* Admin Routes */}
-                  <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />
-                  <Route path="/admin/content-management/media" element={<AuthGuard><MediaLibrary /></AuthGuard>} />
-                  <Route path="/admin/content-management/editor" element={<AuthGuard><PostEditor /></AuthGuard>} />
-                  <Route path="/admin/content-management/categories" element={<AuthGuard><CategoriesManagement /></AuthGuard>} />
-                  <Route path="/admin/content-management/templates" element={<AuthGuard><TemplatesManagement /></AuthGuard>} />
-                  <Route path="/admin/content-management/workflows" element={<AuthGuard><WorkflowsManagement /></AuthGuard>} />
-                  <Route path="/admin/settings/content-types" element={<AuthGuard><ContentTypesSettings /></AuthGuard>} />
+                  {/* Admin Routes - Now with role check */}
+                  <Route path="/admin" element={<AuthGuard requiredRole="admin"><AdminDashboard /></AuthGuard>} />
+                  <Route path="/admin/content-management/media" element={<AuthGuard requiredRole="admin"><MediaLibrary /></AuthGuard>} />
+                  <Route path="/admin/content-management/editor" element={<AuthGuard requiredRole="admin"><PostEditor /></AuthGuard>} />
+                  <Route path="/admin/content-management/categories" element={<AuthGuard requiredRole="admin"><CategoriesManagement /></AuthGuard>} />
+                  <Route path="/admin/content-management/templates" element={<AuthGuard requiredRole="admin"><TemplatesManagement /></AuthGuard>} />
+                  <Route path="/admin/content-management/workflows" element={<AuthGuard requiredRole="admin"><WorkflowsManagement /></AuthGuard>} />
+                  <Route path="/admin/settings/content-types" element={<AuthGuard requiredRole="admin"><ContentTypesSettings /></AuthGuard>} />
                 </Routes>
               </PageTransition>
             </main>
