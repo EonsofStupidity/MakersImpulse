@@ -35,6 +35,9 @@ const LatestUpdates = () => {
 
   useEffect(() => {
     console.log("LatestUpdates component state:", { posts, isLoading, error });
+    if (error) {
+      console.error("Error in component:", error);
+    }
   }, [posts, isLoading, error]);
 
   return (
@@ -75,7 +78,6 @@ const LatestUpdates = () => {
           ) : error ? (
             <div className="text-center text-red-400">
               Failed to load blog posts. Please try again later.
-              {console.error("Error in component:", error)}
             </div>
           ) : posts?.length === 0 ? (
             <div className="text-center text-white/70">
