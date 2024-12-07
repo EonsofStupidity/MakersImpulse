@@ -23,6 +23,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
 
+  // Create an array of 5 thumbnails using the featured image
+  const thumbnails = Array(5).fill(post.featured_image);
+
   return (
     <>
       <motion.div
@@ -35,12 +38,18 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         {post.featured_image && (
           <div className="absolute inset-0 flex">
             <div className="w-1/3 h-full relative">
-              <img 
-                src={post.featured_image} 
-                alt="" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/50" />
+              <div className="absolute inset-0 grid grid-rows-5 gap-2">
+                {thumbnails.map((thumbnail, index) => (
+                  <div key={index} className="relative overflow-hidden group">
+                    <img 
+                      src={thumbnail} 
+                      alt="" 
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/50" />
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="w-2/3 h-full">
               <img 
