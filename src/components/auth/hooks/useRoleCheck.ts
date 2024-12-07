@@ -30,7 +30,9 @@ export const useRoleCheck = (
 
     const checkAccess = async () => {
       try {
-        setState(prev => ({ ...prev, isLoading: true, error: null }));
+        if (isMounted) {
+          setState(prev => ({ ...prev, isLoading: true, error: null }));
+        }
 
         // Handle unauthenticated users
         if (!session && requireAuth) {
@@ -41,30 +43,33 @@ export const useRoleCheck = (
         // Handle authenticated users with no role requirement
         if (session && !requiredRole) {
           if (isMounted) {
-            setState(prev => ({ ...prev, hasAccess: true }));
+            setState(prev => ({ ...prev, hasAccess: true, isLoading: false }));
           }
           return;
         }
 
         // Handle role checks
         if (session && requiredRole) {
+          console.log('Checking user role for session:', session.user.id);
+          
           const { data: profiles, error: fetchError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .limit(1);
+            .single();
 
           if (fetchError) {
             console.error('Error fetching user role:', fetchError);
             throw new Error('Error verifying permissions');
           }
 
-          if (!profiles || profiles.length === 0) {
+          if (!profiles) {
             console.error('No profile found for user');
             throw new Error('No profile found');
           }
 
-          const userRole = profiles[0].role;
+          const userRole = profiles.role;
+          console.log('User role found:', userRole);
           
           if (!userRole) {
             console.error('No role assigned to user profile');
@@ -78,13 +83,23 @@ export const useRoleCheck = (
             userRoleLevel >= roleHierarchy[role]
           );
 
+          console.log('Role check result:', {
+            userRole,
+            requiredRoles,
+            hasRequiredRole
+          });
+
           if (!hasRequiredRole) {
-            console.log(`User role ${userRole} insufficient for required roles:`, requiredRoles);
             throw new Error('Insufficient permissions');
           }
 
           if (isMounted) {
-            setState(prev => ({ ...prev, hasAccess: true }));
+            setState(prev => ({ 
+              ...prev, 
+              hasAccess: true,
+              isLoading: false,
+              error: null
+            }));
           }
         }
       } catch (error) {
@@ -95,16 +110,13 @@ export const useRoleCheck = (
           setState(prev => ({ 
             ...prev, 
             error: errorMessage,
-            hasAccess: false 
+            hasAccess: false,
+            isLoading: false
           }));
         }
 
         toast.error(errorMessage);
         navigate(fallbackPath, { replace: true });
-      } finally {
-        if (isMounted) {
-          setState(prev => ({ ...prev, isLoading: false }));
-        }
       }
     };
 
