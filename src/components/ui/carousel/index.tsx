@@ -75,7 +75,7 @@ const Carousel = React.forwardRef<
     return (
       <CarouselContext.Provider
         value={{
-          carouselRef,
+          carouselRef: React.useRef(carouselRef),
           api: api,
           opts,
           orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
@@ -108,7 +108,7 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel()
 
   return (
-    <div ref={carouselRef} className="overflow-hidden">
+    <div ref={carouselRef.current} className="overflow-hidden">
       <div
         ref={ref}
         className={cn(
