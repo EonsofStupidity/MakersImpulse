@@ -56,15 +56,17 @@ const PostsManagement = () => {
     queryKey: ['admin-posts'],
     queryFn: async () => {
       console.log('Fetching posts...');
+      // Join blog_posts with profiles using a subquery
       const { data, error } = await supabase
         .from('blog_posts')
         .select(`
           *,
-          author_display_name:profiles!inner(display_name),
-          author_username:profiles!inner(username)
+          profiles!blog_posts_author_id_fkey (
+            display_name,
+            username
+          )
         `)
-        .order('updated_at', { ascending: false })
-        .returns<PostWithAuthor[]>();
+        .order('updated_at', { ascending: false });
       
       if (error) {
         console.error('Error fetching posts:', error);
@@ -72,8 +74,15 @@ const PostsManagement = () => {
         throw error;
       }
 
-      console.log('Posts fetched successfully:', data);
-      return data;
+      // Transform the data to match our PostWithAuthor interface
+      const transformedData: PostWithAuthor[] = data.map(post => ({
+        ...post,
+        author_display_name: post.profiles?.display_name || null,
+        author_username: post.profiles?.username || null
+      }));
+
+      console.log('Posts fetched successfully:', transformedData);
+      return transformedData;
     },
   });
 
