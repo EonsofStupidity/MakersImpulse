@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ToolbarItem } from "./ToolbarItem";
 import { ToolbarDropIndicator } from "./ToolbarDropIndicator";
-import { ToolbarItemType, DragEventHandlers } from "./types";
+import type { ToolbarItemType, DragEventHandlers } from "./types";
 
 interface ToolbarItemListProps extends DragEventHandlers {
   items: ToolbarItemType[];

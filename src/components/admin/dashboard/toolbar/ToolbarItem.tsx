@@ -4,22 +4,7 @@ import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
-
-export interface ToolbarItemType {
-  id: string;
-  icon: string | LucideIcon;
-  label: string;
-}
-
-interface ToolbarItemProps {
-  item: ToolbarItemType;
-  index: number;
-  isIconOnly: boolean;
-  isLocked: boolean;
-  onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
-  onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
-  onReorder: (fromIndex: number, toIndex: number) => void;
-}
+import type { ToolbarItemProps } from './types';
 
 export const ToolbarItem = ({ 
   item, 
@@ -27,6 +12,7 @@ export const ToolbarItem = ({
   isIconOnly, 
   isLocked,
   onDragOver, 
+  onDragLeave,
   onDrop,
   onReorder 
 }: ToolbarItemProps) => {
@@ -34,7 +20,6 @@ export const ToolbarItem = ({
 
   try {
     if (typeof item.icon === 'string') {
-      // Cast to unknown first, then to the desired type
       const icons = LucideIcons as unknown as Record<string, LucideIcon>;
       IconComponent = icons[item.icon];
       console.log('Resolved icon component:', item.icon);
@@ -118,6 +103,12 @@ export const ToolbarItem = ({
           e.preventDefault();
           console.log('Drag over event at index:', index);
           onDragOver(e);
+        }
+      }}
+      onDragLeave={(e) => {
+        if (!isLocked) {
+          console.log('Drag leave event at index:', index);
+          onDragLeave(e);
         }
       }}
       onDrop={(e) => {
