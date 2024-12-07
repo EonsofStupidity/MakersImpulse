@@ -20,8 +20,8 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
         {title}
       </h3>
       
-      <div className="text-white/80 mb-6">
-        {content}
+      <div className="text-white/80 mb-6 prose prose-invert max-w-none">
+        <div dangerouslySetInnerHTML={{ __html: content }} />
         {hasMoreContent && (
           <Button 
             variant="link" 
