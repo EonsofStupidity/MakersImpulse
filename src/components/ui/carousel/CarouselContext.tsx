@@ -2,6 +2,7 @@ import * as React from "react"
 import type { UseEmblaCarouselType } from "embla-carousel-react"
 
 type CarouselApi = UseEmblaCarouselType[1]
+type EmblaRefType = UseEmblaCarouselType[0]
 
 type CarouselProps = {
   opts?: any
@@ -11,7 +12,7 @@ type CarouselProps = {
 }
 
 type CarouselContextProps = {
-  carouselRef: ReturnType<typeof React.useRef<HTMLDivElement>>
+  carouselRef: EmblaRefType
   api: CarouselApi | undefined
   opts?: any
   orientation?: "horizontal" | "vertical"

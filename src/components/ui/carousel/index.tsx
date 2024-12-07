@@ -1,7 +1,7 @@
 import * as React from "react"
-import useEmblaCarousel from "embla-carousel-react"
+import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react"
 import { cn } from "@/lib/utils"
-import { CarouselContext, type CarouselApi, type CarouselProps, useCarousel } from "./CarouselContext"
+import { CarouselContext, type CarouselApi, type CarouselProps } from "./CarouselContext"
 export { CarouselPrevious, CarouselNext } from "./CarouselControls"
 
 const Carousel = React.forwardRef<
@@ -75,7 +75,7 @@ const Carousel = React.forwardRef<
     return (
       <CarouselContext.Provider
         value={{
-          carouselRef: React.useRef(carouselRef),
+          carouselRef,
           api: api,
           opts,
           orientation: orientation || (opts?.axis === "y" ? "vertical" : "horizontal"),
@@ -108,11 +108,11 @@ const CarouselContent = React.forwardRef<
   const { carouselRef, orientation } = useCarousel()
 
   return (
-    <div ref={carouselRef.current} className="overflow-hidden">
+    <div ref={carouselRef} className="overflow-hidden">
       <div
         ref={ref}
         className={cn(
-          "flex h-full -ml-4",
+          "flex",
           orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
           className
         )}
@@ -135,7 +135,7 @@ const CarouselItem = React.forwardRef<
       role="group"
       aria-roledescription="slide"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full pl-4",
+        "min-w-0 shrink-0 grow-0 basis-full",
         orientation === "horizontal" ? "pl-4" : "pt-4",
         "relative overflow-hidden",
         className
