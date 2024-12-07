@@ -36,7 +36,7 @@ export const AdminToolbar = () => {
     }
   }, [toolbarItems, orientation, isPersistent]);
 
-  const handleDragOver = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+  const handleDragOver = (event: React.DragEvent<HTMLDivElement>, index: number) => {
     if (isLocked) return;
     
     try {
@@ -48,7 +48,7 @@ export const AdminToolbar = () => {
     }
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>, index: number) => {
     if (isLocked) {
       toast.error('Toolbar is locked. Unlock it to add shortcuts.');
       return;
