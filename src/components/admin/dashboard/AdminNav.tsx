@@ -36,7 +36,7 @@ export const AdminNav = () => {
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
 
-  const handleDragStart = (event: React.DragEvent<HTMLLIElement>, item: NavItem) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, item: NavItem) => {
     try {
       console.log('Drag start event:', { item });
       
@@ -74,10 +74,10 @@ export const AdminNav = () => {
             <Reorder.Item
               key={item.id}
               value={item}
-              as="li"
+              as="div"
               className="group/menu-item relative"
               draggable="true"
-              onDragStart={(e) => handleDragStart(e as React.DragEvent<HTMLLIElement>, item)}
+              onDragStart={(e) => handleDragStart(e, item)}
             >
               <Link 
                 to={item.to}
