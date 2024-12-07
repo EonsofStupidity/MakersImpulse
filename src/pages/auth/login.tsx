@@ -50,8 +50,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] dark px-4">
-      <Card className="w-full max-w-md glass animate-fade-in">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden dark">
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+      </div>
+      
+      <div 
+        className="absolute inset-0 opacity-20 bg-cover bg-center"
+        style={{
+          backgroundImage: "url('/lovable-uploads/4edf410a-5bd3-426b-8efe-fb8acb60e39c.png')",
+          backgroundPosition: "center 40%"
+        }}
+      />
+
+      <Card className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 animate-fade-in">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-white">Welcome back</CardTitle>
           <CardDescription className="text-center text-gray-400">
