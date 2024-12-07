@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { 
   BookOpen, 
   UserCog, 
@@ -14,8 +15,12 @@ import { toast } from "sonner";
 import { AdminToolbar } from "./AdminToolbar";
 import { NavItemList } from "./nav/NavItemList";
 import type { NavItemType } from "./nav/NavItem";
+import { useSession } from "@/components/auth/SessionContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export const AdminNav = () => {
+  const navigate = useNavigate();
+  const { session } = useSession();
   const [items] = useState<NavItemType[]>([
     { id: "posts", to: "/admin/posts", icon: BookOpen, label: "Posts" },
     { id: "users", to: "/admin/users", icon: UserCog, label: "Manage Users" },
@@ -27,6 +32,50 @@ export const AdminNav = () => {
     { id: "media", to: "/admin/media", icon: Image, label: "Media Library" },
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
+
+  React.useEffect(() => {
+    const checkAdminAccess = async () => {
+      if (!session?.user?.id) {
+        console.log('No session found, redirecting to login');
+        toast.error('Please login to access admin dashboard');
+        navigate('/login');
+        return;
+      }
+
+      try {
+        console.log('Checking admin access for user:', session.user.id);
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+
+        console.log('Profile check result:', { profile, error });
+
+        if (error) {
+          console.error('Error fetching profile:', error);
+          toast.error('Error verifying admin access');
+          navigate('/');
+          return;
+        }
+
+        if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
+          console.log('User is not an admin:', profile?.role);
+          toast.error('Admin access required');
+          navigate('/');
+          return;
+        }
+
+        console.log('Admin access confirmed for role:', profile.role);
+      } catch (error) {
+        console.error('Error in admin access check:', error);
+        toast.error('Error verifying admin access');
+        navigate('/');
+      }
+    };
+
+    checkAdminAccess();
+  }, [session, navigate]);
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, item: NavItemType) => {
     try {
@@ -46,7 +95,6 @@ export const AdminNav = () => {
       event.dataTransfer.setData('application/json', JSON.stringify(itemData));
       event.dataTransfer.effectAllowed = 'move';
       
-      // Add visual feedback
       toast.info('Dragging shortcut...', {
         description: `Drag ${item.label} to the toolbar to create a shortcut`
       });
