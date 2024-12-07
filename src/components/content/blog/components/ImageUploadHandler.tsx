@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { useSession } from '@/components/auth/SessionContext';
+import { uploadBlogImage } from '@/services/imageService';
+import { supabase } from "@/integrations/supabase/client";
 
 interface ImageUploadHandlerProps {
   postId: string;
@@ -25,68 +26,43 @@ const ImageUploadHandler: React.FC<ImageUploadHandlerProps> = ({ postId, onImage
       }
 
       setUploading(true);
-      console.log('Starting upload process for file:', file.name);
       
-      // Upload to storage
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `blog-posts/${postId}/${fileName}`;
-
-      console.log('Uploading to path:', filePath);
-
-      const { error: uploadError, data: uploadData } = await supabase.storage
-        .from('media')
-        .upload(filePath, file, {
-          upsert: false
-        });
-
-      if (uploadError) {
-        console.error('Upload error:', uploadError);
-        throw uploadError;
+      const { url, error } = await uploadBlogImage(file, postId);
+      
+      if (error || !url) {
+        toast.error(error || 'Failed to upload image');
+        return;
       }
-
-      console.log('Upload successful:', uploadData);
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('media')
-        .getPublicUrl(filePath);
-
-      console.log('Public URL generated:', publicUrl);
 
       // Create media record
       const { error: mediaError } = await supabase
         .from('media')
         .insert({
           name: file.name,
-          url: publicUrl,
+          url: url,
           type: file.type,
           size: file.size,
           blog_post_id: postId,
-          user_id: session.user.id // Add the user_id to comply with RLS
+          user_id: session.user.id
         });
 
       if (mediaError) {
-        console.error('Media record error:', mediaError);
-        throw mediaError;
+        toast.error('Failed to save image metadata');
+        return;
       }
-
-      console.log('Media record created successfully');
 
       // Append to blog post images array
       const { error: appendError } = await supabase.rpc(
         'append_blog_image',
-        { post_id: postId, image_url: publicUrl }
+        { post_id: postId, image_url: url }
       );
 
       if (appendError) {
-        console.error('Append error:', appendError);
-        throw appendError;
+        toast.error('Failed to update blog post');
+        return;
       }
 
-      console.log('Image appended to blog post successfully');
-
-      onImageUploaded(publicUrl);
+      onImageUploaded(url);
       toast.success('Image uploaded successfully');
     } catch (error) {
       console.error('Upload error:', error);

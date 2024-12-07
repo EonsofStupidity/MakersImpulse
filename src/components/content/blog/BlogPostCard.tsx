@@ -7,7 +7,7 @@ import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
 import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
-import { validateBlogImage } from '@/utils/validation/image/imageValidation';
+import { validateBlogImage } from '@/services/imageService';
 
 interface BlogPostCardProps {
   post: {
@@ -42,24 +42,23 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       }
 
       setIsLoading(true);
-      console.log('Starting image validation for post:', post.id);
       const errors: Record<string, boolean> = {};
 
-      for (const imageUrl of images) {
-        console.log('Validating image:', imageUrl);
-        const isValid = await validateBlogImage(imageUrl);
-        if (!isValid) {
-          console.log('Image validation failed:', imageUrl);
-          errors[imageUrl] = true;
-        }
-      }
+      await Promise.all(
+        images.map(async (imageUrl) => {
+          const isValid = await validateBlogImage(imageUrl);
+          if (!isValid) {
+            errors[imageUrl] = true;
+          }
+        })
+      );
 
       setImageLoadErrors(errors);
       setIsLoading(false);
     };
 
     validateImages();
-  }, [images, post.id]);
+  }, [images]);
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -92,7 +91,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
                   onError={() => {
-                    console.log('Featured image failed to load:', featuredImage);
                     setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
                   }}
                 />
