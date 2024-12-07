@@ -23,23 +23,18 @@ export const AdminToolbar = ({ className }: AdminToolbarProps) => {
   ]);
   const [dropTarget, setDropTarget] = useState<number | null>(null);
 
-  const toggleOrientation = () => {
-    setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
-  };
-
-  const handleDragOver = (e: React.DragEvent, index: number) => {
+  const handleDragOver = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
     e.preventDefault();
     setDropTarget(index);
   };
 
-  const handleDrop = (e: React.DragEvent, index: number) => {
+  const handleDrop = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
     e.preventDefault();
     const draggedItemData = JSON.parse(e.dataTransfer.getData('application/json'));
     
-    // Create new toolbar item from nav item
     const newItem: ToolbarItem = {
       id: draggedItemData.id,
-      icon: draggedItemData.icon || Settings, // Default to Settings icon if none provided
+      icon: draggedItemData.icon || Settings,
       label: draggedItemData.label,
     };
 
@@ -72,7 +67,6 @@ export const AdminToolbar = ({ className }: AdminToolbarProps) => {
       )}>
         {toolbarItems.map((item, index) => (
           <React.Fragment key={item.id}>
-            {/* Drop zone indicator */}
             <motion.div
               className={cn(
                 "absolute z-10 pointer-events-none",

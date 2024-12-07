@@ -15,7 +15,6 @@ import {
   GripVertical
 } from "lucide-react";
 import { motion, Reorder } from "framer-motion";
-import { AdminToolbar } from "./AdminToolbar";
 
 interface NavItem {
   id: string;
@@ -37,7 +36,7 @@ export const AdminNav = () => {
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
 
-  const handleDragStart = (e: React.DragEvent, item: NavItem) => {
+  const handleDragStart = (e: React.DragEvent<HTMLLIElement>, item: NavItem) => {
     e.dataTransfer.setData('application/json', JSON.stringify(item));
     e.dataTransfer.effectAllowed = 'move';
   };
@@ -57,16 +56,16 @@ export const AdminNav = () => {
               key={item.id}
               value={item}
               as="li"
-              className="group relative"
+              className="group/menu-item relative"
               draggable="true"
-              onDragStart={(e) => handleDragStart(e, item)}
+              onDragStart={(e) => handleDragStart(e as React.DragEvent<HTMLLIElement>, item)}
             >
               <Link 
                 to={item.to}
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff0abe] transition-all duration-200"
               >
                 <div className="flex items-center gap-2">
-                  <GripVertical className="w-4 h-4 opacity-0 group-hover:opacity-50 transition-opacity cursor-grab active:cursor-grabbing" />
+                  <GripVertical className="w-4 h-4 opacity-0 group-hover/menu-item:opacity-50 transition-opacity cursor-grab active:cursor-grabbing" />
                   <item.icon className="w-4 h-4" />
                   <span>{item.label}</span>
                 </div>
@@ -75,7 +74,6 @@ export const AdminNav = () => {
           ))}
         </Reorder.Group>
       </nav>
-      <AdminToolbar />
     </>
   );
 };
