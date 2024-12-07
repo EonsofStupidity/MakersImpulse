@@ -21,13 +21,18 @@ import TemplatesManagement from "./pages/admin/content-management/templates";
 import WorkflowsManagement from "./pages/admin/content-management/workflows";
 import ContentTypesSettings from "./pages/admin/settings/content-types";
 import LandingPage from "./pages/site/landing";
-
-// Site Pages
 import AboutPage from "./pages/site/about";
 import TermsPage from "./pages/site/terms";
 import PrivacyPage from "./pages/site/privacy";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 // Pool of trendy transitions
 const transitions = [
@@ -95,10 +100,11 @@ const App = () => (
                   <Route path="/about" element={<AboutPage />} />
                   <Route path="/terms" element={<TermsPage />} />
                   <Route path="/privacy" element={<PrivacyPage />} />
+                  <Route path="/blog" element={<LatestUpdates />} /> {/* Updated blog route */}
+                  <Route path="/blog/latest-updates" element={<LatestUpdates />} />
 
                   {/* Protected Routes */}
                   <Route path="/maker-space" element={<AuthGuard><MakerSpace /></AuthGuard>} />
-                  <Route path="/blog/latest-updates" element={<AuthGuard><LatestUpdates /></AuthGuard>} />
                   
                   {/* Admin Routes */}
                   <Route path="/admin" element={<AuthGuard><AdminDashboard /></AuthGuard>} />

@@ -53,7 +53,7 @@ export const Navigation = () => {
 
           <div className="hidden md:flex items-center space-x-6">
             <Link 
-              to="/blog/latest-updates"
+              to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group"
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
