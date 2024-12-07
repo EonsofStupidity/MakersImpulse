@@ -18,20 +18,22 @@ export const queryClient = new QueryClient({
         successMessage: "Operation completed successfully",
         errorMessage: "Operation failed",
       },
-      onError: (error: Error, variables: unknown, context: unknown, mutation: any): unknown => {
+      onError: (error: Error, variables: unknown, context: unknown): unknown => {
+        const meta = (context as any)?.meta;
         toast.error(
-          mutation.meta?.errorMessage || "An error occurred",
+          meta?.errorMessage || "An error occurred",
           {
             description: error.message
           }
         );
-        return { error, variables, context, mutation };
+        return { error, variables, context };
       },
-      onSuccess: (data: unknown, variables: unknown, context: unknown, mutation: any): unknown => {
-        if (mutation.meta?.successMessage) {
-          toast.success(mutation.meta.successMessage);
+      onSuccess: (data: unknown, variables: unknown, context: unknown): unknown => {
+        const meta = (context as any)?.meta;
+        if (meta?.successMessage) {
+          toast.success(meta.successMessage);
         }
-        return { data, variables, context, mutation };
+        return { data, variables, context };
       },
     },
   },
