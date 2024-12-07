@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { 
   BookOpen, 
   UserCog, 
@@ -9,22 +8,15 @@ import {
   FileType, 
   GitBranch, 
   Image,
-  Settings,
-  GripVertical
+  Settings
 } from "lucide-react";
-import { motion, Reorder } from "framer-motion";
-import { AdminToolbar } from "./AdminToolbar";
 import { toast } from "sonner";
-
-interface NavItem {
-  id: string;
-  to: string;
-  icon: React.ElementType;
-  label: string;
-}
+import { AdminToolbar } from "./AdminToolbar";
+import { NavItemList } from "./nav/NavItemList";
+import type { NavItemType } from "./nav/NavItem";
 
 export const AdminNav = () => {
-  const [items, setItems] = useState<NavItem[]>([
+  const [items, setItems] = useState<NavItemType[]>([
     { id: "posts", to: "/admin/posts", icon: BookOpen, label: "Posts" },
     { id: "users", to: "/admin/users", icon: UserCog, label: "Manage Users" },
     { id: "settings", to: "/admin/settings", icon: Cog, label: "Site Settings" },
@@ -36,12 +28,11 @@ export const AdminNav = () => {
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
 
-  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, item: NavItem) => {
+  const handleDragStart = (event: React.DragEvent<HTMLDivElement>, item: NavItemType) => {
     try {
       console.log('Drag start event:', { item });
       
-      // Get the icon component name
-      const iconComponent = item.icon as any;
+      const iconComponent = item.icon;
       const iconName = iconComponent.name || 'UnknownIcon';
       console.log('Icon name:', iconName);
 
@@ -63,35 +54,11 @@ export const AdminNav = () => {
   return (
     <>
       <nav className="glass mb-8 p-4">
-        <Reorder.Group 
-          as="ul" 
-          axis="y" 
-          values={items} 
+        <NavItemList 
+          items={items}
           onReorder={setItems}
-          className="flex flex-wrap gap-4 justify-center md:justify-start items-center"
-        >
-          {items.map((item) => (
-            <Reorder.Item
-              key={item.id}
-              value={item}
-              as="div"
-              className="group/menu-item relative"
-              draggable="true"
-              onDragStart={(e) => handleDragStart(e, item)}
-            >
-              <Link 
-                to={item.to}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 hover:text-[#ff0abe] transition-all duration-200"
-              >
-                <div className="flex items-center gap-2">
-                  <GripVertical className="w-4 h-4 opacity-0 group-hover/menu-item:opacity-50 transition-opacity cursor-grab active:cursor-grabbing" />
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </div>
-              </Link>
-            </Reorder.Item>
-          ))}
-        </Reorder.Group>
+          onDragStart={handleDragStart}
+        />
       </nav>
       <AdminToolbar />
     </>

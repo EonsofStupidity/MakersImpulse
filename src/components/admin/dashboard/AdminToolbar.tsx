@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Settings, RotateCw, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { ToolbarItem, ToolbarItemType } from './toolbar/ToolbarItem';
-import { ToolbarDropIndicator } from './toolbar/ToolbarDropIndicator';
+import { ToolbarItemList } from './toolbar/ToolbarItemList';
+import { ToolbarItemType } from './toolbar/types';
 import { toast } from 'sonner';
 
 export const AdminToolbar = () => {
@@ -41,7 +41,6 @@ export const AdminToolbar = () => {
       const draggedItemData = JSON.parse(jsonData);
       console.log('Parsed dropped item data:', draggedItemData);
       
-      // Validate the dropped data
       if (!draggedItemData.id || !draggedItemData.icon || !draggedItemData.label) {
         throw new Error('Invalid item data structure');
       }
@@ -82,27 +81,14 @@ export const AdminToolbar = () => {
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
     >
-      <div className={cn(
-        "relative flex gap-2 p-2",
-        orientation === 'horizontal' ? 'flex-row' : 'flex-col'
-      )}>
-        {toolbarItems.map((item, index) => (
-          <React.Fragment key={item.id}>
-            <ToolbarDropIndicator
-              orientation={orientation}
-              isActive={dropTarget === index}
-              index={index}
-              itemCount={toolbarItems.length}
-            />
-            <ToolbarItem
-              item={item}
-              isIconOnly={isIconOnly}
-              onDragOver={(e) => handleDragOver(e, index)}
-              onDrop={(e) => handleDrop(e, index)}
-            />
-          </React.Fragment>
-        ))}
-      </div>
+      <ToolbarItemList
+        items={toolbarItems}
+        isIconOnly={isIconOnly}
+        orientation={orientation}
+        dropTarget={dropTarget}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+      />
     </motion.div>
   );
 };
