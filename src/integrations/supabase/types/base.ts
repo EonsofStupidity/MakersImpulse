@@ -12,7 +12,7 @@ type TableDefinition<RowType> = {
   Update: Partial<RowType>;
   Relationships: Array<{
     foreignKeyName: string;
-    columns: Array<keyof RowType>;
+    columns: string[];
     referencedRelation: string;
     referencedColumns: string[];
   }>;
