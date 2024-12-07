@@ -7,13 +7,16 @@ import { ImageUploadZone } from "@/components/uploads";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/content/blog/components/RichTextEditor";
+import { Database } from "@/integrations/supabase/types";
+
+type PostCategory = Database["public"]["Enums"]["post_category"];
 
 const PostEditor = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
-  const [category, setCategory] = useState<string | null>(null);
+  const [category, setCategory] = useState<PostCategory | null>(null);
   const [tags, setTags] = useState<string[]>([]);
 
   const handleSave = async () => {
@@ -62,13 +65,13 @@ const PostEditor = () => {
         .insert({
           title,
           slug: slug || title.toLowerCase().replace(/ /g, "-"),
-          content: content,
+          content,
           rich_content: content,
           status: 'draft',
           author_id: user.id,
           images: uploadedImageUrls,
-          category: category,
-          tags: tags
+          category,
+          tags
         })
         .select()
         .single();
@@ -139,7 +142,7 @@ const PostEditor = () => {
               <RichTextEditor 
                 content={content}
                 onChange={setContent}
-                onCategoryChange={setCategory}
+                onCategoryChange={(cat) => setCategory(cat as PostCategory)}
                 onTagsChange={setTags}
               />
             </div>
