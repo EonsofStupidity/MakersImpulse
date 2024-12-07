@@ -30,6 +30,13 @@ export const useRoleCheck = (
 
     const checkAccess = async () => {
       try {
+        console.log('Starting role check with:', {
+          requireAuth,
+          requiredRole,
+          sessionExists: !!session,
+          userId: session?.user?.id
+        });
+
         if (isMounted) {
           setState(prev => ({ ...prev, isLoading: true, error: null }));
         }
@@ -42,6 +49,7 @@ export const useRoleCheck = (
 
         // Handle authenticated users with no role requirement
         if (session && !requiredRole) {
+          console.log('User authenticated, no role required');
           if (isMounted) {
             setState(prev => ({ ...prev, hasAccess: true, isLoading: false }));
           }
@@ -52,23 +60,25 @@ export const useRoleCheck = (
         if (session && requiredRole) {
           console.log('Checking user role for session:', session.user.id);
           
-          const { data: profiles, error: fetchError } = await supabase
+          const { data: profile, error: fetchError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
+
+          console.log('Profile query result:', { profile, fetchError });
 
           if (fetchError) {
             console.error('Error fetching user role:', fetchError);
             throw new Error('Error verifying permissions');
           }
 
-          if (!profiles) {
+          if (!profile) {
             console.error('No profile found for user');
             throw new Error('No profile found');
           }
 
-          const userRole = profiles.role;
+          const userRole = profile.role;
           console.log('User role found:', userRole);
           
           if (!userRole) {
@@ -86,6 +96,7 @@ export const useRoleCheck = (
           console.log('Role check result:', {
             userRole,
             requiredRoles,
+            userRoleLevel,
             hasRequiredRole
           });
 
