@@ -29,6 +29,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     ? post.images[Math.floor(Math.random() * post.images.length)] 
     : null);
 
+  console.log('Post images:', post.images); // Debug log
+  console.log('Featured image:', featuredImage); // Debug log
+
   return (
     <>
       <motion.div
@@ -36,10 +39,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         animate={{ opacity: 1, y: 0 }}
         className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible h-[544px] w-full"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10 rounded-xl" />
-        
         {featuredImage && (
-          <div className="absolute inset-0 flex rounded-xl overflow-hidden">
+          <div className="absolute inset-0 rounded-xl overflow-hidden">
             <motion.div 
               className="w-full h-full"
               whileHover={{ scale: 1.05 }}
@@ -54,6 +55,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             </motion.div>
           </div>
         )}
+
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10 rounded-xl" />
 
         <div className="relative z-20 p-8 h-full flex flex-col">
           <div className="flex-1">
@@ -75,7 +78,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             </div>
           </div>
 
-          <div className="space-y-6">
+          <div className="mt-auto">
             <div className="flex justify-between items-center text-sm mb-8">
               <span className="text-[#ff0abe]">
                 {post.published_at ? 
