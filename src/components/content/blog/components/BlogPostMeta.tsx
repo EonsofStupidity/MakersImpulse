@@ -8,23 +8,21 @@ interface BlogPostMetaProps {
 
 const BlogPostMeta: React.FC<BlogPostMetaProps> = ({ publishedAt, viewsCount }) => {
   return (
-    <div className="flex justify-between items-center text-sm mb-4">
+    <div className="absolute -bottom-8 right-8 flex items-center gap-4 text-sm">
       <span className="text-[#ff0abe]">
         {publishedAt ? 
           formatDistanceToNow(new Date(publishedAt), { addSuffix: true }) :
           "Recently"
         }
       </span>
-      <div className="flex items-center gap-4">
+      <span className="text-[#ff0abe]">
+        5 min read
+      </span>
+      {viewsCount !== null && (
         <span className="text-[#ff0abe]">
-          5 min read
+          {viewsCount} views
         </span>
-        {viewsCount !== null && (
-          <span className="text-[#ff0abe]">
-            {viewsCount} views
-          </span>
-        )}
-      </div>
+      )}
     </div>
   );
 };
