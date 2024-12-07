@@ -23,21 +23,28 @@ export const AuthGuard = ({ children, requireAuth = true, requiredRole }: AuthGu
       }
 
       if (session && requiredRole) {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
+        try {
+          const { data: profile, error } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single();
 
-        if (error || !profile) {
-          console.error('Error fetching user role:', error);
+          if (error) {
+            console.error('Error fetching user role:', error);
+            toast.error("Error checking permissions");
+            navigate('/');
+            return;
+          }
+
+          if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
+            toast.error("You don't have permission to access this page");
+            navigate('/');
+            return;
+          }
+        } catch (error) {
+          console.error('Error in auth check:', error);
           toast.error("Error checking permissions");
-          navigate('/');
-          return;
-        }
-
-        if (!['admin', 'super_admin'].includes(profile.role)) {
-          toast.error("You don't have permission to access this page");
           navigate('/');
           return;
         }
