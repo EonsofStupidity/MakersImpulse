@@ -98,10 +98,30 @@ export const AdminNav = () => {
       event.dataTransfer.setData('application/json', JSON.stringify(itemData));
       event.dataTransfer.effectAllowed = 'move';
 
-      // Add visual feedback
-      const dragImage = new Image();
-      dragImage.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2341f0db" stroke-width="2"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/></svg>`;
-      event.dataTransfer.setDragImage(dragImage, 0, 0);
+      // Create custom drag image using DOM API
+      const dragPreview = document.createElement('div');
+      dragPreview.innerHTML = `
+        <div style="
+          padding: 8px 16px;
+          background: rgba(65, 240, 219, 0.2);
+          border: 1px solid rgba(65, 240, 219, 0.5);
+          border-radius: 8px;
+          color: #41f0db;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        ">
+          <span>${item.label}</span>
+        </div>
+      `;
+      document.body.appendChild(dragPreview);
+      event.dataTransfer.setDragImage(dragPreview, 0, 0);
+      
+      // Clean up the preview element after drag starts
+      requestAnimationFrame(() => {
+        document.body.removeChild(dragPreview);
+      });
       
       toast.info('Dragging shortcut...', {
         description: `Drag ${item.label} to the toolbar to create a shortcut`,

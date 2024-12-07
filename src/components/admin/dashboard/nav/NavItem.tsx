@@ -14,9 +14,10 @@ export interface NavItemType {
 interface NavItemProps {
   item: NavItemType;
   onDragStart: (event: React.DragEvent<HTMLDivElement>, item: NavItemType) => void;
+  onDragEnd: () => void;
 }
 
-export const NavItem = ({ item, onDragStart }: NavItemProps) => {
+export const NavItem = ({ item, onDragStart, onDragEnd }: NavItemProps) => {
   const dragControls = useDragControls();
 
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>) => {
@@ -40,6 +41,8 @@ export const NavItem = ({ item, onDragStart }: NavItemProps) => {
       <div 
         draggable="true"
         onDragStart={handleDragStart}
+        onDragEnd={onDragEnd}
+        className="transition-opacity duration-300 hover:opacity-80"
       >
         <Link 
           to={item.to}
