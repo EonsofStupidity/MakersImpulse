@@ -46,6 +46,7 @@ interface PostWithAuthor {
   status: string | null;
   updated_at: string | null;
   views_count: number | null;
+  author_id: string | null;
   profiles: {
     display_name: string | null;
     username: string | null;
@@ -66,14 +67,17 @@ const PostsManagement = () => {
             username
           )
         `)
-        .order('updated_at', { ascending: false });
+        .order('updated_at', { ascending: false })
+        .returns<PostWithAuthor[]>();
       
       if (error) {
         console.error('Error fetching posts:', error);
+        toast.error('Failed to load posts');
         throw error;
       }
+
       console.log('Posts fetched successfully:', data);
-      return data as PostWithAuthor[];
+      return data;
     },
   });
 
