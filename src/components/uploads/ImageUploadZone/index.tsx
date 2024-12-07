@@ -105,13 +105,13 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 flex-1">
+      <div className="grid grid-cols-3 gap-3 flex-1">
         {images.map((file, index) => (
           <div key={index} className="relative group">
             <img
               src={URL.createObjectURL(file)}
               alt={`Upload ${index + 1}`}
-              className="w-full h-[150px] object-cover rounded-lg transition-transform duration-200 group-hover:scale-[1.02]"
+              className="w-full h-[75px] object-cover rounded-lg transition-transform duration-200 group-hover:scale-[1.02]"
             />
             <button
               onClick={() => setDeleteIndex(index)}
