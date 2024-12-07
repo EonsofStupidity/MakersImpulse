@@ -47,6 +47,19 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
       return { url: publicUrl, error: 'Failed to create media record' };
     }
 
+    // Update blog post images array
+    const { error: updateError } = await supabase
+      .from('blog_posts')
+      .update({
+        images: supabase.sql`array_append(images, ${publicUrl})`
+      })
+      .eq('id', postId);
+
+    if (updateError) {
+      console.error('Error updating blog post images:', updateError);
+      return { url: publicUrl, error: 'Image uploaded but failed to update post' };
+    }
+
     return { url: publicUrl };
   } catch (error) {
     console.error('Image upload error:', error);
@@ -56,12 +69,14 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
 
 export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
   try {
+    console.log('Validating image URL:', imageUrl);
+
     if (!imageUrl) {
       console.log('No image URL provided');
       return false;
     }
 
-    // First check if image exists in media table
+    // Check if image exists in media table first
     const { data: mediaData, error: mediaError } = await supabase
       .from('media')
       .select('id')
@@ -75,22 +90,28 @@ export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
       return true;
     }
 
-    // If not in media table, check storage directly
-    const urlParts = imageUrl.split('/media/');
-    if (urlParts.length !== 2) {
+    // If not in media table, extract bucket and path from URL
+    const match = imageUrl.match(/storage\/v1\/object\/public\/([^/]+)\/(.+)/);
+    if (!match) {
       console.log('Invalid storage URL format:', imageUrl);
       return false;
     }
 
-    const filePath = urlParts[1];
-    console.log('Checking storage path:', filePath);
+    const [, bucket, path] = match;
+    console.log('Checking storage bucket:', bucket, 'path:', path);
 
-    const { data } = await supabase.storage
-      .from('media')
-      .list(filePath.split('/').slice(0, -1).join('/'), {
+    // Check if file exists in storage
+    const { data, error } = await supabase.storage
+      .from(bucket)
+      .list(path.split('/').slice(0, -1).join('/'), {
         limit: 1,
-        search: filePath.split('/').pop()
+        search: path.split('/').pop()
       });
+
+    if (error) {
+      console.error('Storage list error:', error);
+      return false;
+    }
 
     const exists = data && data.length > 0;
     console.log('Image exists in storage:', exists);
