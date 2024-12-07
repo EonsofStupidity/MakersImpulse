@@ -3,7 +3,7 @@ import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { uploadMedia } from "@/utils/media";
 import { toast } from "sonner";
 
