@@ -1,3 +1,6 @@
+import { toast } from "@/hooks/use-toast";
+import { AlertCircle, CheckCircle2, RefreshCcw, WifiOff } from "lucide-react";
+
 type WebSocketState = 'CONNECTING' | 'CONNECTED' | 'DISCONNECTED' | 'RECONNECTING' | 'FAILED';
 
 interface WebSocketHandlerConfig {
@@ -29,6 +32,51 @@ export class WebSocketHandler {
     this.currentState = newState;
     this.config.onStateChange?.(newState);
     console.log(`WebSocket state changed to: ${newState}`);
+    
+    // Show visual notification based on state
+    switch (newState) {
+      case 'CONNECTING':
+        toast({
+          title: "Connecting to server...",
+          description: "Establishing connection",
+          icon: <RefreshCcw className="h-5 w-5 text-[#41f0db] animate-spin" />,
+          className: "glass border border-[#41f0db]/30 bg-black/80",
+        });
+        break;
+      case 'CONNECTED':
+        toast({
+          title: "Connected",
+          description: "WebSocket connection established",
+          icon: <CheckCircle2 className="h-5 w-5 text-[#41f0db] animate-neon-pulse" />,
+          className: "glass border border-[#41f0db]/30 bg-black/80",
+        });
+        break;
+      case 'DISCONNECTED':
+        toast({
+          title: "Disconnected",
+          description: "Connection closed",
+          icon: <WifiOff className="h-5 w-5 text-[#ff0abe]" />,
+          className: "glass border border-[#ff0abe]/30 bg-black/80",
+        });
+        break;
+      case 'RECONNECTING':
+        toast({
+          title: "Reconnecting...",
+          description: `Attempt ${this.retryCount + 1} of ${this.maxRetries}`,
+          icon: <RefreshCcw className="h-5 w-5 text-[#8000ff] animate-spin" />,
+          className: "glass border border-[#8000ff]/30 bg-black/80",
+        });
+        break;
+      case 'FAILED':
+        toast({
+          title: "Connection Failed",
+          description: "Maximum reconnection attempts reached",
+          icon: <AlertCircle className="h-5 w-5 text-[#ff0abe] animate-neon-glow" />,
+          className: "glass border border-[#ff0abe]/30 bg-black/80",
+          duration: 5000,
+        });
+        break;
+    }
   }
 
   private calculateRetryDelay(): number {
