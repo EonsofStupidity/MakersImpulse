@@ -4,6 +4,7 @@ import { SessionProvider } from "@/components/auth/SessionContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
+import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -15,17 +16,19 @@ const queryClient = new QueryClient({
 });
 
 const App = () => (
-  <SessionProvider>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <BrowserRouter>
-          <RootLayout>
-            <AppRoutes />
-          </RootLayout>
-        </BrowserRouter>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </SessionProvider>
+  <ErrorBoundary>
+    <SessionProvider>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <BrowserRouter>
+            <RootLayout>
+              <AppRoutes />
+            </RootLayout>
+          </BrowserRouter>
+        </TooltipProvider>
+      </QueryClientProvider>
+    </SessionProvider>
+  </ErrorBoundary>
 );
 
 export default App;
