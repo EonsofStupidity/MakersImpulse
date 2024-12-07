@@ -8,6 +8,7 @@ import ImageCarouselDialog from './components/ImageCarouselDialog';
 import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
 import { validateBlogImage } from '@/services/imageService';
+import { toast } from "sonner";
 
 interface BlogPostCardProps {
   post: {
@@ -26,46 +27,45 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showCarousel, setShowCarousel] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
+  const [validImages, setValidImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
-  const images = (post.images || []).filter(Boolean);
-  const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
+  const images = post.images || [];
 
   useEffect(() => {
     const validateImages = async () => {
       console.log('Starting image validation for post:', post.id);
-      console.log('Images to validate:', images);
-
+      
       if (!images.length) {
         console.log('No images to validate');
         setIsLoading(false);
         return;
       }
 
-      setIsLoading(true);
-      const errors: Record<string, boolean> = {};
+      try {
+        setIsLoading(true);
+        const validationResults = await Promise.all(
+          images.map(async (imageUrl) => {
+            const isValid = await validateBlogImage(imageUrl);
+            console.log('Image validation result:', imageUrl, isValid);
+            return { imageUrl, isValid };
+          })
+        );
 
-      const validationResults = await Promise.all(
-        images.map(async (imageUrl) => {
-          console.log('Validating image:', imageUrl);
-          const isValid = await validateBlogImage(imageUrl);
-          console.log('Image validation result:', imageUrl, isValid);
-          return { imageUrl, isValid };
-        })
-      );
+        const validUrls = validationResults
+          .filter(({ isValid }) => isValid)
+          .map(({ imageUrl }) => imageUrl);
 
-      validationResults.forEach(({ imageUrl, isValid }) => {
-        if (!isValid) {
-          errors[imageUrl] = true;
-        }
-      });
-
-      console.log('Validation complete, errors:', errors);
-      setImageLoadErrors(errors);
-      setIsLoading(false);
+        console.log('Valid images:', validUrls);
+        setValidImages(validUrls);
+      } catch (error) {
+        console.error('Error validating images:', error);
+        toast.error('Failed to load some images');
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     validateImages();
@@ -76,8 +76,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     setShowCarousel(true);
   };
 
-  const validImages = images.filter(img => !imageLoadErrors[img]);
-  console.log('Valid images:', validImages);
+  const featuredImage = post.featured_image || (validImages.length > 0 ? validImages[0] : null);
 
   return (
     <div className="relative w-full mb-16">
@@ -91,7 +90,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             <Loader2 className="w-8 h-8 text-[#ff0abe] animate-spin" />
           </div>
         ) : (
-          featuredImage && !imageLoadErrors[featuredImage] && (
+          featuredImage && (
             <div className="absolute inset-0 rounded-xl overflow-hidden">
               <motion.div 
                 className="w-full h-full"
@@ -102,10 +101,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   src={featuredImage} 
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
-                  onError={() => {
-                    console.error('Image load error:', featuredImage);
-                    setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
-                  }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-[#ff0abe]/20 to-black/80 mix-blend-overlay" />
               </motion.div>
