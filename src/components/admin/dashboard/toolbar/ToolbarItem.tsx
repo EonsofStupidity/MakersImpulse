@@ -40,6 +40,7 @@ export const ToolbarItem = ({
 
   const handleClick = () => {
     if (item.to) {
+      console.log('Navigating to:', item.to);
       navigate(item.to);
       toast.success(`Navigating to ${item.label}`);
     }
