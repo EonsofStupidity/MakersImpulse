@@ -8,6 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import RichTextEditor from "@/components/content/blog/components/RichTextEditor";
 import { Database } from "@/integrations/supabase/types";
+import { PreviewDialog } from "@/components/content/blog/components/preview/PreviewDialog";
+import { X } from "lucide-react";
 
 type PostCategory = Database["public"]["Enums"]["post_category"];
 
@@ -112,7 +114,10 @@ const PostEditor = () => {
       <AdminNav />
       <div className="container mx-auto">
         <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)] animate-fade-in">
-          <h1 className="text-3xl font-bold text-white mb-8">Create New Post</h1>
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold text-white">Create New Post</h1>
+            <PreviewDialog title={title} content={content} />
+          </div>
           
           <div className="space-y-6">
             <div>
@@ -163,13 +168,14 @@ const PostEditor = () => {
                   setCategory(null);
                   setTags([]);
                 }}
-                className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300"
+                className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300 group"
               >
+                <X className="w-4 h-4 mr-2 group-hover:text-[#41f0db]" />
                 Clear
               </Button>
               <Button 
                 onClick={handleSave}
-                className="bg-[#41f0db]/20 backdrop-blur-sm text-white border border-[#41f0db]/50 hover:bg-[#41f0db]/30 hover:border-[#41f0db] transition-all duration-300 shadow-[0_0_10px_rgba(65,240,219,0.3)]"
+                className="bg-[#41f0db]/20 backdrop-blur-sm text-white border border-[#41f0db]/50 hover:bg-[#41f0db]/30 hover:border-[#41f0db] transition-all duration-300 shadow-[0_0_15px_rgba(65,240,219,0.3)]"
               >
                 Save Post
               </Button>
