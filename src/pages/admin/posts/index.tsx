@@ -49,6 +49,10 @@ interface PostWithAuthor {
   author_id: string | null;
   author_display_name: string | null;
   author_username: string | null;
+  profiles?: {
+    display_name: string | null;
+    username: string | null;
+  }[];
 }
 
 const PostsManagement = () => {
@@ -77,8 +81,8 @@ const PostsManagement = () => {
       // Transform the data to match our PostWithAuthor interface
       const transformedData: PostWithAuthor[] = data.map(post => ({
         ...post,
-        author_display_name: post.profiles?.display_name || null,
-        author_username: post.profiles?.username || null
+        author_display_name: post.profiles?.[0]?.display_name || null,
+        author_username: post.profiles?.[0]?.username || null
       }));
 
       console.log('Posts fetched successfully:', transformedData);
