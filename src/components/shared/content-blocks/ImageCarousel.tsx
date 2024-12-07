@@ -15,14 +15,25 @@ const ImageCarousel = ({
   onIndexChange, 
   className = "" 
 }: ImageCarouselProps) => {
+  const [direction, setDirection] = useState(0);
+  
+  useEffect(() => {
+    console.log('ImageCarousel mounted with images:', images);
+    console.log('Current index:', currentIndex);
+  }, [images, currentIndex]);
+
   const handleKeyPress = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowRight':
       case ' ':
-        onIndexChange(currentIndex < images.length - 1 ? currentIndex + 1 : 0);
+        const nextIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
+        setDirection(1);
+        onIndexChange(nextIndex);
         break;
       case 'ArrowLeft':
-        onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1);
+        const prevIndex = currentIndex > 0 ? currentIndex - 1 : images.length - 1;
+        setDirection(-1);
+        onIndexChange(prevIndex);
         break;
     }
   };
@@ -33,12 +44,6 @@ const ImageCarousel = ({
       window.removeEventListener('keydown', handleKeyPress);
     };
   }, [currentIndex, images.length]);
-
-  const [[page, direction], setPage] = useState([currentIndex, 0]);
-
-  useEffect(() => {
-    setPage([currentIndex, currentIndex > page ? 1 : -1]);
-  }, [currentIndex]);
 
   const slideVariants = {
     enter: (direction: number) => ({
@@ -74,6 +79,16 @@ const ImageCarousel = ({
         damping: 20
       }
     })
+  };
+
+  const handleNext = () => {
+    setDirection(1);
+    onIndexChange(currentIndex < images.length - 1 ? currentIndex + 1 : 0);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1);
   };
 
   return (
@@ -115,14 +130,14 @@ const ImageCarousel = ({
 
         {/* Navigation arrows - positioned around image */}
         <button
-          onClick={() => onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1)}
+          onClick={handlePrev}
           className="absolute left-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/80 transition-colors z-20"
         >
           <ChevronLeft size={24} />
         </button>
         
         <button
-          onClick={() => onIndexChange(currentIndex < images.length - 1 ? currentIndex + 1 : 0)}
+          onClick={handleNext}
           className="absolute right-8 top-1/2 -translate-y-1/2 p-3 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/80 transition-colors z-20"
         >
           <ChevronRight size={24} />
