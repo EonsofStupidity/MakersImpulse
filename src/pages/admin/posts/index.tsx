@@ -10,12 +10,17 @@ const PostsManagement = () => {
   const { data: posts, isLoading } = useQuery({
     queryKey: ['admin-posts'],
     queryFn: async () => {
+      console.log('Fetching posts...');
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
-        .order('created_at', { ascending: false });
+        .order('updated_at', { ascending: false });
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching posts:', error);
+        throw error;
+      }
+      console.log('Posts fetched successfully:', data);
       return data;
     },
   });
