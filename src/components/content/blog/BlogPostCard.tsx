@@ -8,6 +8,7 @@ import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BlogPostCardProps {
   post: {
@@ -34,44 +35,59 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   // Ensure images is always an array and filter out any null/undefined values
   const images = (post.images || []).filter(Boolean);
-  console.log('Post ID:', post.id);
-  console.log('Post images array:', images);
   
   // Use featured_image if available, otherwise use first valid image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
-  console.log('Featured image:', featuredImage);
+
+  const verifyImageUrl = async (url: string) => {
+    try {
+      console.log('Verifying image URL:', url);
+      const { data: { publicUrl }, error: urlError } = supabase.storage
+        .from('media')
+        .getPublicUrl(url.split('/object/public/media/')[1]);
+
+      if (urlError) {
+        console.error('Error getting public URL:', urlError);
+        return false;
+      }
+
+      console.log('Public URL generated:', publicUrl);
+      
+      // Test if the image is accessible
+      const response = await fetch(publicUrl, { method: 'HEAD' });
+      console.log('Image fetch response:', response.status, response.statusText);
+      return response.ok;
+    } catch (error) {
+      console.error('Error verifying image:', error);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    if (images.length > 0) {
-      let loadedCount = 0;
-      const totalImages = images.length;
-      setIsLoading(true);
+    const validateImages = async () => {
+      if (images.length > 0) {
+        setIsLoading(true);
+        console.log('Starting image validation for post:', post.id);
 
-      // Preload images and check their validity
-      images.forEach((imageUrl, index) => {
-        const img = new Image();
-        img.onload = () => {
-          console.log(`Image ${index} loaded successfully:`, imageUrl);
-          loadedCount++;
-          if (loadedCount === totalImages) {
-            setIsLoading(false);
+        for (const imageUrl of images) {
+          const isValid = await verifyImageUrl(imageUrl);
+          if (!isValid) {
+            console.error('Image validation failed:', imageUrl);
+            setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
+            toast.error(`Failed to validate image: ${imageUrl}`);
+          } else {
+            console.log('Image validation successful:', imageUrl);
           }
-        };
-        img.onerror = () => {
-          console.error(`Image ${index} failed to load:`, imageUrl);
-          setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
-          toast.error(`Failed to load image ${index + 1}`);
-          loadedCount++;
-          if (loadedCount === totalImages) {
-            setIsLoading(false);
-          }
-        };
-        img.src = imageUrl;
-      });
-    } else {
-      setIsLoading(false);
-    }
-  }, [images]);
+        }
+
+        setIsLoading(false);
+      } else {
+        setIsLoading(false);
+      }
+    };
+
+    validateImages();
+  }, [images, post.id]);
 
   const handleImageClick = (index: number) => {
     console.log('Image clicked:', index, 'URL:', images[index]);
@@ -165,7 +181,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Image Gallery - Only show if there are valid images and not loading */}
         {!isLoading && validImages.length > 0 && (
           <div className="absolute -bottom-12 left-0 right-0 z-30">
             <ImageGallery 
@@ -176,14 +191,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         )}
       </motion.div>
 
-      {/* Expanded Post Dialog */}
       <ExpandedPost
         isOpen={isExpanded}
         onOpenChange={setIsExpanded}
         post={post}
       />
 
-      {/* Image Carousel Dialog */}
       {validImages.length > 0 && (
         <ImageCarouselDialog
           isOpen={showCarousel}
