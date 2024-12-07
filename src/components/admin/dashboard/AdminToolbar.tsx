@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, RotateCw, Minimize2, Lock, Unlock } from 'lucide-react';
+import { Settings, RotateCw, ArrowLeftRight, Lock, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ToolbarItemList } from './toolbar/ToolbarItemList';
 import { ToolbarItemType } from './toolbar/types';
@@ -92,7 +92,6 @@ export const AdminToolbar = () => {
       setToolbarItems(newItems);
       setDropTarget(null);
 
-      // Show success animation and toast
       toast.success('Shortcut added to toolbar', {
         description: `${draggedItemData.label} has been added to your shortcuts`
       });
@@ -109,6 +108,11 @@ export const AdminToolbar = () => {
     const [movedItem] = newItems.splice(fromIndex, 1);
     newItems.splice(toIndex, 0, movedItem);
     setToolbarItems(newItems);
+  };
+
+  const toggleOrientation = () => {
+    setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
+    toast.success(`Toolbar orientation changed to ${orientation === 'horizontal' ? 'vertical' : 'horizontal'}`);
   };
 
   return (
@@ -136,6 +140,26 @@ export const AdminToolbar = () => {
             className="data-[state=checked]:bg-[#41f0db]"
           />
         </div>
+        <button
+          onClick={() => setIsIconOnly(!isIconOnly)}
+          className={cn(
+            "p-2 rounded-lg transition-colors duration-200",
+            "bg-white/5 text-white/60 hover:text-white"
+          )}
+          title={isIconOnly ? "Show labels" : "Hide labels"}
+        >
+          <ArrowLeftRight className="w-4 h-4" />
+        </button>
+        <button
+          onClick={toggleOrientation}
+          className={cn(
+            "p-2 rounded-lg transition-colors duration-200",
+            "bg-white/5 text-white/60 hover:text-white"
+          )}
+          title="Toggle orientation"
+        >
+          <RotateCw className="w-4 h-4" />
+        </button>
         <button
           onClick={() => setIsLocked(!isLocked)}
           className={cn(
