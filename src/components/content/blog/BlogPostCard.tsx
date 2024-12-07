@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from "@/components/ui/button";
 import ImageGallery from './components/ImageGallery';
 import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
+import { toast } from "sonner";
 
 interface BlogPostCardProps {
   post: {
@@ -23,23 +24,46 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showCarousel, setShowCarousel] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [imageLoadErrors, setImageLoadErrors] = useState<Record<string, boolean>>({});
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
 
-  // Ensure images is always an array, even if undefined
-  const images = post.images || [];
-  console.log('Post images:', images); // Debug log
+  // Ensure images is always an array and filter out any null/undefined values
+  const images = (post.images || []).filter(Boolean);
+  console.log('Post ID:', post.id);
+  console.log('Post images array:', images);
   
-  // Use featured_image if available, otherwise use first image from images array
+  // Use featured_image if available, otherwise use first valid image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
-  console.log('Featured image:', featuredImage); // Debug log
+  console.log('Featured image:', featuredImage);
+
+  useEffect(() => {
+    if (images.length > 0) {
+      // Preload images and check their validity
+      images.forEach((imageUrl, index) => {
+        const img = new Image();
+        img.onload = () => {
+          console.log(`Image ${index} loaded successfully:`, imageUrl);
+        };
+        img.onerror = () => {
+          console.error(`Image ${index} failed to load:`, imageUrl);
+          setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
+          toast.error(`Failed to load image ${index + 1}`);
+        };
+        img.src = imageUrl;
+      });
+    }
+  }, [images]);
 
   const handleImageClick = (index: number) => {
-    console.log('Image clicked:', index); // Debug log
+    console.log('Image clicked:', index, 'URL:', images[index]);
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
+
+  // Filter out images that failed to load
+  const validImages = images.filter(img => !imageLoadErrors[img]);
 
   return (
     <div className="relative w-full mb-16">
@@ -48,7 +72,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         animate={{ opacity: 1, y: 0 }}
         className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]"
       >
-        {featuredImage && (
+        {featuredImage && !imageLoadErrors[featuredImage] && (
           <div className="absolute inset-0 rounded-xl overflow-hidden">
             <motion.div 
               className="w-full h-full"
@@ -60,9 +84,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                 alt={post.title}
                 className="w-full h-full object-cover opacity-50"
                 onError={(e) => {
-                  console.error('Image failed to load:', featuredImage);
+                  console.error('Featured image failed to load:', featuredImage);
+                  setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
+                onLoad={() => console.log('Featured image loaded successfully:', featuredImage)}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-[#ff0abe]/20 to-black/80 mix-blend-overlay" />
             </motion.div>
@@ -108,11 +134,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Image Gallery - Only show if there are images */}
-        {images.length > 0 && (
+        {/* Image Gallery - Only show if there are valid images */}
+        {validImages.length > 0 && (
           <div className="absolute -bottom-12 left-0 right-0 z-30">
             <ImageGallery 
-              images={images} 
+              images={validImages} 
               onImageClick={handleImageClick}
             />
           </div>
@@ -127,11 +153,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       />
 
       {/* Image Carousel Dialog */}
-      {images.length > 0 && (
+      {validImages.length > 0 && (
         <ImageCarouselDialog
           isOpen={showCarousel}
           onOpenChange={setShowCarousel}
-          images={images}
+          images={validImages}
           currentIndex={currentImageIndex}
           onIndexChange={setCurrentImageIndex}
         />
