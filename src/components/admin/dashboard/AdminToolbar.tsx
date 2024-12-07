@@ -4,6 +4,7 @@ import { Settings, RotateCw, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ToolbarItem, ToolbarItemType } from './toolbar/ToolbarItem';
 import { ToolbarDropIndicator } from './toolbar/ToolbarDropIndicator';
+import { toast } from 'sonner';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
@@ -16,30 +17,52 @@ export const AdminToolbar = () => {
   const [dropTarget, setDropTarget] = useState<number | null>(null);
 
   const handleDragOver = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    setDropTarget(index);
+    try {
+      event.preventDefault();
+      console.log('Drag over event at index:', index);
+      setDropTarget(index);
+    } catch (error) {
+      console.error('Error in handleDragOver:', error);
+    }
   };
 
   const handleDrop = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
-    event.preventDefault();
-    console.log('Drop event:', event);
-    
     try {
-      const draggedItemData = JSON.parse(event.dataTransfer.getData('application/json'));
-      console.log('Dropped item data:', draggedItemData);
+      event.preventDefault();
+      console.log('Drop event:', event);
       
+      const jsonData = event.dataTransfer.getData('application/json');
+      console.log('Received JSON data:', jsonData);
+      
+      if (!jsonData) {
+        throw new Error('No data received in drop event');
+      }
+
+      const draggedItemData = JSON.parse(jsonData);
+      console.log('Parsed dropped item data:', draggedItemData);
+      
+      // Validate the dropped data
+      if (!draggedItemData.id || !draggedItemData.icon || !draggedItemData.label) {
+        throw new Error('Invalid item data structure');
+      }
+
       const newItem: ToolbarItemType = {
         id: draggedItemData.id,
         icon: draggedItemData.icon,
         label: draggedItemData.label,
       };
 
+      console.log('Creating new toolbar item:', newItem);
+
       const newItems = [...toolbarItems];
       newItems.splice(index, 0, newItem);
       setToolbarItems(newItems);
       setDropTarget(null);
+
+      toast.success('Item added to toolbar successfully');
     } catch (error) {
       console.error('Error handling drop:', error);
+      toast.error('Failed to add item to toolbar');
     }
   };
 

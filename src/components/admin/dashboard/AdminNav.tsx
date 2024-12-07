@@ -36,14 +36,25 @@ export const AdminNav = () => {
   ]);
 
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, item: NavItem) => {
-    console.log('Drag started:', item);
-    const itemData = {
-      id: item.id,
-      icon: item.icon.name,
-      label: item.label
-    };
-    event.dataTransfer.setData('application/json', JSON.stringify(itemData));
-    event.dataTransfer.effectAllowed = 'move';
+    try {
+      console.log('Drag start event:', { item, eventType: event.type });
+      
+      // Get the icon component name safely
+      const iconName = item.icon.displayName || 'UnknownIcon';
+      console.log('Icon name:', iconName);
+
+      const itemData = {
+        id: item.id,
+        icon: iconName,
+        label: item.label
+      };
+
+      console.log('Setting drag data:', itemData);
+      event.dataTransfer.setData('application/json', JSON.stringify(itemData));
+      event.dataTransfer.effectAllowed = 'move';
+    } catch (error) {
+      console.error('Error in handleDragStart:', error);
+    }
   };
 
   return (
@@ -57,10 +68,8 @@ export const AdminNav = () => {
           className="flex flex-wrap gap-4 justify-center md:justify-start items-center"
         >
           {items.map((item) => (
-            <Reorder.Item
+            <motion.li
               key={item.id}
-              value={item}
-              as="li"
               className="group/menu-item relative"
               draggable="true"
               onDragStart={(e: React.DragEvent<HTMLLIElement>) => handleDragStart(e, item)}
@@ -75,7 +84,7 @@ export const AdminNav = () => {
                   <span>{item.label}</span>
                 </div>
               </Link>
-            </Reorder.Item>
+            </motion.li>
           ))}
         </Reorder.Group>
       </nav>
