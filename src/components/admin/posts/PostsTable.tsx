@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { format } from "date-fns";
-import { Edit2, Trash2 } from "lucide-react";
 import { PostWithAuthor } from "@/hooks/posts/usePostsQuery";
 import {
   Table,
@@ -11,20 +10,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { showSuccessToast, showLoadingToast } from "@/lib/toast-config";
+import { PostStatusBadge } from "./PostStatusBadge";
+import { PostTableRowActions } from "./PostTableRowActions";
+import { PostDeleteDialog } from "./PostDeleteDialog";
+import { showSuccessToast, showLoadingToast, showErrorToast } from "@/lib/toast-config";
 
 interface PostsTableProps {
   posts: PostWithAuthor[];
@@ -34,19 +24,6 @@ interface PostsTableProps {
 export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
   const [selectedPosts, setSelectedPosts] = useState<string[]>([]);
   const [deletingPosts, setDeletingPosts] = useState<string[]>([]);
-  
-  console.log('Rendering PostsTable with posts:', posts);
-  
-  const getStatusBadge = (status: string | null) => {
-    switch (status) {
-      case 'published':
-        return <Badge className="bg-[#41f0db]/10 text-[#41f0db] hover:bg-[#41f0db]/20 border-0">Published</Badge>;
-      case 'draft':
-        return <Badge className="bg-[#ff0abe]/10 text-[#ff0abe] hover:bg-[#ff0abe]/20 border-0">Draft</Badge>;
-      default:
-        return <Badge variant="outline" className="border-zinc-700 text-zinc-400">{status || 'Unknown'}</Badge>;
-    }
-  };
 
   const handleSelectAll = (checked: boolean) => {
     setSelectedPosts(checked ? posts.map(post => post.id) : []);
@@ -67,11 +44,9 @@ export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
     
     try {
       await onDelete(postId);
-      toast.dismiss(loadingToast);
       showSuccessToast(`Successfully deleted ${post.title}`);
     } catch (error) {
       console.error('Error deleting post:', error);
-      toast.dismiss(loadingToast);
       showErrorToast(`Failed to delete ${post.title}`);
     } finally {
       setDeletingPosts(prev => prev.filter(id => id !== postId));
@@ -83,12 +58,10 @@ export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
     
     try {
       await Promise.all(selectedPosts.map(id => onDelete(id)));
-      toast.dismiss(loadingToast);
       showSuccessToast(`Successfully deleted ${selectedPosts.length} posts`);
       setSelectedPosts([]);
     } catch (error) {
       console.error('Error in bulk delete:', error);
-      toast.dismiss(loadingToast);
       showErrorToast('Failed to delete some posts');
     }
   };
@@ -147,54 +120,19 @@ export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
                   {post.profiles?.display_name || post.profiles?.username || 'Unknown'}
                 </TableCell>
                 <TableCell>
-                  {getStatusBadge(post.status)}
+                  <PostStatusBadge status={post.status} />
                 </TableCell>
                 <TableCell className="text-zinc-400">
                   {post.views_count || 0}
                 </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex justify-end gap-2">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {}}
-                      className={`h-8 w-8 ${isSelected ? 'text-[#ff0abe] hover:text-[#ff0abe]/80' : 'text-zinc-400 hover:text-[#41f0db] hover:bg-[#41f0db]/10'}`}
-                      disabled={isDeleting}
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </Button>
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className={`h-8 w-8 transition-colors ${isSelected ? 'text-[#ff0abe] hover:text-[#ff0abe]/80' : 'text-zinc-400 hover:text-[#ff0abe] hover:bg-[#ff0abe]/10'}`}
-                          disabled={isDeleting}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className="bg-zinc-900 border border-zinc-800">
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-zinc-100">Delete Post</AlertDialogTitle>
-                          <AlertDialogDescription className="text-zinc-400">
-                            Are you sure you want to delete this post? This action cannot be undone.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className="bg-transparent border border-zinc-800 text-zinc-100 hover:bg-zinc-800">
-                            Cancel
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => handleDelete(post.id)}
-                            className="bg-[#ff0abe] hover:bg-[#ff0abe]/80 text-white border-0"
-                          >
-                            Delete
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
-                  </div>
+                <TableCell>
+                  <PostTableRowActions
+                    postId={post.id}
+                    postTitle={post.title}
+                    isSelected={isSelected}
+                    isDeleting={isDeleting}
+                    onDelete={() => handleDelete(post.id)}
+                  />
                 </TableCell>
               </TableRow>
             );
@@ -207,36 +145,13 @@ export const PostsTable: React.FC<PostsTableProps> = ({ posts, onDelete }) => {
             <span className="text-sm text-zinc-400">
               {selectedPosts.length} {selectedPosts.length === 1 ? 'post' : 'posts'} selected
             </span>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  className="bg-[#ff0abe] hover:bg-[#ff0abe]/80 text-white border-0"
-                >
-                  Delete Selected
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent className="bg-zinc-900 border border-zinc-800">
-                <AlertDialogHeader>
-                  <AlertDialogTitle className="text-zinc-100">Delete Selected Posts</AlertDialogTitle>
-                  <AlertDialogDescription className="text-zinc-400">
-                    Are you sure you want to delete {selectedPosts.length} {selectedPosts.length === 1 ? 'post' : 'posts'}? This action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="bg-transparent border border-zinc-800 text-zinc-100 hover:bg-zinc-800">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    onClick={handleBulkDelete}
-                    className="bg-[#ff0abe] hover:bg-[#ff0abe]/80 text-white border-0"
-                  >
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            <PostDeleteDialog
+              title=""
+              isMultiple={true}
+              count={selectedPosts.length}
+              onDelete={handleBulkDelete}
+              className="bg-[#ff0abe] hover:bg-[#ff0abe]/80 text-white border-0"
+            />
           </div>
         </div>
       )}
