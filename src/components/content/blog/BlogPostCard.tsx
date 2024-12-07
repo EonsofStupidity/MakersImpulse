@@ -34,12 +34,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-hidden h-[544px] w-full"
+        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible h-[544px] w-full"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10 rounded-xl" />
         
         {featuredImage && (
-          <div className="absolute inset-0 flex">
+          <div className="absolute inset-0 flex rounded-xl overflow-hidden">
             <motion.div 
               className="w-full h-full"
               whileHover={{ scale: 1.05 }}
@@ -76,7 +76,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
 
           <div className="space-y-6">
-            <div className="flex justify-between items-center text-sm">
+            <div className="flex justify-between items-center text-sm mb-8">
               <span className="text-[#ff0abe]">
                 {post.published_at ? 
                   formatDistanceToNow(new Date(post.published_at), { addSuffix: true }) :
@@ -92,7 +92,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
             {post.images && post.images.length > 0 && (
               <motion.div 
-                className="grid grid-cols-5 gap-2 -mb-12 mt-4"
+                className="absolute left-8 right-8 -bottom-8 grid grid-cols-5 gap-2"
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -100,7 +100,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                 {post.images.slice(0, 5).map((image, index) => (
                   <motion.div 
                     key={index} 
-                    className="relative aspect-square overflow-hidden rounded-lg shadow-lg"
+                    className="relative aspect-square overflow-hidden rounded-lg border border-[#ff0abe]/20 shadow-lg shadow-[#ff0abe]/10"
                     whileHover={{ y: -5, scale: 1.05 }}
                     transition={{ duration: 0.2 }}
                   >
