@@ -13,6 +13,8 @@ interface AuthGuardProps {
   requireAuth?: boolean;
   requiredRole?: UserRole | UserRole[];
   fallbackPath?: string;
+  loadingComponent?: React.ReactNode;
+  unauthorizedComponent?: React.ReactNode;
 }
 
 const roleHierarchy: Record<UserRole, number> = {
@@ -26,94 +28,102 @@ export const AuthGuard = ({
   children, 
   requireAuth = true, 
   requiredRole,
-  fallbackPath = '/'
+  fallbackPath = '/',
+  loadingComponent,
+  unauthorizedComponent
 }: AuthGuardProps) => {
   const { session } = useSession();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const checkAccess = async () => {
       try {
         setIsLoading(true);
+        setError(null);
 
         // Not authenticated but auth required
         if (!session && requireAuth) {
           console.log('Auth required but no session found');
           toast.error("Please sign in to access this page");
-          navigate('/login');
+          navigate('/login', { replace: true });
           return;
         }
 
         // Authenticated but no role required
         if (session && !requiredRole) {
-          setHasAccess(true);
+          if (isMounted) setHasAccess(true);
           return;
         }
 
         // Role check required
         if (session && requiredRole) {
-          const { data: profile, error } = await supabase
+          const { data: profile, error: fetchError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
             .single();
 
-          if (error) {
-            console.error('Error fetching user role:', error);
-            toast.error("Error checking permissions");
-            navigate(fallbackPath);
-            return;
+          if (fetchError) {
+            console.error('Error fetching user role:', fetchError);
+            throw new Error('Error checking permissions');
           }
 
           if (!profile?.role) {
             console.error('No role found for user');
-            toast.error("No role assigned");
-            navigate(fallbackPath);
-            return;
+            throw new Error('No role assigned');
           }
 
           // Handle multiple required roles
           const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
           
           // Check if user has sufficient role level
-          const userRoleLevel = roleHierarchy[profile.role];
+          const userRoleLevel = roleHierarchy[profile.role as UserRole];
           const hasRequiredRole = requiredRoles.some(role => 
             userRoleLevel >= roleHierarchy[role]
           );
 
           if (!hasRequiredRole) {
             console.log(`User role ${profile.role} insufficient for required roles:`, requiredRoles);
-            toast.error("You don't have permission to access this page");
-            navigate(fallbackPath);
-            return;
+            throw new Error("Insufficient permissions");
           }
 
-          setHasAccess(true);
+          if (isMounted) setHasAccess(true);
         }
       } catch (error) {
         console.error('Error in auth check:', error);
-        toast.error("Error checking permissions");
-        navigate(fallbackPath);
+        const errorMessage = error instanceof Error ? error.message : "Error checking permissions";
+        if (isMounted) {
+          setError(errorMessage);
+          toast.error(errorMessage);
+        }
+        navigate(fallbackPath, { replace: true });
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     };
 
     checkAccess();
+
+    return () => {
+      isMounted = false;
+    };
   }, [session, requireAuth, requiredRole, navigate, fallbackPath]);
 
   if (isLoading) {
-    return (
+    return loadingComponent || (
       <div className="flex items-center justify-center min-h-[200px]">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
     );
   }
 
-  if (!hasAccess) {
-    return null;
+  if (error || !hasAccess) {
+    return unauthorizedComponent || null;
   }
 
   return <>{children}</>;
