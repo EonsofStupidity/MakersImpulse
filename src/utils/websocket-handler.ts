@@ -1,3 +1,4 @@
+import React from 'react';
 import { toast } from "@/hooks/use-toast";
 import { AlertCircle, CheckCircle2, RefreshCcw, WifiOff } from "lucide-react";
 
@@ -39,9 +40,6 @@ export class WebSocketHandler {
         toast({
           title: "Connecting to server...",
           description: "Establishing connection",
-          icon: React.createElement(RefreshCcw, { 
-            className: "h-5 w-5 text-[#41f0db] animate-spin" 
-          }),
           className: "glass border border-[#41f0db]/30 bg-black/80",
         });
         break;
@@ -49,9 +47,6 @@ export class WebSocketHandler {
         toast({
           title: "Connected",
           description: "WebSocket connection established",
-          icon: React.createElement(CheckCircle2, { 
-            className: "h-5 w-5 text-[#41f0db] animate-neon-pulse" 
-          }),
           className: "glass border border-[#41f0db]/30 bg-black/80",
         });
         break;
@@ -59,9 +54,6 @@ export class WebSocketHandler {
         toast({
           title: "Disconnected",
           description: "Connection closed",
-          icon: React.createElement(WifiOff, { 
-            className: "h-5 w-5 text-[#ff0abe]" 
-          }),
           className: "glass border border-[#ff0abe]/30 bg-black/80",
         });
         break;
@@ -69,9 +61,6 @@ export class WebSocketHandler {
         toast({
           title: "Reconnecting...",
           description: `Attempt ${this.retryCount + 1} of ${this.maxRetries}`,
-          icon: React.createElement(RefreshCcw, { 
-            className: "h-5 w-5 text-[#8000ff] animate-spin" 
-          }),
           className: "glass border border-[#8000ff]/30 bg-black/80",
         });
         break;
@@ -79,9 +68,6 @@ export class WebSocketHandler {
         toast({
           title: "Connection Failed",
           description: "Maximum reconnection attempts reached",
-          icon: React.createElement(AlertCircle, { 
-            className: "h-5 w-5 text-[#ff0abe] animate-neon-glow" 
-          }),
           className: "glass border border-[#ff0abe]/30 bg-black/80",
           duration: 5000,
         });
