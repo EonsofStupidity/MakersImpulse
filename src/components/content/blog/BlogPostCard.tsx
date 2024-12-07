@@ -42,19 +42,19 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const verifyImageUrl = async (url: string) => {
     try {
       console.log('Verifying image URL:', url);
-      const { data: { publicUrl }, error: urlError } = supabase.storage
+      const { data } = supabase.storage
         .from('media')
         .getPublicUrl(url.split('/object/public/media/')[1]);
 
-      if (urlError) {
-        console.error('Error getting public URL:', urlError);
+      if (!data.publicUrl) {
+        console.error('No public URL generated');
         return false;
       }
 
-      console.log('Public URL generated:', publicUrl);
+      console.log('Public URL generated:', data.publicUrl);
       
       // Test if the image is accessible
-      const response = await fetch(publicUrl, { method: 'HEAD' });
+      const response = await fetch(data.publicUrl, { method: 'HEAD' });
       console.log('Image fetch response:', response.status, response.statusText);
       return response.ok;
     } catch (error) {
