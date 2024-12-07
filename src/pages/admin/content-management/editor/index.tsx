@@ -47,11 +47,6 @@ const PostEditor = () => {
           <h1 className="text-3xl font-bold text-white mb-8">Create New Post</h1>
           
           <div className="space-y-6">
-            <ImageUploadZone 
-              images={images} 
-              onImagesChange={setImages} 
-            />
-
             <div>
               <label className="text-white/80 block mb-2">Title</label>
               <Input
@@ -104,6 +99,11 @@ const PostEditor = () => {
                 Save Post
               </Button>
             </div>
+
+            <ImageUploadZone 
+              images={images} 
+              onImagesChange={setImages} 
+            />
           </div>
         </Card>
       </div>
