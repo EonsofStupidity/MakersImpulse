@@ -4,21 +4,18 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
-// Make relationships a separate type that doesn't depend on RowType
-type TableRelationship = {
-  foreignKeyName: string;
-  columns: string[];
-  referencedRelation: string;
-  referencedColumns: string[];
-};
-
-type TableDefinition<RowType> = {
+type TableDefinition<RowType extends { id: string }> = {
   Row: Readonly<RowType>;
   Insert: Partial<RowType> & Required<Pick<RowType, "id">>;
   Update: Partial<RowType>;
-  Relationships: TableRelationship[];
+  Relationships: Array<{
+    foreignKeyName: string;
+    columns: Array<keyof RowType>;
+    referencedRelation: string;
+    referencedColumns: Array<keyof RowType>;
+  }>;
 };
 
-export type { TableDefinition, TableRelationship };
+export type { TableDefinition };
