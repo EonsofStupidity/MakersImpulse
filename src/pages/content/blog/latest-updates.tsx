@@ -1,5 +1,5 @@
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 import { Navigation } from "@/components/shared/ui/Navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
@@ -41,7 +41,6 @@ const GlitchEffect = () => (
 );
 
 const LatestUpdates = () => {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const { data: posts, isLoading, error } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: fetchBlogPosts,
@@ -49,37 +48,17 @@ const LatestUpdates = () => {
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
-  };
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error in component:", error);
-    }
-  }, [error]);
-
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="min-h-screen bg-[#1a1a1a] relative overflow-hidden"
-      onMouseMove={handleMouseMove}
     >
       <Navigation />
       <GlitchEffect />
       
-      <div 
-        className="relative z-10 container mx-auto px-6 pt-32"
-        style={{
-          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.15), rgba(128, 0, 255, 0.15))`,
-        }}
-      >
+      <div className="relative z-10 container mx-auto px-6 pt-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

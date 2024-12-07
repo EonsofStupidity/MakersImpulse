@@ -29,7 +29,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     ? post.images[Math.floor(Math.random() * post.images.length)] 
     : null);
 
-  console.log('Post data:', post);
+  console.log('Post data in BlogPostCard:', post);
   console.log('Post images:', post.images);
   console.log('Featured image:', featuredImage);
 
