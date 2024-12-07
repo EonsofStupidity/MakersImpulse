@@ -11,7 +11,7 @@ interface NavItemListProps {
 export const NavItemList = ({ items, onReorder, onDragStart }: NavItemListProps) => {
   return (
     <Reorder.Group 
-      as="ul" 
+      as="div" 
       axis="y" 
       values={items} 
       onReorder={onReorder}
