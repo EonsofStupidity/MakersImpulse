@@ -47,10 +47,8 @@ interface PostWithAuthor {
   updated_at: string | null;
   views_count: number | null;
   author_id: string | null;
-  profiles: {
-    display_name: string | null;
-    username: string | null;
-  } | null;
+  author_display_name: string | null;
+  author_username: string | null;
 }
 
 const PostsManagement = () => {
@@ -62,10 +60,8 @@ const PostsManagement = () => {
         .from('blog_posts')
         .select(`
           *,
-          profiles:author_id (
-            display_name,
-            username
-          )
+          author_display_name:profiles!inner(display_name),
+          author_username:profiles!inner(username)
         `)
         .order('updated_at', { ascending: false })
         .returns<PostWithAuthor[]>();
@@ -186,7 +182,7 @@ const PostsManagement = () => {
                         {post.updated_at ? format(new Date(post.updated_at), 'MMM dd, yyyy') : 'N/A'}
                       </TableCell>
                       <TableCell className="text-muted-foreground">
-                        {post.profiles?.display_name || post.profiles?.username || 'Unknown'}
+                        {post.author_display_name || post.author_username || 'Unknown'}
                       </TableCell>
                       <TableCell>
                         {getStatusBadge(post.status)}
