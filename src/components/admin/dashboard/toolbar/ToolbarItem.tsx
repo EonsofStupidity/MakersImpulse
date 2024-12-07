@@ -34,7 +34,8 @@ export const ToolbarItem = ({
 
   try {
     if (typeof item.icon === 'string') {
-      const icons = LucideIcons as Record<string, LucideIcon>;
+      // Cast to unknown first, then to the desired type
+      const icons = LucideIcons as unknown as Record<string, LucideIcon>;
       IconComponent = icons[item.icon];
       console.log('Resolved icon component:', item.icon);
     } else {

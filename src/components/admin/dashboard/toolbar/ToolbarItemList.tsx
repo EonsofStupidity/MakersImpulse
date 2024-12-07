@@ -10,8 +10,8 @@ interface ToolbarItemListProps {
   orientation: 'horizontal' | 'vertical';
   dropTarget: number | null;
   isLocked: boolean;
-  onDragOver: (event: React.DragEvent<HTMLButtonElement>, index: number) => void;
-  onDrop: (event: React.DragEvent<HTMLButtonElement>, index: number) => void;
+  onDragOver: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onDrop: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
   onReorder: (fromIndex: number, toIndex: number) => void;
 }
 
