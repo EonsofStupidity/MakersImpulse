@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
 import { Button } from "@/components/ui/button";
-import ImageThumbnails from './components/ImageThumbnails';
+import ImageGallery from './components/ImageGallery';
 import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
 
@@ -29,14 +29,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   // Ensure images is always an array, even if undefined
   const images = post.images || [];
-  console.log('Images in BlogPostCard:', images);
-
+  
   // Use featured_image if available, otherwise use first image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
-  console.log('Featured image:', featuredImage);
 
   const handleImageClick = (index: number) => {
-    console.log('Image clicked:', index);
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
@@ -104,12 +101,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Image Thumbnails */}
+        {/* Image Gallery */}
         {images.length > 0 && (
-          <div className="absolute -bottom-12 left-0 right-0 px-8">
-            <ImageThumbnails 
+          <div className="absolute -bottom-12 left-0 right-0">
+            <ImageGallery 
               images={images} 
-              onImageClick={handleImageClick} 
+              onImageClick={handleImageClick}
             />
           </div>
         )}
