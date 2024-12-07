@@ -56,6 +56,7 @@ export const ToolbarItem = ({
       e.preventDefault();
       return;
     }
+    console.log('Drag start:', index);
     e.dataTransfer.setData('toolbar-index', index.toString());
   };
 
@@ -64,7 +65,8 @@ export const ToolbarItem = ({
     
     e.preventDefault();
     const draggedIndex = parseInt(e.dataTransfer.getData('toolbar-index'));
-    if (draggedIndex !== index) {
+    if (!isNaN(draggedIndex) && draggedIndex !== index) {
+      console.log('Reordering from', draggedIndex, 'to', index);
       onReorder(draggedIndex, index);
     }
   };
