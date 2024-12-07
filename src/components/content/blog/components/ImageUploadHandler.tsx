@@ -3,6 +3,7 @@ import { Upload, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useSession } from '@/components/auth/SessionContext';
 
 interface ImageUploadHandlerProps {
   postId: string;
@@ -11,29 +12,47 @@ interface ImageUploadHandlerProps {
 
 const ImageUploadHandler: React.FC<ImageUploadHandlerProps> = ({ postId, onImageUploaded }) => {
   const [uploading, setUploading] = useState(false);
+  const { session } = useSession();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const file = event.target.files?.[0];
       if (!file) return;
 
+      if (!session?.user) {
+        toast.error("You must be logged in to upload images");
+        return;
+      }
+
       setUploading(true);
+      console.log('Starting upload process for file:', file.name);
       
       // Upload to storage
       const fileExt = file.name.split('.').pop();
       const fileName = `${Math.random()}.${fileExt}`;
       const filePath = `blog-posts/${postId}/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('media')
-        .upload(filePath, file);
+      console.log('Uploading to path:', filePath);
 
-      if (uploadError) throw uploadError;
+      const { error: uploadError, data: uploadData } = await supabase.storage
+        .from('media')
+        .upload(filePath, file, {
+          upsert: false
+        });
+
+      if (uploadError) {
+        console.error('Upload error:', uploadError);
+        throw uploadError;
+      }
+
+      console.log('Upload successful:', uploadData);
 
       // Get public URL
       const { data: { publicUrl } } = supabase.storage
         .from('media')
         .getPublicUrl(filePath);
+
+      console.log('Public URL generated:', publicUrl);
 
       // Create media record
       const { error: mediaError } = await supabase
@@ -43,10 +62,16 @@ const ImageUploadHandler: React.FC<ImageUploadHandlerProps> = ({ postId, onImage
           url: publicUrl,
           type: file.type,
           size: file.size,
-          blog_post_id: postId
+          blog_post_id: postId,
+          user_id: session.user.id // Add the user_id to comply with RLS
         });
 
-      if (mediaError) throw mediaError;
+      if (mediaError) {
+        console.error('Media record error:', mediaError);
+        throw mediaError;
+      }
+
+      console.log('Media record created successfully');
 
       // Append to blog post images array
       const { error: appendError } = await supabase.rpc(
@@ -54,7 +79,12 @@ const ImageUploadHandler: React.FC<ImageUploadHandlerProps> = ({ postId, onImage
         { post_id: postId, image_url: publicUrl }
       );
 
-      if (appendError) throw appendError;
+      if (appendError) {
+        console.error('Append error:', appendError);
+        throw appendError;
+      }
+
+      console.log('Image appended to blog post successfully');
 
       onImageUploaded(publicUrl);
       toast.success('Image uploaded successfully');
