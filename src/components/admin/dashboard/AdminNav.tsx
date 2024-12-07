@@ -91,7 +91,8 @@ export const AdminNav = () => {
       const itemData = {
         id: item.id,
         icon: iconName,
-        label: item.label
+        label: item.label,
+        to: item.to // Include navigation path
       };
 
       console.log('Setting drag data:', itemData);

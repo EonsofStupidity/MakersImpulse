@@ -4,12 +4,14 @@ export interface ToolbarItemType {
   id: string;
   icon: string | LucideIcon;
   label: string;
+  to?: string; // Add navigation path
 }
 
 export interface DraggedItemData {
   id: string;
   icon: string;
   label: string;
+  to?: string;
 }
 
 export interface DragEventHandlers {

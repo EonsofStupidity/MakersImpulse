@@ -4,6 +4,7 @@ import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 import type { ToolbarItemProps } from './types';
 
 export const ToolbarItem = ({ 
@@ -16,13 +17,13 @@ export const ToolbarItem = ({
   onDrop,
   onReorder 
 }: ToolbarItemProps) => {
+  const navigate = useNavigate();
   let IconComponent: LucideIcon | null = null;
 
   try {
     if (typeof item.icon === 'string') {
       const icons = LucideIcons as unknown as Record<string, LucideIcon>;
       IconComponent = icons[item.icon];
-      console.log('Resolved icon component:', item.icon);
     } else {
       IconComponent = item.icon;
     }
@@ -37,11 +38,16 @@ export const ToolbarItem = ({
     return null;
   }
 
+  const handleClick = () => {
+    if (item.to) {
+      navigate(item.to);
+      toast.success(`Navigating to ${item.label}`);
+    }
+  };
+
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     if (isLocked) {
-      console.log('Drag prevented - toolbar is locked');
       e.preventDefault();
-      toast.error('Toolbar is locked. Unlock it to reorder items.');
       return;
     }
     
@@ -65,23 +71,13 @@ export const ToolbarItem = ({
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
-    if (isLocked) {
-      console.log('Drag enter prevented - toolbar is locked');
-      return;
-    }
+    if (isLocked) return;
     
     try {
       e.preventDefault();
       const draggedIndex = parseInt(e.dataTransfer.getData('toolbar-index'));
       
-      console.log('Drag enter event:', {
-        draggedIndex,
-        targetIndex: index,
-        isLocked
-      });
-
       if (!isNaN(draggedIndex) && draggedIndex !== index) {
-        console.log('Reordering from', draggedIndex, 'to', index);
         onReorder(draggedIndex, index);
       }
     } catch (error) {
@@ -93,7 +89,7 @@ export const ToolbarItem = ({
     <div
       className={cn(
         "relative",
-        isLocked ? "cursor-not-allowed" : "cursor-grab active:cursor-grabbing"
+        isLocked ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
       )}
       draggable={!isLocked}
       onDragStart={handleDragStart}
@@ -101,32 +97,30 @@ export const ToolbarItem = ({
       onDragOver={(e) => {
         if (!isLocked) {
           e.preventDefault();
-          console.log('Drag over event at index:', index);
           onDragOver(e);
         }
       }}
       onDragLeave={(e) => {
         if (!isLocked) {
-          console.log('Drag leave event at index:', index);
           onDragLeave(e);
         }
       }}
       onDrop={(e) => {
         if (!isLocked) {
-          console.log('Drop event at index:', index);
           onDrop(e);
         }
       }}
+      onClick={handleClick}
     >
       <motion.div
         className={cn(
           "p-2 rounded-lg transition-all group w-full",
           isLocked 
-            ? "bg-white/5 text-white/60"
+            ? "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
             : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
         )}
-        whileHover={!isLocked ? { scale: 1.1 } : undefined}
-        whileTap={!isLocked ? { scale: 0.95 } : undefined}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
         layout
       >
         <div className="flex items-center gap-2">

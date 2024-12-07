@@ -108,6 +108,7 @@ export const AdminToolbar = () => {
         id: draggedItemData.id,
         icon: draggedItemData.icon,
         label: draggedItemData.label,
+        to: draggedItemData.to // Include navigation path
       };
 
       console.log('Creating new toolbar item:', newItem);
@@ -135,7 +136,18 @@ export const AdminToolbar = () => {
     setToolbarItems(newItems);
   };
 
+  const toggleLock = () => {
+    setIsLocked(!isLocked);
+    toast.success(isLocked ? 'Toolbar unlocked' : 'Toolbar locked', {
+      description: isLocked ? 'You can now modify shortcuts' : 'Shortcuts and controls are now locked'
+    });
+  };
+
   const toggleOrientation = () => {
+    if (isLocked) {
+      toast.error('Unlock the toolbar to change orientation');
+      return;
+    }
     setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
     toast.success(`Toolbar orientation changed to ${orientation === 'horizontal' ? 'vertical' : 'horizontal'}`);
   };
@@ -164,15 +176,23 @@ export const AdminToolbar = () => {
             checked={isPersistent}
             onCheckedChange={setIsPersistent}
             className="data-[state=checked]:bg-[#41f0db]"
+            disabled={isLocked}
           />
         </div>
         <button
-          onClick={() => setIsIconOnly(!isIconOnly)}
+          onClick={() => {
+            if (isLocked) {
+              toast.error('Unlock the toolbar to toggle labels');
+              return;
+            }
+            setIsIconOnly(!isIconOnly);
+          }}
           className={cn(
             "p-2 rounded-lg transition-colors duration-200",
-            "bg-white/5 text-white/60 hover:text-white"
+            isLocked ? "opacity-50 cursor-not-allowed" : "bg-white/5 text-white/60 hover:text-white"
           )}
           title={isIconOnly ? "Show labels" : "Hide labels"}
+          disabled={isLocked}
         >
           <ArrowLeftRight className="w-4 h-4" />
         </button>
@@ -180,14 +200,15 @@ export const AdminToolbar = () => {
           onClick={toggleOrientation}
           className={cn(
             "p-2 rounded-lg transition-colors duration-200",
-            "bg-white/5 text-white/60 hover:text-white"
+            isLocked ? "opacity-50 cursor-not-allowed" : "bg-white/5 text-white/60 hover:text-white"
           )}
           title="Toggle orientation"
+          disabled={isLocked}
         >
           <RotateCw className="w-4 h-4" />
         </button>
         <button
-          onClick={() => setIsLocked(!isLocked)}
+          onClick={toggleLock}
           className={cn(
             "p-2 rounded-lg transition-colors duration-200",
             isLocked ? "bg-[#41f0db]/20 text-[#41f0db]" : "bg-white/5 text-white/60 hover:text-white"
