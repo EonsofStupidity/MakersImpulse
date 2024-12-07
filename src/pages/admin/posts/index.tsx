@@ -39,6 +39,19 @@ import {
 import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 
+interface PostWithAuthor {
+  id: string;
+  title: string;
+  content: string;
+  status: string | null;
+  updated_at: string | null;
+  views_count: number | null;
+  profiles: {
+    display_name: string | null;
+    username: string | null;
+  } | null;
+}
+
 const PostsManagement = () => {
   const { data: posts, isLoading, refetch } = useQuery({
     queryKey: ['admin-posts'],
@@ -60,7 +73,7 @@ const PostsManagement = () => {
         throw error;
       }
       console.log('Posts fetched successfully:', data);
-      return data;
+      return data as PostWithAuthor[];
     },
   });
 
