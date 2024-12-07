@@ -12,7 +12,7 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
     
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
-    const filePath = `blog-posts/${postId}/${fileName}`;
+    const filePath = `uploads/${fileName}`; // Simplified path structure
 
     console.log('Uploading file to path:', filePath);
 
@@ -66,9 +66,8 @@ export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
     }
 
     const [, bucket, path] = urlMatch;
-    const pathParts = path.split('/');
-    const fileName = pathParts.pop();
-    const directory = pathParts.join('/');
+    const directory = path.split('/')[0]; // Get the first directory segment
+    const fileName = path.split('/').pop(); // Get the file name
 
     console.log('Checking file in bucket:', bucket, 'directory:', directory, 'filename:', fileName);
 

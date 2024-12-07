@@ -48,16 +48,20 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       setIsLoading(true);
       const errors: Record<string, boolean> = {};
 
-      await Promise.all(
+      const validationResults = await Promise.all(
         images.map(async (imageUrl) => {
           console.log('Validating image:', imageUrl);
           const isValid = await validateBlogImage(imageUrl);
           console.log('Image validation result:', imageUrl, isValid);
-          if (!isValid) {
-            errors[imageUrl] = true;
-          }
+          return { imageUrl, isValid };
         })
       );
+
+      validationResults.forEach(({ imageUrl, isValid }) => {
+        if (!isValid) {
+          errors[imageUrl] = true;
+        }
+      });
 
       console.log('Validation complete, errors:', errors);
       setImageLoadErrors(errors);
@@ -65,7 +69,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     };
 
     validateImages();
-  }, [images]);
+  }, [images, post.id]);
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
