@@ -2,17 +2,14 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ToolbarItem } from "./ToolbarItem";
 import { ToolbarDropIndicator } from "./ToolbarDropIndicator";
-import { ToolbarItemType } from "./types";
+import { ToolbarItemType, DragEventHandlers } from "./types";
 
-interface ToolbarItemListProps {
+interface ToolbarItemListProps extends DragEventHandlers {
   items: ToolbarItemType[];
   isIconOnly: boolean;
   orientation: 'horizontal' | 'vertical';
   dropTarget: number | null;
   isLocked: boolean;
-  onDragOver: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
-  onDrop: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
-  onReorder: (fromIndex: number, toIndex: number) => void;
 }
 
 export const ToolbarItemList = ({

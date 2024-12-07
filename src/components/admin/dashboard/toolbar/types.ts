@@ -11,3 +11,9 @@ export interface DraggedItemData {
   icon: string;
   label: string;
 }
+
+export interface DragEventHandlers {
+  onDragOver: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onDrop: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onReorder: (fromIndex: number, toIndex: number) => void;
+}
