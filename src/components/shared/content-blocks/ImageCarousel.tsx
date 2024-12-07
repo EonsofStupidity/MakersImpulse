@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowLeft, ArrowRight } from "lucide-react";
+import { X, ArrowLeft, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ImageCarouselProps {
   images: string[];
@@ -79,22 +79,21 @@ const ImageCarousel = ({
   return (
     <div className={`relative w-full h-full ${className}`}>
       <div className="flex flex-col items-center justify-center h-full">
-        {/* Main image container with relative positioning */}
-        <div className="relative w-full flex-1 flex items-center justify-center">
-          {/* ESC to close message - positioned above image */}
-          <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="absolute -top-16 left-1/2 -translate-x-1/2 z-50"
-          >
-            <div className="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
-              <X size={16} className="text-white/80" />
-              <span className="text-sm text-white/90">ESC to close</span>
-            </div>
-          </motion.div>
+        {/* ESC to close message - floating above image */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="absolute top-4 left-1/2 -translate-x-1/2 z-50"
+        >
+          <div className="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
+            <X size={16} className="text-white/80" />
+            <span className="text-sm text-white/90">ESC to close</span>
+          </div>
+        </motion.div>
 
-          {/* Image carousel */}
+        {/* Main image container */}
+        <div className="relative w-full flex-1 flex items-center justify-center">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={currentIndex}
@@ -103,7 +102,7 @@ const ImageCarousel = ({
               initial="enter"
               animate="center"
               exit="exit"
-              className="relative w-full h-full flex items-center justify-center p-8"
+              className="absolute inset-0 flex items-center justify-center p-8"
             >
               <img
                 src={images[currentIndex]}
@@ -129,8 +128,8 @@ const ImageCarousel = ({
           </button>
         </div>
 
-        {/* Controls and counter - positioned below image */}
-        <div className="flex flex-col items-center gap-4 mt-8">
+        {/* Controls and counter - centered below image */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
