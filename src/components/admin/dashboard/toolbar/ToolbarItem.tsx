@@ -36,7 +36,7 @@ export const ToolbarItem = ({
     if (typeof item.icon === 'string') {
       const icons = LucideIcons as any;
       IconComponent = icons[item.icon];
-      console.log('Found icon component for:', item.icon);
+      console.log('Resolved icon component:', item.icon);
     } else {
       IconComponent = item.icon;
     }
@@ -53,21 +53,54 @@ export const ToolbarItem = ({
 
   const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
     if (isLocked) {
+      console.log('Drag prevented - toolbar is locked');
       e.preventDefault();
+      toast.error('Toolbar is locked. Unlock it to reorder items.');
       return;
     }
-    console.log('Drag start:', index);
-    e.dataTransfer.setData('toolbar-index', index.toString());
+    
+    try {
+      console.log('Starting drag operation:', {
+        index,
+        itemId: item.id,
+        isLocked
+      });
+      
+      e.dataTransfer.setData('toolbar-index', index.toString());
+      e.dataTransfer.effectAllowed = 'move';
+      
+      // Add visual feedback
+      toast.info('Dragging toolbar item...', {
+        description: `Moving ${item.label}`
+      });
+    } catch (error) {
+      console.error('Error in drag start:', error);
+      toast.error('Failed to start drag operation');
+    }
   };
 
   const handleDragEnter = (e: React.DragEvent<HTMLButtonElement>) => {
-    if (isLocked) return;
+    if (isLocked) {
+      console.log('Drag enter prevented - toolbar is locked');
+      return;
+    }
     
-    e.preventDefault();
-    const draggedIndex = parseInt(e.dataTransfer.getData('toolbar-index'));
-    if (!isNaN(draggedIndex) && draggedIndex !== index) {
-      console.log('Reordering from', draggedIndex, 'to', index);
-      onReorder(draggedIndex, index);
+    try {
+      e.preventDefault();
+      const draggedIndex = parseInt(e.dataTransfer.getData('toolbar-index'));
+      
+      console.log('Drag enter event:', {
+        draggedIndex,
+        targetIndex: index,
+        isLocked
+      });
+
+      if (!isNaN(draggedIndex) && draggedIndex !== index) {
+        console.log('Reordering from', draggedIndex, 'to', index);
+        onReorder(draggedIndex, index);
+      }
+    } catch (error) {
+      console.error('Error in drag enter:', error);
     }
   };
 
@@ -76,13 +109,24 @@ export const ToolbarItem = ({
       className={cn(
         "p-2 rounded-lg transition-all group relative",
         isLocked 
-          ? "bg-white/5 text-white/60"
-          : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
+          ? "bg-white/5 text-white/60 cursor-not-allowed"
+          : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] cursor-grab active:cursor-grabbing"
       )}
-      whileHover={!isLocked ? { scale: 1.1 } : {}}
-      whileTap={!isLocked ? { scale: 0.95 } : {}}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
+      whileHover={!isLocked ? { scale: 1.1 } : undefined}
+      whileTap={!isLocked ? { scale: 0.95 } : undefined}
+      onDragOver={(e) => {
+        if (!isLocked) {
+          e.preventDefault();
+          console.log('Drag over event at index:', index);
+          onDragOver(e);
+        }
+      }}
+      onDrop={(e) => {
+        if (!isLocked) {
+          console.log('Drop event at index:', index);
+          onDrop(e);
+        }
+      }}
       draggable={!isLocked}
       onDragStart={handleDragStart}
       onDragEnter={handleDragEnter}
