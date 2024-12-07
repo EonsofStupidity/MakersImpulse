@@ -42,9 +42,29 @@ export const AdminToolbar = () => {
     try {
       event.preventDefault();
       console.log('Drag over event at index:', index);
+      
+      // Visual feedback for drag over
+      const target = event.currentTarget;
+      target.style.background = 'rgba(65, 240, 219, 0.1)';
+      target.style.transform = 'scale(1.02)';
+      
       setDropTarget(index);
     } catch (error) {
       console.error('Error in handleDragOver:', error);
+    }
+  };
+
+  const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
+    if (isLocked) return;
+    
+    try {
+      const target = event.currentTarget;
+      target.style.background = '';
+      target.style.transform = '';
+      
+      console.log('Drag leave event');
+    } catch (error) {
+      console.error('Error in handleDragLeave:', error);
     }
   };
 
@@ -57,6 +77,11 @@ export const AdminToolbar = () => {
     try {
       event.preventDefault();
       console.log('Drop event:', event);
+      
+      // Reset visual styles
+      const target = event.currentTarget;
+      target.style.background = '';
+      target.style.transform = '';
       
       const jsonData = event.dataTransfer.getData('application/json');
       console.log('Received JSON data:', jsonData);
@@ -124,7 +149,8 @@ export const AdminToolbar = () => {
         "rounded-xl shadow-2xl",
         "before:absolute before:inset-0 before:rounded-xl",
         "before:bg-gradient-to-r before:from-[#9b87f5]/20 before:to-[#ff69b4]/20",
-        "before:animate-gradient before:bg-[length:200%_200%]"
+        "before:animate-gradient before:bg-[length:200%_200%]",
+        dropTarget !== null && "ring-2 ring-[#41f0db]/30"
       )}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -177,6 +203,7 @@ export const AdminToolbar = () => {
           orientation={orientation}
           dropTarget={dropTarget}
           onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onReorder={handleReorder}
           isLocked={isLocked}

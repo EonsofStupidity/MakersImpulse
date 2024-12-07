@@ -14,6 +14,7 @@ export interface DraggedItemData {
 
 export interface DragEventHandlers {
   onDragOver: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
+  onDragLeave: (event: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>, index: number) => void;
   onReorder: (fromIndex: number, toIndex: number) => void;
 }
