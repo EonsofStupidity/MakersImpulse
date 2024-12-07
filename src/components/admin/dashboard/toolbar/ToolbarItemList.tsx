@@ -19,6 +19,7 @@ export const ToolbarItemList = ({
   dropTarget,
   isLocked,
   onDragOver,
+  onDragLeave,
   onDrop,
   onReorder
 }: ToolbarItemListProps) => {
@@ -27,32 +28,44 @@ export const ToolbarItemList = ({
       className={`relative flex gap-2 p-2 ${orientation === 'horizontal' ? 'flex-row' : 'flex-col'}`}
       layout
     >
-      {items.map((item, index) => (
-        <React.Fragment key={item.id}>
-          <ToolbarDropIndicator
-            orientation={orientation}
-            isActive={dropTarget === index}
-            index={index}
-            itemCount={items.length}
-          />
-          <ToolbarItem
-            item={item}
-            index={index}
-            isIconOnly={isIconOnly}
-            isLocked={isLocked}
-            onDragOver={(e) => onDragOver(e, index)}
-            onDrop={(e) => onDrop(e, index)}
-            onReorder={onReorder}
-          />
-        </React.Fragment>
-      ))}
-      {items.length === 0 && (
+      {items.length > 0 ? (
+        items.map((item, index) => (
+          <React.Fragment key={item.id}>
+            <ToolbarDropIndicator
+              orientation={orientation}
+              isActive={dropTarget === index}
+              index={index}
+              itemCount={items.length}
+            />
+            <ToolbarItem
+              item={item}
+              index={index}
+              isIconOnly={isIconOnly}
+              isLocked={isLocked}
+              onDragOver={(e) => onDragOver(e, index)}
+              onDragLeave={onDragLeave}
+              onDrop={(e) => onDrop(e, index)}
+              onReorder={onReorder}
+            />
+          </React.Fragment>
+        ))
+      ) : (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          className="text-white/50 text-sm px-4 py-2"
+          animate={{ opacity: 1 }}
+          className="relative z-50 min-w-[200px] min-h-[100px] flex items-center justify-center"
+          onDragOver={(e) => {
+            e.preventDefault();
+            e.currentTarget.style.background = 'rgba(65, 240, 219, 0.1)';
+          }}
+          onDragLeave={(e) => {
+            e.currentTarget.style.background = '';
+          }}
+          onDrop={(e) => onDrop(e, 0)}
         >
-          Drag items here to create shortcuts
+          <div className="text-white/50 text-sm px-4 py-2 pointer-events-none">
+            Drag items here to create shortcuts
+          </div>
         </motion.div>
       )}
     </motion.div>

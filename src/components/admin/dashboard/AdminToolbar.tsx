@@ -41,9 +41,9 @@ export const AdminToolbar = () => {
     
     try {
       event.preventDefault();
+      event.stopPropagation();
       console.log('Drag over event at index:', index);
       
-      // Visual feedback for drag over
       const target = event.currentTarget;
       target.style.background = 'rgba(65, 240, 219, 0.1)';
       target.style.transform = 'scale(1.02)';
@@ -58,6 +58,7 @@ export const AdminToolbar = () => {
     if (isLocked) return;
     
     try {
+      event.stopPropagation();
       const target = event.currentTarget;
       target.style.background = '';
       target.style.transform = '';
@@ -76,9 +77,9 @@ export const AdminToolbar = () => {
 
     try {
       event.preventDefault();
+      event.stopPropagation();
       console.log('Drop event:', event);
       
-      // Reset visual styles
       const target = event.currentTarget;
       target.style.background = '';
       target.style.transform = '';
@@ -97,7 +98,6 @@ export const AdminToolbar = () => {
         throw new Error('Invalid item data structure');
       }
 
-      // Check if item already exists
       const itemExists = toolbarItems.some(item => item.id === draggedItemData.id);
       if (itemExists) {
         toast.error('This shortcut already exists in the toolbar');
@@ -143,11 +143,11 @@ export const AdminToolbar = () => {
   return (
     <motion.div
       className={cn(
-        "fixed z-50 flex transition-all duration-300",
+        "fixed z-[100] flex transition-all duration-300",
         orientation === 'horizontal' ? 'top-20 right-4 flex-row' : 'top-20 right-4 flex-col',
         "bg-black/20 backdrop-blur-lg border border-white/10",
-        "rounded-xl shadow-2xl",
-        "before:absolute before:inset-0 before:rounded-xl",
+        "rounded-xl shadow-2xl overflow-visible",
+        "before:absolute before:inset-0 before:rounded-xl before:z-0",
         "before:bg-gradient-to-r before:from-[#9b87f5]/20 before:to-[#ff69b4]/20",
         "before:animate-gradient before:bg-[length:200%_200%]",
         dropTarget !== null && "ring-2 ring-[#41f0db]/30"
@@ -157,7 +157,7 @@ export const AdminToolbar = () => {
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
     >
-      <div className="absolute -top-12 right-0 flex items-center gap-4 text-white/80">
+      <div className="absolute -top-12 right-0 flex items-center gap-4 text-white/80 z-[101]">
         <div className="flex items-center gap-2">
           <span className="text-sm">Persist Toolbar</span>
           <Switch
