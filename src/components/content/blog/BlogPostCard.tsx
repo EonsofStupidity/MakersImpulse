@@ -29,11 +29,14 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   // Ensure images is always an array, even if undefined
   const images = post.images || [];
+  console.log('Post images:', images); // Debug log
   
   // Use featured_image if available, otherwise use first image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
+  console.log('Featured image:', featuredImage); // Debug log
 
   const handleImageClick = (index: number) => {
+    console.log('Image clicked:', index); // Debug log
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
@@ -54,8 +57,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             >
               <motion.img 
                 src={featuredImage} 
-                alt="" 
+                alt={post.title}
                 className="w-full h-full object-cover opacity-50"
+                onError={(e) => {
+                  console.error('Image failed to load:', featuredImage);
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-[#ff0abe]/20 to-black/80 mix-blend-overlay" />
             </motion.div>
@@ -101,9 +108,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Image Gallery */}
+        {/* Image Gallery - Only show if there are images */}
         {images.length > 0 && (
-          <div className="absolute -bottom-12 left-0 right-0">
+          <div className="absolute -bottom-12 left-0 right-0 z-30">
             <ImageGallery 
               images={images} 
               onImageClick={handleImageClick}
@@ -112,19 +119,23 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         )}
       </motion.div>
 
+      {/* Expanded Post Dialog */}
       <ExpandedPost
         isOpen={isExpanded}
         onOpenChange={setIsExpanded}
         post={post}
       />
 
-      <ImageCarouselDialog
-        isOpen={showCarousel}
-        onOpenChange={setShowCarousel}
-        images={images}
-        currentIndex={currentImageIndex}
-        onIndexChange={setCurrentImageIndex}
-      />
+      {/* Image Carousel Dialog */}
+      {images.length > 0 && (
+        <ImageCarouselDialog
+          isOpen={showCarousel}
+          onOpenChange={setShowCarousel}
+          images={images}
+          currentIndex={currentImageIndex}
+          onIndexChange={setCurrentImageIndex}
+        />
+      )}
     </div>
   );
 };
