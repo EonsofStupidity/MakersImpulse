@@ -8,7 +8,7 @@ interface BlogPostMetaProps {
 
 const BlogPostMeta: React.FC<BlogPostMetaProps> = ({ publishedAt, viewsCount }) => {
   return (
-    <div className="absolute -bottom-[84px] right-8 flex items-center gap-4 text-sm">
+    <div className="absolute -bottom-84 right-8 flex items-center gap-4 text-sm">
       <span className="text-[#ff0abe]">
         {publishedAt ? 
           formatDistanceToNow(new Date(publishedAt), { addSuffix: true }) :
