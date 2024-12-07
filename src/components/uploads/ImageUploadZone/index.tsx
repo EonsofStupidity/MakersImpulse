@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,7 +13,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { validateImageFile, validateMaxCount, ACCEPTED_IMAGE_FORMATS } from "@/utils/validation";
+import { 
+  validateImageFile, 
+  validateMaxCount, 
+  validateDuplicateFile,
+  ACCEPTED_IMAGE_FORMATS 
+} from "@/utils/validation";
 import { ImageUploadZoneProps } from "./types";
 
 const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChange }) => {
@@ -30,26 +36,40 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
     }
   };
 
+  const validateAndProcessFiles = (files: File[]) => {
+    const validFiles = files.filter(file => {
+      if (!validateImageFile(file)) {
+        return false;
+      }
+      if (!validateMaxCount(images.length)) {
+        toast.error("Maximum number of images reached");
+        return false;
+      }
+      if (!validateDuplicateFile(file, images)) {
+        toast.error(`Sorry, ${file.name} already exists in this directory`);
+        return false;
+      }
+      return true;
+    });
+    
+    if (validFiles.length > 0) {
+      onImagesChange([...images, ...validFiles].slice(0, 7));
+    }
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-
-    const files = Array.from(e.dataTransfer.files).filter(file => 
-      validateImageFile(file) && validateMaxCount(images.length)
-    );
     
-    if (files.length > 0) {
-      onImagesChange([...images, ...files].slice(0, 7));
-    }
+    const files = Array.from(e.dataTransfer.files);
+    validateAndProcessFiles(files);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files).filter(file => 
-        validateImageFile(file) && validateMaxCount(images.length)
-      );
-      onImagesChange([...images, ...newFiles].slice(0, 7));
+      const files = Array.from(e.target.files);
+      validateAndProcessFiles(files);
     }
   };
 
