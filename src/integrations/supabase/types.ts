@@ -16,6 +16,7 @@ export type Database = {
           excerpt: string | null
           featured_image: string | null
           id: string
+          images: string[] | null
           published_at: string | null
           slug: string
           status: string | null
@@ -29,6 +30,7 @@ export type Database = {
           excerpt?: string | null
           featured_image?: string | null
           id?: string
+          images?: string[] | null
           published_at?: string | null
           slug: string
           status?: string | null
@@ -42,6 +44,7 @@ export type Database = {
           excerpt?: string | null
           featured_image?: string | null
           id?: string
+          images?: string[] | null
           published_at?: string | null
           slug?: string
           status?: string | null
@@ -176,7 +179,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      append_blog_image: {
+        Args: {
+          post_id: string
+          image_url: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       user_role: "subscriber" | "maker" | "admin" | "super_admin"

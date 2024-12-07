@@ -27,14 +27,16 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
 
+  // Ensure images is always an array, even if undefined
   const images = post.images || [];
-  console.log('Images in BlogPostCard:', images); // Debug log
+  console.log('Images in BlogPostCard:', images);
 
+  // Use featured_image if available, otherwise use first image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
-  console.log('Featured image:', featuredImage); // Debug log
+  console.log('Featured image:', featuredImage);
 
   const handleImageClick = (index: number) => {
-    console.log('Image clicked:', index); // Debug log
+    console.log('Image clicked:', index);
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
@@ -102,7 +104,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
         </div>
 
-        {/* Image Thumbnails - Now positioned absolutely at the bottom */}
+        {/* Image Thumbnails */}
         {images.length > 0 && (
           <div className="absolute -bottom-12 left-0 right-0 px-8">
             <ImageThumbnails 
