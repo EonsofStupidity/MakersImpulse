@@ -50,7 +50,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] dark px-4">
       <Card className="w-full max-w-md glass animate-fade-in">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center text-white">Welcome back</CardTitle>
