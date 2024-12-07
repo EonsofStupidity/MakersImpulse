@@ -15,34 +15,46 @@ export const validateImageFile = (file: File): boolean => {
 export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
   try {
     if (!imageUrl) {
-      console.error('Invalid image URL provided');
+      console.log('No image URL provided');
       return false;
     }
 
-    // Extract bucket name and file path from URL
-    const urlParts = imageUrl.split('/storage/v1/object/public/');
-    if (urlParts.length !== 2) {
-      console.error('Invalid Supabase storage URL format');
+    // Simple URL validation first
+    if (!imageUrl.includes('storage/v1/object/public/')) {
+      console.log('Invalid storage URL format:', imageUrl);
       return false;
     }
 
-    const [bucket, filePath] = urlParts[1].split('/', 1);
-    const path = urlParts[1].slice(bucket.length + 1);
+    // Get bucket and path
+    const parts = imageUrl.split('storage/v1/object/public/')[1];
+    if (!parts) {
+      console.log('Could not extract bucket and path from URL:', imageUrl);
+      return false;
+    }
 
-    // Get the file metadata directly
+    const [bucket, ...pathParts] = parts.split('/');
+    const path = pathParts.join('/');
+
+    console.log('Checking image in bucket:', bucket, 'path:', path);
+
+    // List files in the path to verify existence
     const { data, error } = await supabase
       .storage
       .from(bucket)
-      .createSignedUrl(path, 60);
+      .list(path.split('/').slice(0, -1).join('/'), {
+        limit: 1,
+        offset: 0,
+        search: path.split('/').pop()
+      });
 
     if (error) {
-      console.error('Error validating image:', error);
+      console.error('Storage list error:', error);
       return false;
     }
 
-    return !!data;
+    return data && data.length > 0;
   } catch (error) {
-    console.error('Error in validateBlogImage:', error);
+    console.error('Error validating blog image:', error);
     return false;
   }
 };

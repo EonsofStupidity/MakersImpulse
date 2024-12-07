@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { toast } from "sonner";
 import ImageGallery from './components/ImageGallery';
 import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
@@ -43,12 +42,14 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       }
 
       setIsLoading(true);
+      console.log('Starting image validation for post:', post.id);
       const errors: Record<string, boolean> = {};
 
       for (const imageUrl of images) {
+        console.log('Validating image:', imageUrl);
         const isValid = await validateBlogImage(imageUrl);
         if (!isValid) {
-          console.error('Image validation failed:', imageUrl);
+          console.log('Image validation failed:', imageUrl);
           errors[imageUrl] = true;
         }
       }
@@ -58,7 +59,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     };
 
     validateImages();
-  }, [images]);
+  }, [images, post.id]);
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -91,6 +92,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
                   onError={() => {
+                    console.log('Featured image failed to load:', featuredImage);
                     setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
                   }}
                 />
