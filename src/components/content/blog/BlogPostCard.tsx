@@ -8,7 +8,7 @@ import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
 import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
-import { validateBlogImage } from './utils/imageValidation';
+import { validateBlogImage } from '@/utils/validation/image/imageValidation';
 
 interface BlogPostCardProps {
   post: {
@@ -32,43 +32,39 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
-
-  // Ensure images is always an array and filter out any null/undefined values
   const images = (post.images || []).filter(Boolean);
-  
-  // Use featured_image if available, otherwise use first valid image from images array
   const featuredImage = post.featured_image || (images.length > 0 ? images[0] : null);
 
   useEffect(() => {
     const validateImages = async () => {
-      if (images.length > 0) {
-        setIsLoading(true);
-        console.log('Starting image validation for post:', post.id);
-
-        for (const imageUrl of images) {
-          const isValid = await validateBlogImage(imageUrl);
-          if (!isValid) {
-            console.error('Image validation failed:', imageUrl);
-            setImageLoadErrors(prev => ({ ...prev, [imageUrl]: true }));
-            toast.error(`Failed to validate image: ${imageUrl}`);
-          }
-        }
-
+      if (!images.length) {
         setIsLoading(false);
-      } else {
-        setIsLoading(false);
+        return;
       }
+
+      setIsLoading(true);
+      const errors: Record<string, boolean> = {};
+
+      for (const imageUrl of images) {
+        const isValid = await validateBlogImage(imageUrl);
+        if (!isValid) {
+          console.error('Image validation failed:', imageUrl);
+          errors[imageUrl] = true;
+        }
+      }
+
+      setImageLoadErrors(errors);
+      setIsLoading(false);
     };
 
     validateImages();
-  }, [images, post.id]);
+  }, [images]);
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
 
-  // Filter out images that failed to load
   const validImages = images.filter(img => !imageLoadErrors[img]);
 
   return (
@@ -95,7 +91,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
                   onError={() => {
-                    console.error('Featured image failed to load:', featuredImage);
                     setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
                   }}
                 />
