@@ -4,80 +4,60 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageCarouselProps {
   images: string[];
-  isOpen: boolean;
   currentIndex: number;
-  onClose: () => void;
-  onNavigate: (direction: 'next' | 'prev') => void;
+  onIndexChange: (index: number) => void;
+  className?: string;
 }
 
-const ImageCarousel = ({ images, isOpen, currentIndex, onClose, onNavigate }: ImageCarouselProps) => {
-  useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (!isOpen) return;
-      
-      switch (e.key) {
-        case 'Escape':
-          onClose();
-          break;
-        case 'ArrowRight':
-        case ' ':
-          onNavigate('next');
-          break;
-        case 'ArrowLeft':
-          onNavigate('prev');
-          break;
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
-    return () => window.removeEventListener('keydown', handleKeyPress);
-  }, [isOpen, onClose, onNavigate]);
-
-  const handleWheel = (e: React.WheelEvent) => {
-    if (e.deltaY > 0) {
-      onNavigate('next');
-    } else {
-      onNavigate('prev');
+const ImageCarousel = ({ images, currentIndex, onIndexChange, className = "" }: ImageCarouselProps) => {
+  const handleKeyPress = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'ArrowRight':
+      case ' ':
+        onIndexChange(currentIndex < images.length - 1 ? currentIndex + 1 : 0);
+        break;
+      case 'ArrowLeft':
+        onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1);
+        break;
     }
   };
 
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90"
-          onWheel={handleWheel}
-        >
-          <div className="absolute top-4 right-4 flex items-center gap-4 text-white/70">
-            <span className="text-sm">Press ESC to close</span>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
+  const handleWheel = (e: WheelEvent) => {
+    if (e.deltaY > 0) {
+      onIndexChange(currentIndex < images.length - 1 ? currentIndex + 1 : 0);
+    } else {
+      onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1);
+    }
+  };
 
-          <motion.div
-            key={currentIndex}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.8, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="relative max-w-4xl max-h-[80vh]"
-          >
-            <img
-              src={images[currentIndex]}
-              alt={`Image ${currentIndex + 1}`}
-              className="w-full h-full object-contain"
-            />
-          </motion.div>
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener('wheel', handleWheel);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, [currentIndex, images.length]);
+
+  return (
+    <div className={`relative w-full h-full ${className}`}>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.9 }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          className="w-full h-full"
+        >
+          <img
+            src={images[currentIndex]}
+            alt={`Image ${currentIndex + 1}`}
+            className="w-full h-full object-contain"
+          />
         </motion.div>
-      )}
-    </AnimatePresence>
+      </AnimatePresence>
+    </div>
   );
 };
 
