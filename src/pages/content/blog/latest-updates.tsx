@@ -7,13 +7,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 
 const fetchBlogPosts = async () => {
+  console.log("Fetching blog posts...");
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*")
-    .eq("status", "published")
     .order("published_at", { ascending: false });
 
-  if (error) throw error;
+  if (error) {
+    console.error("Error fetching blog posts:", error);
+    throw error;
+  }
+  
+  console.log("Fetched blog posts:", data);
   return data;
 };
 
@@ -22,6 +27,11 @@ const LatestUpdates = () => {
     queryKey: ["blog-posts"],
     queryFn: fetchBlogPosts,
   });
+
+  useEffect(() => {
+    if (error) console.error("Query error:", error);
+    if (posts) console.log("Posts in component:", posts);
+  }, [posts, error]);
 
   return (
     <motion.div 
@@ -61,6 +71,10 @@ const LatestUpdates = () => {
           ) : error ? (
             <div className="text-center text-red-400">
               Failed to load blog posts. Please try again later.
+            </div>
+          ) : posts?.length === 0 ? (
+            <div className="text-center text-white/70">
+              No blog posts available yet.
             </div>
           ) : (
             posts?.map((post, index) => (
