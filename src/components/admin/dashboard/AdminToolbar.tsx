@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, RotateCw, ArrowLeftRight, Lock, Unlock } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ToolbarItemList } from './toolbar/ToolbarItemList';
+import { ToolbarControls } from './toolbar/ToolbarControls';
 import { ToolbarItemType } from './toolbar/types';
 import { toast } from 'sonner';
-import { Switch } from '@/components/ui/switch';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
@@ -38,27 +37,20 @@ export const AdminToolbar = () => {
 
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>, index: number) => {
     if (isLocked) return;
-    
     event.preventDefault();
     event.stopPropagation();
-    console.log('Drag over event at index:', index);
-    
     const target = event.currentTarget;
     target.style.background = 'rgba(65, 240, 219, 0.1)';
     target.style.transform = 'scale(1.02)';
-    
     setDropTarget(index);
   };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     if (isLocked) return;
-    
     event.stopPropagation();
     const target = event.currentTarget;
     target.style.background = '';
     target.style.transform = '';
-    
-    console.log('Drag leave event');
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -70,22 +62,16 @@ export const AdminToolbar = () => {
     try {
       event.preventDefault();
       event.stopPropagation();
-      console.log('Drop event:', event);
-      
       const target = event.currentTarget;
       target.style.background = '';
       target.style.transform = '';
       
       const jsonData = event.dataTransfer.getData('application/json');
-      console.log('Received JSON data:', jsonData);
-      
       if (!jsonData) {
         throw new Error('No data received in drop event');
       }
 
       const draggedItemData = JSON.parse(jsonData);
-      console.log('Parsed dropped item data:', draggedItemData);
-      
       if (!draggedItemData.id || !draggedItemData.icon || !draggedItemData.label) {
         throw new Error('Invalid item data structure');
       }
@@ -103,8 +89,6 @@ export const AdminToolbar = () => {
         to: draggedItemData.to
       };
 
-      console.log('Creating new toolbar item:', newItem);
-
       const newItems = [...toolbarItems];
       newItems.splice(index, 0, newItem);
       setToolbarItems(newItems);
@@ -121,7 +105,6 @@ export const AdminToolbar = () => {
 
   const handleReorder = (fromIndex: number, toIndex: number) => {
     if (isLocked) return;
-    
     const newItems = [...toolbarItems];
     const [movedItem] = newItems.splice(fromIndex, 1);
     newItems.splice(toIndex, 0, movedItem);
@@ -130,11 +113,9 @@ export const AdminToolbar = () => {
 
   const handleRemove = (index: number) => {
     if (isLocked) return;
-
     const removedItem = toolbarItems[index];
     const newItems = toolbarItems.filter((_, i) => i !== index);
     setToolbarItems(newItems);
-    
     toast.success('Shortcut removed', {
       description: `${removedItem.label} has been removed from your shortcuts`
     });
@@ -166,75 +147,35 @@ export const AdminToolbar = () => {
         "before:absolute before:inset-0 before:rounded-xl before:z-0",
         "before:bg-gradient-to-r before:from-[#9b87f5]/20 before:to-[#ff69b4]/20",
         "before:animate-gradient before:bg-[length:200%_200%]",
-        dropTarget !== null && "ring-2 ring-[#41f0db]/30"
+        dropTarget !== null && "ring-2 ring-neon-cyan/30"
       )}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
     >
-      <div className="absolute -top-12 right-0 flex items-center gap-4 text-white/80 z-[101]">
-        <div className="flex items-center gap-2">
-          <span className="text-sm">Persist Toolbar</span>
-          <Switch
-            checked={isPersistent}
-            onCheckedChange={setIsPersistent}
-            className="data-[state=checked]:bg-[#41f0db]"
-            disabled={isLocked}
-          />
-        </div>
-        <button
-          onClick={() => {
-            if (isLocked) {
-              toast.error('Unlock the toolbar to toggle labels');
-              return;
-            }
-            setIsIconOnly(!isIconOnly);
-          }}
-          className={cn(
-            "p-2 rounded-lg transition-colors duration-200",
-            isLocked ? "opacity-50 cursor-not-allowed" : "bg-white/5 text-white/60 hover:text-white"
-          )}
-          title={isIconOnly ? "Show labels" : "Hide labels"}
-          disabled={isLocked}
-        >
-          <ArrowLeftRight className="w-4 h-4" />
-        </button>
-        <button
-          onClick={toggleOrientation}
-          className={cn(
-            "p-2 rounded-lg transition-colors duration-200",
-            isLocked ? "opacity-50 cursor-not-allowed" : "bg-white/5 text-white/60 hover:text-white"
-          )}
-          title="Toggle orientation"
-          disabled={isLocked}
-        >
-          <RotateCw className="w-4 h-4" />
-        </button>
-        <button
-          onClick={toggleLock}
-          className={cn(
-            "p-2 rounded-lg transition-colors duration-200",
-            isLocked ? "bg-[#41f0db]/20 text-[#41f0db]" : "bg-white/5 text-white/60 hover:text-white"
-          )}
-        >
-          {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
-        </button>
-      </div>
-      <AnimatePresence mode="wait">
-        <ToolbarItemList
-          items={toolbarItems}
-          isIconOnly={isIconOnly}
-          orientation={orientation}
-          dropTarget={dropTarget}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          onReorder={handleReorder}
-          onRemove={handleRemove}
-          isLocked={isLocked}
-        />
-      </AnimatePresence>
+      <ToolbarControls
+        isPersistent={isPersistent}
+        setIsPersistent={setIsPersistent}
+        isIconOnly={isIconOnly}
+        setIsIconOnly={setIsIconOnly}
+        orientation={orientation}
+        isLocked={isLocked}
+        onToggleOrientation={toggleOrientation}
+        onToggleLock={toggleLock}
+      />
+      <ToolbarItemList
+        items={toolbarItems}
+        isIconOnly={isIconOnly}
+        orientation={orientation}
+        dropTarget={dropTarget}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onReorder={handleReorder}
+        onRemove={handleRemove}
+        isLocked={isLocked}
+      />
     </motion.div>
   );
 };
