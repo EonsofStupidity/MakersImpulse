@@ -9,7 +9,8 @@ import {
   FileType, 
   GitBranch, 
   Image,
-  Settings
+  Settings,
+  Navigation
 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminToolbar } from "./AdminToolbar";
@@ -21,6 +22,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const AdminNav = () => {
   const navigate = useNavigate();
   const { session } = useSession();
+  const [draggedItem, setDraggedItem] = useState<NavItemType | null>(null);
   const [items] = useState<NavItemType[]>([
     { id: "posts", to: "/admin/posts", icon: BookOpen, label: "Posts" },
     { id: "users", to: "/admin/users", icon: UserCog, label: "Manage Users" },
@@ -80,9 +82,10 @@ export const AdminNav = () => {
   const handleDragStart = (event: React.DragEvent<HTMLDivElement>, item: NavItemType) => {
     try {
       console.log('Drag start event:', { item });
+      setDraggedItem(item);
       
       const iconComponent = item.icon;
-      const iconName = iconComponent.name || 'UnknownIcon';
+      const iconName = iconComponent.displayName || 'UnknownIcon';
       console.log('Icon name:', iconName);
 
       const itemData = {
@@ -94,9 +97,15 @@ export const AdminNav = () => {
       console.log('Setting drag data:', itemData);
       event.dataTransfer.setData('application/json', JSON.stringify(itemData));
       event.dataTransfer.effectAllowed = 'move';
+
+      // Add visual feedback
+      const dragImage = new Image();
+      dragImage.src = `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2341f0db" stroke-width="2"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/></svg>`;
+      event.dataTransfer.setDragImage(dragImage, 0, 0);
       
       toast.info('Dragging shortcut...', {
-        description: `Drag ${item.label} to the toolbar to create a shortcut`
+        description: `Drag ${item.label} to the toolbar to create a shortcut`,
+        icon: <Navigation className="h-4 w-4 text-[#41f0db]" />
       });
     } catch (error) {
       console.error('Error in handleDragStart:', error);
@@ -104,13 +113,19 @@ export const AdminNav = () => {
     }
   };
 
+  const handleDragEnd = () => {
+    console.log('Drag operation ended');
+    setDraggedItem(null);
+  };
+
   return (
     <>
-      <nav className="glass mb-8 p-4">
+      <nav className={`glass mb-8 p-4 transition-all duration-300 ${draggedItem ? 'opacity-75' : ''}`}>
         <NavItemList 
           items={items}
           onReorder={items => {}} // Disabled reordering for now
           onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         />
       </nav>
       <AdminToolbar />

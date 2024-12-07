@@ -6,9 +6,10 @@ interface NavItemListProps {
   items: NavItemType[];
   onReorder: (items: NavItemType[]) => void;
   onDragStart: (event: React.DragEvent<HTMLDivElement>, item: NavItemType) => void;
+  onDragEnd: () => void;
 }
 
-export const NavItemList = ({ items, onReorder, onDragStart }: NavItemListProps) => {
+export const NavItemList = ({ items, onReorder, onDragStart, onDragEnd }: NavItemListProps) => {
   return (
     <Reorder.Group 
       as="div" 
@@ -22,6 +23,7 @@ export const NavItemList = ({ items, onReorder, onDragStart }: NavItemListProps)
           key={item.id}
           item={item}
           onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
         />
       ))}
     </Reorder.Group>
