@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { uploadMedia } from "@/utils/media";
+import { uploadMedia } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const MediaLibrary = () => {
@@ -89,7 +89,21 @@ const MediaLibrary = () => {
                   variant="destructive" 
                   size="sm" 
                   className="mt-2 w-full"
-                  onClick={() => {/* Add delete functionality */}}
+                  onClick={async () => {
+                    try {
+                      const { error } = await supabase
+                        .from('media')
+                        .delete()
+                        .eq('id', media.id);
+                      
+                      if (error) throw error;
+                      
+                      toast.success('Media deleted successfully');
+                      fetchMedia();
+                    } catch (err) {
+                      toast.error('Error deleting media');
+                    }
+                  }}
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
                   Delete
