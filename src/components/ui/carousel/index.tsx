@@ -1,7 +1,7 @@
 import * as React from "react"
 import useEmblaCarousel, { type UseEmblaCarouselType } from "embla-carousel-react"
 import { cn } from "@/lib/utils"
-import { CarouselContext, type CarouselApi, type CarouselProps } from "./CarouselContext"
+import { CarouselContext, type CarouselApi, type CarouselProps, useCarousel } from "./CarouselContext"
 export { CarouselPrevious, CarouselNext } from "./CarouselControls"
 
 const Carousel = React.forwardRef<
