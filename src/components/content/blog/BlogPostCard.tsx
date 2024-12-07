@@ -14,6 +14,7 @@ interface BlogPostCardProps {
     featured_image?: string | null;
     published_at?: string | null;
     views_count?: number | null;
+    images?: string[];
   };
 }
 
@@ -23,8 +24,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
 
-  // Create an array of 5 thumbnails using the featured image
-  const thumbnails = Array(5).fill(post.featured_image);
+  // Get a random image from the post's images to use as featured if none is set
+  const featuredImage = post.featured_image || (post.images && post.images.length > 0 
+    ? post.images[Math.floor(Math.random() * post.images.length)] 
+    : null);
 
   return (
     <>
@@ -35,23 +38,25 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10" />
         
-        {post.featured_image && (
+        {featuredImage && (
           <div className="absolute inset-0 flex">
-            <div className="w-full h-full">
+            <motion.div 
+              className="w-full h-full"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.3 }}
+            >
               <motion.img 
-                src={post.featured_image} 
+                src={featuredImage} 
                 alt="" 
                 className="w-full h-full object-cover opacity-50"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.3 }}
               />
               <div className="absolute inset-0 bg-gradient-to-b from-[#ff0abe]/20 to-black/80 mix-blend-overlay" />
-            </div>
+            </motion.div>
           </div>
         )}
 
-        <div className="relative z-20 p-8 h-full flex flex-col justify-between">
-          <div>
+        <div className="relative z-20 p-8 h-full flex flex-col">
+          <div className="flex-1">
             <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#ff0abe] transition-colors duration-300">
               {post.title}
             </h3>
@@ -71,27 +76,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           </div>
 
           <div className="space-y-6">
-            <div className="grid grid-cols-5 gap-2 rounded-lg overflow-hidden">
-              {thumbnails.map((thumbnail, index) => (
-                <div 
-                  key={index} 
-                  className="relative aspect-square overflow-hidden rounded-lg"
-                >
-                  <motion.div
-                    className="absolute inset-0 bg-[#ff0abe]/20 mix-blend-overlay"
-                    whileHover={{ opacity: 0 }}
-                  />
-                  <motion.img 
-                    src={thumbnail} 
-                    alt="" 
-                    className="w-full h-full object-cover"
-                    whileHover={{ scale: 1.1 }}
-                    transition={{ duration: 0.2 }}
-                  />
-                </div>
-              ))}
-            </div>
-
             <div className="flex justify-between items-center text-sm">
               <span className="text-[#ff0abe]">
                 {post.published_at ? 
@@ -105,6 +89,34 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                 </span>
               )}
             </div>
+
+            {post.images && post.images.length > 0 && (
+              <motion.div 
+                className="grid grid-cols-5 gap-2 -mb-12 mt-4"
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.2 }}
+              >
+                {post.images.slice(0, 5).map((image, index) => (
+                  <motion.div 
+                    key={index} 
+                    className="relative aspect-square overflow-hidden rounded-lg shadow-lg"
+                    whileHover={{ y: -5, scale: 1.05 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-[#ff0abe]/20 mix-blend-overlay"
+                      whileHover={{ opacity: 0 }}
+                    />
+                    <img 
+                      src={image} 
+                      alt="" 
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
           </div>
         </div>
       </motion.div>
@@ -113,10 +125,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         <DialogContent className="max-w-4xl h-[80vh] bg-[#1a1a1a] border-[#ff0abe]/20">
           <ScrollArea className="h-full pr-4">
             <div className="space-y-6">
-              {post.featured_image && (
+              {featuredImage && (
                 <div className="relative h-[300px] rounded-lg overflow-hidden">
                   <img 
-                    src={post.featured_image} 
+                    src={featuredImage} 
                     alt="" 
                     className="w-full h-full object-cover"
                   />
