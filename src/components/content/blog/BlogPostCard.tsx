@@ -87,6 +87,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             </div>
           ) : (
             <>
+              <div className="absolute top-4 right-4 flex items-center gap-4">
+                <span className="text-sm text-white/50">5 min read</span>
+                <span className="text-sm text-white/50">{post.views_count || 0} views</span>
+              </div>
               <BlogPostContent
                 title={post.title}
                 content={displayContent}
