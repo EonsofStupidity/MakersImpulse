@@ -7,19 +7,24 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatDistanceToNow } from "date-fns";
 
 const fetchBlogPosts = async () => {
-  console.log("Fetching blog posts...");
-  const { data, error } = await supabase
-    .from("blog_posts")
-    .select("*")
-    .order("published_at", { ascending: false });
+  console.log("Starting fetchBlogPosts function...");
+  try {
+    const { data, error } = await supabase
+      .from("blog_posts")
+      .select("*")
+      .order("published_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching blog posts:", error);
+    if (error) {
+      console.error("Supabase error:", error);
+      throw error;
+    }
+    
+    console.log("Fetched blog posts successfully:", data);
+    return data;
+  } catch (error) {
+    console.error("Error in fetchBlogPosts:", error);
     throw error;
   }
-  
-  console.log("Fetched blog posts:", data);
-  return data;
 };
 
 const LatestUpdates = () => {
@@ -29,9 +34,8 @@ const LatestUpdates = () => {
   });
 
   useEffect(() => {
-    if (error) console.error("Query error:", error);
-    if (posts) console.log("Posts in component:", posts);
-  }, [posts, error]);
+    console.log("LatestUpdates component state:", { posts, isLoading, error });
+  }, [posts, isLoading, error]);
 
   return (
     <motion.div 
@@ -71,6 +75,7 @@ const LatestUpdates = () => {
           ) : error ? (
             <div className="text-center text-red-400">
               Failed to load blog posts. Please try again later.
+              {console.error("Error in component:", error)}
             </div>
           ) : posts?.length === 0 ? (
             <div className="text-center text-white/70">
