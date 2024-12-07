@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 export interface ToolbarItemType {
   id: string;
@@ -71,7 +72,7 @@ export const ToolbarItem = ({
   return (
     <motion.button
       className={cn(
-        "p-2 rounded-lg transition-all group",
+        "p-2 rounded-lg transition-all group relative",
         isLocked 
           ? "bg-white/5 text-white/60"
           : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
@@ -97,6 +98,14 @@ export const ToolbarItem = ({
           </span>
         )}
       </div>
+      {!isLocked && (
+        <motion.div
+          className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      )}
     </motion.button>
   );
 };
