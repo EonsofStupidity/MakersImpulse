@@ -41,7 +41,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const featuredImage = post.featured_image || (validImages.length > 0 ? validImages[0] : null);
 
   return (
-    <div className="relative w-full mb-16">
+    <div className="relative w-full mb-24">
       <ImageValidation
         images={images}
         onValidImagesChange={setValidImages}
@@ -104,7 +104,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         </div>
 
         {!isLoading && validImages.length > 0 && (
-          <div className="absolute -bottom-12 left-0 right-0 z-30">
+          <div className="absolute -bottom-32 left-0 right-0 z-30">
             <ImageGallery 
               images={validImages} 
               onImageClick={handleImageClick}
