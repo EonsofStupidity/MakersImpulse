@@ -1,35 +1,42 @@
 import { supabase } from "@/integrations/supabase/client";
+import { ImageValidationResult } from "./types";
 
-export const validateImageInMediaTable = async (imageUrl: string): Promise<boolean> => {
-  const { data: mediaData, error: mediaError } = await supabase
-    .from('media')
-    .select('id')
-    .eq('url', imageUrl)
-    .maybeSingle();
+export const validateImageInMediaTable = async (imageUrl: string): Promise<ImageValidationResult> => {
+  console.log('Checking image in media table:', imageUrl);
+  try {
+    const { data, error } = await supabase
+      .from('media')
+      .select('id')
+      .eq('url', imageUrl)
+      .maybeSingle();
 
-  if (mediaError) {
-    console.error('Error checking media table:', mediaError);
-    return false;
+    if (error) {
+      console.error('Media table check error:', error);
+      return { isValid: false, error: error.message };
+    }
+
+    const isValid = !!data;
+    console.log('Image found in media table:', isValid);
+    return { isValid };
+  } catch (error) {
+    console.error('Media validation error:', error);
+    return { isValid: false, error: 'Failed to check media table' };
   }
-
-  if (mediaData) {
-    console.log('Image found in media table:', imageUrl);
-    return true;
-  }
-
-  return false;
 };
 
-export const validateImageInStorage = async (imageUrl: string): Promise<boolean> => {
+export const validateImageInStorage = async (imageUrl: string): Promise<ImageValidationResult> => {
+  console.log('Checking image in storage:', imageUrl);
   try {
-    const match = imageUrl.match(/storage\/v1\/object\/public\/([^/]+)\/(.+)/);
+    const urlPattern = /storage\/v1\/object\/public\/([^/]+)\/(.+)/;
+    const match = imageUrl.match(urlPattern);
+    
     if (!match) {
       console.error('Invalid storage URL format:', imageUrl);
-      return false;
+      return { isValid: false, error: 'Invalid storage URL format' };
     }
 
     const [, bucket, path] = match;
-    console.log('Checking storage:', { bucket, path });
+    console.log('Parsed storage path:', { bucket, path });
 
     const { data, error } = await supabase.storage
       .from(bucket)
@@ -39,15 +46,15 @@ export const validateImageInStorage = async (imageUrl: string): Promise<boolean>
       });
 
     if (error) {
-      console.error('Storage list error:', error);
-      return false;
+      console.error('Storage check error:', error);
+      return { isValid: false, error: error.message };
     }
 
-    const exists = data && data.length > 0;
-    console.log('Image exists in storage:', exists);
-    return exists;
+    const isValid = data && data.length > 0;
+    console.log('Image exists in storage:', isValid);
+    return { isValid };
   } catch (error) {
     console.error('Storage validation error:', error);
-    return false;
+    return { isValid: false, error: 'Failed to check storage' };
   }
 };

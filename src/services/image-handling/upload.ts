@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { ImageUploadResult } from "../types";
+import { ImageUploadResult } from "./types";
 
 export const uploadBlogImage = async (file: File, postId: string): Promise<ImageUploadResult> => {
   try {
@@ -42,7 +42,7 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
       return { url: publicUrl, error: 'Failed to create media record' };
     }
 
-    // Update blog post images array using rpc function
+    // Update blog post images array
     const { error: updateError } = await supabase
       .rpc('append_blog_image', {
         post_id: postId,
