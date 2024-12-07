@@ -47,17 +47,6 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
       return { url: publicUrl, error: 'Failed to create media record' };
     }
 
-    // Update blog post images array
-    const { error: updateError } = await supabase.rpc(
-      'append_blog_image',
-      { post_id: postId, image_url: publicUrl }
-    );
-
-    if (updateError) {
-      console.error('Error updating blog post images:', updateError);
-      return { url: publicUrl, error: 'Image uploaded but failed to update post' };
-    }
-
     return { url: publicUrl };
   } catch (error) {
     console.error('Image upload error:', error);
@@ -72,24 +61,21 @@ export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
       return false;
     }
 
-    // Extract the media ID from the URL if it exists in the database
+    // First check if image exists in media table
     const { data: mediaData, error: mediaError } = await supabase
       .from('media')
-      .select('id, url')
+      .select('id')
       .eq('url', imageUrl)
-      .single();
+      .maybeSingle();
 
     if (mediaError) {
       console.error('Error checking media record:', mediaError);
-      return false;
-    }
-
-    if (mediaData) {
+    } else if (mediaData) {
       console.log('Image found in media table:', mediaData);
       return true;
     }
 
-    // Fallback to checking storage directly
+    // If not in media table, check storage directly
     const urlParts = imageUrl.split('/media/');
     if (urlParts.length !== 2) {
       console.log('Invalid storage URL format:', imageUrl);
@@ -99,16 +85,16 @@ export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
     const filePath = urlParts[1];
     console.log('Checking storage path:', filePath);
 
-    const { data, error } = await supabase.storage
+    const { data } = await supabase.storage
       .from('media')
-      .download(filePath);
+      .list(filePath.split('/').slice(0, -1).join('/'), {
+        limit: 1,
+        search: filePath.split('/').pop()
+      });
 
-    if (error) {
-      console.error('Storage validation error:', error);
-      return false;
-    }
-
-    return true;
+    const exists = data && data.length > 0;
+    console.log('Image exists in storage:', exists);
+    return exists;
   } catch (error) {
     console.error('Image validation error:', error);
     return false;

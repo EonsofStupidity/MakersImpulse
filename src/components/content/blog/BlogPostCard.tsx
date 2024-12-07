@@ -35,6 +35,8 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const images = post.images || [];
 
   useEffect(() => {
+    let isMounted = true;
+
     const validateImages = async () => {
       console.log('Starting image validation for post:', post.id);
       
@@ -45,14 +47,16 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       }
 
       try {
-        setIsLoading(true);
         const validationResults = await Promise.all(
           images.map(async (imageUrl) => {
+            if (!isMounted) return { imageUrl, isValid: false };
             const isValid = await validateBlogImage(imageUrl);
             console.log('Image validation result:', imageUrl, isValid);
             return { imageUrl, isValid };
           })
         );
+
+        if (!isMounted) return;
 
         const validUrls = validationResults
           .filter(({ isValid }) => isValid)
@@ -62,13 +66,21 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         setValidImages(validUrls);
       } catch (error) {
         console.error('Error validating images:', error);
-        toast.error('Failed to load some images');
+        if (isMounted) {
+          toast.error('Failed to load some images');
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     validateImages();
+
+    return () => {
+      isMounted = false;
+    };
   }, [images, post.id]);
 
   const handleImageClick = (index: number) => {
