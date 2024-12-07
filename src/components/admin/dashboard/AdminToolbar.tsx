@@ -7,12 +7,46 @@ interface AdminToolbarProps {
   className?: string;
 }
 
+interface ToolbarItem {
+  id: string;
+  icon: React.ElementType;
+  label: string;
+}
+
 export const AdminToolbar = ({ className }: AdminToolbarProps) => {
   const [isIconOnly, setIsIconOnly] = useState(false);
   const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
+  const [toolbarItems, setToolbarItems] = useState<ToolbarItem[]>([
+    { id: 'settings', icon: Settings, label: 'Settings' },
+    { id: 'rotate', icon: RotateCw, label: 'Rotate' },
+    { id: 'minimize', icon: Minimize2, label: 'Minimize' },
+  ]);
+  const [dropTarget, setDropTarget] = useState<number | null>(null);
 
   const toggleOrientation = () => {
     setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
+  };
+
+  const handleDragOver = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    setDropTarget(index);
+  };
+
+  const handleDrop = (e: React.DragEvent, index: number) => {
+    e.preventDefault();
+    const draggedItemData = JSON.parse(e.dataTransfer.getData('application/json'));
+    
+    // Create new toolbar item from nav item
+    const newItem: ToolbarItem = {
+      id: draggedItemData.id,
+      icon: draggedItemData.icon || Settings, // Default to Settings icon if none provided
+      label: draggedItemData.label,
+    };
+
+    const newItems = [...toolbarItems];
+    newItems.splice(index, 0, newItem);
+    setToolbarItems(newItems);
+    setDropTarget(null);
   };
 
   return (
@@ -36,34 +70,40 @@ export const AdminToolbar = ({ className }: AdminToolbarProps) => {
         "relative flex gap-2 p-2",
         orientation === 'horizontal' ? 'flex-row' : 'flex-col'
       )}>
-        <motion.button
-          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsIconOnly(!isIconOnly)}
-        >
-          <Settings className="w-5 h-5" />
-          {!isIconOnly && <span className="ml-2">Settings</span>}
-        </motion.button>
-
-        <motion.button
-          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#7FFFD4] transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={toggleOrientation}
-        >
-          <RotateCw className="w-5 h-5" />
-          {!isIconOnly && <span className="ml-2">Rotate</span>}
-        </motion.button>
-
-        <motion.button
-          className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#E6E6FA] transition-all"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Minimize2 className="w-5 h-5" />
-          {!isIconOnly && <span className="ml-2">Minimize</span>}
-        </motion.button>
+        {toolbarItems.map((item, index) => (
+          <React.Fragment key={item.id}>
+            {/* Drop zone indicator */}
+            <motion.div
+              className={cn(
+                "absolute z-10 pointer-events-none",
+                orientation === 'horizontal' 
+                  ? "h-full w-0.5 bg-[#41f0db]" 
+                  : "w-full h-0.5 bg-[#41f0db]",
+                "opacity-0"
+              )}
+              animate={{
+                opacity: dropTarget === index ? 1 : 0,
+                scale: dropTarget === index ? 1 : 0.95,
+              }}
+              style={{
+                left: orientation === 'horizontal' ? `${(index * 100) / toolbarItems.length}%` : 0,
+                top: orientation === 'vertical' ? `${(index * 100) / toolbarItems.length}%` : 0,
+              }}
+            />
+            
+            <motion.button
+              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDrop={(e) => handleDrop(e, index)}
+              layout
+            >
+              <item.icon className="w-5 h-5" />
+              {!isIconOnly && <span className="ml-2">{item.label}</span>}
+            </motion.button>
+          </React.Fragment>
+        ))}
       </div>
     </motion.div>
   );

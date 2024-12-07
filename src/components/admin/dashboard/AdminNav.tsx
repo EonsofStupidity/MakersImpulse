@@ -37,6 +37,11 @@ export const AdminNav = () => {
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
 
+  const handleDragStart = (e: React.DragEvent, item: NavItem) => {
+    e.dataTransfer.setData('application/json', JSON.stringify(item));
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
   return (
     <>
       <nav className="glass mb-8 p-4">
@@ -53,6 +58,8 @@ export const AdminNav = () => {
               value={item}
               as="li"
               className="group relative"
+              draggable="true"
+              onDragStart={(e) => handleDragStart(e, item)}
             >
               <Link 
                 to={item.to}
