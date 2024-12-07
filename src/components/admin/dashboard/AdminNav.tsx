@@ -37,7 +37,12 @@ export const AdminNav = () => {
 
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, item: NavItem) => {
     console.log('Drag started:', item);
-    event.dataTransfer.setData('application/json', JSON.stringify(item));
+    const itemData = {
+      id: item.id,
+      icon: item.icon.name,
+      label: item.label
+    };
+    event.dataTransfer.setData('application/json', JSON.stringify(itemData));
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -58,7 +63,7 @@ export const AdminNav = () => {
               as="li"
               className="group/menu-item relative"
               draggable="true"
-              onDragStart={(e) => handleDragStart(e, item)}
+              onDragStart={(e: React.DragEvent<HTMLLIElement>) => handleDragStart(e, item)}
             >
               <Link 
                 to={item.to}

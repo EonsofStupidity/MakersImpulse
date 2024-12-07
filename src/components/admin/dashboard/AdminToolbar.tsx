@@ -1,18 +1,14 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Settings, RotateCw, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-interface ToolbarItem {
-  id: string;
-  icon: React.ElementType;
-  label: string;
-}
+import { ToolbarItem, ToolbarItemType } from './toolbar/ToolbarItem';
+import { ToolbarDropIndicator } from './toolbar/ToolbarDropIndicator';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
   const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
-  const [toolbarItems, setToolbarItems] = useState<ToolbarItem[]>([
+  const [toolbarItems, setToolbarItems] = useState<ToolbarItemType[]>([
     { id: 'settings', icon: Settings, label: 'Settings' },
     { id: 'rotate', icon: RotateCw, label: 'Rotate' },
     { id: 'minimize', icon: Minimize2, label: 'Minimize' },
@@ -28,19 +24,23 @@ export const AdminToolbar = () => {
     event.preventDefault();
     console.log('Drop event:', event);
     
-    const draggedItemData = JSON.parse(event.dataTransfer.getData('application/json'));
-    console.log('Dropped item data:', draggedItemData);
-    
-    const newItem: ToolbarItem = {
-      id: draggedItemData.id,
-      icon: draggedItemData.icon || Settings,
-      label: draggedItemData.label,
-    };
+    try {
+      const draggedItemData = JSON.parse(event.dataTransfer.getData('application/json'));
+      console.log('Dropped item data:', draggedItemData);
+      
+      const newItem: ToolbarItemType = {
+        id: draggedItemData.id,
+        icon: draggedItemData.icon,
+        label: draggedItemData.label,
+      };
 
-    const newItems = [...toolbarItems];
-    newItems.splice(index, 0, newItem);
-    setToolbarItems(newItems);
-    setDropTarget(null);
+      const newItems = [...toolbarItems];
+      newItems.splice(index, 0, newItem);
+      setToolbarItems(newItems);
+      setDropTarget(null);
+    } catch (error) {
+      console.error('Error handling drop:', error);
+    }
   };
 
   return (
@@ -65,35 +65,18 @@ export const AdminToolbar = () => {
       )}>
         {toolbarItems.map((item, index) => (
           <React.Fragment key={item.id}>
-            <motion.div
-              className={cn(
-                "absolute z-10 pointer-events-none",
-                orientation === 'horizontal' 
-                  ? "h-full w-0.5 bg-[#41f0db]" 
-                  : "w-full h-0.5 bg-[#41f0db]",
-                "opacity-0"
-              )}
-              animate={{
-                opacity: dropTarget === index ? 1 : 0,
-                scale: dropTarget === index ? 1 : 0.95,
-              }}
-              style={{
-                left: orientation === 'horizontal' ? `${(index * 100) / toolbarItems.length}%` : 0,
-                top: orientation === 'vertical' ? `${(index * 100) / toolbarItems.length}%` : 0,
-              }}
+            <ToolbarDropIndicator
+              orientation={orientation}
+              isActive={dropTarget === index}
+              index={index}
+              itemCount={toolbarItems.length}
             />
-            
-            <motion.button
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
+            <ToolbarItem
+              item={item}
+              isIconOnly={isIconOnly}
               onDragOver={(e) => handleDragOver(e, index)}
               onDrop={(e) => handleDrop(e, index)}
-              layout
-            >
-              <item.icon className="w-5 h-5" />
-              {!isIconOnly && <span className="ml-2">{item.label}</span>}
-            </motion.button>
+            />
           </React.Fragment>
         ))}
       </div>
