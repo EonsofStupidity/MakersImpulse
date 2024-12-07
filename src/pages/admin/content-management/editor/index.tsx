@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploadZone } from "@/components/uploads";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 const PostEditor = () => {
@@ -15,27 +15,40 @@ const PostEditor = () => {
   const [images, setImages] = useState<File[]>([]);
 
   const handleSave = async () => {
-    if (!title || !content) {
-      toast.error("Please fill in all required fields");
-      return;
-    }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("You must be logged in to create posts");
+        return;
+      }
 
-    const { data, error } = await supabase.from("blog_posts").insert({
-      title,
-      slug: slug || title.toLowerCase().replace(/ /g, "-"),
-      content,
-      status: 'draft'
-    });
+      if (!title || !content) {
+        toast.error("Please fill in all required fields");
+        return;
+      }
 
-    if (error) {
-      toast.error("Error saving post");
-      console.error("Error saving post:", error);
-    } else {
-      toast.success("Post saved successfully");
-      setTitle("");
-      setSlug("");
-      setContent("");
-      setImages([]);
+      const { data, error } = await supabase.from("blog_posts").insert({
+        title,
+        slug: slug || title.toLowerCase().replace(/ /g, "-"),
+        content,
+        status: 'draft',
+        author_id: user.id
+      });
+
+      if (error) {
+        toast.error("Error saving post");
+        console.error("Error saving post:", error);
+      } else {
+        toast.success("Post saved successfully");
+        setTitle("");
+        setSlug("");
+        setContent("");
+        setImages([]);
+      }
+    } catch (error) {
+      console.error("Error in handleSave:", error);
+      toast.error("An unexpected error occurred");
     }
   };
 
