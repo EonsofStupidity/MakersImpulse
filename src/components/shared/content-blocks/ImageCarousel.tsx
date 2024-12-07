@@ -37,35 +37,35 @@ const ImageCarousel = ({
   const slideVariants = {
     enter: (direction: number) => ({
       opacity: 0,
-      scale: 1.2,
-      filter: "blur(12px)",
-      rotateY: direction > 0 ? 15 : -15
+      scale: 0.9,
+      filter: "blur(8px)",
+      y: direction > 0 ? 20 : -20
     }),
     center: {
       zIndex: 1,
       x: 0,
+      y: 0,
       opacity: 1,
       scale: 1,
       filter: "blur(0px)",
-      rotateY: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.4,
         type: "spring",
-        stiffness: 200,
-        damping: 25
+        stiffness: 150,
+        damping: 20
       }
     },
     exit: (direction: number) => ({
       zIndex: 0,
       opacity: 0,
-      scale: 0.8,
-      filter: "blur(12px)",
-      rotateY: direction < 0 ? 15 : -15,
+      scale: 0.9,
+      filter: "blur(8px)",
+      y: direction < 0 ? 20 : -20,
       transition: {
-        duration: 0.5,
+        duration: 0.3,
         type: "spring",
-        stiffness: 200,
-        damping: 25
+        stiffness: 150,
+        damping: 20
       }
     })
   };
@@ -78,12 +78,12 @@ const ImageCarousel = ({
 
   return (
     <div className={`relative w-full h-full ${className}`}>
-      {/* Floating ESC message */}
+      {/* ESC to close message */}
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="absolute top-4 left-1/2 -translate-x-1/2 z-50"
+        className="absolute top-6 left-1/2 -translate-x-1/2 z-50"
       >
         <div className="flex items-center gap-2 bg-black/60 px-4 py-2 rounded-full backdrop-blur-sm border border-white/10">
           <X size={16} className="text-white/80" />
@@ -91,9 +91,9 @@ const ImageCarousel = ({
         </div>
       </motion.div>
 
-      {/* Image Container */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <AnimatePresence initial={false} custom={direction}>
+      {/* Main image display */}
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+        <AnimatePresence initial={false} custom={direction} mode="wait">
           <motion.div
             key={page}
             custom={direction}
@@ -101,26 +101,29 @@ const ImageCarousel = ({
             initial="enter"
             animate="center"
             exit="exit"
-            className="absolute w-full h-full flex items-center justify-center"
+            className="absolute inset-0 flex items-center justify-center"
           >
-            <img
+            <motion.img
               src={images[currentIndex]}
               alt={`Image ${currentIndex + 1}`}
-              className="max-w-full max-h-full object-contain"
+              className="max-w-[90%] max-h-[80vh] object-contain"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
             />
           </motion.div>
         </AnimatePresence>
       </div>
 
-      {/* Navigation Controls */}
+      {/* Navigation controls */}
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50"
+        className="absolute bottom-12 left-1/2 -translate-x-1/2 z-50"
       >
         <div className="flex flex-col items-center gap-3">
-          <div className="flex items-center gap-4 bg-black/60 px-6 py-3 rounded-xl backdrop-blur-sm border border-white/10">
+          <div className="flex items-center gap-6 bg-black/60 px-8 py-3 rounded-xl backdrop-blur-sm border border-white/10">
             <ArrowLeft size={20} className="text-white/80" />
             <div className="px-4 py-1 bg-white/10 rounded text-sm text-white/90">SPACE</div>
             <ArrowRight size={20} className="text-white/80" />
@@ -129,6 +132,7 @@ const ImageCarousel = ({
         </div>
       </motion.div>
 
+      {/* Image counter */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 z-50">
         {currentIndex + 1} of {images.length}
       </div>
