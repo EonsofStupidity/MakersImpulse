@@ -51,7 +51,7 @@ export const ToolbarItem = ({
     return null;
   }
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
     if (isLocked) {
       console.log('Drag prevented - toolbar is locked');
       e.preventDefault();
@@ -78,7 +78,7 @@ export const ToolbarItem = ({
     }
   };
 
-  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEnter = (e: React.DragEvent<HTMLButtonElement>) => {
     if (isLocked) {
       console.log('Drag enter prevented - toolbar is locked');
       return;
@@ -104,14 +104,15 @@ export const ToolbarItem = ({
   };
 
   return (
-    <div
+    <motion.button
       className={cn(
-        "relative",
-        isLocked ? "cursor-not-allowed" : "cursor-grab active:cursor-grabbing"
+        "p-2 rounded-lg transition-all group relative",
+        isLocked 
+          ? "bg-white/5 text-white/60 cursor-not-allowed"
+          : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] cursor-grab active:cursor-grabbing"
       )}
-      draggable={!isLocked}
-      onDragStart={handleDragStart}
-      onDragEnter={handleDragEnter}
+      whileHover={!isLocked ? { scale: 1.1 } : undefined}
+      whileTap={!isLocked ? { scale: 0.95 } : undefined}
       onDragOver={(e) => {
         if (!isLocked) {
           e.preventDefault();
@@ -125,35 +126,31 @@ export const ToolbarItem = ({
           onDrop(e);
         }
       }}
+      draggable={!isLocked}
+      onDragStart={handleDragStart}
+      onDragEnter={handleDragEnter}
+      layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.2 }}
     >
-      <motion.button
-        className={cn(
-          "p-2 rounded-lg transition-all group w-full",
-          isLocked 
-            ? "bg-white/5 text-white/60"
-            : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
+      <div className="flex items-center gap-2">
+        <IconComponent className="w-5 h-5" />
+        {!isIconOnly && (
+          <span className="ml-2 opacity-80 group-hover:opacity-100 transition-opacity">
+            {item.label}
+          </span>
         )}
-        whileHover={!isLocked ? { scale: 1.1 } : undefined}
-        whileTap={!isLocked ? { scale: 0.95 } : undefined}
-        layout
-      >
-        <div className="flex items-center gap-2">
-          <IconComponent className="w-5 h-5" />
-          {!isIconOnly && (
-            <span className="ml-2 opacity-80 group-hover:opacity-100 transition-opacity">
-              {item.label}
-            </span>
-          )}
-        </div>
-        {!isLocked && (
-          <motion.div
-            className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        )}
-      </motion.button>
-    </div>
+      </div>
+      {!isLocked && (
+        <motion.div
+          className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
+      )}
+    </motion.button>
   );
 };
