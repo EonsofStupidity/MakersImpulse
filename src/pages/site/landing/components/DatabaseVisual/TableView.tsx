@@ -2,7 +2,8 @@ import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Database, Filter, Search, SortAsc, SortDesc } from "lucide-react";
+import { Database, Filter, Search, SortAsc } from "lucide-react";
+import { TableRowSkeleton } from "@/components/shared/ui/loading/LoadingStates";
 
 export const TableView = () => {
   const { data: projects, isLoading } = useQuery({
@@ -50,17 +51,15 @@ export const TableView = () => {
           </TableHeader>
           <TableBody>
             {isLoading ? (
-              <TableRow>
-                <TableCell colSpan={5} className="text-center py-8">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="inline-block"
-                  >
-                    <Database className="w-6 h-6 text-[#41f0db]" />
-                  </motion.div>
-                </TableCell>
-              </TableRow>
+              <>
+                {Array(5).fill(null).map((_, index) => (
+                  <TableRow key={index}>
+                    <TableCell colSpan={5} className="p-0">
+                      <TableRowSkeleton columns={5} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
             ) : (
               projects?.map((project) => (
                 <TableRow 
