@@ -41,14 +41,12 @@ export const ContentGrid: React.FC<ContentGridProps> = ({
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className="grid grid-cols-1 gap-8 p-6"
+        className="flex flex-col items-center gap-8 p-6 w-full"
       >
-        {items.map((post, index) => (
-          <BlogPostCard 
-            key={post.id} 
-            post={post} 
-            isFeature={index === 0} // First post is featured (81% larger)
-          />
+        {items.map((post) => (
+          <div key={post.id} className="w-[81%]">
+            <BlogPostCard post={post} />
+          </div>
         ))}
       </motion.div>
     );

@@ -15,25 +15,20 @@ interface BlogPostCardProps {
     published_at?: string | null;
     views_count?: number | null;
   };
-  isFeature?: boolean;
 }
 
-const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isFeature = false }) => {
+const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
-
-  const cardClassName = isFeature 
-    ? "col-span-full h-[544px] w-full" // 81% larger than original 300px height
-    : "h-[300px] w-full";
 
   return (
     <>
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#41f0db]/50 transition-all duration-300 overflow-hidden ${cardClassName}`}
+        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#41f0db]/50 transition-all duration-300 overflow-hidden h-[544px] w-full"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10" />
         
@@ -58,9 +53,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post, isFeature = false }) 
         )}
 
         <div className="relative z-20 p-8 h-full flex flex-col justify-end">
-          <h3 className={`font-bold text-white mb-4 group-hover:text-[#41f0db] transition-colors duration-300 ${
-            isFeature ? 'text-4xl' : 'text-2xl'
-          }`}>
+          <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#41f0db] transition-colors duration-300">
             {post.title}
           </h3>
           
