@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -7,8 +7,7 @@ import ExpandedPost from './components/ExpandedPost';
 import ImageCarouselDialog from './components/ImageCarouselDialog';
 import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
-import { validateBlogImage } from '@/services/imageService';
-import { toast } from "sonner";
+import ImageValidation from './components/ImageValidation';
 
 interface BlogPostCardProps {
   post: {
@@ -34,55 +33,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const hasMoreContent = post.content.length > 350;
   const images = post.images || [];
 
-  useEffect(() => {
-    let isMounted = true;
-    console.log('BlogPostCard useEffect triggered for post:', post.id);
-
-    const validateImages = async () => {
-      if (!images.length) {
-        console.log('No images to validate for post:', post.id);
-        if (isMounted) setIsLoading(false);
-        return;
-      }
-
-      try {
-        console.log('Starting validation for images:', images);
-        const validationResults = await Promise.all(
-          images.map(async (imageUrl) => {
-            if (!isMounted) return { imageUrl, isValid: false };
-            const isValid = await validateBlogImage(imageUrl);
-            console.log(`Validation result for ${imageUrl}:`, isValid);
-            return { imageUrl, isValid };
-          })
-        );
-
-        if (!isMounted) return;
-
-        const validUrls = validationResults
-          .filter(({ isValid }) => isValid)
-          .map(({ imageUrl }) => imageUrl);
-
-        console.log('Valid images for post', post.id, ':', validUrls);
-        setValidImages(validUrls);
-      } catch (error) {
-        console.error('Error validating images for post', post.id, ':', error);
-        if (isMounted) {
-          toast.error('Failed to load some images');
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    validateImages();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [images, post.id]);
-
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
     setShowCarousel(true);
@@ -92,6 +42,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   return (
     <div className="relative w-full mb-16">
+      <ImageValidation
+        images={images}
+        onValidImagesChange={setValidImages}
+        onLoadingChange={setIsLoading}
+      />
+
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
