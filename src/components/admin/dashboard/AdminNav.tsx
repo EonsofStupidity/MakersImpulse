@@ -1,20 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { 
-  FileText, 
-  Image, 
-  Users, 
+  BookOpen, 
+  UserCog, 
+  Cog,
   MessageSquare, 
   Layers, 
   FileType, 
   GitBranch, 
+  Image,
   Settings,
-  BookOpen,
-  UserCog,
-  Cog,
   GripVertical
 } from "lucide-react";
 import { motion, Reorder } from "framer-motion";
+import { AdminToolbar } from "./AdminToolbar";
 
 interface NavItem {
   id: string;
@@ -36,9 +35,10 @@ export const AdminNav = () => {
     { id: "content-types", to: "/admin/settings/content-types", icon: Settings, label: "Content Types" },
   ]);
 
-  const handleDragStart = (e: React.DragEvent<HTMLLIElement>, item: NavItem) => {
-    e.dataTransfer.setData('application/json', JSON.stringify(item));
-    e.dataTransfer.effectAllowed = 'move';
+  const handleDragStart = (event: React.DragEvent<HTMLLIElement>, item: NavItem) => {
+    console.log('Drag started:', item);
+    event.dataTransfer.setData('application/json', JSON.stringify(item));
+    event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
@@ -58,7 +58,7 @@ export const AdminNav = () => {
               as="li"
               className="group/menu-item relative"
               draggable="true"
-              onDragStart={(e) => handleDragStart(e as React.DragEvent<HTMLLIElement>, item)}
+              onDragStart={(e) => handleDragStart(e, item)}
             >
               <Link 
                 to={item.to}
@@ -74,6 +74,7 @@ export const AdminNav = () => {
           ))}
         </Reorder.Group>
       </nav>
+      <AdminToolbar />
     </>
   );
 };

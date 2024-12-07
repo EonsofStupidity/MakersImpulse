@@ -3,17 +3,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Settings, RotateCw, Minimize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface AdminToolbarProps {
-  className?: string;
-}
-
 interface ToolbarItem {
   id: string;
   icon: React.ElementType;
   label: string;
 }
 
-export const AdminToolbar = ({ className }: AdminToolbarProps) => {
+export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
   const [orientation, setOrientation] = useState<'horizontal' | 'vertical'>('horizontal');
   const [toolbarItems, setToolbarItems] = useState<ToolbarItem[]>([
@@ -23,14 +19,17 @@ export const AdminToolbar = ({ className }: AdminToolbarProps) => {
   ]);
   const [dropTarget, setDropTarget] = useState<number | null>(null);
 
-  const handleDragOver = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
-    e.preventDefault();
+  const handleDragOver = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+    event.preventDefault();
     setDropTarget(index);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLButtonElement>, index: number) => {
-    e.preventDefault();
-    const draggedItemData = JSON.parse(e.dataTransfer.getData('application/json'));
+  const handleDrop = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+    event.preventDefault();
+    console.log('Drop event:', event);
+    
+    const draggedItemData = JSON.parse(event.dataTransfer.getData('application/json'));
+    console.log('Dropped item data:', draggedItemData);
     
     const newItem: ToolbarItem = {
       id: draggedItemData.id,
@@ -53,8 +52,7 @@ export const AdminToolbar = ({ className }: AdminToolbarProps) => {
         "rounded-xl shadow-2xl",
         "before:absolute before:inset-0 before:rounded-xl",
         "before:bg-gradient-to-r before:from-[#9b87f5]/20 before:to-[#ff69b4]/20",
-        "before:animate-gradient before:bg-[length:200%_200%]",
-        className
+        "before:animate-gradient before:bg-[length:200%_200%]"
       )}
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
