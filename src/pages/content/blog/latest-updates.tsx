@@ -31,14 +31,15 @@ const LatestUpdates = () => {
   const { data: posts, isLoading, error } = useQuery({
     queryKey: ["blog-posts"],
     queryFn: fetchBlogPosts,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 
   useEffect(() => {
-    console.log("LatestUpdates component state:", { posts, isLoading, error });
     if (error) {
       console.error("Error in component:", error);
     }
-  }, [posts, isLoading, error]);
+  }, [error]);
 
   return (
     <motion.div 
