@@ -17,10 +17,21 @@ interface ToolbarItemProps {
 }
 
 export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarItemProps) => {
-  // Handle both string icon names and direct LucideIcon components
-  const IconComponent = typeof item.icon === 'string' 
-    ? (LucideIcons as Record<string, LucideIcon>)[item.icon] 
-    : item.icon;
+  let IconComponent: LucideIcon | null = null;
+
+  try {
+    if (typeof item.icon === 'string') {
+      // Cast the icons object to any to bypass TypeScript index signature check
+      const icons = LucideIcons as any;
+      IconComponent = icons[item.icon];
+      console.log('Found icon component for:', item.icon);
+    } else {
+      IconComponent = item.icon;
+    }
+  } catch (error) {
+    console.error('Error resolving icon:', error);
+    return null;
+  }
 
   if (!IconComponent) {
     console.error(`Icon not found: ${item.icon}`);

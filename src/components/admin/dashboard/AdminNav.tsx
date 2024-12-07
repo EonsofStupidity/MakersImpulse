@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { motion, Reorder } from "framer-motion";
 import { AdminToolbar } from "./AdminToolbar";
+import { toast } from "sonner";
 
 interface NavItem {
   id: string;
@@ -37,10 +38,11 @@ export const AdminNav = () => {
 
   const handleDragStart = (event: React.DragEvent<HTMLLIElement>, item: NavItem) => {
     try {
-      console.log('Drag start event:', { item, eventType: event.type });
+      console.log('Drag start event:', { item });
       
-      // Get the icon component name safely
-      const iconName = item.icon.displayName || 'UnknownIcon';
+      // Get the icon component name
+      const iconComponent = item.icon as any;
+      const iconName = iconComponent.name || 'UnknownIcon';
       console.log('Icon name:', iconName);
 
       const itemData = {
@@ -54,6 +56,7 @@ export const AdminNav = () => {
       event.dataTransfer.effectAllowed = 'move';
     } catch (error) {
       console.error('Error in handleDragStart:', error);
+      toast.error('Failed to start drag operation');
     }
   };
 
@@ -68,11 +71,13 @@ export const AdminNav = () => {
           className="flex flex-wrap gap-4 justify-center md:justify-start items-center"
         >
           {items.map((item) => (
-            <motion.li
+            <Reorder.Item
               key={item.id}
+              value={item}
+              as="li"
               className="group/menu-item relative"
               draggable="true"
-              onDragStart={(e: React.DragEvent<HTMLLIElement>) => handleDragStart(e, item)}
+              onDragStart={(e) => handleDragStart(e as React.DragEvent<HTMLLIElement>, item)}
             >
               <Link 
                 to={item.to}
@@ -84,7 +89,7 @@ export const AdminNav = () => {
                   <span>{item.label}</span>
                 </div>
               </Link>
-            </motion.li>
+            </Reorder.Item>
           ))}
         </Reorder.Group>
       </nav>
