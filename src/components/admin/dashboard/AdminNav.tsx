@@ -16,7 +16,7 @@ import { NavItemList } from "./nav/NavItemList";
 import type { NavItemType } from "./nav/NavItem";
 
 export const AdminNav = () => {
-  const [items, setItems] = useState<NavItemType[]>([
+  const [items] = useState<NavItemType[]>([
     { id: "posts", to: "/admin/posts", icon: BookOpen, label: "Posts" },
     { id: "users", to: "/admin/users", icon: UserCog, label: "Manage Users" },
     { id: "settings", to: "/admin/settings", icon: Cog, label: "Site Settings" },
@@ -45,6 +45,11 @@ export const AdminNav = () => {
       console.log('Setting drag data:', itemData);
       event.dataTransfer.setData('application/json', JSON.stringify(itemData));
       event.dataTransfer.effectAllowed = 'move';
+      
+      // Add visual feedback
+      toast.info('Dragging shortcut...', {
+        description: `Drag ${item.label} to the toolbar to create a shortcut`
+      });
     } catch (error) {
       console.error('Error in handleDragStart:', error);
       toast.error('Failed to start drag operation');
@@ -56,7 +61,7 @@ export const AdminNav = () => {
       <nav className="glass mb-8 p-4">
         <NavItemList 
           items={items}
-          onReorder={setItems}
+          onReorder={items => {}} // Disabled reordering for now
           onDragStart={handleDragStart}
         />
       </nav>

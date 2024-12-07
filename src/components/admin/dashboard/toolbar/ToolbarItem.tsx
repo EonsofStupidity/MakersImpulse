@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { LucideIcon } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
+import { toast } from 'sonner';
 
 export interface ToolbarItemType {
   id: string;
@@ -21,7 +22,6 @@ export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarIte
 
   try {
     if (typeof item.icon === 'string') {
-      // Cast the icons object to any to bypass TypeScript index signature check
       const icons = LucideIcons as any;
       IconComponent = icons[item.icon];
       console.log('Found icon component for:', item.icon);
@@ -30,6 +30,7 @@ export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarIte
     }
   } catch (error) {
     console.error('Error resolving icon:', error);
+    toast.error(`Failed to load icon for ${item.label}`);
     return null;
   }
 
@@ -40,15 +41,21 @@ export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarIte
 
   return (
     <motion.button
-      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all"
+      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all group"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
       onDragOver={onDragOver}
       onDrop={onDrop}
       layout
     >
-      <IconComponent className="w-5 h-5" />
-      {!isIconOnly && <span className="ml-2">{item.label}</span>}
+      <div className="flex items-center gap-2">
+        <IconComponent className="w-5 h-5" />
+        {!isIconOnly && (
+          <span className="ml-2 opacity-80 group-hover:opacity-100 transition-opacity">
+            {item.label}
+          </span>
+        )}
+      </div>
     </motion.button>
   );
 };
