@@ -86,6 +86,32 @@ export default {
           "50%": {
             "text-shadow": "0 0 10px #ff0abe, 0 0 20px #ff0abe, 0 0 30px #ff0abe"
           }
+        },
+        glitch: {
+          "0%": {
+            transform: "translate(0)",
+            opacity: "0.3"
+          },
+          "20%": {
+            transform: "translate(-2px, 2px)",
+            opacity: "0.4"
+          },
+          "40%": {
+            transform: "translate(-2px, -2px)",
+            opacity: "0.5"
+          },
+          "60%": {
+            transform: "translate(2px, 2px)",
+            opacity: "0.4"
+          },
+          "80%": {
+            transform: "translate(2px, -2px)",
+            opacity: "0.3"
+          },
+          "100%": {
+            transform: "translate(0)",
+            opacity: "0.3"
+          }
         }
       },
       animation: {
@@ -94,7 +120,8 @@ export default {
         "fade-in": "fade-in 0.6s ease-out",
         float: "float 3s ease-in-out infinite",
         "neon-pulse": "neon-pulse 2s ease-in-out infinite",
-        "neon-glow": "neon-glow 2s ease-in-out infinite"
+        "neon-glow": "neon-glow 2s ease-in-out infinite",
+        glitch: "glitch 2s ease-in-out infinite"
       },
     },
   },
