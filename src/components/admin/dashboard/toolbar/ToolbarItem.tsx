@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon } from 'lucide-react';
+import { LucideIcon, X } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -15,7 +15,8 @@ export const ToolbarItem = ({
   onDragOver, 
   onDragLeave,
   onDrop,
-  onReorder 
+  onReorder,
+  onRemove 
 }: ToolbarItemProps) => {
   const navigate = useNavigate();
   let IconComponent: LucideIcon | null = null;
@@ -43,6 +44,14 @@ export const ToolbarItem = ({
       console.log('Navigating to:', item.to);
       navigate(item.to);
       toast.success(`Navigating to ${item.label}`);
+    }
+  };
+
+  const handleRemove = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onRemove) {
+      onRemove(index);
+      toast.success(`Removed ${item.label} shortcut`);
     }
   };
 
@@ -131,15 +140,22 @@ export const ToolbarItem = ({
               {item.label}
             </span>
           )}
+          {!isLocked && (
+            <button
+              onClick={handleRemove}
+              className="ml-auto p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/10 hover:text-red-400"
+              title="Remove shortcut"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
         </div>
-        {!isLocked && (
-          <motion.div
-            className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: [0, 0.5, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          />
-        )}
+        <motion.div
+          className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 0.5, 0] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        />
       </motion.div>
     </div>
   );

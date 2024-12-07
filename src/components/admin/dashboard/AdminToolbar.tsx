@@ -39,34 +39,26 @@ export const AdminToolbar = () => {
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>, index: number) => {
     if (isLocked) return;
     
-    try {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log('Drag over event at index:', index);
-      
-      const target = event.currentTarget;
-      target.style.background = 'rgba(65, 240, 219, 0.1)';
-      target.style.transform = 'scale(1.02)';
-      
-      setDropTarget(index);
-    } catch (error) {
-      console.error('Error in handleDragOver:', error);
-    }
+    event.preventDefault();
+    event.stopPropagation();
+    console.log('Drag over event at index:', index);
+    
+    const target = event.currentTarget;
+    target.style.background = 'rgba(65, 240, 219, 0.1)';
+    target.style.transform = 'scale(1.02)';
+    
+    setDropTarget(index);
   };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     if (isLocked) return;
     
-    try {
-      event.stopPropagation();
-      const target = event.currentTarget;
-      target.style.background = '';
-      target.style.transform = '';
-      
-      console.log('Drag leave event');
-    } catch (error) {
-      console.error('Error in handleDragLeave:', error);
-    }
+    event.stopPropagation();
+    const target = event.currentTarget;
+    target.style.background = '';
+    target.style.transform = '';
+    
+    console.log('Drag leave event');
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -108,7 +100,7 @@ export const AdminToolbar = () => {
         id: draggedItemData.id,
         icon: draggedItemData.icon,
         label: draggedItemData.label,
-        to: draggedItemData.to // Include navigation path
+        to: draggedItemData.to
       };
 
       console.log('Creating new toolbar item:', newItem);
@@ -134,6 +126,18 @@ export const AdminToolbar = () => {
     const [movedItem] = newItems.splice(fromIndex, 1);
     newItems.splice(toIndex, 0, movedItem);
     setToolbarItems(newItems);
+  };
+
+  const handleRemove = (index: number) => {
+    if (isLocked) return;
+
+    const removedItem = toolbarItems[index];
+    const newItems = toolbarItems.filter((_, i) => i !== index);
+    setToolbarItems(newItems);
+    
+    toast.success('Shortcut removed', {
+      description: `${removedItem.label} has been removed from your shortcuts`
+    });
   };
 
   const toggleLock = () => {
@@ -227,6 +231,7 @@ export const AdminToolbar = () => {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onReorder={handleReorder}
+          onRemove={handleRemove}
           isLocked={isLocked}
         />
       </AnimatePresence>

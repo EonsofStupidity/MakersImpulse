@@ -10,6 +10,7 @@ interface ToolbarItemListProps extends DragEventHandlers {
   orientation: 'horizontal' | 'vertical';
   dropTarget: number | null;
   isLocked: boolean;
+  onRemove?: (index: number) => void;
 }
 
 export const ToolbarItemList = ({
@@ -21,7 +22,8 @@ export const ToolbarItemList = ({
   onDragOver,
   onDragLeave,
   onDrop,
-  onReorder
+  onReorder,
+  onRemove
 }: ToolbarItemListProps) => {
   return (
     <motion.div 
@@ -46,6 +48,7 @@ export const ToolbarItemList = ({
               onDragLeave={onDragLeave}
               onDrop={(e) => onDrop(e, index)}
               onReorder={onReorder}
+              onRemove={onRemove}
             />
           </React.Fragment>
         ))

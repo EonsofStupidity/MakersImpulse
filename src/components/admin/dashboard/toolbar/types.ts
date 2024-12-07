@@ -4,7 +4,7 @@ export interface ToolbarItemType {
   id: string;
   icon: string | LucideIcon;
   label: string;
-  to?: string; // Add navigation path
+  to?: string;
 }
 
 export interface DraggedItemData {
@@ -30,4 +30,5 @@ export interface ToolbarItemProps {
   onDragLeave: (event: React.DragEvent<HTMLDivElement>) => void;
   onDrop: (event: React.DragEvent<HTMLDivElement>) => void;
   onReorder: (fromIndex: number, toIndex: number) => void;
+  onRemove?: (index: number) => void;
 }
