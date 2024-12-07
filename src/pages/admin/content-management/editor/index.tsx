@@ -13,6 +13,8 @@ const PostEditor = () => {
   const [slug, setSlug] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
+  const [category, setCategory] = useState<string | null>(null);
+  const [tags, setTags] = useState<string[]>([]);
 
   const handleSave = async () => {
     try {
@@ -25,6 +27,11 @@ const PostEditor = () => {
 
       if (!title || !content) {
         toast.error("Please fill in all required fields");
+        return;
+      }
+
+      if (!category) {
+        toast.error("Please select a category");
         return;
       }
 
@@ -56,10 +63,12 @@ const PostEditor = () => {
           title,
           slug: slug || title.toLowerCase().replace(/ /g, "-"),
           content: content,
-          rich_content: content, // Store the HTML content
+          rich_content: content,
           status: 'draft',
           author_id: user.id,
-          images: uploadedImageUrls
+          images: uploadedImageUrls,
+          category: category,
+          tags: tags
         })
         .select()
         .single();
@@ -87,6 +96,8 @@ const PostEditor = () => {
       setSlug("");
       setContent("");
       setImages([]);
+      setCategory(null);
+      setTags([]);
     } catch (error) {
       console.error("Error in handleSave:", error);
       toast.error("An unexpected error occurred");
@@ -128,6 +139,8 @@ const PostEditor = () => {
               <RichTextEditor 
                 content={content}
                 onChange={setContent}
+                onCategoryChange={setCategory}
+                onTagsChange={setTags}
               />
             </div>
 
@@ -144,6 +157,8 @@ const PostEditor = () => {
                   setSlug("");
                   setContent("");
                   setImages([]);
+                  setCategory(null);
+                  setTags([]);
                 }}
                 className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300"
               >

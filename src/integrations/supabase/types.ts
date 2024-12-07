@@ -12,6 +12,7 @@ export type Database = {
       blog_posts: {
         Row: {
           author_id: string | null
+          category: Database["public"]["Enums"]["post_category"] | null
           content: string
           excerpt: string | null
           featured_image: string | null
@@ -21,12 +22,14 @@ export type Database = {
           rich_content: Json | null
           slug: string
           status: string | null
+          tags: string[] | null
           title: string
           updated_at: string | null
           views_count: number | null
         }
         Insert: {
           author_id?: string | null
+          category?: Database["public"]["Enums"]["post_category"] | null
           content: string
           excerpt?: string | null
           featured_image?: string | null
@@ -36,12 +39,14 @@ export type Database = {
           rich_content?: Json | null
           slug: string
           status?: string | null
+          tags?: string[] | null
           title: string
           updated_at?: string | null
           views_count?: number | null
         }
         Update: {
           author_id?: string | null
+          category?: Database["public"]["Enums"]["post_category"] | null
           content?: string
           excerpt?: string | null
           featured_image?: string | null
@@ -51,6 +56,7 @@ export type Database = {
           rich_content?: Json | null
           slug?: string
           status?: string | null
+          tags?: string[] | null
           title?: string
           updated_at?: string | null
           views_count?: number | null
@@ -202,6 +208,14 @@ export type Database = {
       }
     }
     Enums: {
+      post_category:
+        | "Guides"
+        | "Reviews"
+        | "Blog"
+        | "Site Updates"
+        | "Critical"
+        | "3D Printer"
+        | "3D Printer Hardware"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"
     }
     CompositeTypes: {
