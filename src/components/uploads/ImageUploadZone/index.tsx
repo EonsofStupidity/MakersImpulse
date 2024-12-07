@@ -111,7 +111,7 @@ const ImageUploadZone: React.FC<ImageUploadZoneProps> = ({ images, onImagesChang
             <img
               src={URL.createObjectURL(file)}
               alt={`Upload ${index + 1}`}
-              className="w-full h-[75px] object-cover rounded-lg transition-transform duration-200 group-hover:scale-[1.02]"
+              className="w-full h-[75px] object-cover rounded-lg transition-transform duration-200 group-hover:scale-[1.02] border-2 border-transparent hover:border-[#8000ff] hover:shadow-[0_0_15px_rgba(128,0,255,0.5)] transition-all"
             />
             <button
               onClick={() => setDeleteIndex(index)}
