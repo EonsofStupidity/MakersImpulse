@@ -48,31 +48,38 @@ export const useRoleCheck = (
 
         // Handle role checks
         if (session && requiredRole) {
-          const { data: profile, error: fetchError } = await supabase
+          const { data: profiles, error: fetchError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .single();
+            .limit(1);
 
           if (fetchError) {
             console.error('Error fetching user role:', fetchError);
             throw new Error('Error verifying permissions');
           }
 
-          if (!profile?.role) {
-            console.error('No role found for user');
+          if (!profiles || profiles.length === 0) {
+            console.error('No profile found for user');
+            throw new Error('No profile found');
+          }
+
+          const userRole = profiles[0].role;
+          
+          if (!userRole) {
+            console.error('No role assigned to user profile');
             throw new Error('No role assigned');
           }
 
           const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-          const userRoleLevel = roleHierarchy[profile.role as UserRole];
+          const userRoleLevel = roleHierarchy[userRole as UserRole];
           
           const hasRequiredRole = requiredRoles.some(role => 
             userRoleLevel >= roleHierarchy[role]
           );
 
           if (!hasRequiredRole) {
-            console.log(`User role ${profile.role} insufficient for required roles:`, requiredRoles);
+            console.log(`User role ${userRole} insufficient for required roles:`, requiredRoles);
             throw new Error('Insufficient permissions');
           }
 
