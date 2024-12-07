@@ -12,12 +12,23 @@ export interface ToolbarItemType {
 
 interface ToolbarItemProps {
   item: ToolbarItemType;
+  index: number;
   isIconOnly: boolean;
+  isLocked: boolean;
   onDragOver: (event: React.DragEvent<HTMLButtonElement>) => void;
   onDrop: (event: React.DragEvent<HTMLButtonElement>) => void;
+  onReorder: (fromIndex: number, toIndex: number) => void;
 }
 
-export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarItemProps) => {
+export const ToolbarItem = ({ 
+  item, 
+  index,
+  isIconOnly, 
+  isLocked,
+  onDragOver, 
+  onDrop,
+  onReorder 
+}: ToolbarItemProps) => {
   let IconComponent: LucideIcon | null = null;
 
   try {
@@ -39,14 +50,44 @@ export const ToolbarItem = ({ item, isIconOnly, onDragOver, onDrop }: ToolbarIte
     return null;
   }
 
+  const handleDragStart = (e: React.DragEvent<HTMLButtonElement>) => {
+    if (isLocked) {
+      e.preventDefault();
+      return;
+    }
+    e.dataTransfer.setData('toolbar-index', index.toString());
+  };
+
+  const handleDragEnter = (e: React.DragEvent<HTMLButtonElement>) => {
+    if (isLocked) return;
+    
+    e.preventDefault();
+    const draggedIndex = parseInt(e.dataTransfer.getData('toolbar-index'));
+    if (draggedIndex !== index) {
+      onReorder(draggedIndex, index);
+    }
+  };
+
   return (
     <motion.button
-      className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4] transition-all group"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
+      className={cn(
+        "p-2 rounded-lg transition-all group",
+        isLocked 
+          ? "bg-white/5 text-white/60"
+          : "bg-white/5 hover:bg-white/10 text-white/80 hover:text-[#ff69b4]"
+      )}
+      whileHover={!isLocked ? { scale: 1.1 } : {}}
+      whileTap={!isLocked ? { scale: 0.95 } : {}}
       onDragOver={onDragOver}
       onDrop={onDrop}
+      draggable={!isLocked}
+      onDragStart={handleDragStart}
+      onDragEnter={handleDragEnter}
       layout
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.2 }}
     >
       <div className="flex items-center gap-2">
         <IconComponent className="w-5 h-5" />

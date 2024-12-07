@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Settings, RotateCw, Minimize2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Settings, RotateCw, Minimize2, Lock, Unlock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ToolbarItemList } from './toolbar/ToolbarItemList';
 import { ToolbarItemType } from './toolbar/types';
@@ -9,6 +9,7 @@ import { Switch } from '@/components/ui/switch';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const [isPersistent, setIsPersistent] = useState(() => {
     const saved = localStorage.getItem('adminToolbarPersistent');
     return saved ? JSON.parse(saved) : false;
@@ -19,11 +20,7 @@ export const AdminToolbar = () => {
   });
   const [toolbarItems, setToolbarItems] = useState<ToolbarItemType[]>(() => {
     const saved = localStorage.getItem('adminToolbarItems');
-    return saved ? JSON.parse(saved) : [
-      { id: 'settings', icon: 'Settings', label: 'Settings' },
-      { id: 'rotate', icon: 'RotateCw', label: 'Rotate' },
-      { id: 'minimize', icon: 'Minimize2', label: 'Minimize' },
-    ];
+    return saved ? JSON.parse(saved) : [];
   });
   const [dropTarget, setDropTarget] = useState<number | null>(null);
 
@@ -40,6 +37,8 @@ export const AdminToolbar = () => {
   }, [toolbarItems, orientation, isPersistent]);
 
   const handleDragOver = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+    if (isLocked) return;
+    
     try {
       event.preventDefault();
       console.log('Drag over event at index:', index);
@@ -50,6 +49,11 @@ export const AdminToolbar = () => {
   };
 
   const handleDrop = (event: React.DragEvent<HTMLButtonElement>, index: number) => {
+    if (isLocked) {
+      toast.error('Toolbar is locked. Unlock it to add shortcuts.');
+      return;
+    }
+
     try {
       event.preventDefault();
       console.log('Drop event:', event);
@@ -98,6 +102,15 @@ export const AdminToolbar = () => {
     }
   };
 
+  const handleReorder = (fromIndex: number, toIndex: number) => {
+    if (isLocked) return;
+    
+    const newItems = [...toolbarItems];
+    const [movedItem] = newItems.splice(fromIndex, 1);
+    newItems.splice(toIndex, 0, movedItem);
+    setToolbarItems(newItems);
+  };
+
   return (
     <motion.div
       className={cn(
@@ -114,22 +127,37 @@ export const AdminToolbar = () => {
       transition={{ duration: 0.3 }}
       whileHover={{ scale: 1.02 }}
     >
-      <div className="absolute -top-12 right-0 flex items-center gap-2 text-white/80">
-        <span className="text-sm">Persist Toolbar</span>
-        <Switch
-          checked={isPersistent}
-          onCheckedChange={setIsPersistent}
-          className="data-[state=checked]:bg-[#41f0db]"
-        />
+      <div className="absolute -top-12 right-0 flex items-center gap-4 text-white/80">
+        <div className="flex items-center gap-2">
+          <span className="text-sm">Persist Toolbar</span>
+          <Switch
+            checked={isPersistent}
+            onCheckedChange={setIsPersistent}
+            className="data-[state=checked]:bg-[#41f0db]"
+          />
+        </div>
+        <button
+          onClick={() => setIsLocked(!isLocked)}
+          className={cn(
+            "p-2 rounded-lg transition-colors duration-200",
+            isLocked ? "bg-[#41f0db]/20 text-[#41f0db]" : "bg-white/5 text-white/60 hover:text-white"
+          )}
+        >
+          {isLocked ? <Lock className="w-4 h-4" /> : <Unlock className="w-4 h-4" />}
+        </button>
       </div>
-      <ToolbarItemList
-        items={toolbarItems}
-        isIconOnly={isIconOnly}
-        orientation={orientation}
-        dropTarget={dropTarget}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      />
+      <AnimatePresence mode="wait">
+        <ToolbarItemList
+          items={toolbarItems}
+          isIconOnly={isIconOnly}
+          orientation={orientation}
+          dropTarget={dropTarget}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          onReorder={handleReorder}
+          isLocked={isLocked}
+        />
+      </AnimatePresence>
     </motion.div>
   );
 };
