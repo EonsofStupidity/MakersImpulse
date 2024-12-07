@@ -4,7 +4,7 @@ import { formatDistanceToNow } from 'date-fns';
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { ImageCarousel } from "@/components/shared/content-blocks/ImageCarousel";
+import ImageCarousel from "@/components/shared/content-blocks/ImageCarousel";
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 interface BlogPostCardProps {
