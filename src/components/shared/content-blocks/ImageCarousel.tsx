@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ImageCarouselProps {
@@ -9,7 +8,12 @@ interface ImageCarouselProps {
   className?: string;
 }
 
-const ImageCarousel = ({ images, currentIndex, onIndexChange, className = "" }: ImageCarouselProps) => {
+const ImageCarousel = ({ 
+  images, 
+  currentIndex, 
+  onIndexChange, 
+  className = "" 
+}: ImageCarouselProps) => {
   const handleKeyPress = (e: KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowRight':
@@ -18,6 +22,9 @@ const ImageCarousel = ({ images, currentIndex, onIndexChange, className = "" }: 
         break;
       case 'ArrowLeft':
         onIndexChange(currentIndex > 0 ? currentIndex - 1 : images.length - 1);
+        break;
+      case 'Escape':
+        // This will be handled by the Dialog component
         break;
     }
   };
