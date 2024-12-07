@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "@/integrations/supabase/client";
 
 export const uploadMedia = async (file: File): Promise<string> => {
   const fileExt = file.name.split('.').pop();
