@@ -24,7 +24,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
 
-  // Get a random image from the post's images to use as featured if none is set
   const featuredImage = post.featured_image || (post.images && post.images.length > 0 
     ? post.images[Math.floor(Math.random() * post.images.length)] 
     : null);
