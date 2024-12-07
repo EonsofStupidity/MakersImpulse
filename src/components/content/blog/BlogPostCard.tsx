@@ -1,11 +1,10 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
 import { formatDistanceToNow } from 'date-fns';
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import ImageCarousel from "@/components/shared/content-blocks/ImageCarousel";
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import ImageThumbnails from './components/ImageThumbnails';
+import ExpandedPost from './components/ExpandedPost';
+import ImageCarouselDialog from './components/ImageCarouselDialog';
 
 interface BlogPostCardProps {
   post: {
@@ -35,47 +34,6 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     setCurrentImageIndex(index);
     setShowCarousel(true);
   };
-
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!showCarousel) return;
-
-    switch (e.key) {
-      case 'ArrowLeft':
-        setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
-        break;
-      case 'ArrowRight':
-      case ' ': // Spacebar
-        setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
-        break;
-      case 'Escape':
-        setShowCarousel(false);
-        break;
-    }
-  }, [showCarousel, images.length]);
-
-  const handleWheel = useCallback((e: WheelEvent) => {
-    if (!showCarousel) return;
-    
-    if (e.deltaY > 0) {
-      setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0));
-    } else {
-      setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : images.length - 1));
-    }
-  }, [showCarousel, images.length]);
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('wheel', handleWheel);
-    
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      window.removeEventListener('wheel', handleWheel);
-    };
-  }, [handleKeyDown, handleWheel]);
-
-  console.log('Post data:', post);
-  console.log('Images array:', images);
-  console.log('Current image index:', currentImageIndex);
 
   return (
     <>
@@ -139,98 +97,28 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             </div>
 
             {images.length > 0 && (
-              <motion.div 
-                className="absolute left-8 right-8 -bottom-8 grid grid-cols-5 gap-2"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2 }}
-              >
-                {images.slice(0, 5).map((image, index) => (
-                  <motion.div 
-                    key={index} 
-                    className="relative aspect-square overflow-hidden rounded-lg border border-[#ff0abe]/20 shadow-lg shadow-[#ff0abe]/10 cursor-pointer"
-                    whileHover={{ y: -5, scale: 1.05 }}
-                    transition={{ duration: 0.2 }}
-                    onClick={() => handleImageClick(index)}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-[#ff0abe]/20 mix-blend-overlay"
-                      whileHover={{ opacity: 0 }}
-                    />
-                    <img 
-                      src={image} 
-                      alt="" 
-                      className="w-full h-full object-cover"
-                    />
-                  </motion.div>
-                ))}
-              </motion.div>
+              <ImageThumbnails 
+                images={images} 
+                onImageClick={handleImageClick} 
+              />
             )}
           </div>
         </div>
       </motion.div>
 
-      <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
-        <DialogContent className="max-w-4xl h-[80vh] bg-[#1a1a1a] border-[#ff0abe]/20">
-          <ScrollArea className="h-full pr-4">
-            <div className="space-y-6">
-              {featuredImage && (
-                <div className="relative h-[300px] rounded-lg overflow-hidden">
-                  <img 
-                    src={featuredImage} 
-                    alt="" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <h2 className="text-3xl font-bold text-white">{post.title}</h2>
-              <div className="prose prose-invert max-w-none">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              </div>
-            </div>
-          </ScrollArea>
-        </DialogContent>
-      </Dialog>
+      <ExpandedPost
+        isOpen={isExpanded}
+        onOpenChange={setIsExpanded}
+        post={post}
+      />
 
-      {showCarousel && (
-        <Dialog open={showCarousel} onOpenChange={setShowCarousel}>
-          <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-black/90 border-none">
-            <div className="relative w-full h-full flex items-center justify-center">
-              <button
-                onClick={() => setShowCarousel(false)}
-                className="absolute top-4 right-4 text-white/80 hover:text-white z-50"
-              >
-                <X size={24} />
-              </button>
-              
-              <ImageCarousel
-                images={images}
-                currentIndex={currentImageIndex}
-                onIndexChange={setCurrentImageIndex}
-                className="w-full h-full"
-              />
-
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80">
-                {currentImageIndex + 1} of {images.length}
-              </div>
-
-              <button
-                onClick={() => setCurrentImageIndex(prev => (prev > 0 ? prev - 1 : images.length - 1))}
-                className="absolute left-4 text-white/80 hover:text-white"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              
-              <button
-                onClick={() => setCurrentImageIndex(prev => (prev < images.length - 1 ? prev + 1 : 0))}
-                className="absolute right-4 text-white/80 hover:text-white"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      <ImageCarouselDialog
+        isOpen={showCarousel}
+        onOpenChange={setShowCarousel}
+        images={images}
+        currentIndex={currentImageIndex}
+        onIndexChange={setCurrentImageIndex}
+      />
     </>
   );
 };
