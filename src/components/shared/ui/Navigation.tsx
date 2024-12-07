@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MegaMenu } from "./navigation/MegaMenu";
+import { MobileNav } from "./navigation/mobile/MobileNav";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -73,29 +74,33 @@ export const Navigation = () => {
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
             </Button>
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
-                  <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
-                    <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
-                <DropdownMenuItem asChild>
-                  <Link to="/login" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign In</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/register" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign Up</Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <Link to="/admin" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Admin Dashboard</Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="hidden md:block">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
+                    <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
+                      <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
+                        <User className="h-4 w-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
+                  <DropdownMenuItem asChild>
+                    <Link to="/login" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign In</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/register" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign Up</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Admin Dashboard</Link>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+
+            <MobileNav />
           </div>
         </div>
       </div>
