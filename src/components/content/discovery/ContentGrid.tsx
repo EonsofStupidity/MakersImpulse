@@ -37,7 +37,7 @@ export const ContentGrid: React.FC<ContentGridProps> = ({
   }
 
   if (type === 'blog' && items) {
-    console.log('Blog items:', items); // Debug log
+    console.log('Blog items:', items);
     return (
       <motion.div 
         initial={{ opacity: 0 }}
