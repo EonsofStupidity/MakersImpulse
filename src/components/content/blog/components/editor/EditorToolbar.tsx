@@ -25,7 +25,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={editor.isActive('bold') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('bold') ? 'bg-white/10' : ''}`}
       >
         <Bold className="h-4 w-4" />
       </Button>
@@ -34,7 +34,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={editor.isActive('italic') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('italic') ? 'bg-white/10' : ''}`}
       >
         <Italic className="h-4 w-4" />
       </Button>
@@ -43,7 +43,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={editor.isActive('codeBlock') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('codeBlock') ? 'bg-white/10' : ''}`}
       >
         <Code className="h-4 w-4" />
       </Button>
@@ -52,7 +52,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={editor.isActive('heading', { level: 1 }) ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('heading', { level: 1 }) ? 'bg-white/10' : ''}`}
       >
         <Heading1 className="h-4 w-4" />
       </Button>
@@ -61,7 +61,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={editor.isActive('heading', { level: 2 }) ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('heading', { level: 2 }) ? 'bg-white/10' : ''}`}
       >
         <Heading2 className="h-4 w-4" />
       </Button>
@@ -70,7 +70,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={editor.isActive('bulletList') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('bulletList') ? 'bg-white/10' : ''}`}
       >
         <List className="h-4 w-4" />
       </Button>
@@ -79,7 +79,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={editor.isActive('orderedList') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('orderedList') ? 'bg-white/10' : ''}`}
       >
         <ListOrdered className="h-4 w-4" />
       </Button>
@@ -88,7 +88,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={editor.isActive('blockquote') ? 'bg-white/10' : ''}
+        className={`text-white hover:text-[#41f0db] ${editor.isActive('blockquote') ? 'bg-white/10' : ''}`}
       >
         <Quote className="h-4 w-4" />
       </Button>
@@ -97,6 +97,7 @@ export const EditorToolbar: React.FC<EditorToolbarProps> = ({ editor, onImageAdd
         variant="ghost"
         size="icon"
         onClick={onImageAdd}
+        className="text-white hover:text-[#41f0db]"
       >
         <ImageIcon className="h-4 w-4" />
       </Button>

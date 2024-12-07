@@ -3,7 +3,7 @@ import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import CodeBlockLowlight from '@tiptap/extension-code-block-lowlight';
-import { common, createLowlight } from 'lowlight'
+import { common, createLowlight } from 'lowlight';
 import { EditorToolbar } from './editor/EditorToolbar';
 import { EditorStyles } from './editor/EditorStyles';
 
@@ -12,7 +12,7 @@ interface RichTextEditorProps {
   onChange: (content: string) => void;
 }
 
-const lowlight = createLowlight(common)
+const lowlight = createLowlight(common);
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange }) => {
   const editor = useEditor({
@@ -26,6 +26,11 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange }) =>
     content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'prose prose-invert max-w-none p-4 min-h-[300px] focus:outline-none text-white',
+      },
     },
   });
 
@@ -44,10 +49,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ content, onChange }) =>
     <div className="border border-white/10 rounded-lg overflow-hidden bg-black/40 backdrop-blur-xl">
       <EditorToolbar editor={editor} onImageAdd={addImage} />
       <EditorStyles>
-        <EditorContent 
-          editor={editor} 
-          className="prose prose-invert max-w-none p-4 min-h-[300px] focus:outline-none"
-        />
+        <EditorContent editor={editor} />
       </EditorStyles>
     </div>
   );
