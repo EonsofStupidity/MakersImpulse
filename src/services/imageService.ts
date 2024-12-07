@@ -8,9 +8,13 @@ export interface ImageUploadResult {
 
 export const uploadBlogImage = async (file: File, postId: string): Promise<ImageUploadResult> => {
   try {
+    console.log('Starting image upload for post:', postId);
+    
     const fileExt = file.name.split('.').pop();
     const fileName = `${Math.random()}.${fileExt}`;
     const filePath = `blog-posts/${postId}/${fileName}`;
+
+    console.log('Uploading file to path:', filePath);
 
     const { error: uploadError } = await supabase.storage
       .from('media')
@@ -25,6 +29,19 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
       .from('media')
       .getPublicUrl(filePath);
 
+    console.log('File uploaded successfully, public URL:', publicUrl);
+
+    // Update blog post images array
+    const { error: updateError } = await supabase.rpc(
+      'append_blog_image',
+      { post_id: postId, image_url: publicUrl }
+    );
+
+    if (updateError) {
+      console.error('Error updating blog post images:', updateError);
+      return { url: publicUrl, error: 'Image uploaded but failed to update post' };
+    }
+
     return { url: publicUrl };
   } catch (error) {
     console.error('Image upload error:', error);
@@ -33,16 +50,27 @@ export const uploadBlogImage = async (file: File, postId: string): Promise<Image
 };
 
 export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
-  if (!imageUrl) return false;
+  console.log('Validating blog image:', imageUrl);
+  
+  if (!imageUrl) {
+    console.log('No image URL provided');
+    return false;
+  }
 
   try {
+    // Extract bucket and path from URL
     const urlMatch = imageUrl.match(/\/storage\/v1\/object\/public\/([^/]+)\/(.+)/);
-    if (!urlMatch) return false;
+    if (!urlMatch) {
+      console.log('Invalid storage URL format:', imageUrl);
+      return false;
+    }
 
     const [, bucket, path] = urlMatch;
     const pathParts = path.split('/');
     const fileName = pathParts.pop();
     const directory = pathParts.join('/');
+
+    console.log('Checking file in bucket:', bucket, 'directory:', directory, 'filename:', fileName);
 
     const { data, error } = await supabase.storage
       .from(bucket)
@@ -56,7 +84,9 @@ export const validateBlogImage = async (imageUrl: string): Promise<boolean> => {
       return false;
     }
 
-    return data && data.length > 0;
+    const exists = data && data.length > 0;
+    console.log('Image exists:', exists);
+    return exists;
   } catch (error) {
     console.error('Image validation error:', error);
     return false;

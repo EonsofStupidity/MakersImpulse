@@ -36,7 +36,11 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
   useEffect(() => {
     const validateImages = async () => {
+      console.log('Starting image validation for post:', post.id);
+      console.log('Images to validate:', images);
+
       if (!images.length) {
+        console.log('No images to validate');
         setIsLoading(false);
         return;
       }
@@ -46,13 +50,16 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
 
       await Promise.all(
         images.map(async (imageUrl) => {
+          console.log('Validating image:', imageUrl);
           const isValid = await validateBlogImage(imageUrl);
+          console.log('Image validation result:', imageUrl, isValid);
           if (!isValid) {
             errors[imageUrl] = true;
           }
         })
       );
 
+      console.log('Validation complete, errors:', errors);
       setImageLoadErrors(errors);
       setIsLoading(false);
     };
@@ -66,6 +73,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   };
 
   const validImages = images.filter(img => !imageLoadErrors[img]);
+  console.log('Valid images:', validImages);
 
   return (
     <div className="relative w-full mb-16">
@@ -91,6 +99,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
                   onError={() => {
+                    console.error('Image load error:', featuredImage);
                     setImageLoadErrors(prev => ({ ...prev, [featuredImage]: true }));
                   }}
                 />
