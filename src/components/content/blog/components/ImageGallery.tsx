@@ -1,20 +1,36 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, Loader2 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface ImageGalleryProps {
   images: string[];
   onImageClick?: (index: number) => void;
   onImageRemove?: (index: number) => void;
   editable?: boolean;
+  isLoading?: boolean;
 }
 
 const ImageGallery: React.FC<ImageGalleryProps> = ({ 
   images, 
   onImageClick,
   onImageRemove,
-  editable = false 
+  editable = false,
+  isLoading = false
 }) => {
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+        {[1, 2, 3, 4].map((_, index) => (
+          <Skeleton
+            key={index}
+            className="aspect-square w-full bg-white/5 rounded-lg"
+          />
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
       {images.map((image, index) => (
