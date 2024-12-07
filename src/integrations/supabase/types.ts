@@ -1,145 +1,285 @@
-// Define a flexible JSON type
 export type Json =
   | string
   | number
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
-/**
- * Generic table definition type
- * @template RowType - The shape of a table's data.
- */
-type TableDefinition<RowType> = {
-  Row: Readonly<RowType>; // Immutable rows for safety
-  Insert: Partial<RowType> & Required<Pick<RowType, "id">>;
-  Update: Partial<RowType>;
-  Relationships: Array<{
-    foreignKey: string;
-    references: string;
-  }>;
-};
-
-/**
- * Define the main database schema
- */
 export type Database = {
   public: {
     Tables: {
-      blog_posts: TableDefinition<{
-        author_id: string | null;
-        content: string;
-        excerpt: string | null;
-        featured_image: string | null;
-        id: string;
-        published_at: string | null;
-        slug: string;
-        status: BlogPostStatus | null;
-        title: string;
-        updated_at: string | null;
-        views_count: number | null;
-      }>;
-      maker_projects: TableDefinition<{
-        category: string;
-        created_at: string | null;
-        description: string | null;
-        difficulty_level: string | null;
-        estimated_time: string | null;
-        id: string;
-        likes_count: number | null;
-        parts_count: number | null;
-        status: string | null;
-        title: string;
-        updated_at: string | null;
-        views_count: number | null;
-      }>;
-      media: TableDefinition<{
-        created_at: string;
-        id: string;
-        name: string;
-        size: number | null;
-        type: string | null;
-        updated_at: string;
-        url: string;
-        user_id: string | null;
-      }>;
-      profiles: TableDefinition<{
-        avatar_url: string | null;
-        bio: string | null;
-        created_at: string;
-        display_name: string | null;
-        id: string;
-        last_seen: string | null;
-        location: string | null;
-        role: Database["public"]["Enums"]["user_role"] | null;
-        updated_at: string;
-        username: string | null;
-        website: string | null;
-      }>;
-    };
-    Views: Record<string, never>;
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          content: string
+          excerpt: string | null
+          featured_image: string | null
+          id: string
+          published_at: string | null
+          slug: string
+          status: string | null
+          title: string
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          excerpt?: string | null
+          featured_image?: string | null
+          id?: string
+          published_at?: string | null
+          slug?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      maker_projects: {
+        Row: {
+          category: string
+          created_at: string | null
+          description: string | null
+          difficulty_level: string | null
+          estimated_time: string | null
+          id: string
+          likes_count: number | null
+          parts_count: number | null
+          status: string | null
+          title: string
+          updated_at: string | null
+          views_count: number | null
+        }
+        Insert: {
+          category: string
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          estimated_time?: string | null
+          id?: string
+          likes_count?: number | null
+          parts_count?: number | null
+          status?: string | null
+          title: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Update: {
+          category?: string
+          created_at?: string | null
+          description?: string | null
+          difficulty_level?: string | null
+          estimated_time?: string | null
+          id?: string
+          likes_count?: number | null
+          parts_count?: number | null
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      media: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          size: number | null
+          type: string | null
+          updated_at: string
+          url: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          size?: number | null
+          type?: string | null
+          updated_at?: string
+          url: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          size?: number | null
+          type?: string | null
+          updated_at?: string
+          url?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          last_seen: string | null
+          location: string | null
+          role: Database["public"]["Enums"]["user_role"] | null
+          updated_at: string
+          username: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          last_seen?: string | null
+          location?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string
+          username?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          last_seen?: string | null
+          location?: string | null
+          role?: Database["public"]["Enums"]["user_role"] | null
+          updated_at?: string
+          username?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
-      get_popular_posts: {
-        Args: {
-          limit: number;
-        };
-        Returns: {
-          id: string;
-          title: string;
-          views_count: number;
-        }[];
-      };
-    };
+      [_ in never]: never
+    }
     Enums: {
-      user_role: "subscriber" | "maker" | "admin" | "super_admin";
-    };
+      user_role: "subscriber" | "maker" | "admin" | "super_admin"
+    }
     CompositeTypes: {
-      address: {
-        street: string;
-        city: string;
-        state: string;
-        zip: string;
-      };
-    };
-  };
-};
+      [_ in never]: never
+    }
+  }
+}
 
-// Type aliases for stricter usage and readability
-type BlogPostStatus = "draft" | "published" | "archived";
+type PublicSchema = Database[Extract<keyof Database, "public">]
 
-// Utility type for accessing table rows
 export type Tables<
-  Table extends keyof Database["public"]["Tables"]
-> = Database["public"]["Tables"][Table]["Row"];
+  PublicTableNameOrOptions extends
+    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
+      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
+        PublicSchema["Views"])
+    ? (PublicSchema["Tables"] &
+        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
 
-// Utility type for insertable data in tables
 export type TablesInsert<
-  Table extends keyof Database["public"]["Tables"]
-> = Database["public"]["Tables"][Table]["Insert"];
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
 
-// Utility type for updatable data in tables
 export type TablesUpdate<
-  Table extends keyof Database["public"]["Tables"]
-> = Database["public"]["Tables"][Table]["Update"];
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = PublicTableNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
+    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
 
-// Utility type for accessing enums dynamically
 export type Enums<
-  EnumName extends keyof Database["public"]["Enums"]
-> = Database["public"]["Enums"][EnumName];
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
+    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
+    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+    : never
 
-// Utility type for accessing composite types dynamically
 export type CompositeTypes<
-  CompositeTypeName extends keyof Database["public"]["CompositeTypes"]
-> = Database["public"]["CompositeTypes"][CompositeTypeName];
-
-// Utility types for additional common use cases
-type PaginatedResult<RowType> = {
-  data: RowType[];
-  total: number;
-  page: number;
-  perPage: number;
-};
-
-// Example usage for paginated blog posts
-type BlogPostsPaginated = PaginatedResult<Tables<"blog_posts">>;
+  PublicCompositeTypeNameOrOptions extends
+    | keyof PublicSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
+    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
