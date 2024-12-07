@@ -3,10 +3,10 @@ import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { ImageUploadZone } from "@/components/uploads";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import RichTextEditor from "@/components/content/blog/components/RichTextEditor";
 
 const PostEditor = () => {
   const [title, setTitle] = useState("");
@@ -28,24 +28,65 @@ const PostEditor = () => {
         return;
       }
 
-      const { data, error } = await supabase.from("blog_posts").insert({
-        title,
-        slug: slug || title.toLowerCase().replace(/ /g, "-"),
-        content,
-        status: 'draft',
-        author_id: user.id
-      });
+      // Upload images first
+      const uploadedImageUrls = await Promise.all(
+        images.map(async (file) => {
+          const fileExt = file.name.split('.').pop();
+          const fileName = `${Math.random()}.${fileExt}`;
+          const filePath = `uploads/${fileName}`;
 
-      if (error) {
-        toast.error("Error saving post");
-        console.error("Error saving post:", error);
-      } else {
-        toast.success("Post saved successfully");
-        setTitle("");
-        setSlug("");
-        setContent("");
-        setImages([]);
+          const { error: uploadError } = await supabase.storage
+            .from('media')
+            .upload(filePath, file);
+
+          if (uploadError) throw uploadError;
+
+          const { data } = supabase.storage
+            .from('media')
+            .getPublicUrl(filePath);
+
+          return data.publicUrl;
+        })
+      );
+
+      // Create the blog post
+      const { data: post, error: postError } = await supabase
+        .from("blog_posts")
+        .insert({
+          title,
+          slug: slug || title.toLowerCase().replace(/ /g, "-"),
+          content: content,
+          rich_content: content, // Store the HTML content
+          status: 'draft',
+          author_id: user.id,
+          images: uploadedImageUrls
+        })
+        .select()
+        .single();
+
+      if (postError) throw postError;
+
+      // Associate images with the post
+      if (post && uploadedImageUrls.length > 0) {
+        const { error: mediaError } = await supabase
+          .from('media')
+          .insert(
+            uploadedImageUrls.map(url => ({
+              name: url.split('/').pop() || '',
+              url,
+              blog_post_id: post.id,
+              user_id: user.id
+            }))
+          );
+
+        if (mediaError) throw mediaError;
       }
+
+      toast.success("Post saved successfully");
+      setTitle("");
+      setSlug("");
+      setContent("");
+      setImages([]);
     } catch (error) {
       console.error("Error in handleSave:", error);
       toast.error("An unexpected error occurred");
@@ -84,13 +125,16 @@ const PostEditor = () => {
 
             <div>
               <label className="text-white/80 block mb-2">Content</label>
-              <Textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="bg-white/5 border-white/10 text-white min-h-[300px] focus:border-[#41f0db] focus:ring-[#41f0db]/20 transition-all duration-300"
-                placeholder="Write your post content here..."
+              <RichTextEditor 
+                content={content}
+                onChange={setContent}
               />
             </div>
+
+            <ImageUploadZone 
+              images={images} 
+              onImagesChange={setImages} 
+            />
 
             <div className="flex justify-end gap-4">
               <Button 
@@ -112,11 +156,6 @@ const PostEditor = () => {
                 Save Post
               </Button>
             </div>
-
-            <ImageUploadZone 
-              images={images} 
-              onImagesChange={setImages} 
-            />
           </div>
         </Card>
       </div>

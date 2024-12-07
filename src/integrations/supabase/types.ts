@@ -18,6 +18,7 @@ export type Database = {
           id: string
           images: string[] | null
           published_at: string | null
+          rich_content: Json | null
           slug: string
           status: string | null
           title: string
@@ -32,6 +33,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           published_at?: string | null
+          rich_content?: Json | null
           slug: string
           status?: string | null
           title: string
@@ -46,6 +48,7 @@ export type Database = {
           id?: string
           images?: string[] | null
           published_at?: string | null
+          rich_content?: Json | null
           slug?: string
           status?: string | null
           title?: string
@@ -101,6 +104,7 @@ export type Database = {
       }
       media: {
         Row: {
+          blog_post_id: string | null
           created_at: string
           id: string
           name: string
@@ -111,6 +115,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          blog_post_id?: string | null
           created_at?: string
           id?: string
           name: string
@@ -121,6 +126,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          blog_post_id?: string | null
           created_at?: string
           id?: string
           name?: string
@@ -130,7 +136,15 @@ export type Database = {
           url?: string
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "media_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
