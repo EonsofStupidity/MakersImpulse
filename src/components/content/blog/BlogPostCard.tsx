@@ -31,72 +31,86 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#41f0db]/50 transition-all duration-300 overflow-hidden h-[544px] w-full"
+        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-hidden h-[544px] w-full"
       >
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black/80 z-10" />
         
         {post.featured_image && (
           <div className="absolute inset-0 flex">
-            <div className="w-1/3 h-full relative">
-              <div className="absolute inset-0 grid grid-rows-5 gap-2">
-                {thumbnails.map((thumbnail, index) => (
-                  <div key={index} className="relative overflow-hidden group">
-                    <img 
-                      src={thumbnail} 
-                      alt="" 
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/50" />
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="w-2/3 h-full">
-              <img 
+            <div className="w-full h-full">
+              <motion.img 
                 src={post.featured_image} 
                 alt="" 
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-50"
+                className="w-full h-full object-cover opacity-50"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.3 }}
               />
+              <div className="absolute inset-0 bg-gradient-to-b from-[#ff0abe]/20 to-black/80 mix-blend-overlay" />
             </div>
           </div>
         )}
 
-        <div className="relative z-20 p-8 h-full flex flex-col justify-end">
-          <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#41f0db] transition-colors duration-300">
-            {post.title}
-          </h3>
-          
-          <div className="text-white/80 mb-6 line-clamp-3">
-            {displayContent}
-            {hasMoreContent && (
-              <Button 
-                variant="link" 
-                className="text-[#41f0db] hover:text-[#41f0db]/80 pl-2"
-                onClick={() => setIsExpanded(true)}
-              >
-                Read more
-              </Button>
-            )}
+        <div className="relative z-20 p-8 h-full flex flex-col justify-between">
+          <div>
+            <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#ff0abe] transition-colors duration-300">
+              {post.title}
+            </h3>
+            
+            <div className="text-white/80 mb-6 line-clamp-3">
+              {displayContent}
+              {hasMoreContent && (
+                <Button 
+                  variant="link" 
+                  className="text-[#ff0abe] hover:text-[#ff0abe]/80 pl-2"
+                  onClick={() => setIsExpanded(true)}
+                >
+                  Read more
+                </Button>
+              )}
+            </div>
           </div>
 
-          <div className="flex justify-between items-center text-sm">
-            <span className="text-[#41f0db]">
-              {post.published_at ? 
-                formatDistanceToNow(new Date(post.published_at), { addSuffix: true }) :
-                "Recently"
-              }
-            </span>
-            {post.views_count !== null && (
-              <span className="text-white/50">
-                {post.views_count} views
+          <div className="space-y-6">
+            <div className="grid grid-cols-5 gap-2 rounded-lg overflow-hidden">
+              {thumbnails.map((thumbnail, index) => (
+                <div 
+                  key={index} 
+                  className="relative aspect-square overflow-hidden rounded-lg"
+                >
+                  <motion.div
+                    className="absolute inset-0 bg-[#ff0abe]/20 mix-blend-overlay"
+                    whileHover={{ opacity: 0 }}
+                  />
+                  <motion.img 
+                    src={thumbnail} 
+                    alt="" 
+                    className="w-full h-full object-cover"
+                    whileHover={{ scale: 1.1 }}
+                    transition={{ duration: 0.2 }}
+                  />
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-[#ff0abe]">
+                {post.published_at ? 
+                  formatDistanceToNow(new Date(post.published_at), { addSuffix: true }) :
+                  "Recently"
+                }
               </span>
-            )}
+              {post.views_count !== null && (
+                <span className="text-white/50">
+                  {post.views_count} views
+                </span>
+              )}
+            </div>
           </div>
         </div>
       </motion.div>
 
       <Dialog open={isExpanded} onOpenChange={setIsExpanded}>
-        <DialogContent className="max-w-4xl h-[80vh] bg-[#1a1a1a] border-[#41f0db]/20">
+        <DialogContent className="max-w-4xl h-[80vh] bg-[#1a1a1a] border-[#ff0abe]/20">
           <ScrollArea className="h-full pr-4">
             <div className="space-y-6">
               {post.featured_image && (
