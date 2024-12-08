@@ -15,7 +15,7 @@ interface ResetDialogProps {
   onResetConfirmationChange: (value: string) => void;
   confirmCheckbox: boolean;
   onConfirmCheckboxChange: (checked: boolean) => void;
-  onKeyPress: (e: React.KeyboardEvent) => void;
+  onKeyPress?: (e: React.KeyboardEvent) => void;
 }
 
 export const ResetDialog: React.FC<ResetDialogProps> = ({

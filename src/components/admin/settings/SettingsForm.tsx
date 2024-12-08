@@ -75,8 +75,8 @@ export const SettingsForm = () => {
     const subscription = form.watch((value, { name, type }) => {
       if (type === "change") {
         const formValues = form.getValues();
-        handleSettingsUpdate(formValues);
-        updateTheme(formValues);
+        handleSettingsUpdate(formValues as Settings);
+        updateTheme(formValues as Settings);
       }
     });
     return () => subscription.unsubscribe();
@@ -102,6 +102,12 @@ export const SettingsForm = () => {
       toast.error("Failed to reset settings");
     } finally {
       setIsResetting(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleReset();
     }
   };
 
@@ -166,6 +172,7 @@ export const SettingsForm = () => {
         onResetConfirmationChange={setResetConfirmation}
         confirmCheckbox={confirmCheckbox}
         onConfirmCheckboxChange={setConfirmCheckbox}
+        onKeyPress={handleKeyPress}
       />
     </div>
   );
