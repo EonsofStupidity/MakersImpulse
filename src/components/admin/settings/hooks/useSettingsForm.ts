@@ -3,33 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { uploadMedia } from "@/utils/media";
 import { Settings, SettingsResponse } from "../types";
-
-const DEFAULT_SETTINGS: Settings = {
-  site_title: "MakersImpulse",
-  tagline: "Create, Share, Inspire",
-  primary_color: "#7FFFD4",
-  secondary_color: "#FFB6C1",
-  accent_color: "#E6E6FA",
-  text_primary_color: "#FFFFFF",
-  text_secondary_color: "#A1A1AA",
-  text_link_color: "#3B82F6",
-  text_heading_color: "#FFFFFF",
-  neon_cyan: "#41f0db",
-  neon_pink: "#ff0abe",
-  neon_purple: "#8000ff",
-  border_radius: "0.5rem",
-  spacing_unit: "1rem",
-  transition_duration: "0.3s",
-  shadow_color: "#000000",
-  hover_scale: "1.05",
-  font_family_heading: "Inter",
-  font_family_body: "Inter",
-  font_size_base: "16px",
-  font_weight_normal: "400",
-  font_weight_bold: "700",
-  line_height_base: "1.5",
-  letter_spacing: "normal",
-};
+import { DEFAULT_SETTINGS } from "./useSettingsDefaults";
 
 export const useSettingsForm = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
@@ -74,6 +48,13 @@ export const useSettingsForm = () => {
           transition_duration: data.transition_duration,
           shadow_color: data.shadow_color,
           hover_scale: data.hover_scale,
+          font_family_heading: data.font_family_heading,
+          font_family_body: data.font_family_body,
+          font_size_base: data.font_size_base,
+          font_weight_normal: data.font_weight_normal,
+          font_weight_bold: data.font_weight_bold,
+          line_height_base: data.line_height_base,
+          letter_spacing: data.letter_spacing,
         };
         
         console.log("Settings fetched successfully:", settingsData);
@@ -176,6 +157,13 @@ export const useSettingsForm = () => {
         p_transition_duration: formData.transition_duration,
         p_shadow_color: formData.shadow_color,
         p_hover_scale: formData.hover_scale,
+        p_font_family_heading: formData.font_family_heading,
+        p_font_family_body: formData.font_family_body,
+        p_font_size_base: formData.font_size_base,
+        p_font_weight_normal: formData.font_weight_normal,
+        p_font_weight_bold: formData.font_weight_bold,
+        p_line_height_base: formData.line_height_base,
+        p_letter_spacing: formData.letter_spacing,
       });
 
       if (error) throw error;
