@@ -70,6 +70,16 @@ export const SettingsForm = () => {
     },
   });
 
+  // Watch all form fields for changes
+  React.useEffect(() => {
+    const subscription = form.watch((value, { name, type }) => {
+      if (type === "change") {
+        handleSettingsUpdate(form.getValues());
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form.watch, handleSettingsUpdate]);
+
   const handleReset = async () => {
     if (resetConfirmation.toUpperCase() !== "IMPULSE" || !confirmCheckbox) {
       toast.error("Please type IMPULSE and check the confirmation box");
@@ -125,7 +135,13 @@ export const SettingsForm = () => {
             </Button>
           </div>
 
-          <form onSubmit={form.handleSubmit(handleSettingsUpdate)} className="space-y-6">
+          <form className="space-y-6">
+            {isSaving && (
+              <div className="fixed bottom-4 right-4 bg-primary/10 backdrop-blur-sm border border-primary/20 rounded-lg p-3 flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                <span className="text-sm text-primary">Saving changes...</span>
+              </div>
+            )}
             <Accordion type="single" collapsible className="space-y-4">
               <BasicSettingsSection 
                 register={form.register} 
@@ -138,21 +154,6 @@ export const SettingsForm = () => {
               <TransitionSettingsSection />
               <AnimationsSection />
             </Accordion>
-
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={!form.formState.isDirty || isSaving}
-            >
-              {isSaving ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Saving Changes...
-                </>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
           </form>
         </Card>
       </motion.div>
