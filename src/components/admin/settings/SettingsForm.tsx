@@ -1,22 +1,22 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
-import { useSettingsForm } from "./hooks/useSettingsForm";
-import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
 import { settingsSchema, type SettingsFormData } from "./types";
+import { useSettingsForm } from "./hooks/useSettingsForm";
+import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { ResetDialog } from "./components/ResetDialog";
-import { toast } from "sonner";
-import { Settings } from "./types";
-import { useTheme } from "@/components/theme/ThemeContext";
-import { TextStylesSection } from "./sections/TextStylesSection";
+import { SettingsFormHeader } from "./components/SettingsFormHeader";
+import { SavingIndicator } from "./components/SavingIndicator";
 import { ColorSection } from "./sections/ColorSection";
+import { TextStylesSection } from "./sections/TextStylesSection";
 import { LayoutSection } from "./sections/LayoutSection";
 import { AnimationsSection } from "./sections/AnimationsSection";
+import { toast } from "sonner";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -75,37 +75,8 @@ export const SettingsForm = () => {
     const subscription = form.watch((value, { name, type }) => {
       if (type === "change") {
         const formValues = form.getValues();
-        const settingsUpdate: Settings = {
-          site_title: formValues.site_title || "MakersImpulse",
-          primary_color: formValues.primary_color || "#7FFFD4",
-          secondary_color: formValues.secondary_color || "#FFB6C1",
-          accent_color: formValues.accent_color || "#E6E6FA",
-          text_primary_color: formValues.text_primary_color || "#FFFFFF",
-          text_secondary_color: formValues.text_secondary_color || "#A1A1AA",
-          text_link_color: formValues.text_link_color || "#3B82F6",
-          text_heading_color: formValues.text_heading_color || "#FFFFFF",
-          neon_cyan: formValues.neon_cyan || "#41f0db",
-          neon_pink: formValues.neon_pink || "#ff0abe",
-          neon_purple: formValues.neon_purple || "#8000ff",
-          border_radius: formValues.border_radius || "0.5rem",
-          spacing_unit: formValues.spacing_unit || "1rem",
-          transition_duration: formValues.transition_duration || "0.3s",
-          shadow_color: formValues.shadow_color || "#000000",
-          hover_scale: formValues.hover_scale || "1.05",
-          font_family_heading: formValues.font_family_heading || "Inter",
-          font_family_body: formValues.font_family_body || "Inter",
-          font_size_base: formValues.font_size_base || "16px",
-          font_weight_normal: formValues.font_weight_normal || "400",
-          font_weight_bold: formValues.font_weight_bold || "700",
-          line_height_base: formValues.line_height_base || "1.5",
-          letter_spacing: formValues.letter_spacing || "normal",
-          transition_type: formValues.transition_type || "fade",
-          ...formValues, // Add any optional fields
-        };
-        
-        // Update both the local preview and the global theme
-        handleSettingsUpdate(settingsUpdate);
-        updateTheme(settingsUpdate);
+        handleSettingsUpdate(formValues);
+        updateTheme(formValues);
       }
     });
     return () => subscription.unsubscribe();
@@ -134,12 +105,6 @@ export const SettingsForm = () => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleReset();
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -149,30 +114,21 @@ export const SettingsForm = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%] min-h-[calc(100vh-4rem)]">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
+        className="space-y-6"
       >
-        <Card className="p-6 bg-gray-800/50 border border-white/10">
-          <div className="flex justify-end mb-4">
-            <Button 
-              variant="destructive"
-              onClick={() => setShowResetDialog(true)}
-              className="bg-secondary hover:bg-secondary/80"
-            >
-              Reset to Default
-            </Button>
-          </div>
+        <Card className="p-6 bg-gray-800/50 border border-white/10 backdrop-blur-sm">
+          <SettingsFormHeader 
+            onResetClick={() => setShowResetDialog(true)}
+            isSaving={isSaving}
+          />
 
           <form className="space-y-6">
-            {isSaving && (
-              <div className="fixed bottom-4 right-4 bg-primary/10 backdrop-blur-sm border border-primary/20 rounded-lg p-3 flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin text-primary" />
-                <span className="text-sm text-primary">Saving changes...</span>
-              </div>
-            )}
+            <SavingIndicator isSaving={isSaving} />
             <Accordion type="single" collapsible className="space-y-4">
               <ColorSection form={form} />
               <TextStylesSection form={form} />
@@ -188,7 +144,7 @@ export const SettingsForm = () => {
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <Card className="p-6 bg-gray-800/50 border border-white/10">
+        <Card className="p-6 bg-gray-800/50 border border-white/10 backdrop-blur-sm sticky top-4">
           <h3 className="text-lg font-medium text-white mb-4">Preview</h3>
           <SettingsPreview
             settings={{
@@ -210,7 +166,6 @@ export const SettingsForm = () => {
         onResetConfirmationChange={setResetConfirmation}
         confirmCheckbox={confirmCheckbox}
         onConfirmCheckboxChange={setConfirmCheckbox}
-        onKeyPress={handleKeyPress}
       />
     </div>
   );
