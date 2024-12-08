@@ -7,19 +7,15 @@ import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
-import { BasicSettingsSection } from "./components/BasicSettingsSection";
-import { FontSettingsSection } from "./components/FontSettingsSection";
-import { TransitionSettingsSection } from "./components/TransitionSettingsSection";
 import { settingsSchema, type SettingsFormData } from "./types";
-import { AnimationsSection } from "./components/AnimationsSection";
 import { SettingsPreview } from "./components/SettingsPreview";
-import { FontColorSettingsSection } from "./components/FontColorSettingsSection";
-import { NeonColorsSection } from "./components/NeonColorsSection";
-import { AdvancedCSSSection } from "./components/AdvancedCSSSection";
 import { ResetDialog } from "./components/ResetDialog";
 import { toast } from "sonner";
 import { Settings } from "./types";
 import { useTheme } from "@/components/theme/ThemeContext";
+import { TextStylesSection } from "./sections/TextStylesSection";
+import { ColorSection } from "./sections/ColorSection";
+import { LayoutSection } from "./sections/LayoutSection";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -77,7 +73,6 @@ export const SettingsForm = () => {
     const subscription = form.watch((value, { name, type }) => {
       if (type === "change") {
         const formValues = form.getValues();
-        // Ensure all required fields are present before updating
         const settingsUpdate: Settings = {
           site_title: formValues.site_title || "MakersImpulse",
           primary_color: formValues.primary_color || "#7FFFD4",
@@ -176,16 +171,9 @@ export const SettingsForm = () => {
               </div>
             )}
             <Accordion type="single" collapsible className="space-y-4">
-              <BasicSettingsSection 
-                register={form.register} 
-                formState={form.formState}
-              />
-              <FontColorSettingsSection form={form} />
-              <NeonColorsSection form={form} />
-              <AdvancedCSSSection form={form} />
-              <FontSettingsSection form={form} />
-              <TransitionSettingsSection />
-              <AnimationsSection />
+              <ColorSection form={form} />
+              <TextStylesSection form={form} />
+              <LayoutSection form={form} />
             </Accordion>
           </form>
         </Card>
