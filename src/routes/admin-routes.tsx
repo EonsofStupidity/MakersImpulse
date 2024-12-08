@@ -1,27 +1,36 @@
-import { Route } from "react-router-dom";
-import { AuthGuard } from "@/components/auth/AuthGuard";
-import AdminDashboard from "@/pages/admin/dashboard";
-import MediaLibrary from "@/pages/admin/content-management/media";
-import PostEditor from "@/pages/admin/content-management/editor";
-import CategoriesManagement from "@/pages/admin/content-management/categories";
-import TemplatesManagement from "@/pages/admin/content-management/templates";
-import WorkflowsManagement from "@/pages/admin/content-management/workflows";
-import ContentTypesSettings from "@/pages/admin/settings/content-types";
-import PostsManagement from "@/pages/admin/posts";
-import UserManagement from "@/pages/admin/users";
-import SiteSettings from "@/pages/admin/settings";
+import { lazy } from "react";
+import { RouteObject } from "react-router-dom";
 
-export const AdminRoutes = () => (
-  <>
-    <Route path="/admin" element={<AuthGuard requiredRole="admin"><AdminDashboard /></AuthGuard>} />
-    <Route path="/admin/posts" element={<AuthGuard requiredRole="admin"><PostsManagement /></AuthGuard>} />
-    <Route path="/admin/users" element={<AuthGuard requiredRole="admin"><UserManagement /></AuthGuard>} />
-    <Route path="/admin/settings" element={<AuthGuard requiredRole="admin"><SiteSettings /></AuthGuard>} />
-    <Route path="/admin/content-management/media" element={<AuthGuard requiredRole="admin"><MediaLibrary /></AuthGuard>} />
-    <Route path="/admin/content-management/editor" element={<AuthGuard requiredRole="admin"><PostEditor /></AuthGuard>} />
-    <Route path="/admin/content-management/categories" element={<AuthGuard requiredRole="admin"><CategoriesManagement /></AuthGuard>} />
-    <Route path="/admin/content-management/templates" element={<AuthGuard requiredRole="admin"><TemplatesManagement /></AuthGuard>} />
-    <Route path="/admin/content-management/workflows" element={<AuthGuard requiredRole="admin"><WorkflowsManagement /></AuthGuard>} />
-    <Route path="/admin/settings/content-types" element={<AuthGuard requiredRole="admin"><ContentTypesSettings /></AuthGuard>} />
-  </>
-);
+const AdminDashboard = lazy(() => import("@/pages/admin/dashboard"));
+const AdminPosts = lazy(() => import("@/pages/admin/posts"));
+const AdminSettings = lazy(() => import("@/pages/admin/settings"));
+const AdminUsers = lazy(() => import("@/pages/admin/users"));
+const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
+const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
+
+export const adminRoutes: RouteObject[] = [
+  {
+    path: "/admin/dashboard",
+    element: <AdminDashboard />,
+  },
+  {
+    path: "/admin/posts",
+    element: <AdminPosts />,
+  },
+  {
+    path: "/admin/settings",
+    element: <AdminSettings />,
+  },
+  {
+    path: "/admin/settings/activity-logs",
+    element: <ActivityLogs />,
+  },
+  {
+    path: "/admin/settings/content-types",
+    element: <ContentTypes />,
+  },
+  {
+    path: "/admin/users",
+    element: <AdminUsers />,
+  },
+];
