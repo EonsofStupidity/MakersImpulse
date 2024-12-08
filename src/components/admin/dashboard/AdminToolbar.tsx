@@ -5,6 +5,7 @@ import { ToolbarItemList } from './toolbar/ToolbarItemList';
 import { ToolbarControls } from './toolbar/ToolbarControls';
 import { ToolbarItemType } from './toolbar/types';
 import { toast } from 'sonner';
+import { Check, X } from 'lucide-react';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
@@ -22,6 +23,7 @@ export const AdminToolbar = () => {
     return saved ? JSON.parse(saved) : [];
   });
   const [dropTarget, setDropTarget] = useState<number | null>(null);
+  const [isDraggingOverToolbar, setIsDraggingOverToolbar] = useState(false);
 
   useEffect(() => {
     if (isPersistent) {
@@ -39,18 +41,15 @@ export const AdminToolbar = () => {
     if (isLocked) return;
     event.preventDefault();
     event.stopPropagation();
-    const target = event.currentTarget;
-    target.style.background = 'rgba(65, 240, 219, 0.1)';
-    target.style.transform = 'scale(1.02)';
+    setIsDraggingOverToolbar(true);
     setDropTarget(index);
   };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
     if (isLocked) return;
     event.stopPropagation();
-    const target = event.currentTarget;
-    target.style.background = '';
-    target.style.transform = '';
+    setIsDraggingOverToolbar(false);
+    setDropTarget(null);
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -62,9 +61,8 @@ export const AdminToolbar = () => {
     try {
       event.preventDefault();
       event.stopPropagation();
-      const target = event.currentTarget;
-      target.style.background = '';
-      target.style.transform = '';
+      setIsDraggingOverToolbar(false);
+      setDropTarget(null);
       
       const jsonData = event.dataTransfer.getData('application/json');
       if (!jsonData) {
@@ -92,7 +90,6 @@ export const AdminToolbar = () => {
       const newItems = [...toolbarItems];
       newItems.splice(index, 0, newItem);
       setToolbarItems(newItems);
-      setDropTarget(null);
 
       toast.success('Shortcut added to toolbar', {
         description: `${draggedItemData.label} has been added to your shortcuts`
@@ -103,79 +100,104 @@ export const AdminToolbar = () => {
     }
   };
 
-  const handleReorder = (fromIndex: number, toIndex: number) => {
-    if (isLocked) return;
-    const newItems = [...toolbarItems];
-    const [movedItem] = newItems.splice(fromIndex, 1);
-    newItems.splice(toIndex, 0, movedItem);
-    setToolbarItems(newItems);
-  };
-
-  const handleRemove = (index: number) => {
-    if (isLocked) return;
-    const removedItem = toolbarItems[index];
-    const newItems = toolbarItems.filter((_, i) => i !== index);
-    setToolbarItems(newItems);
-    toast.success('Shortcut removed', {
-      description: `${removedItem.label} has been removed from your shortcuts`
-    });
-  };
-
-  const toggleLock = () => {
-    setIsLocked(!isLocked);
-    toast.success(isLocked ? 'Toolbar unlocked' : 'Toolbar locked', {
-      description: isLocked ? 'You can now modify shortcuts' : 'Shortcuts and controls are now locked'
-    });
-  };
-
-  const toggleOrientation = () => {
-    if (isLocked) {
-      toast.error('Unlock the toolbar to change orientation');
-      return;
+  const handleGlobalDrop = (event: React.DragEvent<HTMLDivElement>) => {
+    if (!isDraggingOverToolbar && event.dataTransfer.getData('toolbar-index')) {
+      event.preventDefault();
+      const index = parseInt(event.dataTransfer.getData('toolbar-index'));
+      const removedItem = toolbarItems[index];
+      const newItems = toolbarItems.filter((_, i) => i !== index);
+      setToolbarItems(newItems);
+      toast.success('Shortcut removed', {
+        description: `${removedItem.label} has been removed from your shortcuts`
+      });
     }
-    setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal');
-    toast.success(`Toolbar orientation changed to ${orientation === 'horizontal' ? 'vertical' : 'horizontal'}`);
   };
+
+  useEffect(() => {
+    const handleDragOver = (e: DragEvent) => {
+      if (e.dataTransfer?.getData('toolbar-index')) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener('dragover', handleDragOver);
+    return () => document.removeEventListener('dragover', handleDragOver);
+  }, []);
 
   return (
-    <motion.div
-      className={cn(
-        "fixed z-[100] flex transition-all duration-300",
-        orientation === 'horizontal' ? 'top-20 right-4 flex-row' : 'top-20 right-4 flex-col',
-        "bg-black/20 backdrop-blur-lg border border-white/10",
-        "rounded-xl shadow-2xl overflow-visible",
-        "before:absolute before:inset-0 before:rounded-xl before:z-0",
-        "before:bg-gradient-to-r before:from-[#9b87f5]/20 before:to-[#ff69b4]/20",
-        "before:animate-gradient before:bg-[length:200%_200%]",
-        dropTarget !== null && "ring-2 ring-neon-cyan/30"
+    <>
+      <motion.div
+        className={cn(
+          "fixed z-[100] flex transition-all duration-300",
+          orientation === 'horizontal' ? 'top-20 right-4 flex-row' : 'top-20 right-4 flex-col',
+          "bg-black/20 backdrop-blur-lg border border-white/10",
+          "rounded-xl shadow-2xl overflow-visible",
+          isDraggingOverToolbar && "ring-2 ring-neon-cyan"
+        )}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        whileHover={{ scale: 1.02 }}
+      >
+        <ToolbarControls
+          isPersistent={isPersistent}
+          setIsPersistent={setIsPersistent}
+          isIconOnly={isIconOnly}
+          setIsIconOnly={setIsIconOnly}
+          orientation={orientation}
+          isLocked={isLocked}
+          onToggleOrientation={() => setOrientation(prev => prev === 'horizontal' ? 'vertical' : 'horizontal')}
+          onToggleLock={() => setIsLocked(!isLocked)}
+        />
+        <ToolbarItemList
+          items={toolbarItems}
+          isIconOnly={isIconOnly}
+          orientation={orientation}
+          dropTarget={dropTarget}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          onReorder={(fromIndex, toIndex) => {
+            if (isLocked) return;
+            const newItems = [...toolbarItems];
+            const [movedItem] = newItems.splice(fromIndex, 1);
+            newItems.splice(toIndex, 0, movedItem);
+            setToolbarItems(newItems);
+          }}
+          isLocked={isLocked}
+        />
+      </motion.div>
+
+      {/* Drop indicator overlay */}
+      {toolbarItems.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ 
+            opacity: isDraggingOverToolbar ? 0 : 1,
+            display: isDraggingOverToolbar ? 'none' : 'flex'
+          }}
+          className="fixed inset-0 pointer-events-none z-[99] flex items-center justify-center"
+        >
+          {isDraggingOverToolbar ? (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/80 text-neon-cyan">
+              <Check className="w-5 h-5" />
+              <span>Drop to place</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-black/80 text-red-400">
+              <X className="w-5 h-5" />
+              <span>Drop to delete</span>
+            </div>
+          )}
+        </motion.div>
       )}
-      initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={{ scale: 1.02 }}
-    >
-      <ToolbarControls
-        isPersistent={isPersistent}
-        setIsPersistent={setIsPersistent}
-        isIconOnly={isIconOnly}
-        setIsIconOnly={setIsIconOnly}
-        orientation={orientation}
-        isLocked={isLocked}
-        onToggleOrientation={toggleOrientation}
-        onToggleLock={toggleLock}
+
+      {/* Global drop zone for deletion */}
+      <div 
+        className="fixed inset-0 z-[98]" 
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={handleGlobalDrop}
       />
-      <ToolbarItemList
-        items={toolbarItems}
-        isIconOnly={isIconOnly}
-        orientation={orientation}
-        dropTarget={dropTarget}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onReorder={handleReorder}
-        onRemove={handleRemove}
-        isLocked={isLocked}
-      />
-    </motion.div>
+    </>
   );
 };

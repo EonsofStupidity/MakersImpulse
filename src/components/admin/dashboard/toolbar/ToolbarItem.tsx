@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LucideIcon, X } from 'lucide-react';
+import { LucideIcon, X, Check } from 'lucide-react';
 import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -47,14 +47,6 @@ export const ToolbarItem = ({
     }
   };
 
-  const handleRemove = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (onRemove) {
-      onRemove(index);
-      toast.success(`Removed ${item.label} shortcut`);
-    }
-  };
-
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>) => {
     if (isLocked) {
       e.preventDefault();
@@ -70,6 +62,14 @@ export const ToolbarItem = ({
       
       e.dataTransfer.setData('toolbar-index', index.toString());
       e.dataTransfer.effectAllowed = 'move';
+      
+      // Set custom drag image with text
+      const dragImage = document.createElement('div');
+      dragImage.className = 'bg-black/80 text-white px-4 py-2 rounded-lg';
+      dragImage.textContent = `Moving ${item.label}`;
+      document.body.appendChild(dragImage);
+      e.dataTransfer.setDragImage(dragImage, 0, 0);
+      setTimeout(() => document.body.removeChild(dragImage), 0);
       
       toast.info('Dragging toolbar item...', {
         description: `Moving ${item.label}`
@@ -140,22 +140,7 @@ export const ToolbarItem = ({
               {item.label}
             </span>
           )}
-          {!isLocked && (
-            <button
-              onClick={handleRemove}
-              className="ml-auto p-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white/10 hover:text-red-400"
-              title="Remove shortcut"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
         </div>
-        <motion.div
-          className="absolute inset-0 rounded-lg bg-gradient-to-r from-[#41f0db]/20 to-[#ff69b4]/20"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: [0, 0.5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        />
       </motion.div>
     </div>
   );
