@@ -19,12 +19,14 @@ import { AdvancedCSSSection } from "./components/AdvancedCSSSection";
 import { ResetDialog } from "./components/ResetDialog";
 import { toast } from "sonner";
 import { Settings } from "./types";
+import { useTheme } from "@/components/theme/ThemeContext";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [resetConfirmation, setResetConfirmation] = useState("");
   const [confirmCheckbox, setConfirmCheckbox] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
+  const { theme, updateTheme } = useTheme();
 
   const {
     settings,
@@ -102,11 +104,14 @@ export const SettingsForm = () => {
           letter_spacing: formValues.letter_spacing || "normal",
           ...formValues, // Add any optional fields
         };
+        
+        // Update both the local preview and the global theme
         handleSettingsUpdate(settingsUpdate);
+        updateTheme(settingsUpdate);
       }
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, handleSettingsUpdate]);
+  }, [form.watch, handleSettingsUpdate, updateTheme]);
 
   const handleReset = async () => {
     if (resetConfirmation.toUpperCase() !== "IMPULSE" || !confirmCheckbox) {

@@ -25,21 +25,21 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#7FFFD4",
-          foreground: "#1A1F2C",
+          DEFAULT: "var(--primary)",
+          foreground: "var(--text-primary)",
         },
         secondary: {
-          DEFAULT: "#FFB6C1",
-          foreground: "#1A1F2C",
+          DEFAULT: "var(--secondary)",
+          foreground: "var(--text-secondary)",
         },
         accent: {
-          DEFAULT: "#E6E6FA",
-          foreground: "#1A1F2C",
+          DEFAULT: "var(--accent)",
+          foreground: "var(--text-heading)",
         },
         neon: {
-          cyan: "#41f0db",
-          pink: "#ff0abe",
-          purple: "#8000ff",
+          cyan: "var(--neon-cyan)",
+          pink: "var(--neon-pink)",
+          purple: "var(--neon-purple)",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
@@ -53,6 +53,38 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+      },
+      borderRadius: {
+        DEFAULT: "var(--border-radius)",
+      },
+      spacing: {
+        unit: "var(--spacing-unit)",
+      },
+      transitionDuration: {
+        DEFAULT: "var(--transition-duration)",
+      },
+      boxShadow: {
+        DEFAULT: "var(--shadow-color)",
+      },
+      scale: {
+        hover: "var(--hover-scale)",
+      },
+      fontFamily: {
+        heading: "var(--font-heading)",
+        body: "var(--font-family-body, 'Inter')",
+      },
+      fontSize: {
+        base: "var(--font-size-base)",
+      },
+      fontWeight: {
+        normal: "var(--font-weight-normal)",
+        bold: "var(--font-weight-bold)",
+      },
+      lineHeight: {
+        base: "var(--line-height-base)",
+      },
+      letterSpacing: {
+        DEFAULT: "var(--letter-spacing)",
       },
       keyframes: {
         "accordion-down": {
