@@ -33,6 +33,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
       className="relative w-full mb-24"
     >
       <ImageValidation
@@ -58,6 +59,9 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                   src={featuredImage} 
                   alt={post.title}
                   className="w-full h-full object-cover opacity-50"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 0.5 }}
+                  transition={{ duration: 0.3 }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/80 to-black/90 mix-blend-multiply" />
               </motion.div>
