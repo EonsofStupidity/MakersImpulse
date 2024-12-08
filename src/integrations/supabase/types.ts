@@ -202,6 +202,56 @@ export type Database = {
         }
         Relationships: []
       }
+      site_settings: {
+        Row: {
+          accent_color: string | null
+          favicon_url: string | null
+          id: string
+          logo_url: string | null
+          primary_color: string | null
+          secondary_color: string | null
+          site_title: string
+          tagline: string | null
+          theme_mode: Database["public"]["Enums"]["theme_mode"] | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          accent_color?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          site_title?: string
+          tagline?: string | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          accent_color?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
+          site_title?: string
+          tagline?: string | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -214,6 +264,19 @@ export type Database = {
         }
         Returns: undefined
       }
+      update_site_settings: {
+        Args: {
+          p_site_title?: string
+          p_tagline?: string
+          p_primary_color?: string
+          p_secondary_color?: string
+          p_accent_color?: string
+          p_logo_url?: string
+          p_favicon_url?: string
+          p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
+        }
+        Returns: Json
+      }
     }
     Enums: {
       post_category:
@@ -224,6 +287,7 @@ export type Database = {
         | "Critical"
         | "3D Printer"
         | "3D Printer Hardware"
+      theme_mode: "light" | "dark" | "system"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"
     }
     CompositeTypes: {

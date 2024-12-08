@@ -1,5 +1,6 @@
 import React from "react";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
+import { SettingsForm } from "@/components/admin/settings/SettingsForm";
 import { motion } from "framer-motion";
 
 const SiteSettings = () => {
@@ -16,10 +17,7 @@ const SiteSettings = () => {
         </div>
 
         <div className="grid gap-6">
-          {/* Site settings interface will be implemented here */}
-          <div className="bg-gray-800/50 border border-white/10 rounded-lg p-6">
-            <p className="text-white/60">Site settings configuration coming soon...</p>
-          </div>
+          <SettingsForm />
         </div>
       </motion.div>
     </div>
