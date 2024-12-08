@@ -2,12 +2,7 @@ import React from "react";
 import { Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface LoadingSpinnerProps {
-  className?: string;
-  size?: "sm" | "md" | "lg";
-}
-
-const LoadingSpinner = ({ className, size = "md" }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ className, size = "md" }: { className?: string; size?: "sm" | "md" | "lg" }) => {
   const sizeClasses = {
     sm: "w-4 h-4",
     md: "w-6 h-6",

@@ -6,7 +6,7 @@ export interface NavigationItem {
   children?: NavigationItem[];
 }
 
-export const navigationConfig: NavigationItem[] = [
+export const mainNavigation: NavigationItem[] = [
   {
     id: 'dashboard',
     label: 'Dashboard',

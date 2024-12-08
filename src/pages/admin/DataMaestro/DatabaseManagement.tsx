@@ -5,25 +5,19 @@ import { useQuery } from "@tanstack/react-query";
 import { Database, Table, ArrowRight, ServerCog } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ERDVisualizer from "@/components/admin/schema/ERDVisualizer";
-import { SchemaManager } from "@/components/admin/schema/SchemaManager";
+import SchemaManager from "@/components/admin/schema/SchemaManager";
 import { useToast } from "@/components/ui/use-toast";
 
 const DatabaseManagement = () => {
   const { toast } = useToast();
   
-  const { data: tables, isLoading } = useQuery({
+  const { data: tables } = useQuery({
     queryKey: ["database-tables"],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc('get_available_tables');
-      if (error) {
-        toast({
-          title: "Error fetching tables",
-          description: error.message,
-          variant: "destructive"
-        });
-        throw error;
-      }
-      return data;
+      const { data: result } = await supabase
+        .from('cms_content')
+        .select('id');
+      return result || [];
     }
   });
 

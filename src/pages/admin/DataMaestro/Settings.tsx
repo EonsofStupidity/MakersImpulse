@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { DatabaseSettingsCard } from "@/components/admin/data-maestro/settings/DatabaseSettingsCard";
-import { ImportSettingsCard } from "@/components/admin/data-maestro/settings/ImportSettingsCard";
-import { InterfaceSettingsCard } from "@/components/admin/data-maestro/settings/InterfaceSettingsCard";
+import DatabaseSettingsCard from "@/components/admin/data-maestro/settings/DatabaseSettingsCard";
+import ImportSettingsCard from "@/components/admin/data-maestro/settings/ImportSettingsCard";
+import InterfaceSettingsCard from "@/components/admin/data-maestro/settings/InterfaceSettingsCard";
 
 const Settings = () => {
   const { toast } = useToast();
@@ -14,9 +14,9 @@ const Settings = () => {
     queryKey: ["data-maestro-settings"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("admin_settings")
+        .from("site_settings")
         .select("*")
-        .eq("setting_type", "string");
+        .single();
 
       if (error) {
         toast({
@@ -27,10 +27,7 @@ const Settings = () => {
         throw error;
       }
 
-      return data.reduce((acc: Record<string, boolean>, setting) => {
-        acc[setting.setting_key] = setting.setting_value === 'true';
-        return acc;
-      }, {});
+      return data || {};
     }
   });
 

@@ -1,4 +1,4 @@
-export { default as ImageGallery } from './ImageGallery';
-export { default as ImageCarouselDialog } from './ImageCarouselDialog';
-export { default as ImageThumbnails } from './ImageThumbnails';
-export { default as ImageValidation } from './ImageValidation';
+export { default as ImageGallery } from '@/components/shared/content-blocks/ImageCarousel';
+export { default as ImageCarouselDialog } from '@/components/content/blog/components/ImageCarouselDialog';
+export { default as ImageThumbnails } from '@/components/content/blog/components/ImageThumbnails';
+export { default as ImageValidation } from '@/components/content/blog/components/ImageValidation';
