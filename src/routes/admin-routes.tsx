@@ -10,9 +10,6 @@ const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
 const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
 const PostEditor = lazy(() => import("@/pages/admin/content-management/editor"));
 const DataMaestro = lazy(() => import("@/components/admin/cms/data-maestro"));
-const DatabaseManagement = lazy(() => import("@/pages/admin/DataMaestro/DatabaseManagement"));
-const ComponentManagement = lazy(() => import("@/pages/admin/DataMaestro/ComponentManager/ComponentManagement"));
-const ImportWizard = lazy(() => import("@/pages/admin/DataMaestro/csv/ImportWizard"));
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -49,18 +46,6 @@ export const adminRoutes: RouteObject[] = [
       {
         path: "data-maestro",
         element: <DataMaestro />,
-      },
-      {
-        path: "data-maestro/database",
-        element: <DatabaseManagement />,
-      },
-      {
-        path: "data-maestro/components",
-        element: <ComponentManagement />,
-      },
-      {
-        path: "data-maestro/import",
-        element: <ImportWizard />,
       }
     ]
   }
