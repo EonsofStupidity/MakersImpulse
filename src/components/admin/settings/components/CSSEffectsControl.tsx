@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface CSSEffectsControlProps {
   label: string;
@@ -32,6 +33,16 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
   previewClass,
   description
 }) => {
+  const handleInputChange = (newValue: number) => {
+    // Ensure the value stays within bounds
+    const boundedValue = Math.min(Math.max(newValue, min), max);
+    onChange(boundedValue);
+    toast.success(`${label} updated to ${boundedValue}`, {
+      position: "top-right",
+      duration: 2000,
+    });
+  };
+
   const renderControl = () => {
     switch (type) {
       case "slider":
@@ -42,14 +53,14 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
               min={min}
               max={max}
               step={step}
-              onValueChange={(values) => onChange(values[0])}
+              onValueChange={(values) => handleInputChange(values[0])}
               className="flex-1"
             />
             <Input
               type="number"
               value={value}
-              onChange={(e) => onChange(Number(e.target.value))}
-              className="w-20 bg-gray-100"
+              onChange={(e) => handleInputChange(Number(e.target.value))}
+              className="w-20 bg-gray-700/50 border-gray-600 text-white"
               min={min}
               max={max}
               step={step}
@@ -58,9 +69,18 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         );
       case "select":
         return (
-          <Select value={value.toString()} onValueChange={onChange}>
-            <SelectTrigger className="w-full bg-gray-100">
-              <SelectValue placeholder="Select animation" />
+          <Select 
+            value={value.toString()} 
+            onValueChange={(val) => {
+              onChange(val);
+              toast.success(`${label} updated to ${val}`, {
+                position: "top-right",
+                duration: 2000,
+              });
+            }}
+          >
+            <SelectTrigger className="w-full bg-gray-700/50 border-gray-600 text-white">
+              <SelectValue placeholder="Select option" />
             </SelectTrigger>
             <SelectContent>
               {options?.map((option) => (
@@ -76,8 +96,14 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
           <Input
             type="text"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full bg-gray-100"
+            onChange={(e) => {
+              onChange(e.target.value);
+              toast.success(`${label} updated to ${e.target.value}`, {
+                position: "top-right",
+                duration: 2000,
+              });
+            }}
+            className="w-full bg-gray-700/50 border-gray-600 text-white"
           />
         );
       default:
@@ -90,7 +116,9 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
       <div className="flex justify-between items-center">
         <Label className="text-sm text-gray-300">{label}</Label>
         {previewClass && (
-          <div className={cn("text-sm px-2 py-1", previewClass)}>Preview</div>
+          <div className={cn("text-sm px-2 py-1 rounded bg-gray-800/50", previewClass)}>
+            Preview
+          </div>
         )}
       </div>
       {description && (
