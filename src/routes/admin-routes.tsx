@@ -9,6 +9,7 @@ const AdminUsers = lazy(() => import("@/pages/admin/users"));
 const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
 const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
 const PostEditor = lazy(() => import("@/pages/admin/content-management/editor"));
+const DataMaestro = lazy(() => import("@/pages/admin/data-maestro"));
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -41,6 +42,10 @@ export const adminRoutes: RouteObject[] = [
       {
         path: "content-management/editor",
         element: <PostEditor />,
+      },
+      {
+        path: "data-maestro/*",
+        element: <DataMaestro />,
       }
     ]
   }

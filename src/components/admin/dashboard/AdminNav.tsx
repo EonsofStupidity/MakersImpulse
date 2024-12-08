@@ -15,7 +15,7 @@ import {
   XCircle
 } from "lucide-react";
 import { toast } from "sonner";
-import { AdminToolbar } from "./AdminToolbar";
+import { AdminToolbar } from "./toolbar/AdminToolbar";
 import { NavItemList } from "./nav/NavItemList";
 import { AdminTabs } from "./tabs/AdminTabs";
 import type { NavItemType } from "./nav/NavItem";
