@@ -26,7 +26,7 @@ export const settingsSchema = z.object({
   line_height_base: z.string(),
   letter_spacing: z.string(),
   box_shadow: z.string().optional(),
-  backdrop_blur: z.string().optional()
+  backdrop_blur: z.string().optional(),
 });
 
 export type SettingsFormData = z.infer<typeof settingsSchema>;
