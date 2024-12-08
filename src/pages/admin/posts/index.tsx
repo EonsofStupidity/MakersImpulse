@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { PostsTable } from "@/components/admin/posts/PostsTable";
 import { usePostsQuery } from "@/hooks/posts/usePostsQuery";
+import { deletePost } from "@/services/blog-posts/deletePost";
 
 const PostsManagement = () => {
   const { data: posts, isLoading, error, refetch } = usePostsQuery();
@@ -19,37 +19,15 @@ const PostsManagement = () => {
   });
 
   const handleDelete = async (postId: string) => {
-    try {
-      console.log('Attempting to delete post and associated media:', postId);
-      
-      // First, delete associated media records
-      const { error: mediaError } = await supabase
-        .from('media')
-        .delete()
-        .eq('blog_post_id', postId);
-
-      if (mediaError) {
-        console.error('Error deleting media:', mediaError);
-        throw mediaError;
-      }
-
-      // Then delete the blog post
-      const { error: postError } = await supabase
-        .from('blog_posts')
-        .delete()
-        .eq('id', postId);
-
-      if (postError) {
-        console.error('Error deleting post:', postError);
-        throw postError;
-      }
-
-      console.log('Post and associated media deleted successfully:', postId);
+    const loadingToast = toast.loading('Deleting post...');
+    
+    const result = await deletePost(postId);
+    
+    if (result.success) {
       toast.success('Post deleted successfully');
       refetch();
-    } catch (error) {
-      console.error('Error in handleDelete:', error);
-      toast.error('Failed to delete post');
+    } else {
+      toast.error(result.error || 'Failed to delete post');
     }
   };
 
