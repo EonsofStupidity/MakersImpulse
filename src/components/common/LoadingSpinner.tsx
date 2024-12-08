@@ -1,22 +1,11 @@
-import React from "react";
-import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { Loader2 } from 'lucide-react';
 
-const LoadingSpinner = ({ className, size = "md" }: { className?: string; size?: "sm" | "md" | "lg" }) => {
-  const sizeClasses = {
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8"
-  };
-
+const LoadingSpinner: React.FC = () => {
   return (
-    <Loader2 
-      className={cn(
-        "animate-spin text-primary",
-        sizeClasses[size],
-        className
-      )} 
-    />
+    <div className="flex items-center justify-center p-4">
+      <Loader2 className="w-6 h-6 animate-spin text-primary" />
+    </div>
   );
 };
 

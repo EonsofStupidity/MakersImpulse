@@ -1,21 +1,25 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/integrations/supabase/client';
 
-export type RevisionType = 'create' | 'update' | 'delete';
-
-export async function trackRevision(
+export const addRevisionEntry = async (
   entityType: string,
   entityId: string,
-  changes: Record<string, any>,
-  revisionType: RevisionType
-) {
-  const { error } = await supabase
+  changes: any,
+  revisionType: string
+) => {
+  const { data, error } = await supabase
     .from('revision_history')
     .insert({
       entity_type: entityType,
       entity_id: entityId,
       changes,
       revision_type: revisionType,
+      created_by: supabase.auth.getUser()?.data.user?.id
     });
 
-  if (error) throw error;
-}
+  if (error) {
+    console.error('Failed to add revision entry:', error);
+    throw error;
+  }
+
+  return data;
+};

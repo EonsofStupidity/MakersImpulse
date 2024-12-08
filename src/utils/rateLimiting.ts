@@ -1,13 +1,11 @@
-import { supabase } from "@/integrations/supabase/client";
+import { supabase } from '@/integrations/supabase/client';
 
-export const checkRateLimit = async (actionType: string, maxCount: number, timeWindow: string) => {
-  const user = await supabase.auth.getUser();
-  const userId = user.data.user?.id;
-
-  if (!userId) {
-    throw new Error('User not authenticated');
-  }
-
+export const checkRateLimit = async (
+  userId: string,
+  actionType: string,
+  maxCount: number,
+  timeWindow: string
+): Promise<boolean> => {
   const { data, error } = await supabase.rpc('check_rate_limit', {
     p_user_id: userId,
     p_action_type: actionType,
@@ -16,7 +14,8 @@ export const checkRateLimit = async (actionType: string, maxCount: number, timeW
   });
 
   if (error) {
-    throw error;
+    console.error('Rate limit check failed:', error);
+    return false;
   }
 
   return data;

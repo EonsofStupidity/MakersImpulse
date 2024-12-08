@@ -1,30 +1,24 @@
 import React from 'react';
-import { formatDistanceToNow } from 'date-fns';
+import { format } from 'date-fns';
 
 interface BlogPostMetaProps {
-  publishedAt?: string | null;
-  viewsCount?: number | null;
+  author: string;
+  date: string;
+  readTime?: number;
 }
 
-const BlogPostMeta: React.FC<BlogPostMetaProps> = ({ publishedAt, viewsCount }) => {
+export const BlogPostMeta: React.FC<BlogPostMetaProps> = ({ author, date, readTime }) => {
   return (
-    <div className="absolute -bottom-[84px] right-8 flex items-center gap-4 text-sm">
-      <span className="text-[#ff0abe]">
-        {publishedAt ? 
-          formatDistanceToNow(new Date(publishedAt), { addSuffix: true }) :
-          "Recently"
-        }
-      </span>
-      <span className="text-[#ff0abe]">
-        5 min read
-      </span>
-      {viewsCount !== null && (
-        <span className="text-[#ff0abe]">
-          {viewsCount} views
-        </span>
+    <div className="flex items-center gap-4 text-sm text-zinc-400">
+      <span>{author}</span>
+      <span>•</span>
+      <span>{format(new Date(date), 'MMM dd, yyyy')}</span>
+      {readTime && (
+        <>
+          <span>•</span>
+          <span>{readTime} min read</span>
+        </>
       )}
     </div>
   );
 };
-
-export default BlogPostMeta;

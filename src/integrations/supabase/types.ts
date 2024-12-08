@@ -454,6 +454,118 @@ export type Database = {
           },
         ]
       }
+      erd_visualizations: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          data: Json
+          id: string
+          name: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          data?: Json
+          id?: string
+          name: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          data?: Json
+          id?: string
+          name?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "erd_visualizations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_replies: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          thread_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          thread_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          thread_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_replies_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_replies_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "forum_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_threads: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_threads_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       import_sessions: {
         Row: {
           completed_at: string | null
@@ -587,6 +699,41 @@ export type Database = {
           },
         ]
       }
+      printer_builds: {
+        Row: {
+          author_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "printer_builds_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -599,6 +746,7 @@ export type Database = {
           gamification_enabled: boolean | null
           id: string
           is_banned: boolean | null
+          last_login_at: string | null
           last_seen: string | null
           location: string | null
           onboarding_completed: boolean | null
@@ -607,6 +755,7 @@ export type Database = {
           two_factor_secret: string | null
           updated_at: string
           username: string | null
+          visual_editor_enabled: boolean | null
           website: string | null
         }
         Insert: {
@@ -620,6 +769,7 @@ export type Database = {
           gamification_enabled?: boolean | null
           id: string
           is_banned?: boolean | null
+          last_login_at?: string | null
           last_seen?: string | null
           location?: string | null
           onboarding_completed?: boolean | null
@@ -628,6 +778,7 @@ export type Database = {
           two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
+          visual_editor_enabled?: boolean | null
           website?: string | null
         }
         Update: {
@@ -641,6 +792,7 @@ export type Database = {
           gamification_enabled?: boolean | null
           id?: string
           is_banned?: boolean | null
+          last_login_at?: string | null
           last_seen?: string | null
           location?: string | null
           onboarding_completed?: boolean | null
@@ -649,6 +801,7 @@ export type Database = {
           two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
+          visual_editor_enabled?: boolean | null
           website?: string | null
         }
         Relationships: [
@@ -695,6 +848,82 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "recovery_codes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      revision_history: {
+        Row: {
+          changes: Json
+          created_at: string | null
+          created_by: string | null
+          entity_id: string
+          entity_type: string
+          id: string
+          revision_type: string
+        }
+        Insert: {
+          changes: Json
+          created_at?: string | null
+          created_by?: string | null
+          entity_id: string
+          entity_type: string
+          id?: string
+          revision_type: string
+        }
+        Update: {
+          changes?: Json
+          created_at?: string | null
+          created_by?: string | null
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          revision_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "revision_history_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_audit_logs: {
+        Row: {
+          action_type: string
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action_type: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action_type?: string
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_audit_logs_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -970,6 +1199,21 @@ export type Database = {
           user_id: string
           reason: string
           admin_id: string
+        }
+        Returns: undefined
+      }
+      check_rate_limit: {
+        Args: {
+          p_user_id: string
+          p_action_type: string
+          p_max_count: number
+          p_time_window: string
+        }
+        Returns: boolean
+      }
+      initialize_user_gamification: {
+        Args: {
+          user_id: string
         }
         Returns: undefined
       }

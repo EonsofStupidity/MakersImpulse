@@ -1,14 +1,12 @@
-export type ComponentType = 'bearings' | 'extruders' | 'addons' | 'other';
-
-export interface BaseComponent {
-  id: string;
-  name: string;
-  manufacturer: string;
-  cost_usd: string;
-  summary: string;
-  image_url?: string;
+export interface NavigationItem {
+  title: string;
+  path: string;
+  icon?: React.ComponentType;
+  requiresAuth?: boolean;
+  children?: NavigationItem[];
 }
 
-export interface ComponentWithType extends BaseComponent {
-  type: ComponentType;
+export interface DataMaestroSettings {
+  settings: Record<string, any>;
+  onSettingChange: (key: string, value: boolean) => void;
 }
