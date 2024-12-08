@@ -16,6 +16,7 @@ export const settingsSchema = z.object({
   border_radius: z.string(),
   spacing_unit: z.string(),
   transition_duration: z.string(),
+  transition_type: z.enum(["fade", "slide", "scale"]).optional(),
   shadow_color: z.string(),
   hover_scale: z.string(),
   font_family_heading: z.string(),

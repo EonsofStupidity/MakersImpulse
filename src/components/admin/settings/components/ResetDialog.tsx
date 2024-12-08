@@ -15,7 +15,7 @@ interface ResetDialogProps {
   onResetConfirmationChange: (value: string) => void;
   confirmCheckbox: boolean;
   onConfirmCheckboxChange: (checked: boolean) => void;
-  onKeyPress: (e: React.KeyboardEvent) => void;
+  onKeyPress?: (e: React.KeyboardEvent) => void;
 }
 
 export const ResetDialog: React.FC<ResetDialogProps> = ({
@@ -31,11 +31,12 @@ export const ResetDialog: React.FC<ResetDialogProps> = ({
 }) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-gray-800/95 border border-white/10">
+      <DialogContent className="bg-gray-800/95 border border-red-500/20">
         <DialogHeader>
-          <DialogTitle className="text-white">Reset Settings to Default</DialogTitle>
+          <DialogTitle className="text-red-400">⚠️ Reset All Settings</DialogTitle>
           <DialogDescription className="text-gray-400">
-            This action will reset all settings to their default values. Type IMPULSE and check the box to confirm.
+            This will reset ALL settings to their default values. This includes colors, fonts, animations, and custom CSS.
+            This action cannot be undone. Type IMPULSE and check the box to confirm.
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
@@ -57,17 +58,17 @@ export const ResetDialog: React.FC<ResetDialogProps> = ({
               onCheckedChange={(checked) => onConfirmCheckboxChange(checked as boolean)}
             />
             <Label htmlFor="confirm-reset" className="text-white">
-              I understand this will reset all settings
+              I understand this will reset all settings and cannot be undone
             </Label>
           </div>
           <div className="flex justify-end space-x-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
+            <Button variant="ghost" onClick={() => onOpenChange(false)}>
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={onReset}
-              disabled={isResetting}
+              disabled={isResetting || !confirmCheckbox || resetConfirmation.toUpperCase() !== "IMPULSE"}
             >
               {isResetting ? (
                 <>
@@ -75,7 +76,7 @@ export const ResetDialog: React.FC<ResetDialogProps> = ({
                   Resetting...
                 </>
               ) : (
-                "Reset Settings"
+                "Reset All Settings"
               )}
             </Button>
           </div>

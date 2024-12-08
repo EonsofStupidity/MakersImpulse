@@ -34,6 +34,7 @@ export interface DatabaseSettingsRow {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  transition_type: 'fade' | 'slide' | 'scale';
   updated_at?: string;
   updated_by?: string;
 }

@@ -1,6 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import React, { createContext, useContext } from "react";
 import { Settings } from "@/components/admin/settings/types";
+import { useThemeSetup } from "./hooks/useThemeSetup";
+import { useThemeSubscription } from "./hooks/useThemeSubscription";
+import { applyThemeToDocument } from "./utils/themeUtils";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface ThemeContextType {
@@ -10,181 +13,9 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-interface DatabaseSettings {
-  id: string;
-  site_title: string;
-  tagline?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  logo_url?: string;
-  favicon_url?: string;
-  theme_mode?: 'light' | 'dark' | 'system';
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  updated_at?: string;
-  updated_by?: string;
-}
-
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState<Settings | null>(null);
-
-  useEffect(() => {
-    const fetchInitialTheme = async () => {
-      try {
-        const { data, error } = await supabase
-          .from("site_settings")
-          .select("*")
-          .single();
-
-        if (error) throw error;
-
-        // Type assertion to DatabaseSettings
-        const dbSettings = data as DatabaseSettings;
-        
-        // Convert to Settings type with defaults
-        const themeData: Settings = {
-          site_title: dbSettings.site_title,
-          tagline: dbSettings.tagline,
-          primary_color: dbSettings.primary_color,
-          secondary_color: dbSettings.secondary_color,
-          accent_color: dbSettings.accent_color,
-          logo_url: dbSettings.logo_url,
-          favicon_url: dbSettings.favicon_url,
-          theme_mode: dbSettings.theme_mode || 'system',
-          text_primary_color: dbSettings.text_primary_color,
-          text_secondary_color: dbSettings.text_secondary_color,
-          text_link_color: dbSettings.text_link_color,
-          text_heading_color: dbSettings.text_heading_color,
-          neon_cyan: dbSettings.neon_cyan || "#41f0db",
-          neon_pink: dbSettings.neon_pink || "#ff0abe",
-          neon_purple: dbSettings.neon_purple || "#8000ff",
-          border_radius: dbSettings.border_radius,
-          spacing_unit: dbSettings.spacing_unit,
-          transition_duration: dbSettings.transition_duration,
-          shadow_color: dbSettings.shadow_color,
-          hover_scale: dbSettings.hover_scale,
-          font_family_heading: dbSettings.font_family_heading,
-          font_family_body: dbSettings.font_family_body,
-          font_size_base: dbSettings.font_size_base,
-          font_weight_normal: dbSettings.font_weight_normal,
-          font_weight_bold: dbSettings.font_weight_bold,
-          line_height_base: dbSettings.line_height_base,
-          letter_spacing: dbSettings.letter_spacing,
-        };
-
-        setTheme(themeData);
-        applyThemeToDocument(themeData);
-      } catch (error) {
-        console.error("Error fetching theme:", error);
-        toast.error("Failed to load theme settings");
-      }
-    };
-
-    fetchInitialTheme();
-
-    // Subscribe to real-time changes
-    const channel = supabase
-      .channel('site_settings_changes')
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'site_settings'
-        },
-        (payload) => {
-          const dbSettings = payload.new as DatabaseSettings;
-          const themeData: Settings = {
-            site_title: dbSettings.site_title,
-            tagline: dbSettings.tagline,
-            primary_color: dbSettings.primary_color,
-            secondary_color: dbSettings.secondary_color,
-            accent_color: dbSettings.accent_color,
-            logo_url: dbSettings.logo_url,
-            favicon_url: dbSettings.favicon_url,
-            theme_mode: dbSettings.theme_mode || 'system',
-            text_primary_color: dbSettings.text_primary_color,
-            text_secondary_color: dbSettings.text_secondary_color,
-            text_link_color: dbSettings.text_link_color,
-            text_heading_color: dbSettings.text_heading_color,
-            neon_cyan: dbSettings.neon_cyan || "#41f0db",
-            neon_pink: dbSettings.neon_pink || "#ff0abe",
-            neon_purple: dbSettings.neon_purple || "#8000ff",
-            border_radius: dbSettings.border_radius,
-            spacing_unit: dbSettings.spacing_unit,
-            transition_duration: dbSettings.transition_duration,
-            shadow_color: dbSettings.shadow_color,
-            hover_scale: dbSettings.hover_scale,
-            font_family_heading: dbSettings.font_family_heading,
-            font_family_body: dbSettings.font_family_body,
-            font_size_base: dbSettings.font_size_base,
-            font_weight_normal: dbSettings.font_weight_normal,
-            font_weight_bold: dbSettings.font_weight_bold,
-            line_height_base: dbSettings.line_height_base,
-            letter_spacing: dbSettings.letter_spacing,
-          };
-          setTheme(themeData);
-          applyThemeToDocument(themeData);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      channel.unsubscribe();
-    };
-  }, []);
-
-  const applyThemeToDocument = (settings: Settings) => {
-    const root = document.documentElement;
-    
-    // Apply colors
-    root.style.setProperty('--primary', settings.primary_color);
-    root.style.setProperty('--secondary', settings.secondary_color);
-    root.style.setProperty('--accent', settings.accent_color);
-    root.style.setProperty('--text-primary', settings.text_primary_color);
-    root.style.setProperty('--text-secondary', settings.text_secondary_color);
-    root.style.setProperty('--text-link', settings.text_link_color);
-    root.style.setProperty('--text-heading', settings.text_heading_color);
-    root.style.setProperty('--neon-cyan', settings.neon_cyan);
-    root.style.setProperty('--neon-pink', settings.neon_pink);
-    root.style.setProperty('--neon-purple', settings.neon_purple);
-
-    // Apply spacing and layout
-    root.style.setProperty('--border-radius', settings.border_radius);
-    root.style.setProperty('--spacing-unit', settings.spacing_unit);
-    root.style.setProperty('--transition-duration', settings.transition_duration);
-    root.style.setProperty('--shadow-color', settings.shadow_color);
-    root.style.setProperty('--hover-scale', settings.hover_scale);
-
-    // Apply typography
-    document.body.style.fontFamily = settings.font_family_body;
-    root.style.setProperty('--font-heading', settings.font_family_heading);
-    root.style.setProperty('--font-size-base', settings.font_size_base);
-    root.style.setProperty('--font-weight-normal', settings.font_weight_normal);
-    root.style.setProperty('--font-weight-bold', settings.font_weight_bold);
-    root.style.setProperty('--line-height-base', settings.line_height_base);
-    root.style.setProperty('--letter-spacing', settings.letter_spacing);
-
-    console.log("Theme applied:", settings);
-  };
+  const { theme, setTheme } = useThemeSetup();
+  useThemeSubscription(setTheme);
 
   const updateTheme = async (newTheme: Settings) => {
     try {
@@ -216,6 +47,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (error) throw error;
+      applyThemeToDocument(newTheme);
       toast.success("Theme updated successfully");
     } catch (error) {
       console.error("Error updating theme:", error);

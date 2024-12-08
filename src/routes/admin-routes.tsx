@@ -7,6 +7,7 @@ const AdminSettings = lazy(() => import("@/pages/admin/settings"));
 const AdminUsers = lazy(() => import("@/pages/admin/users"));
 const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
 const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
+const PostEditor = lazy(() => import("@/pages/admin/content-management/editor"));
 
 export const adminRoutes: RouteObject[] = [
   {
@@ -37,4 +38,8 @@ export const adminRoutes: RouteObject[] = [
     path: "users",
     element: <AdminUsers />,
   },
+  {
+    path: "content-management/editor",
+    element: <PostEditor />,
+  }
 ];

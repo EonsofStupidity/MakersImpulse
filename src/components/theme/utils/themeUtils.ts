@@ -1,6 +1,5 @@
 import { Settings } from "@/components/admin/settings/types";
 import { DatabaseSettingsRow } from "../types/theme";
-import { toast } from "sonner";
 
 export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Settings => {
   return {
@@ -31,6 +30,7 @@ export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Setti
     font_weight_bold: dbSettings.font_weight_bold,
     line_height_base: dbSettings.line_height_base,
     letter_spacing: dbSettings.letter_spacing,
+    transition_type: dbSettings.transition_type || 'fade',
   };
 };
 
@@ -65,6 +65,4 @@ export const applyThemeToDocument = (settings: Settings) => {
   root.style.setProperty('--font-weight-bold', settings.font_weight_bold);
   root.style.setProperty('--line-height-base', settings.line_height_base);
   root.style.setProperty('--letter-spacing', settings.letter_spacing);
-
-  console.log("Theme applied:", settings);
 };
