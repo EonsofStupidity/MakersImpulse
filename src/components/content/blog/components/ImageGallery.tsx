@@ -32,7 +32,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 transform translate-y-1/2"> {/* Added transform */}
       {images.map((image, index) => (
         <motion.div
           key={index}
@@ -46,7 +46,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
             alt={`Gallery image ${index + 1}`}
             className="w-full h-full object-cover rounded-lg cursor-pointer
               border border-[#41f0db]/20 hover:border-[#41f0db]/60 transition-all
-              group-hover:scale-[1.02] duration-200"
+              group-hover:scale-[1.02] duration-200 hover:shadow-[0_0_20px_rgba(65,240,219,0.3)]"
             onClick={() => onImageClick?.(index)}
           />
           {editable && onImageRemove && (

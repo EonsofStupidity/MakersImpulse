@@ -44,7 +44,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative w-full mb-24"
+      className="relative w-full mb-48" // Increased bottom margin
     >
       <ImageValidation
         images={images}
@@ -52,7 +52,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         onLoadingChange={setIsLoading}
       />
 
-      <div className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]">
+      <div className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px] translate-y-[25%]"> {/* Added translate-y */}
         {isLoading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-[#ff0abe] animate-spin" />
@@ -105,7 +105,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         </div>
 
         {!isLoading && validImages.length > 0 && (
-          <div className="absolute -bottom-32 left-0 right-0 z-30">
+          <div className="absolute -bottom-48 -left-[10%] right-0 z-30"> {/* Adjusted positioning */}
             <ImageGallery 
               images={validImages} 
               onImageClick={handleImageClick}
