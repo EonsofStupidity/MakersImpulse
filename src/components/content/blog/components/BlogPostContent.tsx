@@ -1,10 +1,9 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import AnimatedTextReveal from './AnimatedTextReveal';
-import { motion, AnimatePresence } from 'framer-motion';
-import CyberpunkBlogViewer from './CyberpunkBlogViewer';
+import { motion } from 'framer-motion';
+import { useCyberpunkViewer } from './viewer/useCyberpunkViewer';
+import CyberpunkContentViewer from './viewer/CyberpunkContentViewer';
+import CyberpunkViewerButton from './viewer/CyberpunkViewerButton';
 
 interface BlogPostContentProps {
   title: string;
@@ -21,20 +20,15 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
   hasMoreContent,
   images = [],
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
-  const [showCyberpunkViewer, setShowCyberpunkViewer] = React.useState(false);
+  const { isOpen, openViewer, closeViewer } = useCyberpunkViewer();
 
   const handleContentClick = () => {
-    setShowCyberpunkViewer(true);
+    openViewer(content);
   };
 
   return (
     <>
-      <div 
-        className="flex-1 max-w-full overflow-hidden cursor-pointer"
-        onClick={handleContentClick}
-      >
+      <div className="flex-1 max-w-full overflow-hidden">
         <motion.h3 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -49,24 +43,28 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
             dangerouslySetInnerHTML={{ __html: content }} 
           />
           {hasMoreContent && (
-            <Button 
-              variant="link" 
-              className="text-[#ff0abe] hover:text-[#ff0abe]/80 pl-2"
-              onClick={(e) => {
-                e.stopPropagation();
-                onReadMore();
-              }}
-            >
-              Read more
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="link" 
+                className="text-[#ff0abe] hover:text-[#ff0abe]/80 pl-0"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onReadMore();
+                }}
+              >
+                Read more
+              </Button>
+              <span className="text-white/40">or</span>
+              <CyberpunkViewerButton onClick={handleContentClick} />
+            </div>
           )}
         </div>
       </div>
 
-      <CyberpunkBlogViewer
+      <CyberpunkContentViewer
         content={content}
-        isOpen={showCyberpunkViewer}
-        onClose={() => setShowCyberpunkViewer(false)}
+        isOpen={isOpen}
+        onClose={closeViewer}
       />
     </>
   );
