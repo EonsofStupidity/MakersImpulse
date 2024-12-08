@@ -112,6 +112,47 @@ export type Database = {
           },
         ]
       }
+      cms_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          metadata: Json | null
+          name: string
+          parent_id: string | null
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name: string
+          parent_id?: string | null
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          metadata?: Json | null
+          name?: string
+          parent_id?: string | null
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "cms_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cms_components: {
         Row: {
           component_type: string
@@ -251,6 +292,102 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      cms_content_revisions: {
+        Row: {
+          content: Json
+          content_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          metadata: Json | null
+        }
+        Insert: {
+          content: Json
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Update: {
+          content?: Json
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_revisions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_revisions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_content_tags: {
+        Row: {
+          content_id: string
+          tag_id: string
+        }
+        Insert: {
+          content_id: string
+          tag_id: string
+        }
+        Update: {
+          content_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_tags_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "cms_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_tags: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
       }
       cms_workflows: {
         Row: {
@@ -658,6 +795,48 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_activity_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_activity_cms: {
+        Row: {
+          activity_type: string
+          content_id: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          activity_type: string
+          content_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          activity_type?: string
+          content_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_activity_cms_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_activity_cms_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
