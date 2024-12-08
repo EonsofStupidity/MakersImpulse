@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { settingsSchema, type SettingsFormData } from "./types";
+import { settingsSchema, type SettingsFormData, type Settings } from "./types";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";

@@ -19,8 +19,6 @@ export interface Settings {
   transition_duration: string;
   shadow_color: string;
   hover_scale: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -29,6 +27,8 @@ export interface Settings {
   line_height_base: string;
   letter_spacing: string;
   transition_type: 'fade' | 'slide' | 'scale';
+  box_shadow?: string;
+  backdrop_blur?: string;
 }
 
 export interface SettingsResponse {
