@@ -17,19 +17,17 @@ export const WorkflowMonitoring = () => {
     queryKey: ["workflow-metrics"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("cms_workflows")
-        .select("steps")
+        .from("workflow_instances")
+        .select("status")
         .order("created_at", { ascending: false })
         .limit(100);
 
       if (error) throw error;
 
-      // Calculate metrics from workflow data
-      const statusCounts = {
-        active: 35,
-        completed: 50,
-        failed: 15,
-      };
+      const statusCounts = data.reduce((acc: Record<string, number>, curr) => {
+        acc[curr.status] = (acc[curr.status] || 0) + 1;
+        return acc;
+      }, {});
 
       return statusCounts;
     },

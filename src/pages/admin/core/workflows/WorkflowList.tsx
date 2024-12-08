@@ -1,86 +1,98 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Settings2, 
+  Search, 
+  Plus, 
+  Clock,
+  ArrowUpDown
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { formatDistanceToNow } from "date-fns";
-import { Play, Pause, Settings2 } from "lucide-react";
 
-interface WorkflowListProps {
-  onWorkflowAction: (action: string, workflowId: string) => void;
+interface WorkflowTemplate {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  is_active: boolean;
+  created_at: string;
+  version: number;
 }
 
-export const WorkflowList = ({ onWorkflowAction }: WorkflowListProps) => {
+export const WorkflowList = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortField, setSortField] = useState<"name" | "created_at">("created_at");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+
   const { data: workflows, isLoading } = useQuery({
-    queryKey: ["workflows"],
+    queryKey: ["workflow-templates"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("cms_workflows")
+        .from("workflow_templates")
         .select("*")
-        .order("updated_at", { ascending: false });
+        .order(sortField, { ascending: sortOrder === "asc" });
 
       if (error) throw error;
-      return data;
+      return data as WorkflowTemplate[];
     },
   });
 
-  if (isLoading) {
-    return <div>Loading workflows...</div>;
-  }
+  const filteredWorkflows = workflows?.filter(
+    (workflow) =>
+      workflow.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      workflow.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-medium">Workflow Templates</h3>
-        <Button onClick={() => onWorkflowAction("create", "new")}>
-          Create Workflow
+        <div className="relative flex-1 max-w-md">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search workflows..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+        <Button onClick={() => {}}>
+          <Plus className="h-4 w-4 mr-2" />
+          New Workflow
         </Button>
       </div>
 
       <div className="grid gap-4">
-        {workflows?.map((workflow) => (
-          <Card key={workflow.id} className="p-4">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-medium">{workflow.name}</h3>
-                <p className="text-sm text-muted-foreground">
-                  {workflow.description || "No description"}
-                </p>
-                <div className="flex gap-2 mt-2">
-                  <Badge>
-                    {workflow.steps?.nodes?.length || 0} steps
-                  </Badge>
-                  <Badge variant="outline">
-                    Updated {formatDistanceToNow(new Date(workflow.updated_at))} ago
-                  </Badge>
+        {isLoading ? (
+          <Card className="p-8 flex items-center justify-center">
+            <Clock className="h-6 w-6 animate-spin" />
+          </Card>
+        ) : (
+          filteredWorkflows?.map((workflow) => (
+            <Card key={workflow.id} className="p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-medium">{workflow.name}</h3>
+                    <Badge variant={workflow.is_active ? "default" : "secondary"}>
+                      {workflow.is_active ? "Active" : "Inactive"}
+                    </Badge>
+                    <Badge variant="outline">v{workflow.version}</Badge>
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {workflow.description}
+                  </p>
                 </div>
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onWorkflowAction("start", workflow.id)}
-                >
-                  <Play className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onWorkflowAction("pause", workflow.id)}
-                >
-                  <Pause className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => onWorkflowAction("edit", workflow.id)}
-                >
+                <Button variant="ghost" size="icon">
                   <Settings2 className="h-4 w-4" />
                 </Button>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))
+        )}
       </div>
     </div>
   );
