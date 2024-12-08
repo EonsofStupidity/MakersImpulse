@@ -14,6 +14,10 @@ export const adminRoutes: RouteObject[] = [
     element: <AdminDashboard />,
   },
   {
+    path: "/admin",
+    element: <AdminDashboard />, // Add default route for /admin
+  },
+  {
     path: "/admin/posts",
     element: <AdminPosts />,
   },

@@ -3,21 +3,28 @@ import { PageTransition } from "@/components/shared/transitions/PageTransition";
 import { PublicRoutes } from "./public-routes";
 import { ProtectedRoutes } from "./protected-routes";
 import { adminRoutes } from "./admin-routes";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
 export const AppRoutes = () => {
   return (
     <PageTransition>
       <Routes>
-        {/* Spread the route elements from each route group */}
         {PublicRoutes()}
         {ProtectedRoutes()}
-        {adminRoutes.map((route) => (
-          <Route 
-            key={route.path} 
-            path={route.path}
-            element={route.element}
-          />
-        ))}
+        {/* Wrap admin routes with AuthGuard requiring admin role */}
+        <Route path="/admin/*" element={
+          <AuthGuard requireAuth={true} requiredRole="admin">
+            <Routes>
+              {adminRoutes.map((route) => (
+                <Route 
+                  key={route.path}
+                  path={route.path.replace('/admin/', '')} // Remove /admin/ prefix since we're already under /admin/*
+                  element={route.element}
+                />
+              ))}
+            </Routes>
+          </AuthGuard>
+        } />
       </Routes>
     </PageTransition>
   );
