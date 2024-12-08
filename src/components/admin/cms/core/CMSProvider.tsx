@@ -1,32 +1,26 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import type { 
-  CMSContent, 
-  CMSComponent, 
-  CMSWorkflow,
-  CMSCategory,
-  CMSTag 
-} from './types';
+import { useContentQueries } from './hooks/useContentQueries';
+import { useContentMutations } from './hooks/useContentMutations';
+import { useRealtimeSubscriptions } from './hooks/useRealtimeSubscriptions';
+import { CMSErrorBoundary } from './CMSErrorBoundary';
+import type { CMSContent } from './types';
 
 interface CMSContextType {
   // Content Management
   activeContent: CMSContent | null;
   setActiveContent: (content: CMSContent | null) => void;
   
-  // Components Registry
-  components: CMSComponent[];
-  
-  // Workflows
-  workflows: CMSWorkflow[];
-  
-  // Categories & Tags
-  categories: CMSCategory[];
-  tags: CMSTag[];
-  
-  // Loading States
+  // Data and Loading States
+  components: ReturnType<typeof useContentQueries>['components'];
+  workflows: ReturnType<typeof useContentQueries>['workflows'];
+  categories: ReturnType<typeof useContentQueries>['categories'];
+  tags: ReturnType<typeof useContentQueries>['tags'];
   isLoading: boolean;
+  
+  // Mutations
+  createContent: ReturnType<typeof useContentMutations>['createContent']['mutate'];
+  updateContent: ReturnType<typeof useContentMutations>['updateContent']['mutate'];
+  deleteContent: ReturnType<typeof useContentMutations>['deleteContent']['mutate'];
   
   // Metadata
   lastUpdated?: string;
@@ -44,103 +38,35 @@ export const useCMS = () => {
 
 export const CMSProvider = ({ children }: { children: React.ReactNode }) => {
   const [activeContent, setActiveContent] = useState<CMSContent | null>(null);
-
-  // Fetch Components
-  const { data: components = [], isLoading: componentsLoading } = useQuery({
-    queryKey: ['cms-components'],
-    queryFn: async () => {
-      console.log('Fetching CMS components...');
-      const { data, error } = await supabase
-        .from('cms_components')
-        .select('*')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching components:', error);
-        toast.error('Failed to load components');
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  // Fetch Workflows
-  const { data: workflows = [], isLoading: workflowsLoading } = useQuery({
-    queryKey: ['cms-workflows'],
-    queryFn: async () => {
-      console.log('Fetching CMS workflows...');
-      const { data, error } = await supabase
-        .from('cms_workflows')
-        .select('*')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching workflows:', error);
-        toast.error('Failed to load workflows');
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  // Fetch Categories
-  const { data: categories = [], isLoading: categoriesLoading } = useQuery({
-    queryKey: ['cms-categories'],
-    queryFn: async () => {
-      console.log('Fetching CMS categories...');
-      const { data, error } = await supabase
-        .from('cms_categories')
-        .select('*')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching categories:', error);
-        toast.error('Failed to load categories');
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  // Fetch Tags
-  const { data: tags = [], isLoading: tagsLoading } = useQuery({
-    queryKey: ['cms-tags'],
-    queryFn: async () => {
-      console.log('Fetching CMS tags...');
-      const { data, error } = await supabase
-        .from('cms_tags')
-        .select('*')
-        .order('name');
-
-      if (error) {
-        console.error('Error fetching tags:', error);
-        toast.error('Failed to load tags');
-        throw error;
-      }
-
-      return data;
-    },
-  });
-
-  const isLoading = componentsLoading || workflowsLoading || categoriesLoading || tagsLoading;
+  
+  // Set up queries
+  const { components, workflows, categories, tags, isLoading } = useContentQueries();
+  
+  // Set up mutations
+  const { createContent, updateContent, deleteContent } = useContentMutations();
+  
+  // Set up realtime subscriptions
+  useRealtimeSubscriptions();
 
   return (
-    <CMSContext.Provider 
-      value={{ 
-        activeContent, 
-        setActiveContent, 
-        components, 
-        workflows,
-        categories,
-        tags,
-        isLoading,
-        lastUpdated: new Date().toISOString()
-      }}
-    >
-      {children}
-    </CMSContext.Provider>
+    <CMSErrorBoundary>
+      <CMSContext.Provider 
+        value={{ 
+          activeContent, 
+          setActiveContent,
+          components,
+          workflows,
+          categories,
+          tags,
+          isLoading,
+          createContent: createContent.mutate,
+          updateContent: updateContent.mutate,
+          deleteContent: deleteContent.mutate,
+          lastUpdated: new Date().toISOString()
+        }}
+      >
+        {children}
+      </CMSContext.Provider>
+    </CMSErrorBoundary>
   );
 };
