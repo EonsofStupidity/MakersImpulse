@@ -15,7 +15,6 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Settings | null>(null);
 
-  // Initial theme fetch
   useEffect(() => {
     const fetchInitialTheme = async () => {
       try {
@@ -61,6 +60,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         console.log("Initial theme settings fetched:", themeData);
         setTheme(themeData);
         applyThemeToDocument(themeData);
+        toast.success("Theme settings loaded");
       } catch (error) {
         console.error("Error fetching theme:", error);
         toast.error("Failed to load theme settings");
@@ -83,7 +83,6 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           console.log("Received real-time theme update:", payload.new);
           const newData = payload.new;
           
-          // Convert payload to Settings type with defaults
           const themeData: Settings = {
             site_title: newData.site_title || DEFAULT_SETTINGS.site_title,
             tagline: newData.tagline || DEFAULT_SETTINGS.tagline,
@@ -116,6 +115,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           
           setTheme(themeData);
           applyThemeToDocument(themeData);
+          toast.success("Theme updated in real-time");
         }
       )
       .subscribe();

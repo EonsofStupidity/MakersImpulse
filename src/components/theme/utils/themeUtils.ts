@@ -39,7 +39,7 @@ export const applyThemeToDocument = (settings: Settings) => {
   root.style.setProperty('--line-height-base', settings.line_height_base);
   root.style.setProperty('--letter-spacing', settings.letter_spacing);
 
-  // Show confirmation toast
+  // Show confirmation toast with details
   toast.success("Theme updated", {
     description: "All visual settings have been applied to the website",
   });
