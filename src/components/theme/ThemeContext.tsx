@@ -10,6 +10,39 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+interface DatabaseSettings {
+  id: string;
+  site_title: string;
+  tagline?: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  logo_url?: string;
+  favicon_url?: string;
+  theme_mode?: 'light' | 'dark' | 'system';
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  font_family_heading: string;
+  font_family_body: string;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const [theme, setTheme] = useState<Settings | null>(null);
 
@@ -23,12 +56,38 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (error) throw error;
 
-        // Ensure all required properties are present with defaults
+        // Type assertion to DatabaseSettings
+        const dbSettings = data as DatabaseSettings;
+        
+        // Convert to Settings type with defaults
         const themeData: Settings = {
-          ...data,
-          neon_cyan: data.neon_cyan || "#41f0db",
-          neon_pink: data.neon_pink || "#ff0abe",
-          neon_purple: data.neon_purple || "#8000ff",
+          site_title: dbSettings.site_title,
+          tagline: dbSettings.tagline,
+          primary_color: dbSettings.primary_color,
+          secondary_color: dbSettings.secondary_color,
+          accent_color: dbSettings.accent_color,
+          logo_url: dbSettings.logo_url,
+          favicon_url: dbSettings.favicon_url,
+          theme_mode: dbSettings.theme_mode || 'system',
+          text_primary_color: dbSettings.text_primary_color,
+          text_secondary_color: dbSettings.text_secondary_color,
+          text_link_color: dbSettings.text_link_color,
+          text_heading_color: dbSettings.text_heading_color,
+          neon_cyan: dbSettings.neon_cyan || "#41f0db",
+          neon_pink: dbSettings.neon_pink || "#ff0abe",
+          neon_purple: dbSettings.neon_purple || "#8000ff",
+          border_radius: dbSettings.border_radius,
+          spacing_unit: dbSettings.spacing_unit,
+          transition_duration: dbSettings.transition_duration,
+          shadow_color: dbSettings.shadow_color,
+          hover_scale: dbSettings.hover_scale,
+          font_family_heading: dbSettings.font_family_heading,
+          font_family_body: dbSettings.font_family_body,
+          font_size_base: dbSettings.font_size_base,
+          font_weight_normal: dbSettings.font_weight_normal,
+          font_weight_bold: dbSettings.font_weight_bold,
+          line_height_base: dbSettings.line_height_base,
+          letter_spacing: dbSettings.letter_spacing,
         };
 
         setTheme(themeData);
@@ -52,12 +111,35 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           table: 'site_settings'
         },
         (payload) => {
-          const newSettings = payload.new as Settings;
+          const dbSettings = payload.new as DatabaseSettings;
           const themeData: Settings = {
-            ...newSettings,
-            neon_cyan: newSettings.neon_cyan || "#41f0db",
-            neon_pink: newSettings.neon_pink || "#ff0abe",
-            neon_purple: newSettings.neon_purple || "#8000ff",
+            site_title: dbSettings.site_title,
+            tagline: dbSettings.tagline,
+            primary_color: dbSettings.primary_color,
+            secondary_color: dbSettings.secondary_color,
+            accent_color: dbSettings.accent_color,
+            logo_url: dbSettings.logo_url,
+            favicon_url: dbSettings.favicon_url,
+            theme_mode: dbSettings.theme_mode || 'system',
+            text_primary_color: dbSettings.text_primary_color,
+            text_secondary_color: dbSettings.text_secondary_color,
+            text_link_color: dbSettings.text_link_color,
+            text_heading_color: dbSettings.text_heading_color,
+            neon_cyan: dbSettings.neon_cyan || "#41f0db",
+            neon_pink: dbSettings.neon_pink || "#ff0abe",
+            neon_purple: dbSettings.neon_purple || "#8000ff",
+            border_radius: dbSettings.border_radius,
+            spacing_unit: dbSettings.spacing_unit,
+            transition_duration: dbSettings.transition_duration,
+            shadow_color: dbSettings.shadow_color,
+            hover_scale: dbSettings.hover_scale,
+            font_family_heading: dbSettings.font_family_heading,
+            font_family_body: dbSettings.font_family_body,
+            font_size_base: dbSettings.font_size_base,
+            font_weight_normal: dbSettings.font_weight_normal,
+            font_weight_bold: dbSettings.font_weight_bold,
+            line_height_base: dbSettings.line_height_base,
+            letter_spacing: dbSettings.letter_spacing,
           };
           setTheme(themeData);
           applyThemeToDocument(themeData);
