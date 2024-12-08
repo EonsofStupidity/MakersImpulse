@@ -9,47 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      active_2fa_sessions: {
-        Row: {
-          created_at: string | null
-          device_name: string
-          id: string
-          ip_address: string | null
-          is_active: boolean | null
-          last_activity: string | null
-          user_agent: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          device_name: string
-          id?: string
-          ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          device_name?: string
-          id?: string
-          ip_address?: string | null
-          is_active?: boolean | null
-          last_activity?: string | null
-          user_agent?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "active_2fa_sessions_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -106,321 +65,6 @@ export type Database = {
           {
             foreignKeyName: "blog_posts_author_id_fkey"
             columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_categories: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string
-          metadata: Json | null
-          name: string
-          parent_id: string | null
-          slug: string
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          metadata?: Json | null
-          name: string
-          parent_id?: string | null
-          slug: string
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          metadata?: Json | null
-          name?: string
-          parent_id?: string | null
-          slug?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_categories_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "cms_categories"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_components: {
-        Row: {
-          component_type: string
-          created_by: string | null
-          default_props: Json | null
-          description: string | null
-          id: string
-          name: string
-          props_schema: Json | null
-          updated_at: string | null
-        }
-        Insert: {
-          component_type: string
-          created_by?: string | null
-          default_props?: Json | null
-          description?: string | null
-          id?: string
-          name: string
-          props_schema?: Json | null
-          updated_at?: string | null
-        }
-        Update: {
-          component_type?: string
-          created_by?: string | null
-          default_props?: Json | null
-          description?: string | null
-          id?: string
-          name?: string
-          props_schema?: Json | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_components_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_content: {
-        Row: {
-          content: Json | null
-          created_at: string | null
-          created_by: string | null
-          id: string
-          metadata: Json | null
-          slug: string | null
-          status: Database["public"]["Enums"]["content_status"] | null
-          title: string
-          type: Database["public"]["Enums"]["content_type"]
-          updated_at: string | null
-          updated_by: string | null
-          version: number | null
-        }
-        Insert: {
-          content?: Json | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          metadata?: Json | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["content_status"] | null
-          title: string
-          type: Database["public"]["Enums"]["content_type"]
-          updated_at?: string | null
-          updated_by?: string | null
-          version?: number | null
-        }
-        Update: {
-          content?: Json | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          metadata?: Json | null
-          slug?: string | null
-          status?: Database["public"]["Enums"]["content_status"] | null
-          title?: string
-          type?: Database["public"]["Enums"]["content_type"]
-          updated_at?: string | null
-          updated_by?: string | null
-          version?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_content_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cms_content_updated_by_fkey"
-            columns: ["updated_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_content_relationships: {
-        Row: {
-          child_id: string | null
-          id: string
-          order_index: number | null
-          parent_id: string | null
-          relationship_type: string
-        }
-        Insert: {
-          child_id?: string | null
-          id?: string
-          order_index?: number | null
-          parent_id?: string | null
-          relationship_type: string
-        }
-        Update: {
-          child_id?: string | null
-          id?: string
-          order_index?: number | null
-          parent_id?: string | null
-          relationship_type?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_content_relationships_child_id_fkey"
-            columns: ["child_id"]
-            isOneToOne: false
-            referencedRelation: "cms_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cms_content_relationships_parent_id_fkey"
-            columns: ["parent_id"]
-            isOneToOne: false
-            referencedRelation: "cms_content"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_content_revisions: {
-        Row: {
-          content: Json
-          content_id: string | null
-          created_at: string | null
-          created_by: string | null
-          id: string
-          metadata: Json | null
-        }
-        Insert: {
-          content: Json
-          content_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          metadata?: Json | null
-        }
-        Update: {
-          content?: Json
-          content_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          metadata?: Json | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_content_revisions_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "cms_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cms_content_revisions_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_content_tags: {
-        Row: {
-          content_id: string
-          tag_id: string
-        }
-        Insert: {
-          content_id: string
-          tag_id: string
-        }
-        Update: {
-          content_id?: string
-          tag_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_content_tags_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "cms_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "cms_content_tags_tag_id_fkey"
-            columns: ["tag_id"]
-            isOneToOne: false
-            referencedRelation: "cms_tags"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      cms_tags: {
-        Row: {
-          created_at: string | null
-          description: string | null
-          id: string
-          name: string
-          slug: string
-        }
-        Insert: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          name: string
-          slug: string
-        }
-        Update: {
-          created_at?: string | null
-          description?: string | null
-          id?: string
-          name?: string
-          slug?: string
-        }
-        Relationships: []
-      }
-      cms_workflows: {
-        Row: {
-          created_by: string | null
-          description: string | null
-          id: string
-          name: string
-          steps: Json
-          triggers: Json | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          name: string
-          steps: Json
-          triggers?: Json | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_by?: string | null
-          description?: string | null
-          id?: string
-          name?: string
-          steps?: Json
-          triggers?: Json | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "cms_workflows_created_by_fkey"
-            columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -525,15 +169,11 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
-          gamification_enabled: boolean | null
           id: string
           is_banned: boolean | null
           last_seen: string | null
           location: string | null
-          onboarding_completed: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
-          two_factor_enabled: boolean | null
-          two_factor_secret: string | null
           updated_at: string
           username: string | null
           website: string | null
@@ -546,15 +186,11 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
-          gamification_enabled?: boolean | null
           id: string
           is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
-          onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
-          two_factor_enabled?: boolean | null
-          two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -567,15 +203,11 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
-          gamification_enabled?: boolean | null
           id?: string
           is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
-          onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
-          two_factor_enabled?: boolean | null
-          two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -584,47 +216,6 @@ export type Database = {
           {
             foreignKeyName: "profiles_banned_by_fkey"
             columns: ["banned_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      recovery_codes: {
-        Row: {
-          attempts: number | null
-          code: string
-          created_at: string | null
-          expires_at: string
-          id: string
-          used: boolean | null
-          used_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          attempts?: number | null
-          code: string
-          created_at?: string | null
-          expires_at: string
-          id?: string
-          used?: boolean | null
-          used_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          attempts?: number | null
-          code?: string
-          created_at?: string | null
-          expires_at?: string
-          id?: string
-          used?: boolean | null
-          used_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "recovery_codes_user_id_fkey"
-            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -729,44 +320,6 @@ export type Database = {
           },
         ]
       }
-      trusted_devices: {
-        Row: {
-          created_at: string | null
-          device_hash: string
-          device_name: string
-          expires_at: string
-          id: string
-          last_used: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          device_hash: string
-          device_name: string
-          expires_at: string
-          id?: string
-          last_used?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          device_hash?: string
-          device_name?: string
-          expires_at?: string
-          id?: string
-          last_used?: string | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "trusted_devices_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       user_activity: {
         Row: {
           activity_type: string
@@ -795,48 +348,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "user_activity_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_activity_cms: {
-        Row: {
-          activity_type: string
-          content_id: string | null
-          created_at: string | null
-          id: string
-          metadata: Json | null
-          user_id: string | null
-        }
-        Insert: {
-          activity_type: string
-          content_id?: string | null
-          created_at?: string | null
-          id?: string
-          metadata?: Json | null
-          user_id?: string | null
-        }
-        Update: {
-          activity_type?: string
-          content_id?: string | null
-          created_at?: string | null
-          id?: string
-          metadata?: Json | null
-          user_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_activity_cms_content_id_fkey"
-            columns: ["content_id"]
-            isOneToOne: false
-            referencedRelation: "cms_content"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_activity_cms_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -975,8 +486,6 @@ export type Database = {
           }
     }
     Enums: {
-      content_status: "draft" | "published" | "archived"
-      content_type: "page" | "component" | "template" | "workflow"
       post_category:
         | "Guides"
         | "Reviews"

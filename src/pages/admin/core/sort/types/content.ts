@@ -1,1 +1,0 @@
-export type ContentType = 'blog_posts' | 'cms_content' | 'forum_threads' | 'printer_builds';

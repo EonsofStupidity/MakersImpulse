@@ -15,9 +15,8 @@ import {
   XCircle
 } from "lucide-react";
 import { toast } from "sonner";
-import { AdminToolbar } from "./toolbar/AdminToolbar";
+import { AdminToolbar } from "./AdminToolbar";
 import { NavItemList } from "./nav/NavItemList";
-import { AdminTabs } from "./tabs/AdminTabs";
 import type { NavItemType } from "./nav/NavItem";
 import { useSession } from "@/components/auth/SessionContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -157,7 +156,6 @@ export const AdminNav = () => {
 
   return (
     <>
-      <AdminTabs />
       <nav className={`glass mb-8 p-4 transition-all duration-300 ${draggedItem ? 'opacity-75' : ''}`}>
         <NavItemList 
           items={items}
