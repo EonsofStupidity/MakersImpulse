@@ -2,14 +2,11 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import ImageGallery from './components/ImageGallery';
-import ExpandedPost from './components/ExpandedPost';
-import ImageCarouselDialog from './components/ImageCarouselDialog';
-import BlogPostContent from './components/BlogPostContent';
-import BlogPostMeta from './components/BlogPostMeta';
-import ImageValidation from './components/ImageValidation';
-import { useCyberpunkViewer } from './components/viewer/useCyberpunkViewer';
-import CyberpunkBlogViewer from './components/viewer/CyberpunkBlogViewer';
+import { ImageGallery, ImageCarouselDialog, ImageValidation } from '../media';
+import { BlogPostContent } from './BlogPostContent';
+import { BlogPostMeta } from './BlogPostMeta';
+import { ExpandedPost } from './ExpandedPost';
+import { useCyberpunkViewer, CyberpunkBlogViewer } from '../viewer';
 
 interface BlogPostCardProps {
   post: {

@@ -4,6 +4,7 @@ import { Navigation } from "@/components/shared/ui/Navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { ContentGrid } from "@/components/content/discovery/ContentGrid";
+import { BlogPostCard } from "@/components/content/blog";
 
 const fetchBlogPosts = async () => {
   console.log("Starting fetchBlogPosts function...");
