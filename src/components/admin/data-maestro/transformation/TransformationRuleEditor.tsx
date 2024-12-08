@@ -1,8 +1,13 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
+import { TransformationRule } from "@/lib/transformations/types";
 
-const TransformationRuleEditor = () => {
+interface TransformationRuleEditorProps {
+  onSave: (rule: TransformationRule) => Promise<void>;
+}
+
+const TransformationRuleEditor = ({ onSave }: TransformationRuleEditorProps) => {
   return (
     <Card className="p-6">
       <h3 className="text-lg font-semibold mb-4">Transformation Rules</h3>

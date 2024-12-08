@@ -22,7 +22,7 @@ export const getRevisionAuthor = async (userId: string) => {
 export const getRevisionHistory = async () => {
   try {
     const { data, error } = await supabase
-      .from('revisions')
+      .from('revision_history')
       .select('*')
       .order('created_at', { ascending: false });
 
@@ -40,7 +40,7 @@ export const getRevisionHistory = async () => {
 export const addRevision = async (revision: any) => {
   try {
     const { error } = await supabase
-      .from('revisions')
+      .from('revision_history')
       .insert([revision]);
 
     if (error) {
