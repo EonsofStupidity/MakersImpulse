@@ -2,47 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Settings } from "@/components/admin/settings/types";
 import { toast } from "sonner";
-import { applyThemeToDocument } from "../utils/themeUtils";
-import { DEFAULT_SETTINGS } from "@/components/admin/settings/hooks/useSettingsDefaults";
-
-interface ThemeContextType {
-  theme: Settings | null;
-  updateTheme: (newTheme: Settings) => void;
-}
-
-// Define the database response type
-interface DatabaseSettingsRow {
-  id: string;
-  site_title: string;
-  tagline?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  logo_url?: string;
-  favicon_url?: string;
-  theme_mode?: 'light' | 'dark' | 'system';
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan?: string;
-  neon_pink?: string;
-  neon_purple?: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  updated_at?: string;
-  updated_by?: string;
-}
+import { ThemeContextType, DatabaseSettingsRow } from "../types/theme";
+import { applyThemeToDocument, convertDbSettingsToTheme } from "../utils/themeUtils";
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -62,37 +23,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
         // Type assertion to DatabaseSettingsRow
         const dbSettings = rawData as DatabaseSettingsRow;
-        
-        // Convert database settings to Settings type with defaults
-        const themeData: Settings = {
-          site_title: dbSettings.site_title || DEFAULT_SETTINGS.site_title,
-          tagline: dbSettings.tagline || DEFAULT_SETTINGS.tagline,
-          primary_color: dbSettings.primary_color || DEFAULT_SETTINGS.primary_color,
-          secondary_color: dbSettings.secondary_color || DEFAULT_SETTINGS.secondary_color,
-          accent_color: dbSettings.accent_color || DEFAULT_SETTINGS.accent_color,
-          logo_url: dbSettings.logo_url,
-          favicon_url: dbSettings.favicon_url,
-          theme_mode: dbSettings.theme_mode || 'system',
-          text_primary_color: dbSettings.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
-          text_secondary_color: dbSettings.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
-          text_link_color: dbSettings.text_link_color || DEFAULT_SETTINGS.text_link_color,
-          text_heading_color: dbSettings.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
-          neon_cyan: dbSettings.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
-          neon_pink: dbSettings.neon_pink || DEFAULT_SETTINGS.neon_pink,
-          neon_purple: dbSettings.neon_purple || DEFAULT_SETTINGS.neon_purple,
-          border_radius: dbSettings.border_radius || DEFAULT_SETTINGS.border_radius,
-          spacing_unit: dbSettings.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
-          transition_duration: dbSettings.transition_duration || DEFAULT_SETTINGS.transition_duration,
-          shadow_color: dbSettings.shadow_color || DEFAULT_SETTINGS.shadow_color,
-          hover_scale: dbSettings.hover_scale || DEFAULT_SETTINGS.hover_scale,
-          font_family_heading: dbSettings.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
-          font_family_body: dbSettings.font_family_body || DEFAULT_SETTINGS.font_family_body,
-          font_size_base: dbSettings.font_size_base || DEFAULT_SETTINGS.font_size_base,
-          font_weight_normal: dbSettings.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
-          font_weight_bold: dbSettings.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
-          line_height_base: dbSettings.line_height_base || DEFAULT_SETTINGS.line_height_base,
-          letter_spacing: dbSettings.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
-        };
+        const themeData = convertDbSettingsToTheme(dbSettings);
 
         console.log("Initial theme settings fetched:", themeData);
         setTheme(themeData);
@@ -118,37 +49,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         },
         (payload) => {
           console.log("Received real-time theme update:", payload.new);
-          const newData = payload.new as DatabaseSettingsRow;
-          
-          const themeData: Settings = {
-            site_title: newData.site_title || DEFAULT_SETTINGS.site_title,
-            tagline: newData.tagline || DEFAULT_SETTINGS.tagline,
-            primary_color: newData.primary_color || DEFAULT_SETTINGS.primary_color,
-            secondary_color: newData.secondary_color || DEFAULT_SETTINGS.secondary_color,
-            accent_color: newData.accent_color || DEFAULT_SETTINGS.accent_color,
-            logo_url: newData.logo_url,
-            favicon_url: newData.favicon_url,
-            theme_mode: newData.theme_mode || 'system',
-            text_primary_color: newData.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
-            text_secondary_color: newData.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
-            text_link_color: newData.text_link_color || DEFAULT_SETTINGS.text_link_color,
-            text_heading_color: newData.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
-            neon_cyan: newData.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
-            neon_pink: newData.neon_pink || DEFAULT_SETTINGS.neon_pink,
-            neon_purple: newData.neon_purple || DEFAULT_SETTINGS.neon_purple,
-            border_radius: newData.border_radius || DEFAULT_SETTINGS.border_radius,
-            spacing_unit: newData.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
-            transition_duration: newData.transition_duration || DEFAULT_SETTINGS.transition_duration,
-            shadow_color: newData.shadow_color || DEFAULT_SETTINGS.shadow_color,
-            hover_scale: newData.hover_scale || DEFAULT_SETTINGS.hover_scale,
-            font_family_heading: newData.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
-            font_family_body: newData.font_family_body || DEFAULT_SETTINGS.font_family_body,
-            font_size_base: newData.font_size_base || DEFAULT_SETTINGS.font_size_base,
-            font_weight_normal: newData.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
-            font_weight_bold: newData.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
-            line_height_base: newData.line_height_base || DEFAULT_SETTINGS.line_height_base,
-            letter_spacing: newData.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
-          };
+          const dbSettings = payload.new as DatabaseSettingsRow;
+          const themeData = convertDbSettingsToTheme(dbSettings);
           
           setTheme(themeData);
           applyThemeToDocument(themeData);
