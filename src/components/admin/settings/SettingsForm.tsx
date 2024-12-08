@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
@@ -17,13 +17,22 @@ import { motion } from "framer-motion";
 import { BasicSettingsSection } from "./components/BasicSettingsSection";
 import { FontSettingsSection } from "./components/FontSettingsSection";
 import { TransitionSettingsSection } from "./components/TransitionSettingsSection";
-import { settingsSchema, type SettingsFormData, type Settings } from "./types";
+import { settingsSchema, type SettingsFormData } from "./types";
 import { AnimationsSection } from "./components/AnimationsSection";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { FontColorSettingsSection } from "./components/FontColorSettingsSection";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 export const SettingsForm = () => {
-  console.log("SettingsForm rendered");
+  const [showResetDialog, setShowResetDialog] = useState(false);
+  const [resetConfirmation, setResetConfirmation] = useState("");
+  const [confirmCheckbox, setConfirmCheckbox] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
+
   const {
     settings,
     isLoading,
@@ -33,6 +42,7 @@ export const SettingsForm = () => {
     handleLogoUpload,
     handleFaviconUpload,
     handleSettingsUpdate,
+    handleResetToDefault,
   } = useSettingsForm();
 
   const form = useForm<SettingsFormData>({
@@ -53,6 +63,35 @@ export const SettingsForm = () => {
     },
   });
 
+  const handleReset = async () => {
+    if (resetConfirmation.toUpperCase() !== "IMPULSE" || !confirmCheckbox) {
+      toast.error("Please type IMPULSE and check the confirmation box");
+      return;
+    }
+
+    setIsResetting(true);
+    toast.loading("Resetting settings to default...");
+
+    try {
+      await handleResetToDefault();
+      toast.success("Settings reset successfully");
+      setShowResetDialog(false);
+      setResetConfirmation("");
+      setConfirmCheckbox(false);
+      form.reset(settings || undefined);
+    } catch (error) {
+      toast.error("Failed to reset settings");
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleReset();
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -69,6 +108,16 @@ export const SettingsForm = () => {
         transition={{ duration: 0.3 }}
       >
         <Card className="p-6 bg-gray-800/50 border border-white/10">
+          <div className="flex justify-end mb-4">
+            <Button 
+              variant="destructive"
+              onClick={() => setShowResetDialog(true)}
+              className="bg-secondary hover:bg-secondary/80"
+            >
+              Reset to Default
+            </Button>
+          </div>
+
           <form onSubmit={form.handleSubmit(handleSettingsUpdate)} className="space-y-6">
             <Accordion type="single" collapsible className="space-y-4">
               <BasicSettingsSection 
@@ -168,6 +217,59 @@ export const SettingsForm = () => {
           />
         </Card>
       </motion.div>
+
+      <Dialog open={showResetDialog} onOpenChange={setShowResetDialog}>
+        <DialogContent className="bg-gray-800/95 border border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">Reset Settings to Default</DialogTitle>
+            <DialogDescription className="text-gray-400">
+              This action will reset all settings to their default values. Type IMPULSE and check the box to confirm.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="reset-confirmation" className="text-white">Type IMPULSE to confirm</Label>
+              <Input
+                id="reset-confirmation"
+                value={resetConfirmation}
+                onChange={(e) => setResetConfirmation(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="bg-gray-700/50 border-gray-600"
+                placeholder="IMPULSE"
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="confirm-reset"
+                checked={confirmCheckbox}
+                onCheckedChange={(checked) => setConfirmCheckbox(checked as boolean)}
+              />
+              <Label htmlFor="confirm-reset" className="text-white">
+                I understand this will reset all settings
+              </Label>
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowResetDialog(false)}>
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleReset}
+                disabled={isResetting}
+              >
+                {isResetting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Resetting...
+                  </>
+                ) : (
+                  "Reset Settings"
+                )}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -9,6 +9,18 @@ interface SettingsResponse {
   data: Settings;
 }
 
+const DEFAULT_SETTINGS = {
+  site_title: "MakersImpulse",
+  tagline: "Create, Share, Inspire",
+  primary_color: "#7FFFD4",
+  secondary_color: "#FFB6C1",
+  accent_color: "#E6E6FA",
+  text_primary_color: "#FFFFFF",
+  text_secondary_color: "#A1A1AA",
+  text_link_color: "#3B82F6",
+  text_heading_color: "#FFFFFF",
+};
+
 export const useSettingsForm = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +65,35 @@ export const useSettingsForm = () => {
     setFaviconFile(file);
   };
 
+  const handleResetToDefault = async () => {
+    console.log("Resetting settings to default...");
+    setIsSaving(true);
+    try {
+      const { data, error } = await supabase.rpc("update_site_settings", {
+        p_site_title: DEFAULT_SETTINGS.site_title,
+        p_tagline: DEFAULT_SETTINGS.tagline,
+        p_primary_color: DEFAULT_SETTINGS.primary_color,
+        p_secondary_color: DEFAULT_SETTINGS.secondary_color,
+        p_accent_color: DEFAULT_SETTINGS.accent_color,
+        p_text_primary_color: DEFAULT_SETTINGS.text_primary_color,
+        p_text_secondary_color: DEFAULT_SETTINGS.text_secondary_color,
+        p_text_link_color: DEFAULT_SETTINGS.text_link_color,
+        p_text_heading_color: DEFAULT_SETTINGS.text_heading_color,
+      });
+
+      if (error) throw error;
+      
+      console.log("Settings reset successfully:", data);
+      setSettings(data.data);
+      return data;
+    } catch (error) {
+      console.error("Error resetting settings:", error);
+      throw error;
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleSettingsUpdate = async (formData: Settings) => {
     console.log("Starting settings update with formData:", formData);
     setIsSaving(true);
@@ -72,20 +113,6 @@ export const useSettingsForm = () => {
         console.log("Favicon uploaded successfully:", favicon_url);
       }
 
-      console.log("Calling update_site_settings RPC with params:", {
-        p_site_title: formData.site_title,
-        p_tagline: formData.tagline,
-        p_primary_color: formData.primary_color,
-        p_secondary_color: formData.secondary_color,
-        p_accent_color: formData.accent_color,
-        p_logo_url: logo_url,
-        p_favicon_url: favicon_url,
-        p_text_primary_color: formData.text_primary_color,
-        p_text_secondary_color: formData.text_secondary_color,
-        p_text_link_color: formData.text_link_color,
-        p_text_heading_color: formData.text_heading_color,
-      });
-
       const { data, error } = await supabase.rpc("update_site_settings", {
         p_site_title: formData.site_title,
         p_tagline: formData.tagline,
@@ -100,22 +127,10 @@ export const useSettingsForm = () => {
         p_text_heading_color: formData.text_heading_color,
       });
 
-      if (error) {
-        console.error("RPC error:", error);
-        throw error;
-      }
+      if (error) throw error;
 
-      console.log("Raw RPC response:", data);
-
-      if (!data || typeof data !== 'object' || !('success' in data) || !('data' in data)) {
-        console.error("Invalid response structure:", data);
-        throw new Error("Invalid response format from server");
-      }
-
-      const response = data as unknown as SettingsResponse;
-      console.log("Parsed settings response:", response);
-      
-      setSettings(response.data);
+      console.log("Settings updated successfully:", data);
+      setSettings(data.data);
       toast.success("Settings updated successfully");
     } catch (error) {
       console.error("Error in handleSettingsUpdate:", error);
@@ -134,5 +149,6 @@ export const useSettingsForm = () => {
     handleLogoUpload,
     handleFaviconUpload,
     handleSettingsUpdate,
+    handleResetToDefault,
   };
 };
