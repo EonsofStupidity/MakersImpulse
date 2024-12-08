@@ -5,6 +5,7 @@ import { Settings } from "../../types";
 import { DEFAULT_SETTINGS } from "../useSettingsDefaults";
 
 interface DatabaseSettings {
+  id: string;
   site_title: string;
   tagline: string | null;
   primary_color: string | null;
@@ -32,6 +33,7 @@ interface DatabaseSettings {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  updated_at: string | null;
   updated_by: string | null;
 }
 
@@ -53,7 +55,8 @@ export const useSettingsFetch = () => {
           throw error;
         }
         
-        const dbSettings = data as DatabaseSettings;
+        // Type assertion with unknown first for safety
+        const dbSettings = data as unknown as DatabaseSettings;
         const settingsData: Settings = {
           site_title: dbSettings.site_title,
           tagline: dbSettings.tagline || DEFAULT_SETTINGS.tagline,
