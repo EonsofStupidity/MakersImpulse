@@ -23,4 +23,5 @@ export const DEFAULT_SETTINGS = {
   font_weight_bold: "700",
   line_height_base: "1.5",
   letter_spacing: "normal",
+  transition_type: "fade" as const,
 };

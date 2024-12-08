@@ -43,8 +43,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         p_font_weight_normal: newTheme.font_weight_normal,
         p_font_weight_bold: newTheme.font_weight_bold,
         p_line_height_base: newTheme.line_height_base,
-        p_letter_spacing: newTheme.letter_spacing,
-        p_transition_type: newTheme.transition_type
+        p_letter_spacing: newTheme.letter_spacing
       });
 
       if (error) throw error;

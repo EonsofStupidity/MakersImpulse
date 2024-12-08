@@ -33,6 +33,7 @@ interface DatabaseSettings {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  transition_type: 'fade' | 'slide' | 'scale' | null;
   updated_at: string | null;
   updated_by: string | null;
 }
@@ -55,7 +56,6 @@ export const useSettingsFetch = () => {
           throw error;
         }
         
-        // Type assertion with unknown first for safety
         const dbSettings = data as unknown as DatabaseSettings;
         const settingsData: Settings = {
           site_title: dbSettings.site_title,
@@ -85,6 +85,7 @@ export const useSettingsFetch = () => {
           font_weight_bold: dbSettings.font_weight_bold,
           line_height_base: dbSettings.line_height_base,
           letter_spacing: dbSettings.letter_spacing,
+          transition_type: dbSettings.transition_type || 'fade',
         };
         
         console.log("Settings fetched successfully:", settingsData);
