@@ -189,6 +189,31 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) =>
             />
           </motion.div>
         )}
+
+        <AdvancedCSSEditor
+          currentCSS={`/* Current Theme CSS Variables */
+:root {
+  --primary: ${settings.primary_color};
+  --secondary: ${settings.secondary_color};
+  --accent: ${settings.accent_color};
+  --neon-cyan: ${settings.neon_cyan};
+  --neon-pink: ${settings.neon_pink};
+  --neon-purple: ${settings.neon_purple};
+  /* ... other variables */
+}`}
+          onSave={(css) => {
+            // Parse and apply the CSS
+            const styleSheet = new CSSStyleSheet();
+            styleSheet.replaceSync(css);
+            document.adoptedStyleSheets = [styleSheet];
+            toast.success("CSS updated successfully");
+          }}
+          onReset={() => {
+            // Reset to default theme
+            document.adoptedStyleSheets = [];
+            toast.success("CSS reset to default");
+          }}
+        />
       </div>
     </AnimatePresence>
   );
