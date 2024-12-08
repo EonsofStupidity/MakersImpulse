@@ -9,6 +9,7 @@ import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
 import ImageValidation from './components/ImageValidation';
 import { useCyberpunkViewer } from './components/viewer/useCyberpunkViewer';
+import CyberpunkBlogViewer from './components/CyberpunkBlogViewer';
 
 interface BlogPostCardProps {
   post: {
@@ -29,7 +30,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [validImages, setValidImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { openViewer } = useCyberpunkViewer();
+  const { isOpen, openViewer, closeViewer } = useCyberpunkViewer();
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
@@ -141,6 +142,12 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           onIndexChange={setCurrentImageIndex}
         />
       )}
+
+      <CyberpunkBlogViewer
+        content={post.content}
+        isOpen={isOpen}
+        onClose={closeViewer}
+      />
     </motion.div>
   );
 };
