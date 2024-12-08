@@ -18,6 +18,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
+import { AnimationsSection } from "./components/AnimationsSection";
 
 const settingsSchema = z.object({
   site_title: z.string().min(1, "Site title is required"),
@@ -68,7 +69,7 @@ export const SettingsForm = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[-5%]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[2.5%]">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -170,6 +171,15 @@ export const SettingsForm = () => {
                     max={2}
                     onChange={(value) => console.log("Animation speed:", value)}
                   />
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="animations">
+                <AccordionTrigger className="text-lg font-semibold text-white">
+                  Animations & Transitions
+                </AccordionTrigger>
+                <AccordionContent className="pt-4">
+                  <AnimationsSection />
                 </AccordionContent>
               </AccordionItem>
 
