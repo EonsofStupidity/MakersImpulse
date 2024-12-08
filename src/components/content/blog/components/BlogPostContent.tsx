@@ -4,6 +4,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import AnimatedTextReveal from './AnimatedTextReveal';
 import { motion, AnimatePresence } from 'framer-motion';
+import CyberpunkBlogViewer from './CyberpunkBlogViewer';
 
 interface BlogPostContentProps {
   title: string;
@@ -22,9 +23,10 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
 }) => {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  const [showCyberpunkViewer, setShowCyberpunkViewer] = React.useState(false);
 
   const handleContentClick = () => {
-    setIsDialogOpen(true);
+    setShowCyberpunkViewer(true);
   };
 
   return (
@@ -61,53 +63,11 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
         </div>
       </div>
 
-      <AnimatePresence>
-        {isDialogOpen && (
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogContent className="max-w-4xl h-[90vh] p-0 bg-black/90 border-[#ff0abe]/20 overflow-hidden">
-              <div className="flex flex-col h-full">
-                <ScrollArea className="flex-1 p-6">
-                  <motion.h2 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="text-4xl font-bold text-white mb-6"
-                  >
-                    {title}
-                  </motion.h2>
-                  <AnimatedTextReveal content={content} />
-                </ScrollArea>
-                
-                {images && images.length > 0 && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-auto border-t border-white/10 p-4 bg-black/60"
-                  >
-                    <div className="flex gap-4 overflow-x-auto pb-4">
-                      {images.map((image, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setCurrentImageIndex(index)}
-                          className="relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden border-2 transition-all duration-200 hover:scale-105"
-                          style={{
-                            borderColor: currentImageIndex === index ? '#ff0abe' : 'transparent'
-                          }}
-                        >
-                          <img 
-                            src={image} 
-                            alt={`Image ${index + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </AnimatePresence>
+      <CyberpunkBlogViewer
+        content={content}
+        isOpen={showCyberpunkViewer}
+        onClose={() => setShowCyberpunkViewer(false)}
+      />
     </>
   );
 };
