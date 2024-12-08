@@ -15,6 +15,7 @@ interface UserTableRowActionsProps {
     id: string;
     email?: string;
     is_banned?: boolean;
+    username?: string;
   };
   onBanStatusChange: () => void;
 }
@@ -59,10 +60,13 @@ export const UserTableRowActions = ({ user, onBanStatusChange }: UserTableRowAct
       )}
 
       <BanUserDialog
-        open={showBanDialog}
-        onOpenChange={setShowBanDialog}
-        user={user}
-        onBanStatusChange={onBanStatusChange}
+        isOpen={showBanDialog}
+        onClose={() => setShowBanDialog(false)}
+        onConfirm={(reason) => {
+          // Handle ban confirmation
+          onBanStatusChange();
+        }}
+        username={user.username || 'Unknown User'}
       />
     </>
   );

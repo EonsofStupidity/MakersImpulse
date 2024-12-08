@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import { PageTransition } from "@/components/shared/transitions/PageTransition";
 import { PublicRoutes } from "./public-routes";
 import { ProtectedRoutes } from "./protected-routes";
-import { AdminRoutes } from "./admin-routes";
+import { adminRoutes } from "./admin-routes";
 
 export const AppRoutes = () => {
   return (
@@ -11,7 +11,9 @@ export const AppRoutes = () => {
         {/* Spread the route elements from each route group */}
         {PublicRoutes()}
         {ProtectedRoutes()}
-        {AdminRoutes()}
+        {adminRoutes.map((route) => (
+          <Route key={route.path} {...route} />
+        ))}
       </Routes>
     </PageTransition>
   );

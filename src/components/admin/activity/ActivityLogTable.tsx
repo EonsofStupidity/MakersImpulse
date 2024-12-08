@@ -75,13 +75,17 @@ export const ActivityLogTable = () => {
   const { data: activityTypes } = useQuery({
     queryKey: ["activity-types"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: types, error } = await supabase
         .from("user_activity")
         .select("activity_type")
-        .distinct();
+        .then(result => {
+          // Get unique activity types
+          const uniqueTypes = [...new Set(result.data?.map(item => item.activity_type))];
+          return uniqueTypes;
+        });
 
       if (error) throw error;
-      return data.map((item) => item.activity_type);
+      return types || [];
     },
   });
 
