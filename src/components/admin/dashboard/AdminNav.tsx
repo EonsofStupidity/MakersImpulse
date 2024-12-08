@@ -10,7 +10,9 @@ import {
   GitBranch, 
   Image,
   Settings,
-  Navigation
+  Navigation,
+  CheckCircle2,
+  XCircle
 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminToolbar } from "./AdminToolbar";
@@ -92,7 +94,7 @@ export const AdminNav = () => {
         id: item.id,
         icon: iconName,
         label: item.label,
-        to: item.to // Include navigation path
+        to: item.to
       };
 
       console.log('Setting drag data:', itemData);
@@ -125,7 +127,7 @@ export const AdminNav = () => {
       });
       
       toast.info('Dragging shortcut...', {
-        description: `Drag ${item.label} to the toolbar to create a shortcut`,
+        description: 'Drop in toolbar to place, or outside to delete',
         icon: <Navigation className="h-4 w-4 text-[#41f0db]" />
       });
     } catch (error) {

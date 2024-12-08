@@ -5,6 +5,7 @@ import { ToolbarItemList } from './toolbar/ToolbarItemList';
 import { ToolbarControls } from './toolbar/ToolbarControls';
 import { ToolbarItemType } from './toolbar/types';
 import { toast } from 'sonner';
+import { CheckCircle2, XCircle } from 'lucide-react';
 
 export const AdminToolbar = () => {
   const [isIconOnly, setIsIconOnly] = useState(false);
@@ -43,6 +44,13 @@ export const AdminToolbar = () => {
     target.style.background = 'rgba(65, 240, 219, 0.1)';
     target.style.transform = 'scale(1.02)';
     setDropTarget(index);
+    
+    // Update toast for drop to place
+    toast.info('Drop to place shortcut', {
+      id: 'toolbar-drag',
+      description: `Release to add shortcut here`,
+      icon: <CheckCircle2 className="h-4 w-4 text-[#41f0db]" />
+    });
   };
 
   const handleDragLeave = (event: React.DragEvent<HTMLDivElement>) => {
@@ -51,6 +59,13 @@ export const AdminToolbar = () => {
     const target = event.currentTarget;
     target.style.background = '';
     target.style.transform = '';
+    
+    // Update toast for drop to delete
+    toast.info('Drop to delete shortcut', {
+      id: 'toolbar-drag',
+      description: `Release outside toolbar to remove`,
+      icon: <XCircle className="h-4 w-4 text-red-400" />
+    });
   };
 
   const handleDrop = (event: React.DragEvent<HTMLDivElement>, index: number) => {
@@ -102,6 +117,36 @@ export const AdminToolbar = () => {
       toast.error('Failed to add shortcut to toolbar');
     }
   };
+
+  // Add window-level drop handler for deletion
+  React.useEffect(() => {
+    const handleWindowDrop = (event: DragEvent) => {
+      const jsonData = event.dataTransfer?.getData('application/json');
+      if (jsonData) {
+        try {
+          const draggedItemData = JSON.parse(jsonData);
+          const itemIndex = toolbarItems.findIndex(item => item.id === draggedItemData.id);
+          if (itemIndex !== -1) {
+            const newItems = toolbarItems.filter((_, i) => i !== itemIndex);
+            setToolbarItems(newItems);
+            toast.success('Shortcut removed', {
+              description: `${draggedItemData.label} has been removed from your shortcuts`
+            });
+          }
+        } catch (error) {
+          console.error('Error handling window drop:', error);
+        }
+      }
+    };
+
+    window.addEventListener('drop', handleWindowDrop);
+    window.addEventListener('dragover', (e) => e.preventDefault());
+
+    return () => {
+      window.removeEventListener('drop', handleWindowDrop);
+      window.removeEventListener('dragover', (e) => e.preventDefault());
+    };
+  }, [toolbarItems]);
 
   const handleReorder = (fromIndex: number, toIndex: number) => {
     if (isLocked) return;
