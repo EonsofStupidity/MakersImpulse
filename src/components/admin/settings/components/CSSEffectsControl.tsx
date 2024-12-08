@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { toast } from "sonner";
+import { UseFormReturn } from "react-hook-form";
+import { SettingsFormData } from "../types";
 
 interface CSSEffectsControlProps {
   label: string;
@@ -18,6 +19,8 @@ interface CSSEffectsControlProps {
   className?: string;
   previewClass?: string;
   description?: string;
+  form?: UseFormReturn<SettingsFormData>;
+  name?: keyof SettingsFormData;
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
@@ -31,16 +34,16 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
   onChange,
   className,
   previewClass,
-  description
+  description,
+  form,
+  name
 }) => {
-  const handleInputChange = (newValue: number) => {
-    // Ensure the value stays within bounds
-    const boundedValue = Math.min(Math.max(newValue, min), max);
-    onChange(boundedValue);
-    toast.success(`${label} updated to ${boundedValue}`, {
-      position: "top-right",
-      duration: 2000,
-    });
+  const handleInputChange = (newValue: number | string) => {
+    if (form && name) {
+      form.setValue(name, newValue.toString());
+    } else {
+      onChange(newValue);
+    }
   };
 
   const renderControl = () => {
@@ -71,13 +74,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         return (
           <Select 
             value={value.toString()} 
-            onValueChange={(val) => {
-              onChange(val);
-              toast.success(`${label} updated to ${val}`, {
-                position: "top-right",
-                duration: 2000,
-              });
-            }}
+            onValueChange={handleInputChange}
           >
             <SelectTrigger className="w-full bg-gray-700/50 border-gray-600 text-white">
               <SelectValue placeholder="Select option" />
@@ -96,13 +93,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
           <Input
             type="text"
             value={value}
-            onChange={(e) => {
-              onChange(e.target.value);
-              toast.success(`${label} updated to ${e.target.value}`, {
-                position: "top-right",
-                duration: 2000,
-              });
-            }}
+            onChange={(e) => handleInputChange(e.target.value)}
             className="w-full bg-gray-700/50 border-gray-600 text-white"
           />
         );

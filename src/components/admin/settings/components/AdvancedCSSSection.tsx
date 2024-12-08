@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { ColorPicker } from "./ColorPicker";
 import { UseFormReturn } from "react-hook-form";
 import { SettingsFormData } from "../types";
+import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface AdvancedCSSSectionProps {
   form: UseFormReturn<SettingsFormData>;
@@ -17,44 +18,81 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
       </AccordionTrigger>
       <AccordionContent className="space-y-4 pt-4">
         <div className="grid gap-4">
-          <div>
-            <label className="text-sm font-medium text-white">Border Radius</label>
-            <Input
-              {...form.register("border_radius")}
-              placeholder="0.5rem"
-              className="mt-1 bg-gray-700/50 border-gray-600"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-white">Spacing Unit</label>
-            <Input
-              {...form.register("spacing_unit")}
-              placeholder="1rem"
-              className="mt-1 bg-gray-700/50 border-gray-600"
-            />
-          </div>
-          <div>
-            <label className="text-sm font-medium text-white">Transition Duration</label>
-            <Input
-              {...form.register("transition_duration")}
-              placeholder="0.3s"
-              className="mt-1 bg-gray-700/50 border-gray-600"
-            />
-          </div>
+          <CSSEffectsControl
+            label="Border Radius"
+            type="input"
+            value={form.watch("border_radius")}
+            form={form}
+            name="border_radius"
+            description="Border radius for UI elements (e.g., 0.5rem)"
+          />
+          
+          <CSSEffectsControl
+            label="Spacing Unit"
+            type="input"
+            value={form.watch("spacing_unit")}
+            form={form}
+            name="spacing_unit"
+            description="Base spacing unit for layout (e.g., 1rem)"
+          />
+          
+          <CSSEffectsControl
+            label="Transition Duration"
+            type="slider"
+            value={parseFloat(form.watch("transition_duration"))}
+            min={0.1}
+            max={1}
+            step={0.1}
+            form={form}
+            name="transition_duration"
+            description="Duration for animations (in seconds)"
+          />
+          
           <ColorPicker
             label="Shadow Color"
             cssVar="--shadow"
-            value={form.watch("shadow_color") || "#000000"}
+            value={form.watch("shadow_color")}
             onChange={(color) => form.setValue("shadow_color", color)}
           />
-          <div>
-            <label className="text-sm font-medium text-white">Hover Scale</label>
-            <Input
-              {...form.register("hover_scale")}
-              placeholder="1.05"
-              className="mt-1 bg-gray-700/50 border-gray-600"
-            />
-          </div>
+          
+          <CSSEffectsControl
+            label="Hover Scale"
+            type="slider"
+            value={parseFloat(form.watch("hover_scale"))}
+            min={1}
+            max={1.2}
+            step={0.01}
+            form={form}
+            name="hover_scale"
+            description="Scale factor for hover effects"
+          />
+
+          <CSSEffectsControl
+            label="Box Shadow"
+            type="select"
+            value={form.watch("box_shadow") || "none"}
+            options={[
+              { label: "None", value: "none" },
+              { label: "Small", value: "sm" },
+              { label: "Medium", value: "md" },
+              { label: "Large", value: "lg" }
+            ]}
+            form={form}
+            name="box_shadow"
+            description="Shadow depth for elements"
+          />
+
+          <CSSEffectsControl
+            label="Backdrop Blur"
+            type="slider"
+            value={parseInt(form.watch("backdrop_blur") || "0")}
+            min={0}
+            max={20}
+            step={1}
+            form={form}
+            name="backdrop_blur"
+            description="Blur effect for backdrop elements (in pixels)"
+          />
         </div>
       </AccordionContent>
     </AccordionItem>
