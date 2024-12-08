@@ -15,13 +15,16 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
   hasMoreContent,
 }) => {
   return (
-    <div className="flex-1">
-      <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#ff0abe] transition-colors duration-300">
+    <div className="flex-1 max-w-full overflow-hidden">
+      <h3 className="font-bold text-4xl text-white mb-4 group-hover:text-[#ff0abe] transition-colors duration-300 line-clamp-2">
         {title}
       </h3>
       
       <div className="text-white/80 mb-6 prose prose-invert max-w-none">
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        <div 
+          className="line-clamp-3 break-words whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: content }} 
+        />
         {hasMoreContent && (
           <Button 
             variant="link" 
