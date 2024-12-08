@@ -207,8 +207,15 @@ export type Database = {
           accent_color: string | null
           border_radius: string | null
           favicon_url: string | null
+          font_family_body: string
+          font_family_heading: string
+          font_size_base: string
+          font_weight_bold: string
+          font_weight_normal: string
           hover_scale: string | null
           id: string
+          letter_spacing: string
+          line_height_base: string
           logo_url: string | null
           primary_color: string | null
           secondary_color: string | null
@@ -229,8 +236,15 @@ export type Database = {
           accent_color?: string | null
           border_radius?: string | null
           favicon_url?: string | null
+          font_family_body?: string
+          font_family_heading?: string
+          font_size_base?: string
+          font_weight_bold?: string
+          font_weight_normal?: string
           hover_scale?: string | null
           id?: string
+          letter_spacing?: string
+          line_height_base?: string
           logo_url?: string | null
           primary_color?: string | null
           secondary_color?: string | null
@@ -251,8 +265,15 @@ export type Database = {
           accent_color?: string | null
           border_radius?: string | null
           favicon_url?: string | null
+          font_family_body?: string
+          font_family_heading?: string
+          font_size_base?: string
+          font_weight_bold?: string
+          font_weight_normal?: string
           hover_scale?: string | null
           id?: string
+          letter_spacing?: string
+          line_height_base?: string
           logo_url?: string | null
           primary_color?: string | null
           secondary_color?: string | null
@@ -292,6 +313,18 @@ export type Database = {
         Returns: undefined
       }
       update_site_settings:
+        | {
+            Args: {
+              p_font_family_heading?: string
+              p_font_family_body?: string
+              p_font_size_base?: string
+              p_font_weight_normal?: string
+              p_font_weight_bold?: string
+              p_line_height_base?: string
+              p_letter_spacing?: string
+            }
+            Returns: Json
+          }
         | {
             Args: {
               p_site_title?: string
