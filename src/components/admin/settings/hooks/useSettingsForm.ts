@@ -81,9 +81,14 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
 
-      const response = data as SettingsResponse;
-      setSettings(response.data);
-      toast.success("Settings updated successfully");
+      // Explicitly type check the response structure
+      if (typeof data === 'object' && data !== null && 'success' in data && 'data' in data) {
+        const response = data as SettingsResponse;
+        setSettings(response.data);
+        toast.success("Settings updated successfully");
+      } else {
+        throw new Error("Invalid response format from server");
+      }
     } catch (error) {
       console.error("Error updating settings:", error);
       toast.error("Failed to update settings");
