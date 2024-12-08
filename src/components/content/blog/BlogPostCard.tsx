@@ -92,6 +92,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
                 content={displayContent}
                 hasMoreContent={hasMoreContent}
                 onReadMore={() => setIsExpanded(true)}
+                images={validImages}
               />
               <div className="mt-auto">
                 <BlogPostMeta
