@@ -6,11 +6,15 @@ import DatabaseSettingsCard from "@/components/admin/data-maestro/settings/Datab
 import ImportSettingsCard from "@/components/admin/data-maestro/settings/ImportSettingsCard";
 import InterfaceSettingsCard from "@/components/admin/data-maestro/settings/InterfaceSettingsCard";
 
+interface Settings {
+  [key: string]: any;
+}
+
 const Settings = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: settings = {} } = useQuery({
+  const { data: settings = {} } = useQuery<Settings>({
     queryKey: ["data-maestro-settings"],
     queryFn: async () => {
       const { data, error } = await supabase
