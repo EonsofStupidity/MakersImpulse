@@ -14,7 +14,7 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       react({
-        jsxRuntime: "automatic", // Ensure JSX runtime is properly configured
+        jsxRuntime: "automatic", // Modern JSX runtime
         babel: {
           plugins: isDevelopment
             ? ["react-refresh/babel"] // React Fast Refresh in dev mode
