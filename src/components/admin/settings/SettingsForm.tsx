@@ -20,6 +20,7 @@ import { TransitionSettingsSection } from "./components/TransitionSettingsSectio
 import { settingsSchema, type SettingsFormData } from "./types";
 import { AnimationsSection } from "./components/AnimationsSection";
 import { SettingsPreview } from "./components/SettingsPreview";
+import { FontColorSettingsSection } from "./components/FontColorSettingsSection";
 
 export const SettingsForm = () => {
   console.log("SettingsForm rendered");
@@ -45,6 +46,10 @@ export const SettingsForm = () => {
       neon_cyan: "#41f0db",
       neon_pink: "#ff0abe",
       neon_purple: "#8000ff",
+      text_primary_color: settings?.text_primary_color || "#FFFFFF",
+      text_secondary_color: settings?.text_secondary_color || "#A1A1AA",
+      text_link_color: settings?.text_link_color || "#3B82F6",
+      text_heading_color: settings?.text_heading_color || "#FFFFFF",
     },
   });
 
@@ -99,6 +104,7 @@ export const SettingsForm = () => {
                 </AccordionContent>
               </AccordionItem>
 
+              <FontColorSettingsSection form={form} />
               <FontSettingsSection />
               <TransitionSettingsSection />
               <AnimationsSection />
