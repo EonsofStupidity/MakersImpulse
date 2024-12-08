@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { uploadMedia } from "@/utils/media";
 import { Settings, SettingsResponse } from "../types";
 
-const DEFAULT_SETTINGS = {
+const DEFAULT_SETTINGS: Settings = {
   site_title: "MakersImpulse",
   tagline: "Create, Share, Inspire",
   primary_color: "#7FFFD4",
@@ -85,6 +85,11 @@ export const useSettingsForm = () => {
         p_neon_cyan: DEFAULT_SETTINGS.neon_cyan,
         p_neon_pink: DEFAULT_SETTINGS.neon_pink,
         p_neon_purple: DEFAULT_SETTINGS.neon_purple,
+        p_border_radius: DEFAULT_SETTINGS.border_radius,
+        p_spacing_unit: DEFAULT_SETTINGS.spacing_unit,
+        p_transition_duration: DEFAULT_SETTINGS.transition_duration,
+        p_shadow_color: DEFAULT_SETTINGS.shadow_color,
+        p_hover_scale: DEFAULT_SETTINGS.hover_scale,
       });
 
       if (error) throw error;
@@ -135,6 +140,11 @@ export const useSettingsForm = () => {
         p_neon_cyan: formData.neon_cyan,
         p_neon_pink: formData.neon_pink,
         p_neon_purple: formData.neon_purple,
+        p_border_radius: formData.border_radius,
+        p_spacing_unit: formData.spacing_unit,
+        p_transition_duration: formData.transition_duration,
+        p_shadow_color: formData.shadow_color,
+        p_hover_scale: formData.hover_scale,
       });
 
       if (error) throw error;

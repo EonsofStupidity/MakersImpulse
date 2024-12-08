@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 export interface Settings {
   site_title: string;
   tagline?: string;

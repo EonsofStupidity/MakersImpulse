@@ -205,52 +205,67 @@ export type Database = {
       site_settings: {
         Row: {
           accent_color: string | null
+          border_radius: string | null
           favicon_url: string | null
+          hover_scale: string | null
           id: string
           logo_url: string | null
           primary_color: string | null
           secondary_color: string | null
+          shadow_color: string | null
           site_title: string
+          spacing_unit: string | null
           tagline: string | null
           text_heading_color: string | null
           text_link_color: string | null
           text_primary_color: string | null
           text_secondary_color: string | null
           theme_mode: Database["public"]["Enums"]["theme_mode"] | null
+          transition_duration: string | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
           accent_color?: string | null
+          border_radius?: string | null
           favicon_url?: string | null
+          hover_scale?: string | null
           id?: string
           logo_url?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          shadow_color?: string | null
           site_title?: string
+          spacing_unit?: string | null
           tagline?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
+          transition_duration?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
           accent_color?: string | null
+          border_radius?: string | null
           favicon_url?: string | null
+          hover_scale?: string | null
           id?: string
           logo_url?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          shadow_color?: string | null
           site_title?: string
+          spacing_unit?: string | null
           tagline?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
+          transition_duration?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
@@ -304,6 +319,31 @@ export type Database = {
               p_text_secondary_color?: string
               p_text_link_color?: string
               p_text_heading_color?: string
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_site_title?: string
+              p_tagline?: string
+              p_primary_color?: string
+              p_secondary_color?: string
+              p_accent_color?: string
+              p_logo_url?: string
+              p_favicon_url?: string
+              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
+              p_text_primary_color?: string
+              p_text_secondary_color?: string
+              p_text_link_color?: string
+              p_text_heading_color?: string
+              p_neon_cyan?: string
+              p_neon_pink?: string
+              p_neon_purple?: string
+              p_border_radius?: string
+              p_spacing_unit?: string
+              p_transition_duration?: string
+              p_shadow_color?: string
+              p_hover_scale?: string
             }
             Returns: Json
           }
