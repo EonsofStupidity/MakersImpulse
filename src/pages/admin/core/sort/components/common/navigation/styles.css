@@ -1,0 +1,29 @@
+@layer base {
+  .nav-link {
+    @apply relative px-4 py-2 text-sm font-medium transition-all duration-300;
+  }
+
+  .nav-link::after {
+    @apply content-[''] absolute bottom-0 left-0 w-full h-0.5 bg-primary scale-x-0 transition-transform duration-300 origin-bottom-right;
+  }
+
+  .nav-link:hover::after {
+    @apply scale-x-100 origin-bottom-left;
+  }
+
+  .dropdown-menu {
+    @apply absolute top-full left-0 mt-2 w-48 rounded-md border border-border/40 bg-secondary/80 backdrop-blur-md;
+    animation: dropdownFade 0.2s ease-out;
+  }
+
+  @keyframes dropdownFade {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}

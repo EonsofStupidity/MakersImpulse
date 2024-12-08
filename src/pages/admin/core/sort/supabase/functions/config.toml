@@ -1,0 +1,4 @@
+project_id = "sexaafhdokidiblyckas"
+
+[functions.upload-blog-image]
+verify_jwt = true
