@@ -45,8 +45,32 @@ export const useSettingsForm = () => {
           throw error;
         }
         
-        console.log("Settings fetched successfully:", data);
-        setSettings(data as Settings);
+        // Convert the database response to match our Settings type
+        const settingsData: Settings = {
+          site_title: data.site_title,
+          tagline: data.tagline,
+          primary_color: data.primary_color,
+          secondary_color: data.secondary_color,
+          accent_color: data.accent_color,
+          logo_url: data.logo_url,
+          favicon_url: data.favicon_url,
+          theme_mode: data.theme_mode,
+          text_primary_color: data.text_primary_color,
+          text_secondary_color: data.text_secondary_color,
+          text_link_color: data.text_link_color,
+          text_heading_color: data.text_heading_color,
+          neon_cyan: data.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
+          neon_pink: data.neon_pink || DEFAULT_SETTINGS.neon_pink,
+          neon_purple: data.neon_purple || DEFAULT_SETTINGS.neon_purple,
+          border_radius: data.border_radius,
+          spacing_unit: data.spacing_unit,
+          transition_duration: data.transition_duration,
+          shadow_color: data.shadow_color,
+          hover_scale: data.hover_scale,
+        };
+        
+        console.log("Settings fetched successfully:", settingsData);
+        setSettings(settingsData);
       } catch (error) {
         console.error("Error in fetchSettings:", error);
         toast.error("Failed to load settings");
