@@ -1,0 +1,65 @@
+:root {
+  /* Colors */
+  --primary: #7FFFD4;
+  --secondary: #FFB6C1;
+  --accent: #E6E6FA;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A1A1AA;
+  --text-link: #3B82F6;
+  --text-heading: #FFFFFF;
+  --neon-cyan: #41f0db;
+  --neon-pink: #ff0abe;
+  --neon-purple: #8000ff;
+
+  /* Layout */
+  --border-radius: 0.5rem;
+  --spacing-unit: 1rem;
+  --transition-duration: 0.3s;
+  --shadow-color: #000000;
+  --hover-scale: 1.05;
+
+  /* Typography */
+  --font-heading: 'Inter';
+  --font-size-base: 16px;
+  --font-weight-normal: 400;
+  --font-weight-bold: 700;
+  --line-height-base: 1.5;
+  --letter-spacing: normal;
+}
+
+/* Apply variables to global elements */
+body {
+  color: var(--text-primary);
+  font-family: var(--font-family-body);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-base);
+  letter-spacing: var(--letter-spacing);
+  transition: all var(--transition-duration) ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-heading);
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-bold);
+}
+
+a {
+  color: var(--text-link);
+  transition: all var(--transition-duration) ease;
+}
+
+button, .button {
+  border-radius: var(--border-radius);
+  transition: all var(--transition-duration) ease;
+}
+
+button:hover, .button:hover {
+  transform: scale(var(--hover-scale));
+}
+
+.text-primary { color: var(--primary); }
+.text-secondary { color: var(--secondary); }
+.text-accent { color: var(--accent); }
+.bg-primary { background-color: var(--primary); }
+.bg-secondary { background-color: var(--secondary); }
+.bg-accent { background-color: var(--accent); }
