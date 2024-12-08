@@ -112,6 +112,184 @@ export type Database = {
           },
         ]
       }
+      cms_components: {
+        Row: {
+          component_type: string
+          created_by: string | null
+          default_props: Json | null
+          description: string | null
+          id: string
+          name: string
+          props_schema: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          component_type: string
+          created_by?: string | null
+          default_props?: Json | null
+          description?: string | null
+          id?: string
+          name: string
+          props_schema?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          component_type?: string
+          created_by?: string | null
+          default_props?: Json | null
+          description?: string | null
+          id?: string
+          name?: string
+          props_schema?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_components_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_content: {
+        Row: {
+          content: Json | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          metadata: Json | null
+          slug: string | null
+          status: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at: string | null
+          updated_by: string | null
+          version: number | null
+        }
+        Insert: {
+          content?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title: string
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at?: string | null
+          updated_by?: string | null
+          version?: number | null
+        }
+        Update: {
+          content?: Json | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"] | null
+          title?: string
+          type?: Database["public"]["Enums"]["content_type"]
+          updated_at?: string | null
+          updated_by?: string | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_content_relationships: {
+        Row: {
+          child_id: string | null
+          id: string
+          order_index: number | null
+          parent_id: string | null
+          relationship_type: string
+        }
+        Insert: {
+          child_id?: string | null
+          id?: string
+          order_index?: number | null
+          parent_id?: string | null
+          relationship_type: string
+        }
+        Update: {
+          child_id?: string | null
+          id?: string
+          order_index?: number | null
+          parent_id?: string | null
+          relationship_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_relationships_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_relationships_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      cms_workflows: {
+        Row: {
+          created_by: string | null
+          description: string | null
+          id: string
+          name: string
+          steps: Json
+          triggers: Json | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          steps: Json
+          triggers?: Json | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          steps?: Json
+          triggers?: Json | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cms_workflows_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       maker_projects: {
         Row: {
           category: string
@@ -618,6 +796,8 @@ export type Database = {
           }
     }
     Enums: {
+      content_status: "draft" | "published" | "archived"
+      content_type: "page" | "component" | "template" | "workflow"
       post_category:
         | "Guides"
         | "Reviews"
