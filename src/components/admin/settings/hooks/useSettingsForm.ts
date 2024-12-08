@@ -2,17 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { uploadMedia } from "@/utils/media";
-
-interface Settings {
-  site_title: string;
-  tagline?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  logo_url?: string;
-  favicon_url?: string;
-  theme_mode?: "light" | "dark" | "system";
-}
+import { Settings } from "../types";
 
 interface SettingsResponse {
   success: boolean;
@@ -90,6 +80,10 @@ export const useSettingsForm = () => {
         p_accent_color: formData.accent_color,
         p_logo_url: logo_url,
         p_favicon_url: favicon_url,
+        p_text_primary_color: formData.text_primary_color,
+        p_text_secondary_color: formData.text_secondary_color,
+        p_text_link_color: formData.text_link_color,
+        p_text_heading_color: formData.text_heading_color,
       });
 
       const { data, error } = await supabase.rpc("update_site_settings", {
@@ -100,6 +94,10 @@ export const useSettingsForm = () => {
         p_accent_color: formData.accent_color,
         p_logo_url: logo_url,
         p_favicon_url: favicon_url,
+        p_text_primary_color: formData.text_primary_color,
+        p_text_secondary_color: formData.text_secondary_color,
+        p_text_link_color: formData.text_link_color,
+        p_text_heading_color: formData.text_heading_color,
       });
 
       if (error) {
@@ -109,7 +107,6 @@ export const useSettingsForm = () => {
 
       console.log("Raw RPC response:", data);
 
-      // Type guard for response structure
       if (!data || typeof data !== 'object' || !('success' in data) || !('data' in data)) {
         console.error("Invalid response structure:", data);
         throw new Error("Invalid response format from server");
