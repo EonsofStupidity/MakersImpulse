@@ -22,8 +22,17 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
           .single();
 
         if (error) throw error;
-        setTheme(data);
-        applyThemeToDocument(data);
+
+        // Ensure all required properties are present with defaults
+        const themeData: Settings = {
+          ...data,
+          neon_cyan: data.neon_cyan || "#41f0db",
+          neon_pink: data.neon_pink || "#ff0abe",
+          neon_purple: data.neon_purple || "#8000ff",
+        };
+
+        setTheme(themeData);
+        applyThemeToDocument(themeData);
       } catch (error) {
         console.error("Error fetching theme:", error);
         toast.error("Failed to load theme settings");
@@ -44,8 +53,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         },
         (payload) => {
           const newSettings = payload.new as Settings;
-          setTheme(newSettings);
-          applyThemeToDocument(newSettings);
+          const themeData: Settings = {
+            ...newSettings,
+            neon_cyan: newSettings.neon_cyan || "#41f0db",
+            neon_pink: newSettings.neon_pink || "#ff0abe",
+            neon_purple: newSettings.neon_purple || "#8000ff",
+          };
+          setTheme(themeData);
+          applyThemeToDocument(themeData);
         }
       )
       .subscribe();
@@ -79,7 +94,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
     // Apply typography
     document.body.style.fontFamily = settings.font_family_body;
-    document.documentElement.style.setProperty('--font-heading', settings.font_family_heading);
+    root.style.setProperty('--font-heading', settings.font_family_heading);
     root.style.setProperty('--font-size-base', settings.font_size_base);
     root.style.setProperty('--font-weight-normal', settings.font_weight_normal);
     root.style.setProperty('--font-weight-bold', settings.font_weight_bold);
