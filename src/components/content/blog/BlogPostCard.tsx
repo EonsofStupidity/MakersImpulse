@@ -41,18 +41,18 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const featuredImage = post.featured_image || (validImages.length > 0 ? validImages[0] : null);
 
   return (
-    <div className="relative w-full mb-24">
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="relative w-full mb-24"
+    >
       <ImageValidation
         images={images}
         onValidImagesChange={setValidImages}
         onLoadingChange={setIsLoading}
       />
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]"
-      >
+      <div className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]">
         {isLoading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-[#ff0abe] animate-spin" />
@@ -112,7 +112,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
             />
           </div>
         )}
-      </motion.div>
+      </div>
 
       <ExpandedPost
         isOpen={isExpanded}
@@ -129,7 +129,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
           onIndexChange={setCurrentImageIndex}
         />
       )}
-    </div>
+    </motion.div>
   );
 };
 
