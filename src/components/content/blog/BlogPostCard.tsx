@@ -9,7 +9,7 @@ import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
 import ImageValidation from './components/ImageValidation';
 import { useCyberpunkViewer } from './components/viewer/useCyberpunkViewer';
-import CyberpunkBlogViewer from './components/CyberpunkBlogViewer';
+import CyberpunkBlogViewer from './components/viewer/CyberpunkBlogViewer';
 
 interface BlogPostCardProps {
   post: {
@@ -42,6 +42,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   };
 
   const handleCardClick = () => {
+    console.log('Card clicked, opening viewer with content:', post.content);
     openViewer(post.content);
   };
 
