@@ -3,6 +3,9 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, Play } from 'lucide-react';
 import { useCMS } from '../core/CMSProvider';
+import { WorkflowEditor } from '@/pages/admin/core/sort/csv/workflow/WorkflowEditor';
+import { WorkflowProgress } from '@/pages/admin/core/workflows/WorkflowProgress';
+import { WorkflowMonitoring } from '@/pages/admin/core/workflows/WorkflowMonitoring';
 
 export const WorkflowList = () => {
   const { workflows, isLoading } = useCMS();
