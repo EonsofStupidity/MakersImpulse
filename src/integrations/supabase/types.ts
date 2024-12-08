@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      active_2fa_sessions: {
+        Row: {
+          created_at: string | null
+          device_name: string
+          id: string
+          ip_address: string | null
+          is_active: boolean | null
+          last_activity: string | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_name: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_name?: string
+          id?: string
+          ip_address?: string | null
+          is_active?: boolean | null
+          last_activity?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "active_2fa_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -169,11 +210,15 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
+          gamification_enabled: boolean | null
           id: string
           is_banned: boolean | null
           last_seen: string | null
           location: string | null
+          onboarding_completed: boolean | null
           role: Database["public"]["Enums"]["user_role"] | null
+          two_factor_enabled: boolean | null
+          two_factor_secret: string | null
           updated_at: string
           username: string | null
           website: string | null
@@ -186,11 +231,15 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          gamification_enabled?: boolean | null
           id: string
           is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
+          onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -203,11 +252,15 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          gamification_enabled?: boolean | null
           id?: string
           is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
+          onboarding_completed?: boolean | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          two_factor_enabled?: boolean | null
+          two_factor_secret?: string | null
           updated_at?: string
           username?: string | null
           website?: string | null
@@ -216,6 +269,47 @@ export type Database = {
           {
             foreignKeyName: "profiles_banned_by_fkey"
             columns: ["banned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recovery_codes: {
+        Row: {
+          attempts: number | null
+          code: string
+          created_at: string | null
+          expires_at: string
+          id: string
+          used: boolean | null
+          used_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number | null
+          code: string
+          created_at?: string | null
+          expires_at: string
+          id?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number | null
+          code?: string
+          created_at?: string | null
+          expires_at?: string
+          id?: string
+          used?: boolean | null
+          used_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recovery_codes_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -314,6 +408,44 @@ export type Database = {
           {
             foreignKeyName: "site_settings_updated_by_fkey"
             columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      trusted_devices: {
+        Row: {
+          created_at: string | null
+          device_hash: string
+          device_name: string
+          expires_at: string
+          id: string
+          last_used: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          device_hash: string
+          device_name: string
+          expires_at: string
+          id?: string
+          last_used?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          device_hash?: string
+          device_name?: string
+          expires_at?: string
+          id?: string
+          last_used?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trusted_devices_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
