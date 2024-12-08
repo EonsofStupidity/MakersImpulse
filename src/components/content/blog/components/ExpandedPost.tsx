@@ -1,27 +1,40 @@
 import React from 'react';
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { BlogPostContent } from './BlogPostContent';
 import { BlogPostMeta } from './BlogPostMeta';
 
 interface ExpandedPostProps {
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  readTime?: number;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+  post: {
+    title: string;
+    content: string;
+    published_at?: string | null;
+    views_count?: number | null;
+  };
 }
 
 export const ExpandedPost: React.FC<ExpandedPostProps> = ({
-  title,
-  content,
-  author,
-  date,
-  readTime,
+  isOpen,
+  onOpenChange,
+  post
 }) => {
   return (
-    <article className="space-y-6">
-      <h1 className="text-3xl font-bold text-white">{title}</h1>
-      <BlogPostMeta author={author} date={date} readTime={readTime} />
-      <BlogPostContent content={content} />
-    </article>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl bg-black/90 border-[#ff0abe]/20">
+        <div className="space-y-6">
+          <BlogPostContent
+            title={post.title}
+            content={post.content}
+          />
+          <BlogPostMeta
+            publishedAt={post.published_at}
+            viewsCount={post.views_count}
+          />
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
+
+export default ExpandedPost;

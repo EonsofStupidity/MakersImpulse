@@ -1,8 +1,13 @@
 import { mainNavigation } from "@/config/navigation";
 import type { Session } from "@supabase/auth-helpers-react";
 
+interface NavigationItem {
+  requiresAuth?: boolean;
+  [key: string]: any;
+}
+
 export const getFilteredNavigation = (session: Session | null) => {
-  return mainNavigation.filter(item => !item.requiresAuth || session);
+  return mainNavigation.filter((item: NavigationItem) => !item.requiresAuth || session);
 };
 
 export const getNavigationItemIcon = (Icon: any) => {

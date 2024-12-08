@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Loader2 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import ImageGallery from './components/ImageGallery';
-import ExpandedPost from './components/ExpandedPost';
-import ImageCarouselDialog from './components/ImageCarouselDialog';
-import BlogPostContent from './components/BlogPostContent';
-import BlogPostMeta from './components/BlogPostMeta';
-import ImageValidation from './components/ImageValidation';
+import { ImageGallery } from './components/ImageGallery';
+import { ExpandedPost } from './components/ExpandedPost';
+import { ImageCarouselDialog } from './components/ImageCarouselDialog';
+import { BlogPostContent } from './components/BlogPostContent';
+import { BlogPostMeta } from './components/BlogPostMeta';
+import { ImageValidation } from './components/ImageValidation';
 import { useCyberpunkViewer } from './components/viewer/useCyberpunkViewer';
 import CyberpunkBlogViewer from './components/viewer/CyberpunkBlogViewer';
 

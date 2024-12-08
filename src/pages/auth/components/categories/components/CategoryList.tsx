@@ -1,38 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
+import React from 'react';
 import { supabase } from "@/integrations/supabase/client";
-import { Category } from "../types";
+import { useQuery } from "@tanstack/react-query";
 
 export const CategoryList = () => {
-  const { data: categories, isLoading, error } = useQuery({
+  const { data: categories, isLoading } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('categories')
+        .from('cms_categories')  // Updated to use correct table name
         .select('*');
       
       if (error) throw error;
-      
-      // Convert the id to string to match our Category type
-      return (data || []).map(category => ({
-        ...category,
-        id: category.id.toString()
-      })) as Category[];
+      return data;
     }
   });
 
-  if (isLoading) return <div>Loading categories...</div>;
-  if (error) return <div>Error loading categories: {(error as Error).message}</div>;
+  if (isLoading) return <div>Loading...</div>;
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Categories</h1>
-      <ul className="mt-4">
-        {categories?.map((category) => (
-          <li key={category.id} className="py-2">
-            {category.name}
-          </li>
-        ))}
-      </ul>
+      {categories?.map((category) => (
+        <div key={category.id}>{category.name}</div>
+      ))}
     </div>
   );
 };
+
+export default CategoryList;

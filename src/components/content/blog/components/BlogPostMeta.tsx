@@ -1,24 +1,29 @@
 import React from 'react';
 import { format } from 'date-fns';
+import { Eye } from 'lucide-react';
 
 interface BlogPostMetaProps {
-  author: string;
-  date: string;
-  readTime?: number;
+  publishedAt?: string | null;
+  viewsCount?: number | null;
 }
 
-export const BlogPostMeta: React.FC<BlogPostMetaProps> = ({ author, date, readTime }) => {
+export const BlogPostMeta: React.FC<BlogPostMetaProps> = ({
+  publishedAt,
+  viewsCount
+}) => {
   return (
     <div className="flex items-center gap-4 text-sm text-zinc-400">
-      <span>{author}</span>
-      <span>•</span>
-      <span>{format(new Date(date), 'MMM dd, yyyy')}</span>
-      {readTime && (
-        <>
-          <span>•</span>
-          <span>{readTime} min read</span>
-        </>
+      {publishedAt && (
+        <span>{format(new Date(publishedAt), 'MMM dd, yyyy')}</span>
+      )}
+      {viewsCount !== undefined && viewsCount !== null && (
+        <span className="flex items-center gap-1">
+          <Eye className="w-4 h-4" />
+          {viewsCount}
+        </span>
       )}
     </div>
   );
 };
+
+export default BlogPostMeta;
