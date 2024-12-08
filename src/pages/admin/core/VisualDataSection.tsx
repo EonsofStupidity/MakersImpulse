@@ -4,7 +4,7 @@ import { Upload, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useState } from "react";
-import { UnifiedDataImport } from "../visual-builder/UnifiedDataImport";
+import { UnifiedDataImport } from "@/components/admin/data-maestro/import/UnifiedDataImport";
 
 export const VisualDataSection = () => {
   const navigate = useNavigate();

@@ -1,4 +1,5 @@
-import { TransformationRuleEditor } from "@/components/admin/data-maestro/transformation/TransformationRuleEditor";
+import React from 'react';
+import TransformationRuleEditor from "@/components/admin/data-maestro/transformation/TransformationRuleEditor";
 import { useToast } from "@/components/ui/use-toast";
 import { TransformationRule } from "@/lib/transformations/types";
 

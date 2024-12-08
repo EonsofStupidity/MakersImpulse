@@ -1,25 +1,52 @@
-import { supabase } from '@/integrations/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 
-export const addRevisionEntry = async (
-  entityType: string,
-  entityId: string,
-  changes: any,
-  revisionType: string
-) => {
-  const { data, error } = await supabase
-    .from('revision_history')
-    .insert({
-      entity_type: entityType,
-      entity_id: entityId,
-      changes,
-      revision_type: revisionType,
-      created_by: supabase.auth.getUser()?.data.user?.id
-    });
+interface UserResponse {
+  data: {
+    user: {
+      id: string;
+      email: string;
+    };
+  };
+}
 
-  if (error) {
-    console.error('Failed to add revision entry:', error);
-    throw error;
+export const getRevisionAuthor = async (userId: string) => {
+  try {
+    const response = await supabase.auth.getUser();
+    return response.data.user;
+  } catch (error) {
+    console.error("Error fetching revision author:", error);
+    return null;
   }
+}
 
-  return data;
-};
+export const getRevisionHistory = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('revisions')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching revision history:", error);
+    return [];
+  }
+}
+
+export const addRevision = async (revision: any) => {
+  try {
+    const { error } = await supabase
+      .from('revisions')
+      .insert([revision]);
+
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    console.error("Error adding revision:", error);
+  }
+}

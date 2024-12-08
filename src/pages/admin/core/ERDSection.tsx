@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import ERDVisualizer from "../schema/ERDVisualizer";
+import ERDVisualizer from "@/components/admin/schema/ERDVisualizer";
 import { supabase } from "@/integrations/supabase/client";
 
 export const ERDSection = () => {
