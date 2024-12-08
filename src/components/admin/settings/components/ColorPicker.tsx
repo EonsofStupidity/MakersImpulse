@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -19,6 +19,8 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
   onChange,
   className 
 }) => {
+  const colorInputRef = useRef<HTMLInputElement>(null);
+
   const handleColorChange = (newColor: string) => {
     onChange(newColor);
     // Update CSS variable in real-time
@@ -29,6 +31,10 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
     toast.success(`${label} updated to ${newColor}`, {
       description: `CSS Variable: ${cssVar || 'none'}`,
     });
+  };
+
+  const handleColorPickerClick = () => {
+    colorInputRef.current?.click();
   };
   
   return (
@@ -56,11 +62,17 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({
           />
         </div>
         <div className="relative group">
+          <div
+            onClick={handleColorPickerClick}
+            className="w-12 h-12 rounded-lg cursor-pointer transition-all hover:scale-110 border border-gray-600"
+            style={{ backgroundColor: value }}
+          />
           <Input
+            ref={colorInputRef}
             type="color"
             value={value}
             onChange={(e) => handleColorChange(e.target.value)}
-            className="w-12 h-12 p-1 rounded-lg cursor-pointer bg-gray-700/50 border-gray-600 transition-all hover:scale-110"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
           />
           <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-black/80 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
             Click to pick color
