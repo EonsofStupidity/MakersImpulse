@@ -37,7 +37,7 @@ export const useToolbarHandlers = ({
 
       toast.success("Shortcut added to toolbar", {
         description: `${draggedItem.label} has been added`,
-        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+        icon: () => <CheckCircle2 className="h-4 w-4 text-green-500" />, // Function wrapping JSX
       });
     },
     [draggedItem, items, onItemsChange]
