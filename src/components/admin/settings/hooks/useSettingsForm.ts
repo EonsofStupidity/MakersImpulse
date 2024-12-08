@@ -22,6 +22,13 @@ const DEFAULT_SETTINGS: Settings = {
   transition_duration: "0.3s",
   shadow_color: "#000000",
   hover_scale: "1.05",
+  font_family_heading: "Inter",
+  font_family_body: "Inter",
+  font_size_base: "16px",
+  font_weight_normal: "400",
+  font_weight_bold: "700",
+  line_height_base: "1.5",
+  letter_spacing: "normal",
 };
 
 export const useSettingsForm = () => {

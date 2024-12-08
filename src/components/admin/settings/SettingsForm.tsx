@@ -58,6 +58,13 @@ export const SettingsForm = () => {
       transition_duration: settings?.transition_duration || "0.3s",
       shadow_color: settings?.shadow_color || "#000000",
       hover_scale: settings?.hover_scale || "1.05",
+      font_family_heading: settings?.font_family_heading || "Inter",
+      font_family_body: settings?.font_family_body || "Inter",
+      font_size_base: settings?.font_size_base || "16px",
+      font_weight_normal: settings?.font_weight_normal || "400",
+      font_weight_bold: settings?.font_weight_bold || "700",
+      line_height_base: settings?.line_height_base || "1.5",
+      letter_spacing: settings?.letter_spacing || "normal",
     },
   });
 
@@ -125,7 +132,7 @@ export const SettingsForm = () => {
               <FontColorSettingsSection form={form} />
               <NeonColorsSection form={form} />
               <AdvancedCSSSection form={form} />
-              <FontSettingsSection />
+              <FontSettingsSection form={form} />
               <TransitionSettingsSection />
               <AnimationsSection />
             </Accordion>
