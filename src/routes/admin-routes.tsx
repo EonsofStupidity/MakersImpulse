@@ -10,31 +10,31 @@ const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
 
 export const adminRoutes: RouteObject[] = [
   {
-    path: "/admin/dashboard",
+    path: "dashboard",
     element: <AdminDashboard />,
   },
   {
-    path: "/admin",
-    element: <AdminDashboard />, // Add default route for /admin
+    path: "",  // Empty path for the root /admin route
+    element: <AdminDashboard />,
   },
   {
-    path: "/admin/posts",
+    path: "posts",
     element: <AdminPosts />,
   },
   {
-    path: "/admin/settings",
+    path: "settings",
     element: <AdminSettings />,
   },
   {
-    path: "/admin/settings/activity-logs",
+    path: "settings/activity-logs",
     element: <ActivityLogs />,
   },
   {
-    path: "/admin/settings/content-types",
+    path: "settings/content-types",
     element: <ContentTypes />,
   },
   {
-    path: "/admin/users",
+    path: "users",
     element: <AdminUsers />,
   },
 ];

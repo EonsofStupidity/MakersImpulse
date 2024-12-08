@@ -11,20 +11,22 @@ export const AppRoutes = () => {
       <Routes>
         {PublicRoutes()}
         {ProtectedRoutes()}
-        {/* Wrap admin routes with AuthGuard requiring admin role */}
-        <Route path="/admin/*" element={
-          <AuthGuard requireAuth={true} requiredRole="admin">
-            <Routes>
-              {adminRoutes.map((route) => (
-                <Route 
-                  key={route.path}
-                  path={route.path.replace('/admin/', '')} // Remove /admin/ prefix since we're already under /admin/*
-                  element={route.element}
-                />
-              ))}
-            </Routes>
-          </AuthGuard>
-        } />
+        <Route
+          path="admin/*"
+          element={
+            <AuthGuard requireAuth={true} requiredRole="admin">
+              <Routes>
+                {adminRoutes.map((route) => (
+                  <Route
+                    key={route.path}
+                    path={route.path}
+                    element={route.element}
+                  />
+                ))}
+              </Routes>
+            </AuthGuard>
+          }
+        />
       </Routes>
     </PageTransition>
   );
