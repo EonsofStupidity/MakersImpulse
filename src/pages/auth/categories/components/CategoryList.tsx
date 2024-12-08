@@ -7,12 +7,11 @@ export const CategoryList = () => {
     queryKey: ['categories'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('categories')
+        .from('cms_categories')
         .select('*');
       
       if (error) throw error;
       
-      // Convert the id to string to match our Category type
       return (data || []).map(category => ({
         ...category,
         id: category.id.toString()
@@ -36,3 +35,5 @@ export const CategoryList = () => {
     </div>
   );
 };
+
+export default CategoryList;
