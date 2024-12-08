@@ -16,6 +16,7 @@ import { AnimationsSection } from "./components/AnimationsSection";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { FontColorSettingsSection } from "./components/FontColorSettingsSection";
 import { NeonColorsSection } from "./components/NeonColorsSection";
+import { AdvancedCSSSection } from "./components/AdvancedCSSSection";
 import { ResetDialog } from "./components/ResetDialog";
 import { toast } from "sonner";
 
@@ -52,6 +53,11 @@ export const SettingsForm = () => {
       text_secondary_color: settings?.text_secondary_color || "#A1A1AA",
       text_link_color: settings?.text_link_color || "#3B82F6",
       text_heading_color: settings?.text_heading_color || "#FFFFFF",
+      border_radius: settings?.border_radius || "0.5rem",
+      spacing_unit: settings?.spacing_unit || "1rem",
+      transition_duration: settings?.transition_duration || "0.3s",
+      shadow_color: settings?.shadow_color || "#000000",
+      hover_scale: settings?.hover_scale || "1.05",
     },
   });
 
@@ -118,6 +124,7 @@ export const SettingsForm = () => {
               />
               <FontColorSettingsSection form={form} />
               <NeonColorsSection form={form} />
+              <AdvancedCSSSection form={form} />
               <FontSettingsSection />
               <TransitionSettingsSection />
               <AnimationsSection />

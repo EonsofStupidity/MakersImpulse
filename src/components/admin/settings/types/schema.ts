@@ -13,6 +13,11 @@ export const settingsSchema = z.object({
   text_secondary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color format"),
   text_link_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color format"),
   text_heading_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid color format"),
+  border_radius: z.string().optional(),
+  spacing_unit: z.string().optional(),
+  transition_duration: z.string().optional(),
+  shadow_color: z.string().optional(),
+  hover_scale: z.string().optional(),
 });
 
 export type SettingsFormData = z.infer<typeof settingsSchema>;

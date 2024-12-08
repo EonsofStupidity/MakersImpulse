@@ -16,6 +16,11 @@ export interface Settings {
   neon_cyan: string;
   neon_pink: string;
   neon_purple: string;
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
 }
 
 export interface SettingsResponse {

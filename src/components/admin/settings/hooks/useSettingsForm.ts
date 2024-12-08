@@ -17,6 +17,11 @@ const DEFAULT_SETTINGS = {
   neon_cyan: "#41f0db",
   neon_pink: "#ff0abe",
   neon_purple: "#8000ff",
+  border_radius: "0.5rem",
+  spacing_unit: "1rem",
+  transition_duration: "0.3s",
+  shadow_color: "#000000",
+  hover_scale: "1.05",
 };
 
 export const useSettingsForm = () => {
@@ -41,7 +46,7 @@ export const useSettingsForm = () => {
         }
         
         console.log("Settings fetched successfully:", data);
-        setSettings(data);
+        setSettings(data as Settings);
       } catch (error) {
         console.error("Error in fetchSettings:", error);
         toast.error("Failed to load settings");
@@ -77,6 +82,9 @@ export const useSettingsForm = () => {
         p_text_secondary_color: DEFAULT_SETTINGS.text_secondary_color,
         p_text_link_color: DEFAULT_SETTINGS.text_link_color,
         p_text_heading_color: DEFAULT_SETTINGS.text_heading_color,
+        p_neon_cyan: DEFAULT_SETTINGS.neon_cyan,
+        p_neon_pink: DEFAULT_SETTINGS.neon_pink,
+        p_neon_purple: DEFAULT_SETTINGS.neon_purple,
       });
 
       if (error) throw error;
@@ -124,6 +132,9 @@ export const useSettingsForm = () => {
         p_text_secondary_color: formData.text_secondary_color,
         p_text_link_color: formData.text_link_color,
         p_text_heading_color: formData.text_heading_color,
+        p_neon_cyan: formData.neon_cyan,
+        p_neon_pink: formData.neon_pink,
+        p_neon_purple: formData.neon_purple,
       });
 
       if (error) throw error;
