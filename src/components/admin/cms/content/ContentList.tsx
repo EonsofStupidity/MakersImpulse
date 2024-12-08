@@ -1,13 +1,11 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Plus, Edit, Archive } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCMS } from '../core/CMSProvider';
 import type { CMSContent } from '../core/types';
+import { ContentListHeader } from './list/ContentListHeader';
+import { ContentListItem } from './list/ContentListItem';
 
 export const ContentList = () => {
   const { setActiveContent } = useCMS();
@@ -31,24 +29,25 @@ export const ContentList = () => {
     },
   });
 
-  const getStatusColor = (status: CMSContent['status']) => {
-    switch (status) {
-      case 'published':
-        return 'bg-green-500/10 text-green-500';
-      case 'draft':
-        return 'bg-yellow-500/10 text-yellow-500';
-      case 'archived':
-        return 'bg-gray-500/10 text-gray-500';
-      default:
-        return 'bg-gray-500/10 text-gray-500';
-    }
+  const handleNewContent = () => {
+    setActiveContent({
+      id: '',
+      type: 'page',
+      title: '',
+      content: {},
+      metadata: {},
+      status: 'draft',
+      version: 1,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    });
   };
 
   if (isLoading) {
     return (
       <div className="animate-pulse space-y-4">
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="p-4 h-24" />
+          <div key={i} className="h-24 bg-muted rounded-lg" />
         ))}
       </div>
     );
@@ -56,57 +55,14 @@ export const ContentList = () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Content</h2>
-        <Button>
-          <Plus className="w-4 h-4 mr-2" />
-          New Content
-        </Button>
-      </div>
-
+      <ContentListHeader onNewContent={handleNewContent} />
       <div className="grid gap-4">
         {content.map((item) => (
-          <Card key={item.id} className="p-4 hover:shadow-lg transition-shadow">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="font-medium">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">
-                  Last updated: {new Date(item.updated_at).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge className={getStatusColor(item.status)}>
-                  {item.status}
-                </Badge>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => setActiveContent(item)}
-                >
-                  <Edit className="w-4 h-4" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  onClick={() => {
-                    toast.promise(
-                      supabase
-                        .from('cms_content')
-                        .update({ status: 'archived' })
-                        .eq('id', item.id),
-                      {
-                        loading: 'Archiving...',
-                        success: 'Content archived',
-                        error: 'Failed to archive'
-                      }
-                    );
-                  }}
-                >
-                  <Archive className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </Card>
+          <ContentListItem
+            key={item.id}
+            item={item}
+            onEdit={setActiveContent}
+          />
         ))}
       </div>
     </div>
