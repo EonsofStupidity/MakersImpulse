@@ -16,6 +16,7 @@ import { useTheme } from "@/components/theme/ThemeContext";
 import { TextStylesSection } from "./sections/TextStylesSection";
 import { ColorSection } from "./sections/ColorSection";
 import { LayoutSection } from "./sections/LayoutSection";
+import { AnimationsSection } from "./sections/AnimationsSection";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -65,6 +66,7 @@ export const SettingsForm = () => {
       letter_spacing: settings?.letter_spacing || "normal",
       box_shadow: settings?.box_shadow || "none",
       backdrop_blur: settings?.backdrop_blur || "0",
+      transition_type: settings?.transition_type || "fade",
     },
   });
 
@@ -97,6 +99,7 @@ export const SettingsForm = () => {
           font_weight_bold: formValues.font_weight_bold || "700",
           line_height_base: formValues.line_height_base || "1.5",
           letter_spacing: formValues.letter_spacing || "normal",
+          transition_type: formValues.transition_type || "fade",
           ...formValues, // Add any optional fields
         };
         
@@ -174,6 +177,7 @@ export const SettingsForm = () => {
               <ColorSection form={form} />
               <TextStylesSection form={form} />
               <LayoutSection form={form} />
+              <AnimationsSection form={form} />
             </Accordion>
           </form>
         </Card>
