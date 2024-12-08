@@ -6,9 +6,10 @@ import { useCMS } from '../core/CMSProvider';
 import type { CMSContent } from '../core/types';
 import { ContentListHeader } from './list/ContentListHeader';
 import { ContentListItem } from './list/ContentListItem';
+import { ContentEditor } from './editor/ContentEditor';
 
 export const ContentList = () => {
-  const { setActiveContent } = useCMS();
+  const { activeContent, setActiveContent } = useCMS();
 
   const { data: content = [], isLoading } = useQuery({
     queryKey: ['cms-content'],
@@ -42,6 +43,10 @@ export const ContentList = () => {
       updated_at: new Date().toISOString(),
     });
   };
+
+  if (activeContent) {
+    return <ContentEditor />;
+  }
 
   if (isLoading) {
     return (
