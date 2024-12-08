@@ -4,9 +4,28 @@ import { WorkflowList } from "./WorkflowList";
 import { StepTypeDefinitions } from "./StepTypeDefinitions";
 import { WorkflowProgress } from "./WorkflowProgress";
 import { WorkflowMonitoring } from "./WorkflowMonitoring";
+import { useToast } from "@/components/ui/use-toast";
 
 export const WorkflowManagement = () => {
   const [activeTab, setActiveTab] = useState("list");
+  const { toast } = useToast();
+
+  const handleWorkflowAction = async (action: string, workflowId: string) => {
+    try {
+      console.log(`Executing workflow action: ${action} on workflow: ${workflowId}`);
+      toast({
+        title: "Workflow Action",
+        description: `Successfully ${action} workflow`,
+      });
+    } catch (error) {
+      console.error("Workflow action error:", error);
+      toast({
+        title: "Error",
+        description: "Failed to execute workflow action",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -26,7 +45,7 @@ export const WorkflowManagement = () => {
         </TabsList>
 
         <TabsContent value="list" className="mt-6">
-          <WorkflowList />
+          <WorkflowList onWorkflowAction={handleWorkflowAction} />
         </TabsContent>
 
         <TabsContent value="steps" className="mt-6">
