@@ -4,7 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Upload, Wrench, Database, FolderTree } from "lucide-react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import ComponentWizard from "./ComponentWizard";
-import { ImportConfigurationWizard } from "../import/ImportConfigurationWizard";
+import { ImportConfigurationWizard } from "./csv/ImportConfigurationWizard";
 
 const ComponentManagement = () => {
   const [activeTab, setActiveTab] = useState<"add" | "import">("add");
