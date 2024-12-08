@@ -8,6 +8,7 @@ import ImageCarouselDialog from './components/ImageCarouselDialog';
 import BlogPostContent from './components/BlogPostContent';
 import BlogPostMeta from './components/BlogPostMeta';
 import ImageValidation from './components/ImageValidation';
+import { useCyberpunkViewer } from './components/viewer/useCyberpunkViewer';
 
 interface BlogPostCardProps {
   post: {
@@ -28,6 +29,7 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [validImages, setValidImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { openViewer } = useCyberpunkViewer();
   
   const displayContent = post.content.slice(0, 350);
   const hasMoreContent = post.content.length > 350;
@@ -36,6 +38,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
     setShowCarousel(true);
+  };
+
+  const handleCardClick = () => {
+    openViewer(post.content);
   };
 
   const featuredImage = post.featured_image || (validImages.length > 0 ? validImages[0] : null);
@@ -52,7 +58,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         onLoadingChange={setIsLoading}
       />
 
-      <div className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px]">
+      <div 
+        onClick={handleCardClick}
+        className="group relative bg-black/40 backdrop-blur-xl rounded-xl border border-white/10 hover:border-[#ff0abe]/50 transition-all duration-300 overflow-visible min-h-[400px] cursor-pointer"
+      >
         {isLoading ? (
           <div className="absolute inset-0 flex items-center justify-center">
             <Loader2 className="w-8 h-8 text-[#ff0abe] animate-spin" />
@@ -105,7 +114,10 @@ const BlogPostCard: React.FC<BlogPostCardProps> = ({ post }) => {
         </div>
 
         {!isLoading && validImages.length > 0 && (
-          <div className="absolute -bottom-32 left-0 right-0 z-30">
+          <div 
+            className="absolute -bottom-32 left-0 right-0 z-30"
+            onClick={(e) => e.stopPropagation()} // Prevent card click when clicking gallery
+          >
             <ImageGallery 
               images={validImages} 
               onImageClick={handleImageClick}
