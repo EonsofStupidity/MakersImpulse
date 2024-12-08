@@ -20,18 +20,31 @@ const PostsManagement = () => {
 
   const handleDelete = async (postId: string) => {
     try {
-      console.log('Attempting to delete post:', postId);
-      const { error } = await supabase
+      console.log('Attempting to delete post and associated media:', postId);
+      
+      // First, delete associated media records
+      const { error: mediaError } = await supabase
+        .from('media')
+        .delete()
+        .eq('blog_post_id', postId);
+
+      if (mediaError) {
+        console.error('Error deleting media:', mediaError);
+        throw mediaError;
+      }
+
+      // Then delete the blog post
+      const { error: postError } = await supabase
         .from('blog_posts')
         .delete()
         .eq('id', postId);
 
-      if (error) {
-        console.error('Error deleting post:', error);
-        throw error;
+      if (postError) {
+        console.error('Error deleting post:', postError);
+        throw postError;
       }
 
-      console.log('Post deleted successfully:', postId);
+      console.log('Post and associated media deleted successfully:', postId);
       toast.success('Post deleted successfully');
       refetch();
     } catch (error) {
