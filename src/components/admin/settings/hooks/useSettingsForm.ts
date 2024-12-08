@@ -69,7 +69,7 @@ export const useSettingsForm = () => {
     console.log("Resetting settings to default...");
     setIsSaving(true);
     try {
-      const { data, error } = await supabase.rpc("update_site_settings", {
+      const { data, error } = await supabase.rpc('update_site_settings', {
         p_site_title: DEFAULT_SETTINGS.site_title,
         p_tagline: DEFAULT_SETTINGS.tagline,
         p_primary_color: DEFAULT_SETTINGS.primary_color,
@@ -83,9 +83,10 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
       
-      console.log("Settings reset successfully:", data);
-      setSettings(data.data);
-      return data;
+      const response = data as SettingsResponse;
+      console.log("Settings reset successfully:", response);
+      setSettings(response.data);
+      return response;
     } catch (error) {
       console.error("Error resetting settings:", error);
       throw error;
@@ -113,7 +114,7 @@ export const useSettingsForm = () => {
         console.log("Favicon uploaded successfully:", favicon_url);
       }
 
-      const { data, error } = await supabase.rpc("update_site_settings", {
+      const { data, error } = await supabase.rpc('update_site_settings', {
         p_site_title: formData.site_title,
         p_tagline: formData.tagline,
         p_primary_color: formData.primary_color,
@@ -129,8 +130,9 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
 
-      console.log("Settings updated successfully:", data);
-      setSettings(data.data);
+      const response = data as SettingsResponse;
+      console.log("Settings updated successfully:", response);
+      setSettings(response.data);
       toast.success("Settings updated successfully");
     } catch (error) {
       console.error("Error in handleSettingsUpdate:", error);
