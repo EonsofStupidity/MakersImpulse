@@ -16,6 +16,7 @@ import { ColorSection } from "./sections/ColorSection";
 import { TextStylesSection } from "./sections/TextStylesSection";
 import { LayoutSection } from "./sections/LayoutSection";
 import { AnimationsSection } from "./sections/AnimationsSection";
+import { AdvancedEffectsSection } from "./sections/AdvancedEffectsSection";
 import { toast } from "sonner";
 
 export const SettingsForm = () => {
@@ -140,6 +141,7 @@ export const SettingsForm = () => {
               <TextStylesSection form={form} />
               <LayoutSection form={form} />
               <AnimationsSection form={form} />
+              <AdvancedEffectsSection form={form} />
             </Accordion>
           </form>
         </Card>
