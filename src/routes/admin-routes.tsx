@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import { RouteObject } from "react-router-dom";
+import { AdminLayout } from "@/components/admin/layouts/AdminLayout";
 
 const AdminDashboard = lazy(() => import("@/pages/admin/dashboard"));
 const AdminPosts = lazy(() => import("@/pages/admin/posts"));
@@ -11,35 +12,36 @@ const PostEditor = lazy(() => import("@/pages/admin/content-management/editor"))
 
 export const adminRoutes: RouteObject[] = [
   {
-    path: "dashboard",
-    element: <AdminDashboard />,
-  },
-  {
-    path: "",  // Empty path for the root /admin route
-    element: <AdminDashboard />,
-  },
-  {
-    path: "posts",
-    element: <AdminPosts />,
-  },
-  {
-    path: "settings",
-    element: <AdminSettings />,
-  },
-  {
-    path: "settings/activity-logs",
-    element: <ActivityLogs />,
-  },
-  {
-    path: "settings/content-types",
-    element: <ContentTypes />,
-  },
-  {
-    path: "users",
-    element: <AdminUsers />,
-  },
-  {
-    path: "content-management/editor",
-    element: <PostEditor />,
+    element: <AdminLayout />,
+    children: [
+      {
+        path: "",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "posts",
+        element: <AdminPosts />,
+      },
+      {
+        path: "settings",
+        element: <AdminSettings />,
+      },
+      {
+        path: "settings/activity-logs",
+        element: <ActivityLogs />,
+      },
+      {
+        path: "settings/content-types",
+        element: <ContentTypes />,
+      },
+      {
+        path: "users",
+        element: <AdminUsers />,
+      },
+      {
+        path: "content-management/editor",
+        element: <PostEditor />,
+      }
+    ]
   }
 ];
