@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export interface Settings {
   site_title: string;
   tagline?: string;
@@ -11,4 +13,12 @@ export interface Settings {
   text_secondary_color: string;
   text_link_color: string;
   text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+}
+
+export interface SettingsResponse {
+  success: boolean;
+  data: Settings;
 }

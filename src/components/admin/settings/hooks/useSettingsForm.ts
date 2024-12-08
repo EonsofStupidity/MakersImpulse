@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { uploadMedia } from "@/utils/media";
-import { Settings } from "../types";
-
-interface SettingsResponse {
-  success: boolean;
-  data: Settings;
-}
+import { Settings, SettingsResponse } from "../types";
 
 const DEFAULT_SETTINGS = {
   site_title: "MakersImpulse",
@@ -19,6 +14,9 @@ const DEFAULT_SETTINGS = {
   text_secondary_color: "#A1A1AA",
   text_link_color: "#3B82F6",
   text_heading_color: "#FFFFFF",
+  neon_cyan: "#41f0db",
+  neon_pink: "#ff0abe",
+  neon_purple: "#8000ff",
 };
 
 export const useSettingsForm = () => {
@@ -83,7 +81,7 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
       
-      const response = data as SettingsResponse;
+      const response = data as unknown as SettingsResponse;
       console.log("Settings reset successfully:", response);
       setSettings(response.data);
       return response;
@@ -130,7 +128,7 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
 
-      const response = data as SettingsResponse;
+      const response = data as unknown as SettingsResponse;
       console.log("Settings updated successfully:", response);
       setSettings(response.data);
       toast.success("Settings updated successfully");
