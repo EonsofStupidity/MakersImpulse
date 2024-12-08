@@ -8,7 +8,7 @@ interface ImageValidationProps {
   onLoadingChange: (isLoading: boolean) => void;
 }
 
-const ImageValidation: React.FC<ImageValidationProps> = ({
+export const ImageValidation: React.FC<ImageValidationProps> = ({
   images,
   onValidImagesChange,
   onLoadingChange

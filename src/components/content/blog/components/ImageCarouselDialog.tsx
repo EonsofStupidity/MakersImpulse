@@ -11,7 +11,7 @@ interface ImageCarouselDialogProps {
   onIndexChange: (index: number) => void;
 }
 
-const ImageCarouselDialog: React.FC<ImageCarouselDialogProps> = ({
+export const ImageCarouselDialog: React.FC<ImageCarouselDialogProps> = ({
   isOpen,
   onOpenChange,
   images,

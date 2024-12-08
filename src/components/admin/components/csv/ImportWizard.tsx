@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Upload, FileType, CheckCircle2, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
 
-const ImportWizard = () => {
+const ImportWizard: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
 
@@ -80,4 +80,5 @@ const ImportWizard = () => {
   );
 };
 
+export { ImportWizard };
 export default ImportWizard;

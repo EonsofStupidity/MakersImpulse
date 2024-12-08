@@ -15,7 +15,7 @@ interface State {
 export class ErrorBoundary extends React.Component<Props, State> {
   public state: State = {
     hasError: false,
-    error: null
+    error: null,
   };
 
   public static getDerivedStateFromError(error: Error): State {
@@ -34,24 +34,26 @@ export class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <Alert variant="destructive" className="m-4">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>Something went wrong</AlertTitle>
-          <AlertDescription>
-            <div className="mt-2 text-sm">
-              {this.state.error?.message || "An unexpected error occurred"}
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={this.handleReset}
-              className="mt-4"
-            >
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Try again
-            </Button>
-          </AlertDescription>
-        </Alert>
+        <div className="min-h-[400px] flex items-center justify-center p-4">
+          <Alert variant="destructive" className="max-w-xl bg-destructive/5 border-destructive/20">
+            <AlertTriangle className="h-5 w-5" />
+            <AlertTitle>Something went wrong</AlertTitle>
+            <AlertDescription className="mt-2">
+              <div className="text-sm text-destructive/90 mb-4">
+                {this.state.error?.message || "An unexpected error occurred"}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-background/50 hover:bg-background/80"
+                onClick={this.handleReset}
+              >
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Try again
+              </Button>
+            </AlertDescription>
+          </Alert>
+        </div>
       );
     }
 
