@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ImageUploadZone } from "@/components/uploads";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { ColorPicker } from "./components/ColorPicker";
+import { CSSEffectsControl } from "./components/CSSEffectsControl";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -32,6 +33,7 @@ const settingsSchema = z.object({
 type SettingsFormData = z.infer<typeof settingsSchema>;
 
 export const SettingsForm = () => {
+  console.log("SettingsForm rendered");
   const {
     settings,
     isLoading,
@@ -66,7 +68,7 @@ export const SettingsForm = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[-10%]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[-5%]">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -84,9 +86,7 @@ export const SettingsForm = () => {
                     <label className="text-sm font-medium text-white">Site Title</label>
                     <Input
                       {...form.register("site_title")}
-                      className={`mt-1 bg-gray-700/50 border-gray-600 ${
-                        form.formState.errors.site_title ? "border-red-500" : ""
-                      }`}
+                      className="mt-1 bg-gray-700/50 border-gray-600"
                     />
                     {form.formState.errors.site_title && (
                       <p className="mt-1 text-sm text-red-500">
@@ -99,9 +99,7 @@ export const SettingsForm = () => {
                     <label className="text-sm font-medium text-white">Tagline</label>
                     <Input
                       {...form.register("tagline")}
-                      className={`mt-1 bg-gray-700/50 border-gray-600 ${
-                        form.formState.errors.tagline ? "border-red-500" : ""
-                      }`}
+                      className="mt-1 bg-gray-700/50 border-gray-600"
                     />
                   </div>
                 </AccordionContent>
@@ -114,36 +112,64 @@ export const SettingsForm = () => {
                 <AccordionContent className="space-y-4 pt-4">
                   <div className="grid gap-4">
                     <ColorPicker
-                      label="Primary Color (Main Brand)"
+                      label="Primary Color"
+                      cssVar="--primary"
                       value={form.watch("primary_color")}
                       onChange={(color) => form.setValue("primary_color", color)}
                     />
                     <ColorPicker
-                      label="Secondary Color (Accents)"
+                      label="Secondary Color"
+                      cssVar="--secondary"
                       value={form.watch("secondary_color")}
                       onChange={(color) => form.setValue("secondary_color", color)}
                     />
                     <ColorPicker
-                      label="Accent Color (Highlights)"
+                      label="Accent Color"
+                      cssVar="--accent"
                       value={form.watch("accent_color")}
                       onChange={(color) => form.setValue("accent_color", color)}
                     />
                     <ColorPicker
-                      label="Neon Cyan (Glows)"
+                      label="Neon Cyan"
+                      cssVar="--neon-cyan"
                       value={form.watch("neon_cyan")}
                       onChange={(color) => form.setValue("neon_cyan", color)}
                     />
                     <ColorPicker
-                      label="Neon Pink (Effects)"
+                      label="Neon Pink"
+                      cssVar="--neon-pink"
                       value={form.watch("neon_pink")}
                       onChange={(color) => form.setValue("neon_pink", color)}
                     />
                     <ColorPicker
-                      label="Neon Purple (Gradients)"
+                      label="Neon Purple"
+                      cssVar="--neon-purple"
                       value={form.watch("neon_purple")}
                       onChange={(color) => form.setValue("neon_purple", color)}
                     />
                   </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="css-effects">
+                <AccordionTrigger className="text-lg font-semibold text-white">
+                  CSS Effects & Animations
+                </AccordionTrigger>
+                <AccordionContent className="space-y-4 pt-4">
+                  <CSSEffectsControl
+                    label="Neon Glow Intensity"
+                    value={1}
+                    min={0}
+                    max={2}
+                    onChange={(value) => console.log("Neon glow intensity:", value)}
+                  />
+                  <CSSEffectsControl
+                    label="Animation Speed"
+                    value={1}
+                    min={0.5}
+                    max={2}
+                    onChange={(value) => console.log("Animation speed:", value)}
+                  />
                 </AccordionContent>
               </AccordionItem>
 

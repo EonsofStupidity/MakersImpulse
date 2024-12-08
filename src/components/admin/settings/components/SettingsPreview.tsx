@@ -17,6 +17,8 @@ interface SettingsPreviewProps {
 }
 
 export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
+  console.log("SettingsPreview rendered with settings:", settings);
+
   return (
     <div className="space-y-6">
       <motion.div 
@@ -102,6 +104,26 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) =>
           <p style={{ color: settings.neon_cyan }}>Neon Cyan Text</p>
           <p style={{ color: settings.neon_pink }}>Neon Pink Text</p>
           <p style={{ color: settings.neon_purple }}>Neon Purple Text</p>
+        </div>
+
+        <div className="space-y-2">
+          <p className="text-sm text-gray-400">Animation Previews:</p>
+          <div className="space-y-2">
+            <p className="animate-neon-pulse" style={{ color: settings.neon_cyan }}>
+              Neon Pulse Effect
+            </p>
+            <p className="animate-neon-glow" style={{ color: settings.neon_pink }}>
+              Neon Glow Effect
+            </p>
+            <p className="animate-gradient-text" style={{ 
+              backgroundImage: `linear-gradient(-45deg, ${settings.neon_cyan}, ${settings.neon_pink}, ${settings.neon_purple})`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundSize: '200% 200%'
+            }}>
+              Gradient Text Effect
+            </p>
+          </div>
         </div>
       </div>
 
