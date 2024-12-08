@@ -3,19 +3,12 @@ import { Handle, Position } from 'reactflow';
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 
-interface ConditionNodeProps {
-  data: { 
-    condition: string;
-    label?: string;
-  };
-}
-
-export const ConditionNode = memo(({ data }: ConditionNodeProps) => {
+export const ConditionNode = memo(({ data }: { data: { condition: string } }) => {
   return (
     <Card className="px-4 py-2 min-w-[200px]">
       <Handle type="target" position={Position.Top} />
       <div className="space-y-2">
-        <div className="font-medium">{data.label || 'Condition'}</div>
+        <div className="font-medium">Condition</div>
         <Input 
           value={data.condition} 
           onChange={(e) => {
