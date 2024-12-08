@@ -24,8 +24,8 @@ export const useToolbarHandlers = ({
     
     toast.info('Drop to place shortcut', {
       id: 'toolbar-drag',
-      description: `Release to add shortcut here`,
-      icon: <CheckCircle2 className="h-4 w-4 text-[#41f0db]" />
+      description: 'Release to add shortcut here',
+      icon: () => <CheckCircle2 className="h-4 w-4 text-[#41f0db]" />
     });
   };
 
@@ -38,8 +38,8 @@ export const useToolbarHandlers = ({
     
     toast.info('Drop to delete shortcut', {
       id: 'toolbar-drag',
-      description: `Release outside toolbar to remove`,
-      icon: <XCircle className="h-4 w-4 text-red-400" />
+      description: 'Release outside toolbar to remove',
+      icon: () => <XCircle className="h-4 w-4 text-red-400" />
     });
   };
 
