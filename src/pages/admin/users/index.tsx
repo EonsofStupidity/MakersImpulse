@@ -47,21 +47,38 @@ const UserManagement = () => {
   const handleBanUser = async (reason: string) => {
     if (!selectedUser) return;
     
-    // TODO: Implement ban functionality
-    toast.success(`User ${selectedUser.username} has been banned`);
-    setSelectedUser(null);
-  };
+    try {
+      const { data: adminProfile } = await supabase
+        .auth
+        .getUser();
 
-  const getRoleBadgeColor = (role: string | null) => {
-    switch (role) {
-      case 'super_admin':
-        return 'bg-red-500/10 text-red-500 hover:bg-red-500/20';
-      case 'admin':
-        return 'bg-purple-500/10 text-purple-500 hover:bg-purple-500/20';
-      case 'maker':
-        return 'bg-blue-500/10 text-blue-500 hover:bg-blue-500/20';
-      default:
-        return 'bg-gray-500/10 text-gray-500 hover:bg-gray-500/20';
+      if (!adminProfile?.user?.id) {
+        throw new Error('Admin ID not found');
+      }
+
+      const { error } = await supabase
+        .rpc('ban_user', {
+          user_id: selectedUser.id,
+          reason: reason,
+          admin_id: adminProfile.user.id
+        });
+
+      if (error) throw error;
+
+      // Log the activity
+      await supabase.rpc('record_user_activity', {
+        p_user_id: selectedUser.id,
+        p_activity_type: 'user_banned',
+        p_details: reason,
+        p_metadata: { admin_id: adminProfile.user.id }
+      });
+
+      toast.success(`User ${selectedUser.username} has been banned`);
+      setSelectedUser(null);
+      refetch();
+    } catch (error) {
+      console.error('Error banning user:', error);
+      toast.error('Failed to ban user');
     }
   };
 

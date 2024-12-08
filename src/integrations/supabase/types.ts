@@ -163,10 +163,14 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          ban_reason: string | null
+          banned_at: string | null
+          banned_by: string | null
           bio: string | null
           created_at: string
           display_name: string | null
           id: string
+          is_banned: boolean | null
           last_seen: string | null
           location: string | null
           role: Database["public"]["Enums"]["user_role"] | null
@@ -176,10 +180,14 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           bio?: string | null
           created_at?: string
           display_name?: string | null
           id: string
+          is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -189,10 +197,14 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          ban_reason?: string | null
+          banned_at?: string | null
+          banned_by?: string | null
           bio?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          is_banned?: boolean | null
           last_seen?: string | null
           location?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
@@ -200,7 +212,15 @@ export type Database = {
           username?: string | null
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_banned_by_fkey"
+            columns: ["banned_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       site_settings: {
         Row: {
@@ -300,6 +320,41 @@ export type Database = {
           },
         ]
       }
+      user_activity: {
+        Row: {
+          activity_type: string
+          created_at: string | null
+          details: string | null
+          id: string
+          metadata: Json | null
+          user_id: string
+        }
+        Insert: {
+          activity_type: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id: string
+        }
+        Update: {
+          activity_type?: string
+          created_at?: string | null
+          details?: string | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_activity_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -311,6 +366,23 @@ export type Database = {
           image_url: string
         }
         Returns: undefined
+      }
+      ban_user: {
+        Args: {
+          user_id: string
+          reason: string
+          admin_id: string
+        }
+        Returns: undefined
+      }
+      record_user_activity: {
+        Args: {
+          p_user_id: string
+          p_activity_type: string
+          p_details: string
+          p_metadata?: Json
+        }
+        Returns: string
       }
       update_site_settings:
         | {
