@@ -16,14 +16,14 @@ export const ColorPicker: React.FC<ColorPickerProps> = ({ label, value, onChange
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="mt-1"
+          className="mt-1 bg-gray-700/50 border-gray-600"
         />
       </div>
       <Input
         type="color"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-12 h-12 p-1 rounded-lg cursor-pointer"
+        className="w-12 h-12 p-1 rounded-lg cursor-pointer bg-gray-700/50 border-gray-600"
       />
     </div>
   );

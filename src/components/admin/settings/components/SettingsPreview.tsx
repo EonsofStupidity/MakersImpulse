@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 interface SettingsPreviewProps {
   settings: {
@@ -7,6 +8,9 @@ interface SettingsPreviewProps {
     primary_color: string;
     secondary_color: string;
     accent_color: string;
+    neon_cyan?: string;
+    neon_pink?: string;
+    neon_purple?: string;
     logo_url?: string;
     favicon_url?: string;
   };
@@ -15,7 +19,12 @@ interface SettingsPreviewProps {
 export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
   return (
     <div className="space-y-6">
-      <div className="flex items-center gap-4">
+      <motion.div 
+        className="flex items-center gap-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         {settings.logo_url && (
           <img
             src={settings.logo_url}
@@ -33,22 +42,56 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) =>
             </p>
           )}
         </div>
-      </div>
+      </motion.div>
 
       <div className="space-y-4">
-        <div className="flex gap-4">
-          <div
-            className="w-16 h-16 rounded-lg"
-            style={{ backgroundColor: settings.primary_color }}
-          />
-          <div
-            className="w-16 h-16 rounded-lg"
-            style={{ backgroundColor: settings.secondary_color }}
-          />
-          <div
-            className="w-16 h-16 rounded-lg"
-            style={{ backgroundColor: settings.accent_color }}
-          />
+        <div className="grid grid-cols-3 gap-4">
+          <div>
+            <p className="text-sm text-gray-400 mb-2">Brand Colors</p>
+            <div className="space-y-2">
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.primary_color }}
+              />
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.secondary_color }}
+              />
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.accent_color }}
+              />
+            </div>
+          </div>
+          
+          <div>
+            <p className="text-sm text-gray-400 mb-2">Neon Effects</p>
+            <div className="space-y-2">
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.neon_cyan }}
+              />
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.neon_pink }}
+              />
+              <div
+                className="w-full h-16 rounded-lg"
+                style={{ backgroundColor: settings.neon_purple }}
+              />
+            </div>
+          </div>
+
+          <div>
+            <p className="text-sm text-gray-400 mb-2">Gradients</p>
+            <div
+              className="w-full h-52 rounded-lg animate-gradient"
+              style={{
+                backgroundImage: `linear-gradient(-45deg, ${settings.neon_cyan}, ${settings.neon_pink}, ${settings.neon_purple})`,
+                backgroundSize: "200% 200%",
+              }}
+            />
+          </div>
         </div>
 
         <div className="space-y-2">
@@ -56,6 +99,9 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ settings }) =>
           <p style={{ color: settings.primary_color }}>Primary Color Text</p>
           <p style={{ color: settings.secondary_color }}>Secondary Color Text</p>
           <p style={{ color: settings.accent_color }}>Accent Color Text</p>
+          <p style={{ color: settings.neon_cyan }}>Neon Cyan Text</p>
+          <p style={{ color: settings.neon_pink }}>Neon Pink Text</p>
+          <p style={{ color: settings.neon_purple }}>Neon Purple Text</p>
         </div>
       </div>
 
