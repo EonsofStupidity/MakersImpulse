@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { toast } from "sonner";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2 } from "lucide-react";
 import type { ToolbarItem } from "../types";
 
 interface UseToolbarHandlersProps {
@@ -37,7 +37,7 @@ export const useToolbarHandlers = ({
 
       toast.success("Shortcut added to toolbar", {
         description: `${draggedItem.label} has been added`,
-        icon: () => <CheckCircle2 className="h-4 w-4 text-green-500" />, // Function wrapping JSX
+        icon: () => <CheckCircle2 className="h-4 w-4 text-green-500" />, // Wrapping JSX in a function
       });
     },
     [draggedItem, items, onItemsChange]
