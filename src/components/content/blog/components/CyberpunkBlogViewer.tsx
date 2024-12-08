@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
+import ImageCarousel from "@/components/shared/content-blocks/ImageCarousel";
 
 interface CyberpunkBlogViewerProps {
   content: string;
@@ -118,9 +119,8 @@ const CyberpunkBlogViewer: React.FC<CyberpunkBlogViewerProps> = ({
                         delay: index * 0.1
                       }}
                       className="mb-6 text-lg text-white/90 leading-relaxed"
-                    >
-                      {paragraph}
-                    </motion.div>
+                      dangerouslySetInnerHTML={{ __html: paragraph }}
+                    />
                   ))}
                 </div>
               </div>

@@ -32,7 +32,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 transform translate-y-1/2"> {/* Added transform */}
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4 transform translate-y-1/2">
       {images.map((image, index) => (
         <motion.div
           key={index}

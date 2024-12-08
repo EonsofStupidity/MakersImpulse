@@ -1,9 +1,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import AnimatedTextReveal from './AnimatedTextReveal';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import CyberpunkBlogViewer from './CyberpunkBlogViewer';
 
 interface BlogPostContentProps {
@@ -21,8 +18,6 @@ const BlogPostContent: React.FC<BlogPostContentProps> = ({
   hasMoreContent,
   images = [],
 }) => {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
   const [showCyberpunkViewer, setShowCyberpunkViewer] = React.useState(false);
 
   const handleContentClick = () => {
