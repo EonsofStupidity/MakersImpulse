@@ -14,6 +14,11 @@ interface Settings {
   theme_mode?: "light" | "dark" | "system";
 }
 
+interface SettingsResponse {
+  success: boolean;
+  data: Settings;
+}
+
 export const useSettingsForm = () => {
   const [settings, setSettings] = useState<Settings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,7 +81,8 @@ export const useSettingsForm = () => {
 
       if (error) throw error;
 
-      setSettings(data.data);
+      const response = data as SettingsResponse;
+      setSettings(response.data);
       toast.success("Settings updated successfully");
     } catch (error) {
       console.error("Error updating settings:", error);

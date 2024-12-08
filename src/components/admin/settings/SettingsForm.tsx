@@ -59,20 +59,32 @@ export const SettingsForm = () => {
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium text-white">Site Title</label>
-              <Input
-                {...form.register("site_title")}
-                className="mt-1"
-                error={form.formState.errors.site_title?.message}
-              />
+              <div>
+                <Input
+                  {...form.register("site_title")}
+                  className={`mt-1 ${form.formState.errors.site_title ? "border-red-500" : ""}`}
+                />
+                {form.formState.errors.site_title && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {form.formState.errors.site_title.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div>
               <label className="text-sm font-medium text-white">Tagline</label>
-              <Input
-                {...form.register("tagline")}
-                className="mt-1"
-                error={form.formState.errors.tagline?.message}
-              />
+              <div>
+                <Input
+                  {...form.register("tagline")}
+                  className={`mt-1 ${form.formState.errors.tagline ? "border-red-500" : ""}`}
+                />
+                {form.formState.errors.tagline && (
+                  <p className="mt-1 text-sm text-red-500">
+                    {form.formState.errors.tagline.message}
+                  </p>
+                )}
+              </div>
             </div>
 
             <div className="space-y-4">
