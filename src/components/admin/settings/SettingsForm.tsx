@@ -69,7 +69,7 @@ export const SettingsForm = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[2.5%]">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%]">
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -159,6 +159,7 @@ export const SettingsForm = () => {
                 <AccordionContent className="space-y-4 pt-4">
                   <CSSEffectsControl
                     label="Neon Glow Intensity"
+                    type="slider"
                     value={1}
                     min={0}
                     max={2}
@@ -166,6 +167,7 @@ export const SettingsForm = () => {
                   />
                   <CSSEffectsControl
                     label="Animation Speed"
+                    type="slider"
                     value={1}
                     min={0.5}
                     max={2}
