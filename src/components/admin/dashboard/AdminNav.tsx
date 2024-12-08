@@ -39,8 +39,11 @@ export const AdminNav = () => {
 
   React.useEffect(() => {
     const checkAdminAccess = async () => {
+      console.log('Starting admin access check...');
+      console.log('Current session:', session);
+
       if (!session?.user?.id) {
-        console.log('No session found, redirecting to login');
+        console.error('No session found, redirecting to login');
         toast.error('Please login to access admin dashboard');
         navigate('/login');
         return;
@@ -50,7 +53,7 @@ export const AdminNav = () => {
         console.log('Checking admin access for user:', session.user.id);
         const { data: profile, error } = await supabase
           .from('profiles')
-          .select('role')
+          .select('role, username, display_name')
           .eq('id', session.user.id)
           .single();
 
@@ -63,14 +66,24 @@ export const AdminNav = () => {
           return;
         }
 
-        if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
-          console.log('User is not an admin:', profile?.role);
+        if (!profile) {
+          console.error('No profile found for user');
+          toast.error('Profile not found');
+          navigate('/');
+          return;
+        }
+
+        console.log('User profile:', profile);
+
+        if (!['admin', 'super_admin'].includes(profile.role)) {
+          console.error('User is not an admin:', profile.role);
           toast.error('Admin access required');
           navigate('/');
           return;
         }
 
         console.log('Admin access confirmed for role:', profile.role);
+        toast.success(`Welcome back, ${profile.display_name || profile.username || 'Admin'}`);
       } catch (error) {
         console.error('Error in admin access check:', error);
         toast.error('Error verifying admin access');
