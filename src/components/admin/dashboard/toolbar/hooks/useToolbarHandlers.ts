@@ -1,13 +1,19 @@
-import { useState, useCallback } from 'react';
-import { ToolbarItem, ToolbarItemType } from '../types';
+import { useState, useCallback } from "react";
+import { toast } from "sonner";
+import { CheckCircle2, XCircle } from "lucide-react";
+import type { ToolbarItem } from "../types";
 
 interface UseToolbarHandlersProps {
   items: ToolbarItem[];
   onItemsChange: (items: ToolbarItem[]) => void;
+  isLocked?: boolean;
 }
 
-export const useToolbarHandlers = ({ items, onItemsChange }: UseToolbarHandlersProps) => {
-  const [activeItem, setActiveItem] = useState<string | null>(null);
+export const useToolbarHandlers = ({
+  items,
+  onItemsChange,
+  isLocked = false,
+}: UseToolbarHandlersProps) => {
   const [draggedItem, setDraggedItem] = useState<ToolbarItem | null>(null);
 
   const handleDragStart = useCallback((item: ToolbarItem) => {
@@ -18,38 +24,41 @@ export const useToolbarHandlers = ({ items, onItemsChange }: UseToolbarHandlersP
     setDraggedItem(null);
   }, []);
 
-  const handleDrop = useCallback((targetId: string) => {
-    if (!draggedItem) return;
+  const handleDrop = useCallback(
+    (targetId: string) => {
+      if (!draggedItem) return;
 
-    const updatedItems = items.map(item => {
-      if (item.id === targetId) {
-        return { ...draggedItem, id: targetId };
+      const updatedItems = items.map((item) =>
+        item.id === targetId ? { ...draggedItem, id: targetId } : item
+      );
+
+      onItemsChange(updatedItems);
+      setDraggedItem(null);
+
+      toast.success("Shortcut added to toolbar", {
+        description: `${draggedItem.label} has been added`,
+        icon: <CheckCircle2 className="h-4 w-4 text-green-500" />,
+      });
+    },
+    [draggedItem, items, onItemsChange]
+  );
+
+  const handleItemClick = useCallback(
+    (itemId: string) => {
+      if (isLocked) {
+        toast.error("Toolbar is locked. Unlock to modify.");
+        return;
       }
-      return item;
-    });
-
-    onItemsChange(updatedItems);
-    setDraggedItem(null);
-  }, [draggedItem, items, onItemsChange]);
-
-  const handleItemClick = useCallback((itemId: string) => {
-    setActiveItem(itemId === activeItem ? null : itemId);
-  }, [activeItem]);
-
-  const handleItemUpdate = useCallback((itemId: string, updates: Partial<ToolbarItem>) => {
-    const updatedItems = items.map(item => 
-      item.id === itemId ? { ...item, ...updates } : item
-    );
-    onItemsChange(updatedItems);
-  }, [items, onItemsChange]);
+      toast.info(`Item ${itemId} clicked`);
+    },
+    [isLocked]
+  );
 
   return {
-    activeItem,
     draggedItem,
     handleDragStart,
     handleDragEnd,
     handleDrop,
     handleItemClick,
-    handleItemUpdate
   };
 };
