@@ -7,13 +7,19 @@ import { useSettingsForm } from "./hooks/useSettingsForm";
 import { ColorPicker } from "./components/ColorPicker";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
-import { Accordion } from "@/components/ui/accordion";
+import { 
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent 
+} from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { BasicSettingsSection } from "./components/BasicSettingsSection";
 import { FontSettingsSection } from "./components/FontSettingsSection";
 import { TransitionSettingsSection } from "./components/TransitionSettingsSection";
 import { settingsSchema, type SettingsFormData } from "./types";
 import { AnimationsSection } from "./components/AnimationsSection";
+import { SettingsPreview } from "./components/SettingsPreview";
 
 export const SettingsForm = () => {
   console.log("SettingsForm rendered");
