@@ -65,6 +65,8 @@ export const SettingsForm = () => {
       font_weight_bold: settings?.font_weight_bold || "700",
       line_height_base: settings?.line_height_base || "1.5",
       letter_spacing: settings?.letter_spacing || "normal",
+      box_shadow: settings?.box_shadow || "none",
+      backdrop_blur: settings?.backdrop_blur || "0",
     },
   });
 
