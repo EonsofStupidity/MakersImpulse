@@ -20,7 +20,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     const fetchInitialTheme = async () => {
       try {
         console.log("Fetching initial theme settings...");
-        const { data, error } = await supabase
+        const { data: rawData, error } = await supabase
           .from("site_settings")
           .select("*")
           .single();
@@ -29,33 +29,33 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
         // Convert database settings to Settings type with defaults
         const themeData: Settings = {
-          site_title: data.site_title || DEFAULT_SETTINGS.site_title,
-          tagline: data.tagline || DEFAULT_SETTINGS.tagline,
-          primary_color: data.primary_color || DEFAULT_SETTINGS.primary_color,
-          secondary_color: data.secondary_color || DEFAULT_SETTINGS.secondary_color,
-          accent_color: data.accent_color || DEFAULT_SETTINGS.accent_color,
-          logo_url: data.logo_url,
-          favicon_url: data.favicon_url,
-          theme_mode: data.theme_mode || 'system',
-          text_primary_color: data.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
-          text_secondary_color: data.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
-          text_link_color: data.text_link_color || DEFAULT_SETTINGS.text_link_color,
-          text_heading_color: data.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
-          neon_cyan: data.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
-          neon_pink: data.neon_pink || DEFAULT_SETTINGS.neon_pink,
-          neon_purple: data.neon_purple || DEFAULT_SETTINGS.neon_purple,
-          border_radius: data.border_radius || DEFAULT_SETTINGS.border_radius,
-          spacing_unit: data.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
-          transition_duration: data.transition_duration || DEFAULT_SETTINGS.transition_duration,
-          shadow_color: data.shadow_color || DEFAULT_SETTINGS.shadow_color,
-          hover_scale: data.hover_scale || DEFAULT_SETTINGS.hover_scale,
-          font_family_heading: data.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
-          font_family_body: data.font_family_body || DEFAULT_SETTINGS.font_family_body,
-          font_size_base: data.font_size_base || DEFAULT_SETTINGS.font_size_base,
-          font_weight_normal: data.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
-          font_weight_bold: data.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
-          line_height_base: data.line_height_base || DEFAULT_SETTINGS.line_height_base,
-          letter_spacing: data.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
+          site_title: rawData.site_title || DEFAULT_SETTINGS.site_title,
+          tagline: rawData.tagline || DEFAULT_SETTINGS.tagline,
+          primary_color: rawData.primary_color || DEFAULT_SETTINGS.primary_color,
+          secondary_color: rawData.secondary_color || DEFAULT_SETTINGS.secondary_color,
+          accent_color: rawData.accent_color || DEFAULT_SETTINGS.accent_color,
+          logo_url: rawData.logo_url,
+          favicon_url: rawData.favicon_url,
+          theme_mode: rawData.theme_mode || 'system',
+          text_primary_color: rawData.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
+          text_secondary_color: rawData.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
+          text_link_color: rawData.text_link_color || DEFAULT_SETTINGS.text_link_color,
+          text_heading_color: rawData.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
+          neon_cyan: rawData.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
+          neon_pink: rawData.neon_pink || DEFAULT_SETTINGS.neon_pink,
+          neon_purple: rawData.neon_purple || DEFAULT_SETTINGS.neon_purple,
+          border_radius: rawData.border_radius || DEFAULT_SETTINGS.border_radius,
+          spacing_unit: rawData.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
+          transition_duration: rawData.transition_duration || DEFAULT_SETTINGS.transition_duration,
+          shadow_color: rawData.shadow_color || DEFAULT_SETTINGS.shadow_color,
+          hover_scale: rawData.hover_scale || DEFAULT_SETTINGS.hover_scale,
+          font_family_heading: rawData.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
+          font_family_body: rawData.font_family_body || DEFAULT_SETTINGS.font_family_body,
+          font_size_base: rawData.font_size_base || DEFAULT_SETTINGS.font_size_base,
+          font_weight_normal: rawData.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
+          font_weight_bold: rawData.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
+          line_height_base: rawData.line_height_base || DEFAULT_SETTINGS.line_height_base,
+          letter_spacing: rawData.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
         };
 
         console.log("Initial theme settings fetched:", themeData);
