@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Settings } from "@/components/admin/settings/types";
 import { toast } from "sonner";
 import { applyThemeToDocument } from "../utils/themeUtils";
+import { DEFAULT_SETTINGS } from "@/components/admin/settings/hooks/useSettingsDefaults";
 
 interface ThemeContextType {
   theme: Settings | null;
@@ -26,9 +27,40 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (error) throw error;
 
-        console.log("Initial theme settings fetched:", data);
-        setTheme(data);
-        applyThemeToDocument(data);
+        // Convert database settings to Settings type with defaults
+        const themeData: Settings = {
+          site_title: data.site_title || DEFAULT_SETTINGS.site_title,
+          tagline: data.tagline || DEFAULT_SETTINGS.tagline,
+          primary_color: data.primary_color || DEFAULT_SETTINGS.primary_color,
+          secondary_color: data.secondary_color || DEFAULT_SETTINGS.secondary_color,
+          accent_color: data.accent_color || DEFAULT_SETTINGS.accent_color,
+          logo_url: data.logo_url,
+          favicon_url: data.favicon_url,
+          theme_mode: data.theme_mode || 'system',
+          text_primary_color: data.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
+          text_secondary_color: data.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
+          text_link_color: data.text_link_color || DEFAULT_SETTINGS.text_link_color,
+          text_heading_color: data.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
+          neon_cyan: data.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
+          neon_pink: data.neon_pink || DEFAULT_SETTINGS.neon_pink,
+          neon_purple: data.neon_purple || DEFAULT_SETTINGS.neon_purple,
+          border_radius: data.border_radius || DEFAULT_SETTINGS.border_radius,
+          spacing_unit: data.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
+          transition_duration: data.transition_duration || DEFAULT_SETTINGS.transition_duration,
+          shadow_color: data.shadow_color || DEFAULT_SETTINGS.shadow_color,
+          hover_scale: data.hover_scale || DEFAULT_SETTINGS.hover_scale,
+          font_family_heading: data.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
+          font_family_body: data.font_family_body || DEFAULT_SETTINGS.font_family_body,
+          font_size_base: data.font_size_base || DEFAULT_SETTINGS.font_size_base,
+          font_weight_normal: data.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
+          font_weight_bold: data.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
+          line_height_base: data.line_height_base || DEFAULT_SETTINGS.line_height_base,
+          letter_spacing: data.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
+        };
+
+        console.log("Initial theme settings fetched:", themeData);
+        setTheme(themeData);
+        applyThemeToDocument(themeData);
       } catch (error) {
         console.error("Error fetching theme:", error);
         toast.error("Failed to load theme settings");
@@ -49,8 +81,41 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         },
         (payload) => {
           console.log("Received real-time theme update:", payload.new);
-          setTheme(payload.new as Settings);
-          applyThemeToDocument(payload.new as Settings);
+          const newData = payload.new;
+          
+          // Convert payload to Settings type with defaults
+          const themeData: Settings = {
+            site_title: newData.site_title || DEFAULT_SETTINGS.site_title,
+            tagline: newData.tagline || DEFAULT_SETTINGS.tagline,
+            primary_color: newData.primary_color || DEFAULT_SETTINGS.primary_color,
+            secondary_color: newData.secondary_color || DEFAULT_SETTINGS.secondary_color,
+            accent_color: newData.accent_color || DEFAULT_SETTINGS.accent_color,
+            logo_url: newData.logo_url,
+            favicon_url: newData.favicon_url,
+            theme_mode: newData.theme_mode || 'system',
+            text_primary_color: newData.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
+            text_secondary_color: newData.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
+            text_link_color: newData.text_link_color || DEFAULT_SETTINGS.text_link_color,
+            text_heading_color: newData.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
+            neon_cyan: newData.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
+            neon_pink: newData.neon_pink || DEFAULT_SETTINGS.neon_pink,
+            neon_purple: newData.neon_purple || DEFAULT_SETTINGS.neon_purple,
+            border_radius: newData.border_radius || DEFAULT_SETTINGS.border_radius,
+            spacing_unit: newData.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
+            transition_duration: newData.transition_duration || DEFAULT_SETTINGS.transition_duration,
+            shadow_color: newData.shadow_color || DEFAULT_SETTINGS.shadow_color,
+            hover_scale: newData.hover_scale || DEFAULT_SETTINGS.hover_scale,
+            font_family_heading: newData.font_family_heading || DEFAULT_SETTINGS.font_family_heading,
+            font_family_body: newData.font_family_body || DEFAULT_SETTINGS.font_family_body,
+            font_size_base: newData.font_size_base || DEFAULT_SETTINGS.font_size_base,
+            font_weight_normal: newData.font_weight_normal || DEFAULT_SETTINGS.font_weight_normal,
+            font_weight_bold: newData.font_weight_bold || DEFAULT_SETTINGS.font_weight_bold,
+            line_height_base: newData.line_height_base || DEFAULT_SETTINGS.line_height_base,
+            letter_spacing: newData.letter_spacing || DEFAULT_SETTINGS.letter_spacing,
+          };
+          
+          setTheme(themeData);
+          applyThemeToDocument(themeData);
         }
       )
       .subscribe();
