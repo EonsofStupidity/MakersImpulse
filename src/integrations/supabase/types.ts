@@ -212,6 +212,10 @@ export type Database = {
           secondary_color: string | null
           site_title: string
           tagline: string | null
+          text_heading_color: string | null
+          text_link_color: string | null
+          text_primary_color: string | null
+          text_secondary_color: string | null
           theme_mode: Database["public"]["Enums"]["theme_mode"] | null
           updated_at: string | null
           updated_by: string | null
@@ -225,6 +229,10 @@ export type Database = {
           secondary_color?: string | null
           site_title?: string
           tagline?: string | null
+          text_heading_color?: string | null
+          text_link_color?: string | null
+          text_primary_color?: string | null
+          text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           updated_at?: string | null
           updated_by?: string | null
@@ -238,6 +246,10 @@ export type Database = {
           secondary_color?: string | null
           site_title?: string
           tagline?: string | null
+          text_heading_color?: string | null
+          text_link_color?: string | null
+          text_primary_color?: string | null
+          text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           updated_at?: string | null
           updated_by?: string | null
@@ -264,19 +276,37 @@ export type Database = {
         }
         Returns: undefined
       }
-      update_site_settings: {
-        Args: {
-          p_site_title?: string
-          p_tagline?: string
-          p_primary_color?: string
-          p_secondary_color?: string
-          p_accent_color?: string
-          p_logo_url?: string
-          p_favicon_url?: string
-          p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
-        }
-        Returns: Json
-      }
+      update_site_settings:
+        | {
+            Args: {
+              p_site_title?: string
+              p_tagline?: string
+              p_primary_color?: string
+              p_secondary_color?: string
+              p_accent_color?: string
+              p_logo_url?: string
+              p_favicon_url?: string
+              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
+            }
+            Returns: Json
+          }
+        | {
+            Args: {
+              p_site_title?: string
+              p_tagline?: string
+              p_primary_color?: string
+              p_secondary_color?: string
+              p_accent_color?: string
+              p_logo_url?: string
+              p_favicon_url?: string
+              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
+              p_text_primary_color?: string
+              p_text_secondary_color?: string
+              p_text_link_color?: string
+              p_text_heading_color?: string
+            }
+            Returns: Json
+          }
     }
     Enums: {
       post_category:

@@ -17,7 +17,7 @@ import { motion } from "framer-motion";
 import { BasicSettingsSection } from "./components/BasicSettingsSection";
 import { FontSettingsSection } from "./components/FontSettingsSection";
 import { TransitionSettingsSection } from "./components/TransitionSettingsSection";
-import { settingsSchema, type SettingsFormData } from "./types";
+import { settingsSchema, type SettingsFormData, type Settings } from "./types";
 import { AnimationsSection } from "./components/AnimationsSection";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { FontColorSettingsSection } from "./components/FontColorSettingsSection";
