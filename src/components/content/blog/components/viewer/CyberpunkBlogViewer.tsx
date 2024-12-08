@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ChevronUp, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface CyberpunkBlogViewerProps {
   content: string;
@@ -37,6 +38,7 @@ const CyberpunkBlogViewer: React.FC<CyberpunkBlogViewerProps> = ({
 
     if (isOpen) {
       window.addEventListener('keydown', handleKeyPress);
+      toast.info('Use arrow keys or spacebar to scroll');
     }
 
     return () => {
