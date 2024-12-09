@@ -27,10 +27,8 @@ export const AppRoutes = () => {
   return (
     <PageTransition>
       <Routes>
-        {/* Public landing page */}
+        {/* Public Routes */}
         <Route path="/" element={<Landing />} />
-        
-        {/* Auth routes */}
         <Route path="/login" element={
           session ? <Navigate to="/maker-space" replace /> : <Login />
         } />
@@ -38,53 +36,51 @@ export const AppRoutes = () => {
           session ? <Navigate to="/maker-space" replace /> : <Register />
         } />
         
-        {/* Public Routes */}
         {PublicRoutes()}
 
         {/* Protected Routes */}
-        <Route element={
-          <AuthGuard 
-            requireAuth={true}
-            fallbackPath="/login"
-            onError={(error) => {
-              console.error('Protected route access error:', error);
-              toast.error('Please sign in to access this content');
-            }}
-          >
-            <Routes>
-              {ProtectedRoutes()}
-            </Routes>
-          </AuthGuard>
-        } />
+        {ProtectedRoutes().map((route) => (
+          <Route
+            key={route.props.path}
+            path={route.props.path}
+            element={
+              <AuthGuard 
+                requireAuth={true}
+                fallbackPath="/login"
+                onError={(error) => {
+                  console.error('Protected route access error:', error);
+                  toast.error('Please sign in to access this content');
+                }}
+              >
+                {route.props.element}
+              </AuthGuard>
+            }
+          />
+        ))}
 
         {/* Admin Routes */}
-        <Route
-          path="/admin/*"
-          element={
-            <AuthGuard 
-              requireAuth={true} 
-              requiredRole={["admin", "super_admin"]}
-              fallbackPath="/login"
-              onError={(error) => {
-                console.error('Admin access error:', error);
-                toast.error(error instanceof Error ? error.message : 
-                  typeof error === 'string' ? error : 
-                  'message' in error ? error.message : 
-                  'Access denied');
-              }}
-            >
-              <Routes>
-                {adminRoutes.map((route) => (
-                  <Route
-                    key={route.path}
-                    path={route.path}
-                    element={route.element}
-                  />
-                ))}
-              </Routes>
-            </AuthGuard>
-          }
-        />
+        {adminRoutes.map((route) => (
+          <Route
+            key={route.path}
+            path={`/admin${route.path}`}
+            element={
+              <AuthGuard 
+                requireAuth={true} 
+                requiredRole={["admin", "super_admin"]}
+                fallbackPath="/login"
+                onError={(error) => {
+                  console.error('Admin access error:', error);
+                  toast.error(error instanceof Error ? error.message : 
+                    typeof error === 'string' ? error : 
+                    'message' in error ? error.message : 
+                    'Access denied');
+                }}
+              >
+                {route.element}
+              </AuthGuard>
+            }
+          />
+        ))}
 
         {/* Fallback route */}
         <Route path="*" element={<Navigate to="/maker-space" replace />} />

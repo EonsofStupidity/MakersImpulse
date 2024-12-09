@@ -17,7 +17,8 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     console.log('SessionProvider mounted');
-    
+    let isMounted = true;
+
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
       if (!supabaseSession) {
         console.log('No Supabase session found');
@@ -32,10 +33,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', supabaseSession.user.id)
           .single();
 
-        if (error) {
-          console.error('Error fetching profile:', error);
-          throw error;
-        }
+        if (error) throw error;
 
         const authSession: AuthSession = {
           user: {
@@ -52,39 +50,39 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         return authSession;
       } catch (error) {
         console.error('Error in transformSession:', error);
-        toast.error('Error loading user profile');
         return null;
       }
     };
 
-    // Initial session check
     const initializeSession = async () => {
       try {
-        console.log('Checking initial session');
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        const authSession = await transformSession(initialSession);
-        console.log('Initial auth session:', authSession);
-        setSession(authSession);
+        if (isMounted) {
+          const authSession = await transformSession(initialSession);
+          setSession(authSession);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('Error initializing session:', error);
-        toast.error('Error loading session');
-      } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initializeSession();
 
-    // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
       console.log('Auth state changed:', _event);
-      const authSession = await transformSession(supabaseSession);
-      console.log('New session state:', authSession);
-      setSession(authSession);
+      if (isMounted) {
+        const authSession = await transformSession(supabaseSession);
+        setSession(authSession);
+        setIsLoading(false);
+      }
     });
 
     return () => {
-      console.log('Cleaning up auth subscription');
+      isMounted = false;
       subscription.unsubscribe();
     };
   }, []);

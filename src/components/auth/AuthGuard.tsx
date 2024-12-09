@@ -26,15 +26,9 @@ export const AuthGuard = ({
       if (onError) {
         onError(error);
       }
-      const errorMessage = error instanceof Error ? error.message : 
-        typeof error === 'string' ? error : 
-        'message' in error ? error.message : 
-        'Access denied';
-      
-      toast.error(errorMessage);
       navigate(fallbackPath, { replace: true });
     }
-  }, [isLoading, hasAccess, error, requireAuth, requiredRole, fallbackPath, navigate, onError]);
+  }, [error, fallbackPath, navigate, onError]);
 
   if (isLoading) {
     console.log('AuthGuard: Loading state');
