@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Landing from "@/pages/site/landing";
+import { RouteObject } from "react-router-dom";
 
 const About = lazy(() => import("@/pages/site/about"));
 const Login = lazy(() => import("@/pages/auth/login"));
@@ -9,39 +10,39 @@ const LatestUpdates = lazy(() => import("@/pages/content/blog/latest-updates"));
 const Privacy = lazy(() => import("@/pages/site/privacy"));
 const Terms = lazy(() => import("@/pages/site/terms"));
 
-const publicRoutes = [
+const publicRoutes: RouteObject[] = [
   {
     path: "/",
-    element: <Landing />,
+    element: <Landing />
   },
   {
     path: "/about",
-    element: <About />,
+    element: <About />
   },
   {
     path: "/login",
-    element: <Login />,
+    element: <Login />
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <Register />
   },
   {
     path: "/maker-space",
-    element: <MakerSpace />,
+    element: <MakerSpace />
   },
   {
     path: "/blog/latest-updates",
-    element: <LatestUpdates />,
+    element: <LatestUpdates />
   },
   {
     path: "/privacy",
-    element: <Privacy />,
+    element: <Privacy />
   },
   {
     path: "/terms",
-    element: <Terms />,
-  },
+    element: <Terms />
+  }
 ];
 
 export default publicRoutes;
