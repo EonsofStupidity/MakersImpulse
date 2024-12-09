@@ -36,7 +36,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           throw error;
         }
 
-        const authSession: AuthSession = {
+        return {
           user: {
             id: supabaseSession.user.id,
             email: supabaseSession.user.email,
@@ -46,23 +46,20 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           },
           expires_at: supabaseSession.expires_at
         };
-
-        return authSession;
       } catch (error) {
         console.error('Error transforming session:', error);
-        toast.error('Error loading user profile');
         return null;
       }
     };
 
     const initializeSession = async () => {
       try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        console.log('Initializing session...');
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
         
-        if (error) throw error;
-
         if (mounted) {
           const authSession = await transformSession(initialSession);
+          console.log('Session initialized:', authSession ? 'Session exists' : 'No session');
           setSession(authSession);
         }
       } catch (error) {
@@ -98,8 +95,13 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     };
   }, []);
 
+  const contextValue = {
+    session,
+    isLoading
+  };
+
   return (
-    <SessionContext.Provider value={{ session, isLoading }}>
+    <SessionContext.Provider value={contextValue}>
       {children}
     </SessionContext.Provider>
   );

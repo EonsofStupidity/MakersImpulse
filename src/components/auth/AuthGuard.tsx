@@ -17,12 +17,11 @@ export const AuthGuard = ({
   onError
 }: AuthGuardProps) => {
   const navigate = useNavigate();
-  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole, fallbackPath);
+  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
 
   useEffect(() => {
     if (error) {
       console.error('AuthGuard error:', error);
-      toast.error(error instanceof Error ? error.message : 'Authentication error');
       
       if (onError) {
         onError(error);
