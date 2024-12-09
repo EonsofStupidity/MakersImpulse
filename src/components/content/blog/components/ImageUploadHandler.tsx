@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Upload } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { useSession } from '@/components/auth/SessionContext';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { uploadBlogImage } from '@/services/imageService';
 import { supabase } from "@/integrations/supabase/client";
 
@@ -13,7 +13,7 @@ interface ImageUploadHandlerProps {
 
 const ImageUploadHandler: React.FC<ImageUploadHandlerProps> = ({ postId, onImageUploaded }) => {
   const [uploading, setUploading] = useState(false);
-  const { session } = useSession();
+  const { session } = useAuth();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     try {

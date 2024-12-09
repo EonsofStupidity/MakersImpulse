@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { memo } from "react";
 
 export const NavigationLinks = memo(() => {
-  const { session } = useSession();
+  const { session } = useAuth();
 
   console.log('NavigationLinks render - Session:', {
     isAuthenticated: !!session,

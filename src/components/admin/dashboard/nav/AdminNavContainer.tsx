@@ -4,13 +4,13 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminToolbar } from "../AdminToolbar";
 import { AdminNavItems } from "./AdminNavItems";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import type { NavItemType } from "./NavItem";
 
 export const AdminNavContainer = () => {
   const navigate = useNavigate();
-  const { session } = useSession();
+  const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [draggedItem, setDraggedItem] = useState<NavItemType | null>(null);
 

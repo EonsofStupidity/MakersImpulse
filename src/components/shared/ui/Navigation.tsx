@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { NavigationLinks } from "./navigation/NavigationLinks";
 import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";
@@ -13,7 +13,7 @@ import { useNavigationStore } from "./navigation/NavigationState";
 export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { session, isLoading } = useSession();
+  const { session, isLoading } = useAuth();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
   const [hasLogged, setHasLogged] = useState(false);
 

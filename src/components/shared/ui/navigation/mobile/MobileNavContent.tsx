@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from '@/components/auth/AuthProvider';
 import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
@@ -44,7 +44,7 @@ interface MobileNavContentProps {
 
 export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
   const navigate = useNavigate();
-  const { session } = useSession();
+  const { session } = useAuth();
 
   const handleNavigation = (to: string) => {
     console.log('Mobile nav: Navigating to:', to);

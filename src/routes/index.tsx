@@ -3,14 +3,14 @@ import { Suspense } from "react";
 import { PageTransition } from "@/components/shared/transitions/PageTransition";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { toast } from "sonner";
 import { publicRoutes } from "./public-routes";
 import { makerSpaceRoutes } from "./maker-space-routes";
 import { adminRoutes } from "./admin-routes";
 
 export const AppRoutes = () => {
-  const { session, isLoading } = useSession();
+  const { session, isLoading } = useAuth();
   
   console.log('AppRoutes: Session state:', { 
     userId: session?.user?.id,

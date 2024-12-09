@@ -5,14 +5,14 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { session, isLoading } = useSession();
+  const { session, isLoading } = useAuth();
 
   useEffect(() => {
     console.log('Login page render:', { session, isLoading });
@@ -79,6 +79,7 @@ const Login = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#41f0db]/5 to-transparent pointer-events-none" />
           <Auth 
+             
             supabaseClient={supabase}
             appearance={{ 
               theme: ThemeSupa,

@@ -5,7 +5,7 @@ import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useSession } from "@/components/auth/SessionContext";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 interface ThemeContextType {
   theme: Settings | null;
@@ -16,7 +16,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const { theme, setTheme } = useThemeSetup();
-  const { session } = useSession();
+  const { session } = useAuth();
   
   useThemeSubscription(setTheme);
 
