@@ -5,12 +5,18 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import type { AuthSession } from "@/components/auth/types";
 import { useSession } from "@/components/auth/SessionContext";
 
 export const UserMenu = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
+
+  console.log('UserMenu render - Session:', {
+    isAuthenticated: !!session,
+    userId: session?.user?.id,
+    role: session?.user?.role,
+    isLoading
+  });
 
   const handleLogout = async () => {
     try {

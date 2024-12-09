@@ -1,9 +1,14 @@
 import { Link } from "react-router-dom";
-import type { AuthSession } from "@/components/auth/types";
 import { useSession } from "@/components/auth/SessionContext";
 
 export const NavigationLinks = () => {
   const { session } = useSession();
+
+  console.log('NavigationLinks render - Session:', {
+    isAuthenticated: !!session,
+    userId: session?.user?.id,
+    role: session?.user?.role
+  });
 
   return (
     <div className="hidden md:flex items-center space-x-6">
