@@ -8,19 +8,32 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    if (session) {
-      console.log("User is already logged in, redirecting...");
-      navigate("/maker-space");
-    }
+    console.log("Login page mounted, session state:", { session, isLoading });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log("Auth state changed in Login:", event, currentSession?.user?.id);
+      
+      if (currentSession) {
+        console.log("Session detected, navigating to maker-space");
+        navigate("/maker-space");
+      }
+    });
+
+    return () => {
+      console.log("Login page unmounting, cleaning up subscription");
+      subscription.unsubscribe();
+    };
   }, [session, navigate]);
 
   if (isLoading) {
+    console.log("Login page showing loading state");
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">
         <LoadingSpinner />
@@ -28,8 +41,13 @@ const Login = () => {
     );
   }
 
-  if (session) return null;
+  if (session) {
+    console.log("Session exists, redirecting to maker-space");
+    navigate("/maker-space");
+    return null;
+  }
 
+  console.log("Rendering login form");
   return (
     <div className="min-h-screen bg-[#0F1114] flex flex-col">
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-border/40">
@@ -89,8 +107,12 @@ const Login = () => {
                 },
               }}
               theme="dark"
-              providers={['github', 'google']}
+              providers={[]}
               redirectTo={`${window.location.origin}/maker-space`}
+              onError={(error) => {
+                console.error("Auth error:", error);
+                toast.error(error.message);
+              }}
             />
           </div>
         </motion.div>
