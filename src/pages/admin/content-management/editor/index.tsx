@@ -16,7 +16,7 @@ type PostCategory = Database["public"]["Enums"]["post_category"];
 const PostEditor = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState<{ body: string; seo?: { title?: string; description?: string; keywords?: string[] } }>({ body: "" });
   const [images, setImages] = useState<File[]>([]);
   const [category, setCategory] = useState<PostCategory | null>(null);
   const [tags, setTags] = useState<string[]>([]);
@@ -24,89 +24,70 @@ const PostEditor = () => {
   const handleSave = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) {
-        toast.error("You must be logged in to create posts");
+        toast.error("You must be logged in to create posts.");
         return;
       }
 
-      if (!title || !content) {
-        toast.error("Please fill in all required fields");
+      if (!title || !content.body) {
+        toast.error("Please fill in all required fields.");
         return;
       }
 
       if (!category) {
-        toast.error("Please select a category");
+        toast.error("Please select a category.");
         return;
       }
 
-      // Upload images first
+      // Upload images
       const uploadedImageUrls = await Promise.all(
         images.map(async (file) => {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Math.random()}.${fileExt}`;
+          const fileExt = file.name.split(".").pop();
+          const fileName = `${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
           const filePath = `uploads/${fileName}`;
 
-          const { error: uploadError } = await supabase.storage
-            .from('media')
-            .upload(filePath, file);
-
+          const { error: uploadError } = await supabase.storage.from("media").upload(filePath, file);
           if (uploadError) throw uploadError;
 
-          const { data } = supabase.storage
-            .from('media')
-            .getPublicUrl(filePath);
-
+          const { data } = supabase.storage.from("media").getPublicUrl(filePath);
           return data.publicUrl;
         })
       );
 
-      // Create the blog post
+      // Insert the blog post
       const { data: post, error: postError } = await supabase
         .from("blog_posts")
         .insert({
           title,
-          slug: slug || title.toLowerCase().replace(/ /g, "-"),
+          slug: slug || title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
           content,
-          rich_content: content,
-          status: 'draft',
+          rich_content: content.body,
+          status: "draft",
           author_id: user.id,
           images: uploadedImageUrls,
           category,
-          tags
+          tags,
         })
         .select()
         .single();
 
       if (postError) throw postError;
 
-      // Associate images with the post
-      if (post && uploadedImageUrls.length > 0) {
-        const { error: mediaError } = await supabase
-          .from('media')
-          .insert(
-            uploadedImageUrls.map(url => ({
-              name: url.split('/').pop() || '',
-              url,
-              blog_post_id: post.id,
-              user_id: user.id
-            }))
-          );
-
-        if (mediaError) throw mediaError;
-      }
-
-      toast.success("Post saved successfully");
-      setTitle("");
-      setSlug("");
-      setContent("");
-      setImages([]);
-      setCategory(null);
-      setTags([]);
+      toast.success("Post saved successfully.");
+      resetForm();
     } catch (error) {
       console.error("Error in handleSave:", error);
-      toast.error("An unexpected error occurred");
+      toast.error("An unexpected error occurred.");
     }
+  };
+
+  const resetForm = () => {
+    setTitle("");
+    setSlug("");
+    setContent({ body: "" });
+    setImages([]);
+    setCategory(null);
+    setTags([]);
   };
 
   return (
@@ -116,9 +97,9 @@ const PostEditor = () => {
         <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)] animate-fade-in">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-white">Create New Post</h1>
-            <PreviewDialog title={title} content={content} />
+            <PreviewDialog title={title} content={content.body} />
           </div>
-          
+
           <div className="space-y-6">
             <div>
               <label className="text-white/80 block mb-2">Title</label>
@@ -144,36 +125,26 @@ const PostEditor = () => {
 
             <div>
               <label className="text-white/80 block mb-2">Content</label>
-              <RichTextEditor 
-                content={content}
-                onChange={setContent}
+              <RichTextEditor
+                content={content.body}
+                onChange={(body) => setContent((prev) => ({ ...prev, body }))}
                 onCategoryChange={(cat) => setCategory(cat as PostCategory)}
                 onTagsChange={setTags}
               />
             </div>
 
-            <ImageUploadZone 
-              images={images} 
-              onImagesChange={setImages} 
-            />
+            <ImageUploadZone images={images} onImagesChange={setImages} />
 
             <div className="flex justify-end gap-4">
-              <Button 
-                variant="outline" 
-                onClick={() => {
-                  setTitle("");
-                  setSlug("");
-                  setContent("");
-                  setImages([]);
-                  setCategory(null);
-                  setTags([]);
-                }}
+              <Button
+                variant="outline"
+                onClick={resetForm}
                 className="border-white/10 text-white hover:bg-white/5 hover:border-[#41f0db] transition-all duration-300 group"
               >
                 <X className="w-4 h-4 mr-2 group-hover:text-[#41f0db]" />
                 Clear
               </Button>
-              <Button 
+              <Button
                 onClick={handleSave}
                 className="bg-[#41f0db]/20 backdrop-blur-sm text-white border border-[#41f0db]/50 hover:bg-[#41f0db]/30 hover:border-[#41f0db] transition-all duration-300 shadow-[0_0_15px_rgba(65,240,219,0.3)]"
               >
