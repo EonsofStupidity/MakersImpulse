@@ -71,8 +71,10 @@ export const PinSetupForm = () => {
 
     setIsLoading(true);
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
       const { data, error } = await supabase.rpc<PinSetupResponse>('setup_pin', {
-        p_user_id: supabase.auth.getUser()?.id,
+        p_user_id: user?.id,
         p_pin: originalPin,
         p_ip_address: null,
         p_user_agent: navigator.userAgent

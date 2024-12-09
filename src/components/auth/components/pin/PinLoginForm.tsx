@@ -18,8 +18,10 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
 
   const handlePinSubmit = async (pin: string) => {
     try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
       const { data, error } = await supabase.rpc<PinVerificationResponse>('verify_pin_login', {
-        p_user_id: supabase.auth.getUser()?.id,
+        p_user_id: user?.id,
         p_pin: pin,
         p_ip_address: null,
         p_user_agent: navigator.userAgent,
