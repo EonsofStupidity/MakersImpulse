@@ -82,29 +82,37 @@ const Login = () => {
                     defaultButtonBackgroundHover: '#ff0abe',
                     defaultButtonBorder: 'transparent',
                     defaultButtonText: 'white',
-                    inputBackground: 'transparent',
-                    inputBorder: '#2D2D2D',
-                    inputBorderHover: '#4D4D4D',
+                    inputBackground: 'rgba(0, 0, 0, 0.4)',
+                    inputBorder: 'rgba(255, 255, 255, 0.1)',
+                    inputBorderHover: 'rgba(255, 255, 255, 0.2)',
                     inputBorderFocus: '#41f0db',
                     inputText: 'white',
-                    inputLabelText: '#666',
-                    inputPlaceholder: '#444',
+                    inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
                   },
                 },
               },
               className: {
                 container: 'space-y-4',
                 button: 'w-full h-12 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium',
-                label: 'text-sm font-medium text-gray-400',
-                input: 'h-12 bg-black/40 border-border/40 text-white rounded-lg px-4',
-                message: 'text-red-500 text-sm',
-                anchor: 'text-primary hover:text-primary/80 transition-colors',
+                label: 'text-sm font-medium text-gray-300',
+                input: 'h-12 bg-black/40 border-white/10 text-white rounded-lg px-4 w-full',
+                message: 'text-red-400 text-sm',
+                anchor: 'text-[#41f0db] hover:text-[#ff0abe] transition-colors',
+                divider: 'bg-white/10',
               },
             }}
             theme="dark"
             providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/`}
             magicLink={true}
+            localization={{
+              variables: {
+                sign_in: {
+                  email_label: 'Email address',
+                  password_label: 'Your Password',
+                }
+              }
+            }}
           />
         </div>
       </div>

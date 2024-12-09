@@ -22,3 +22,13 @@ export interface AuthGuardProps {
   unauthorizedComponent?: React.ReactNode;
   onError?: (error: Error | { message: string }) => void;
 }
+
+export interface RoleHierarchy {
+  [key: string]: number;
+}
+
+export interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: Error | { message: string } | null;
+}
