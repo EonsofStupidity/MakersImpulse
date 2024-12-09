@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -14,13 +13,11 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
     console.log('SessionProvider: Starting initialization');
 
-    // Initial session check
     const initializeSession = async () => {
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
@@ -64,7 +61,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     initializeSession();
 
-    // Auth state change subscription
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
@@ -94,7 +90,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
           if (event === 'SIGNED_IN') {
             toast.success(`Welcome back, ${sessionData.user.display_name}`);
-            navigate('/');
           }
         } catch (error) {
           console.error('Error in auth state change:', error);
@@ -107,7 +102,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         
         if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out');
-          navigate('/login');
         }
       }
     });
@@ -117,7 +111,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [navigate]);
+  }, []);
 
   return (
     <SessionContext.Provider value={{ session, isLoading }}>
