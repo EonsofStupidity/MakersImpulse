@@ -45,14 +45,14 @@ export const AdminTopNav = () => {
   };
 
   return (
-    <div className="fixed top-16 left-0 right-0 z-40">
+    <div className="fixed top-16 left-0 right-0 z-30">
       <div className="relative w-full max-w-[1400px] mx-auto px-4">
         <motion.div
           className={cn(
-            "relative h-12 bg-black/20 backdrop-blur-lg",
-            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-neon.cyan/10 before:to-neon.pink/10",
+            "relative h-16 bg-black/20 backdrop-blur-lg",
+            "before:absolute before:inset-0 before:bg-gradient-to-r before:from-neon-cyan/10 before:to-neon-pink/10",
             "after:absolute after:inset-0 after:bg-white/5",
-            "overflow-hidden transition-all duration-500"
+            "overflow-visible"
           )}
           style={{
             clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
@@ -67,7 +67,7 @@ export const AdminTopNav = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="flex items-center justify-between w-full px-6 h-full"
+                className="relative z-40 flex items-center justify-between w-full px-6 h-full"
               >
                 <AdminNavItems 
                   isIconOnly={isIconOnly} 
