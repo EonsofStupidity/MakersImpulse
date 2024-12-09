@@ -3,7 +3,6 @@ import { AdminSidebarProvider } from '@/components/admin/dashboard/sidebar/Admin
 import { AdminSidebar } from '@/components/admin/dashboard/sidebar/AdminSidebar';
 import { AdminNav } from '@/components/admin/dashboard/AdminNav';
 import NewDashboardOverview from './core/NewDashboardOverview';
-import { RedisDashboardSection } from './core/RedisDashboardSection';
 
 const AdminDashboard = () => {
   return (
@@ -15,7 +14,6 @@ const AdminDashboard = () => {
           <main className="p-8 pt-32 ml-[60px]">
             <div className="space-y-8 relative z-10">
               <NewDashboardOverview />
-              <RedisDashboardSection />
             </div>
           </main>
         </div>

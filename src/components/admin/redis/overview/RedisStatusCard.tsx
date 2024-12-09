@@ -12,7 +12,6 @@ export const RedisStatusCard = () => {
   const { data: status } = useQuery({
     queryKey: ['redis-status'],
     queryFn: async () => {
-      // This would be replaced with actual Redis status fetching
       return {
         enabled: true,
         mode: 'full',
@@ -26,13 +25,13 @@ export const RedisStatusCard = () => {
   });
 
   return (
-    <Card className="bg-black/20 backdrop-blur-xl border-white/10">
+    <Card className="bg-black/20 backdrop-blur-xl border-neon-cyan/20">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-xl font-bold flex items-center gap-2 text-white">
           <Database className="h-5 w-5 text-neon-cyan" />
           Services Overview
         </CardTitle>
-        <Badge variant={status?.enabled ? "default" : "destructive"} className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/30">
+        <Badge variant="default" className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/30">
           {status?.enabled ? "Enabled" : "Disabled"}
         </Badge>
       </CardHeader>

@@ -12,7 +12,9 @@ export const RedisDashboardSection = () => {
       transition={{ delay: 0.2 }}
       className="space-y-6"
     >
-      <h2 className="text-2xl font-bold text-white">Redis Management</h2>
+      <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-cyan via-neon-pink to-neon-purple">
+        Redis Management
+      </h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RedisStatusCard />
         <div className="space-y-6">
