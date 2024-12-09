@@ -56,7 +56,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-gray-900">
         <AdminTopNav />
         <AdminSidebar />
-        <main className="transition-all duration-300 ml-[210px]">
+        <main className="transition-all duration-300 ml-[185px]">
           <div className="container mx-auto p-8">
             <NewDashboardOverview />
           </div>
