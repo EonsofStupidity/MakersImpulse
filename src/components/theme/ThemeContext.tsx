@@ -1,10 +1,11 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { Settings } from "@/components/admin/settings/types";
 import { useThemeSetup } from "./hooks/useThemeSetup";
 import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useSession } from "@/components/auth/SessionContext";
 
 interface ThemeContextType {
   theme: Settings | null;
@@ -15,10 +16,18 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const { theme, setTheme } = useThemeSetup();
+  const { session } = useSession();
+  
   useThemeSubscription(setTheme);
 
   const updateTheme = async (newTheme: Settings) => {
     try {
+      if (!session?.user) {
+        console.log('No active session, using default theme');
+        applyThemeToDocument(newTheme);
+        return;
+      }
+
       const { error } = await supabase.rpc('update_site_settings', {
         p_site_title: newTheme.site_title,
         p_tagline: newTheme.tagline,
@@ -47,6 +56,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (error) throw error;
+      
+      setTheme(newTheme);
       applyThemeToDocument(newTheme);
       toast.success("Theme updated successfully");
     } catch (error) {
@@ -54,6 +65,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       toast.error("Failed to update theme");
     }
   };
+
+  if (!theme) {
+    console.log("ThemeProvider: Theme not loaded yet");
+    return null;
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, updateTheme }}>

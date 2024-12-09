@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
-import { ThemeProvider } from "@/components/theme/providers/ThemeProvider";
+import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
@@ -23,21 +23,21 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <ThemeProvider>
-            <TooltipProvider>
-              <BrowserRouter>
+          <BrowserRouter>
+            <ThemeProvider>
+              <TooltipProvider>
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
-              </BrowserRouter>
-              <Toaster 
-                position="top-right"
-                expand={false}
-                richColors
-                closeButton
-              />
-            </TooltipProvider>
-          </ThemeProvider>
+                <Toaster 
+                  position="top-right"
+                  expand={false}
+                  richColors
+                  closeButton
+                />
+              </TooltipProvider>
+            </ThemeProvider>
+          </BrowserRouter>
         </SessionProvider>
       </QueryClientProvider>
     </ErrorBoundary>
