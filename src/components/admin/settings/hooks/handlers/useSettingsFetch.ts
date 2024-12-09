@@ -49,11 +49,9 @@ export const useSettingsFetch = () => {
         font_weight_bold: data.font_weight_bold,
         line_height_base: data.line_height_base,
         letter_spacing: data.letter_spacing,
-        transition_type: data.transition_type || 'fade',
+        transition_type: (data.transition_type as 'fade' | 'slide' | 'scale') || 'fade',
         box_shadow: data.box_shadow,
-        backdrop_blur: data.backdrop_blur,
-        updated_at: data.updated_at,
-        updated_by: data.updated_by
+        backdrop_blur: data.backdrop_blur
       };
 
       console.log("Settings fetched successfully:", settings);

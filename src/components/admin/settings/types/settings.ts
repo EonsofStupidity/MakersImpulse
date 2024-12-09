@@ -1,4 +1,4 @@
-export interface Settings {
+export interface SettingsFormData {
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -29,11 +29,6 @@ export interface Settings {
   transition_type: 'fade' | 'slide' | 'scale';
   box_shadow?: string;
   backdrop_blur?: string;
-  updated_at?: string;
-  updated_by?: string;
 }
 
-export interface SettingsResponse {
-  success: boolean;
-  data: Settings;
-}
+export type Settings = SettingsFormData;
