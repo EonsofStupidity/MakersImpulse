@@ -1,51 +1,40 @@
 import { lazy } from "react";
-import type { RouteObject } from "react-router-dom";
 
-const AdminDashboard = lazy(() => import("@/pages/admin/dashboard"));
-const WorkflowsManagement = lazy(() => import("@/pages/admin/content-management/workflows"));
-const WorkflowEditor = lazy(() => import("@/pages/admin/content-management/workflows/[id]"));
-const DatabaseManagement = lazy(() => import("@/pages/admin/DataMaestro/DatabaseManagement"));
-const VisualEditor = lazy(() => import("@/pages/admin/DataMaestro/VisualEditor"));
-const Settings = lazy(() => import("@/pages/admin/settings"));
-const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
+const Dashboard = lazy(() => import("@/pages/admin/dashboard"));
 const Posts = lazy(() => import("@/pages/admin/posts"));
+const Settings = lazy(() => import("@/pages/admin/settings"));
 const Users = lazy(() => import("@/pages/admin/users"));
+const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
+const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
+const DataMaestro = lazy(() => import("@/pages/admin/DataMaestro/Settings"));
 
-export const adminRoutes: RouteObject[] = [
+export const adminRoutes = [
   {
-    path: "",
-    element: <AdminDashboard />
+    path: "dashboard",
+    element: <Dashboard />,
   },
   {
     path: "posts",
-    element: <Posts />
-  },
-  {
-    path: "users",
-    element: <Users />
+    element: <Posts />,
   },
   {
     path: "settings",
-    element: <Settings />
+    element: <Settings />,
+  },
+  {
+    path: "users",
+    element: <Users />,
+  },
+  {
+    path: "settings/activity-logs",
+    element: <ActivityLogs />,
   },
   {
     path: "settings/content-types",
-    element: <ContentTypes />
-  },
-  {
-    path: "content-management/workflows",
-    element: <WorkflowsManagement />
-  },
-  {
-    path: "content-management/workflows/:id",
-    element: <WorkflowEditor />
+    element: <ContentTypes />,
   },
   {
     path: "data-maestro",
-    element: <DatabaseManagement />
+    element: <DataMaestro />,
   },
-  {
-    path: "data-maestro/visual-editor",
-    element: <VisualEditor />
-  }
 ];

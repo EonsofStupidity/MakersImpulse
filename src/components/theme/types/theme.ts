@@ -1,8 +1,10 @@
 import { Settings } from "@/components/admin/settings/types";
 
+export interface Theme extends Settings {}
+
 export interface ThemeContextType {
-  theme: Settings | null;
-  updateTheme: (newTheme: Settings) => void;
+  theme: Theme | null;
+  updateTheme: (newTheme: Theme) => void;
 }
 
 export interface DatabaseSettingsRow {
@@ -34,7 +36,6 @@ export interface DatabaseSettingsRow {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  transition_type: 'fade' | 'slide' | 'scale';
   updated_at?: string;
   updated_by?: string;
 }

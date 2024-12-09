@@ -1,48 +1,47 @@
-import { lazy } from 'react';
-import { Navigate } from 'react-router-dom';
+import { lazy } from "react";
+import { Landing } from "@/pages/site/landing";
 
-const LatestUpdates = lazy(() => import('@/pages/content/blog/latest-updates'));
-const Login = lazy(() => import('@/pages/auth/login'));
-const Register = lazy(() => import('@/pages/auth/register'));
-const MakerSpace = lazy(() => import('@/pages/content/maker-space'));
-const About = lazy(() => import('@/pages/site/about'));
-const Landing = lazy(() => import('@/pages/site/landing'));
-const Privacy = lazy(() => import('@/pages/site/privacy'));
-const Terms = lazy(() => import('@/pages/site/terms'));
+const About = lazy(() => import("@/pages/site/about"));
+const Login = lazy(() => import("@/pages/auth/login"));
+const Register = lazy(() => import("@/pages/auth/register"));
+const MakerSpace = lazy(() => import("@/pages/content/maker-space"));
+const LatestUpdates = lazy(() => import("@/pages/content/blog/latest-updates"));
+const Privacy = lazy(() => import("@/pages/site/privacy"));
+const Terms = lazy(() => import("@/pages/site/terms"));
 
 const publicRoutes = [
   {
-    path: '/',
-    element: <Landing />
+    path: "/",
+    element: <Landing />,
   },
   {
-    path: '/login',
-    element: <Login />
+    path: "/about",
+    element: <About />,
   },
   {
-    path: '/register',
-    element: <Register />
+    path: "/login",
+    element: <Login />,
   },
   {
-    path: '/maker-space',
-    element: <MakerSpace />
+    path: "/register",
+    element: <Register />,
   },
   {
-    path: '/blog',
-    element: <LatestUpdates />
+    path: "/maker-space",
+    element: <MakerSpace />,
   },
   {
-    path: '/about',
-    element: <About />
+    path: "/blog/latest-updates",
+    element: <LatestUpdates />,
   },
   {
-    path: '/privacy',
-    element: <Privacy />
+    path: "/privacy",
+    element: <Privacy />,
   },
   {
-    path: '/terms',
-    element: <Terms />
-  }
+    path: "/terms",
+    element: <Terms />,
+  },
 ];
 
 export default publicRoutes;
