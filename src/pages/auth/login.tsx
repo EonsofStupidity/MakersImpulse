@@ -15,30 +15,33 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    console.log('Login component mounted, session state:', { session, isLoading });
+    console.log('Login page mounted, checking session:', { session, isLoading });
 
-    if (session) {
-      console.log('Active session found, redirecting to home');
+    // If already logged in, redirect to home
+    if (session?.user) {
+      console.log('User already logged in, redirecting to home');
       navigate("/");
       return;
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed in login:', event, session?.user?.id);
+    // Handle auth state changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log('Auth state changed:', event, currentSession?.user?.id);
       
-      if (event === 'SIGNED_IN' && session) {
-        console.log('Sign in successful, redirecting');
+      if (event === 'SIGNED_IN' && currentSession) {
+        console.log('Sign in successful, redirecting to home');
         toast.success("Successfully signed in!");
         navigate("/");
       }
     });
 
     return () => {
-      console.log('Login component unmounting');
+      console.log('Login component unmounting, cleaning up subscription');
       subscription.unsubscribe();
     };
   }, [session, navigate]);
 
+  // Show loading state only during initial session check
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">

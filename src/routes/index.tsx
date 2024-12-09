@@ -44,6 +44,7 @@ export const AppRoutes = () => {
               element={
                 <AuthGuard 
                   requireAuth={true}
+                  fallbackPath="/login"
                   onError={(error) => {
                     console.error('Auth error:', error);
                     toast.error('Please sign in to access this content');
@@ -64,7 +65,7 @@ export const AppRoutes = () => {
                 <AuthGuard 
                   requireAuth={true}
                   requiredRole={["admin", "super_admin"]}
-                  fallbackPath="/"
+                  fallbackPath="/login"
                   onError={(error) => {
                     console.error('Admin access error:', error);
                     toast.error('Admin access required');
