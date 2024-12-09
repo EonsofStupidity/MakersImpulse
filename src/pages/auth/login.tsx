@@ -8,48 +8,52 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
 
-  console.log("Login page render:", { session, isLoading });
-
   useEffect(() => {
-    const handleAuthChange = (event: string, currentSession: any) => {
-      console.log("Auth state changed in login:", event, currentSession?.user?.id);
-      
-      if (event === 'SIGNED_IN' && currentSession) {
-        console.log("User signed in, redirecting to home");
-        toast.success("Successfully signed in!");
-        navigate("/");
-      }
-    };
-
-    if (session) {
-      console.log("Existing session found, redirecting");
+    if (session?.user) {
+      console.log("Existing session found, redirecting to home");
       navigate("/");
       return;
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(handleAuthChange);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed in login:", event, session?.user?.id);
+      
+      if (event === 'SIGNED_IN' && session) {
+        console.log("User signed in, redirecting to home");
+        navigate("/");
+      }
+    });
 
     return () => {
-      console.log("Cleaning up auth listener");
+      console.log("Cleaning up auth listener in login page");
       subscription.unsubscribe();
     };
   }, [session, navigate]);
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="min-h-screen flex items-center justify-center bg-[#0F1114]"
+      >
         <LoadingSpinner />
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0F1114] to-[#1A1F2C] flex flex-col">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen bg-gradient-to-br from-[#0F1114] to-[#1A1F2C] flex flex-col"
+    >
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/40 backdrop-blur-xl border-b border-[#41f0db]/20">
         <Button 
           variant="ghost" 
@@ -65,7 +69,11 @@ const Login = () => {
       </div>
 
       <div className="flex-1 flex flex-col p-4 items-center justify-center">
-        <div className="w-full max-w-md bg-black/30 backdrop-blur-2xl p-8 rounded-xl shadow-xl border border-[#41f0db]/20 relative overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full max-w-md bg-black/30 backdrop-blur-2xl p-8 rounded-xl shadow-xl border border-[#41f0db]/20 relative overflow-hidden"
+        >
           <div className="absolute inset-0 bg-gradient-to-br from-[#41f0db]/5 to-transparent pointer-events-none" />
           <Auth 
             supabaseClient={supabase}
@@ -105,24 +113,10 @@ const Login = () => {
             providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/`}
             magicLink={true}
-            localization={{
-              variables: {
-                sign_in: {
-                  email_label: 'Email address',
-                  password_label: 'Password',
-                  email_input_placeholder: 'Enter your email',
-                  password_input_placeholder: 'Enter your password',
-                  button_label: 'Sign in',
-                  loading_button_label: 'Signing in ...',
-                  social_provider_text: 'Sign in with {{provider}}',
-                  link_text: 'Already have an account? Sign in',
-                }
-              }
-            }}
           />
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
