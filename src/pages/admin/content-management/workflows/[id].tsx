@@ -9,7 +9,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { WorkflowForm } from "@/components/admin/workflows/WorkflowForm";
-import type { WorkflowFormData, WorkflowData, ParsedWorkflowData, WorkflowStep } from "@/components/content/types/workflow";
+import type { WorkflowFormData, WorkflowData, ParsedWorkflowData } from "@/components/content/types/workflow";
+import { parseWorkflowSteps, serializeWorkflowSteps } from "@/components/content/types/workflow";
 
 const WorkflowEditor = () => {
   const { id } = useParams();
@@ -42,7 +43,7 @@ const WorkflowEditor = () => {
       // Parse the workflow data
       const parsedData: ParsedWorkflowData = {
         ...data,
-        steps: Array.isArray(data.steps) ? data.steps : [],
+        steps: parseWorkflowSteps(data.steps),
       };
 
       return parsedData;
@@ -55,7 +56,7 @@ const WorkflowEditor = () => {
       setFormData({
         name: workflow.name,
         description: workflow.description || "",
-        steps: workflow.steps as WorkflowStep[],
+        steps: workflow.steps,
       });
     }
   }, [workflow]);
@@ -65,7 +66,7 @@ const WorkflowEditor = () => {
       const workflowData = {
         name: formData.name,
         description: formData.description,
-        steps: formData.steps,
+        steps: serializeWorkflowSteps(formData.steps),
       };
 
       if (isNewWorkflow) {

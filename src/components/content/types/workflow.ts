@@ -5,6 +5,7 @@ export interface WorkflowStep {
   name: string;
   type: string;
   config: Record<string, unknown>;
+  [key: string]: Json; // Add index signature for Json compatibility
 }
 
 export interface WorkflowFormData {
@@ -26,3 +27,19 @@ export interface WorkflowData {
 export interface ParsedWorkflowData extends Omit<WorkflowData, 'steps'> {
   steps: WorkflowStep[];
 }
+
+// Helper function to convert between types
+export const parseWorkflowSteps = (steps: Json): WorkflowStep[] => {
+  if (!Array.isArray(steps)) return [];
+  return steps.map((step: any) => ({
+    id: step.id || '',
+    name: step.name || '',
+    type: step.type || '',
+    config: step.config || {},
+    ...step
+  }));
+};
+
+export const serializeWorkflowSteps = (steps: WorkflowStep[]): Json => {
+  return steps as Json;
+};
