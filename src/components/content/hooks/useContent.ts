@@ -24,6 +24,7 @@ export const useContent = (contentId?: string) => {
         throw error;
       }
 
+      console.log("Fetched content:", data);
       return data as BaseContent;
     },
     enabled: !!contentId,
@@ -33,15 +34,16 @@ export const useContent = (contentId?: string) => {
     mutationFn: async (formData: ContentFormData) => {
       console.log("Creating content with data:", formData);
       
-      // Ensure required fields are present
       const contentData = {
         title: formData.title,
         type: formData.type,
         content: formData.content || {},
         status: formData.status || "draft",
-        slug: formData.slug,
+        slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-'),
         metadata: formData.metadata || {},
       };
+
+      console.log("Prepared content data:", contentData);
 
       const { data, error } = await supabase
         .from("cms_content")
@@ -54,6 +56,7 @@ export const useContent = (contentId?: string) => {
         throw error;
       }
 
+      console.log("Created content:", data);
       return data;
     },
     onSuccess: () => {
@@ -81,6 +84,7 @@ export const useContent = (contentId?: string) => {
         throw error;
       }
 
+      console.log("Updated content:", data);
       return data;
     },
     onSuccess: () => {
