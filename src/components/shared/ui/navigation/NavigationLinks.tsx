@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import { useSession } from "@/components/auth/SessionContext";
+import type { AuthSession } from "@/components/auth/types";
 
-export const NavigationLinks = () => {
-  const { session } = useSession();
+interface NavigationLinksProps {
+  session?: AuthSession | null;
+}
 
+export const NavigationLinks = ({ session }: NavigationLinksProps) => {
   return (
     <div className="hidden md:flex items-center space-x-6">
       <Link 

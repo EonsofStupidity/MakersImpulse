@@ -6,11 +6,14 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
-import { useSession } from "@/components/auth/SessionContext";
+import type { AuthSession } from "@/components/auth/types";
 
-export const UserMenu = () => {
+interface UserMenuProps {
+  session?: AuthSession | null;
+}
+
+export const UserMenu = ({ session }: UserMenuProps) => {
   const navigate = useNavigate();
-  const { session } = useSession();
 
   const { data: profile } = useQuery({
     queryKey: ['profile', session?.user?.id],
