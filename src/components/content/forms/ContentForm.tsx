@@ -6,6 +6,7 @@ import ComponentContentForm from './ComponentContentForm';
 import { useContent } from '../hooks/useContent';
 import { toast } from 'sonner';
 import type { ContentType } from '../types/contentTypes';
+import type { PageContent, ComponentContent } from '../types/contentTypes';
 
 interface ContentFormProps {
   initialType?: ContentType;
@@ -16,7 +17,7 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
   const [contentType, setContentType] = useState<ContentType>(initialType);
   const { content, createContent, updateContent, isLoading } = useContent(contentId);
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: PageContent | ComponentContent) => {
     try {
       if (contentId) {
         await updateContent.mutateAsync({ id: contentId, ...data });
@@ -32,11 +33,23 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
   };
 
   const renderForm = () => {
+    if (!content && contentId) {
+      return null;
+    }
+
+    const formProps = {
+      initialData: content ? {
+        ...content,
+        content: content.content || {},
+      } : undefined,
+      onSubmit: handleSubmit,
+    };
+
     switch (contentType) {
       case 'page':
-        return <PageContentForm initialData={content} onSubmit={handleSubmit} />;
+        return <PageContentForm {...formProps} />;
       case 'component':
-        return <ComponentContentForm initialData={content} onSubmit={handleSubmit} />;
+        return <ComponentContentForm {...formProps} />;
       default:
         return <div>Form for {contentType} type is not implemented yet</div>;
     }

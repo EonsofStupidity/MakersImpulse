@@ -34,50 +34,15 @@ export const componentContentSchema = baseContentTypeSchema.extend({
   }),
 });
 
-// Template content type
-export const templateContentSchema = baseContentTypeSchema.extend({
-  type: z.literal("template"),
-  content: z.object({
-    sections: z.array(z.object({
-      id: z.string(),
-      type: z.string(),
-      content: z.record(z.any()),
-    })),
-    defaultValues: z.record(z.any()).optional(),
-  }),
-});
-
-// Workflow content type
-export const workflowContentSchema = baseContentTypeSchema.extend({
-  type: z.literal("workflow"),
-  content: z.object({
-    steps: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-      type: z.string(),
-      config: z.record(z.any()),
-    })),
-    transitions: z.array(z.object({
-      from: z.string(),
-      to: z.string(),
-      conditions: z.array(z.record(z.any())).optional(),
-    })).optional(),
-  }),
-});
-
 // Type definitions
 export type BaseContent = z.infer<typeof baseContentTypeSchema>;
 export type PageContent = z.infer<typeof pageContentSchema>;
 export type ComponentContent = z.infer<typeof componentContentSchema>;
-export type TemplateContent = z.infer<typeof templateContentSchema>;
-export type WorkflowContent = z.infer<typeof workflowContentSchema>;
 
 export type ContentType = "page" | "component" | "template" | "workflow";
 export type ContentTypeSchema = 
   | typeof pageContentSchema 
-  | typeof componentContentSchema 
-  | typeof templateContentSchema 
-  | typeof workflowContentSchema;
+  | typeof componentContentSchema;
 
 // Helper function to get schema by content type
 export const getSchemaByType = (type: ContentType): ContentTypeSchema => {
@@ -86,9 +51,7 @@ export const getSchemaByType = (type: ContentType): ContentTypeSchema => {
       return pageContentSchema;
     case "component":
       return componentContentSchema;
-    case "template":
-      return templateContentSchema;
-    case "workflow":
-      return workflowContentSchema;
+    default:
+      throw new Error(`Schema not implemented for type: ${type}`);
   }
 };
