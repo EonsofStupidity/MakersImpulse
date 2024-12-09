@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSession } from "@/components/auth/SessionContext";
+import { Shield } from "lucide-react";
 
 const menuVariants = {
   open: {
@@ -33,13 +35,33 @@ interface MobileNavContentProps {
 }
 
 export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
-  const menuItems = [
-    { to: "/", label: "Home" },
-    { to: "/blog", label: "Blog" },
+  const { session } = useSession();
+  
+  // Base menu items
+  const baseMenuItems = [
     { to: "/maker-space", label: "Maker Space" },
-    { to: "/login", label: "Sign In" },
-    { to: "/register", label: "Sign Up" },
+    { to: "/maker-space/builds", label: "Builds" },
+    { to: "/maker-space/guides", label: "Guides" },
+    { to: "/maker-space/parts", label: "Parts" },
+    { to: "/blog", label: "Blog" },
   ];
+
+  // Auth-related items
+  const authItems = session ? [
+    { to: "/profile", label: "Profile" }
+  ] : [
+    { to: "/login", label: "Sign In" },
+    { to: "/register", label: "Sign Up" }
+  ];
+
+  // Check if user is admin
+  const isAdmin = session?.user && session.user.app_metadata?.role === 'admin';
+  const adminItems = isAdmin ? [
+    { to: "/admin", label: "Admin Dashboard", icon: Shield }
+  ] : [];
+
+  // Combine all menu items
+  const menuItems = [...baseMenuItems, ...authItems, ...adminItems];
 
   return (
     <motion.div
@@ -66,8 +88,9 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
             <Link
               to={item.to}
               onClick={onClose}
-              className="block w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group"
+              className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group"
             >
+              {item.icon && <item.icon className="w-5 h-5 mr-2" />}
               {item.label}
               <motion.div
                 className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
