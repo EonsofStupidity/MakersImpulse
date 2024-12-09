@@ -16,16 +16,16 @@ export const AdminTopNav = () => {
   const { data: adminMetrics } = useQuery({
     queryKey: ['admin-metrics'],
     queryFn: async () => {
-      const [usersCount, postsCount, contentCount] = await Promise.all([
-        supabase.from('profiles').count(),
-        supabase.from('blog_posts').count(),
-        supabase.from('cms_content').count()
+      const [usersResponse, postsResponse, contentResponse] = await Promise.all([
+        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('blog_posts').select('*', { count: 'exact', head: true }),
+        supabase.from('cms_content').select('*', { count: 'exact', head: true })
       ]);
       
       return {
-        users: usersCount.count || 0,
-        posts: postsCount.count || 0,
-        content: contentCount.count || 0
+        users: usersResponse.count || 0,
+        posts: postsResponse.count || 0,
+        content: contentResponse.count || 0
       };
     }
   });
