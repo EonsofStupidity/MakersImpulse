@@ -15,16 +15,15 @@ export const useThemeSetup = () => {
         const { data: rawData, error } = await supabase
           .from("site_settings")
           .select("*")
+          .limit(1)
           .single();
 
         if (error) {
-          if (error.code === 'PGRST116') {
-            // If no settings exist, use defaults
-            console.log("No settings found, using defaults");
-            applyThemeToDocument(DEFAULT_THEME_SETTINGS);
-            return;
-          }
-          throw error;
+          console.error("Error fetching theme:", error);
+          // Use defaults on error
+          setTheme(DEFAULT_THEME_SETTINGS);
+          applyThemeToDocument(DEFAULT_THEME_SETTINGS);
+          return;
         }
 
         const dbSettings = rawData as DatabaseSettingsRow;
@@ -35,7 +34,7 @@ export const useThemeSetup = () => {
         applyThemeToDocument(themeData);
         toast.success("Theme settings loaded");
       } catch (error) {
-        console.error("Error fetching theme:", error);
+        console.error("Error in theme setup:", error);
         // Use defaults on error
         setTheme(DEFAULT_THEME_SETTINGS);
         applyThemeToDocument(DEFAULT_THEME_SETTINGS);
