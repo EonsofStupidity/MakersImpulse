@@ -2,35 +2,33 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
 import { Session } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 
 interface SessionContextType {
   session: AuthSession | null;
+  isLoading: boolean;
 }
 
-export const SessionContext = createContext<SessionContextType | null>(null);
-
-export const useSession = () => {
-  const context = useContext(SessionContext);
-  if (!context) {
-    throw new Error('useSession must be used within a SessionProvider');
-  }
-  return context;
-};
+const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session: supabaseSession } } = await supabase.auth.getSession();
-      if (supabaseSession) {
-        const { data: profile } = await supabase
+    const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
+      if (!supabaseSession) return null;
+
+      try {
+        const { data: profile, error } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', supabaseSession.user.id)
           .single();
 
-        const authSession: AuthSession = {
+        if (error) throw error;
+
+        return {
           user: {
             id: supabaseSession.user.id,
             email: supabaseSession.user.email,
@@ -38,42 +36,49 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           },
           expires_at: supabaseSession.expires_at
         };
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+        toast.error('Error loading user profile');
+        return null;
+      }
+    };
+
+    const fetchSession = async () => {
+      try {
+        const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+        const authSession = await transformSession(supabaseSession);
         setSession(authSession);
+      } catch (error) {
+        console.error('Error fetching session:', error);
+        toast.error('Error loading session');
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchSession();
 
-    const { data } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
-      if (supabaseSession) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', supabaseSession.user.id)
-          .single();
-
-        const authSession: AuthSession = {
-          user: {
-            id: supabaseSession.user.id,
-            email: supabaseSession.user.email,
-            role: profile?.role || 'subscriber'
-          },
-          expires_at: supabaseSession.expires_at
-        };
-        setSession(authSession);
-      } else {
-        setSession(null);
-      }
+    const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
+      const authSession = await transformSession(supabaseSession);
+      setSession(authSession);
     });
 
     return () => {
-      data?.subscription.unsubscribe();
+      subscription.subscription.unsubscribe();
     };
   }, []);
 
   return (
-    <SessionContext.Provider value={{ session }}>
+    <SessionContext.Provider value={{ session, isLoading }}>
       {children}
     </SessionContext.Provider>
   );
+};
+
+export const useSession = () => {
+  const context = useContext(SessionContext);
+  if (context === undefined) {
+    throw new Error('useSession must be used within a SessionProvider');
+  }
+  return context;
 };

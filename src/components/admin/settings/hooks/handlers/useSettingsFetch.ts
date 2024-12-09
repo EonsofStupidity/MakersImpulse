@@ -1,116 +1,29 @@
-import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Settings } from "../../types";
-import { DEFAULT_SETTINGS } from "../useSettingsDefaults";
-
-interface DatabaseSettings {
-  id: string;
-  site_title: string;
-  tagline: string | null;
-  primary_color: string | null;
-  secondary_color: string | null;
-  accent_color: string | null;
-  logo_url: string | null;
-  favicon_url: string | null;
-  theme_mode: "light" | "dark" | "system" | null;
-  text_primary_color: string | null;
-  text_secondary_color: string | null;
-  text_link_color: string | null;
-  text_heading_color: string | null;
-  neon_cyan: string | null;
-  neon_pink: string | null;
-  neon_purple: string | null;
-  border_radius: string | null;
-  spacing_unit: string | null;
-  transition_duration: string | null;
-  shadow_color: string | null;
-  hover_scale: string | null;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  transition_type: 'fade' | 'slide' | 'scale' | null;
-  updated_at: string | null;
-  updated_by: string | null;
-}
+import type { Settings } from "../../types";
 
 export const useSettingsFetch = () => {
-  const [settings, setSettings] = useState<Settings | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  return useQuery({
+    queryKey: ["site-settings"],
+    queryFn: async (): Promise<Settings> => {
+      console.log("Fetching site settings...");
+      
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("*")
+        .single();
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        console.log("Attempting to fetch settings...");
-
-        const { data, error } = await supabase
-          .from("site_settings")
-          .select("*")
-          .single();
-
-        if (error) {
-          console.error("Error details:", {
-            message: error.message,
-            code: error.code,
-            details: error.details,
-            hint: error.hint
-          });
-          throw error;
-        }
-        
-        console.log("Raw settings data:", data);
-        const dbSettings = data as unknown as DatabaseSettings;
-        const settingsData: Settings = {
-          site_title: dbSettings.site_title,
-          tagline: dbSettings.tagline || DEFAULT_SETTINGS.tagline,
-          primary_color: dbSettings.primary_color || DEFAULT_SETTINGS.primary_color,
-          secondary_color: dbSettings.secondary_color || DEFAULT_SETTINGS.secondary_color,
-          accent_color: dbSettings.accent_color || DEFAULT_SETTINGS.accent_color,
-          logo_url: dbSettings.logo_url,
-          favicon_url: dbSettings.favicon_url,
-          theme_mode: dbSettings.theme_mode || 'system',
-          text_primary_color: dbSettings.text_primary_color || DEFAULT_SETTINGS.text_primary_color,
-          text_secondary_color: dbSettings.text_secondary_color || DEFAULT_SETTINGS.text_secondary_color,
-          text_link_color: dbSettings.text_link_color || DEFAULT_SETTINGS.text_link_color,
-          text_heading_color: dbSettings.text_heading_color || DEFAULT_SETTINGS.text_heading_color,
-          neon_cyan: dbSettings.neon_cyan || DEFAULT_SETTINGS.neon_cyan,
-          neon_pink: dbSettings.neon_pink || DEFAULT_SETTINGS.neon_pink,
-          neon_purple: dbSettings.neon_purple || DEFAULT_SETTINGS.neon_purple,
-          border_radius: dbSettings.border_radius || DEFAULT_SETTINGS.border_radius,
-          spacing_unit: dbSettings.spacing_unit || DEFAULT_SETTINGS.spacing_unit,
-          transition_duration: dbSettings.transition_duration || DEFAULT_SETTINGS.transition_duration,
-          shadow_color: dbSettings.shadow_color || DEFAULT_SETTINGS.shadow_color,
-          hover_scale: dbSettings.hover_scale || DEFAULT_SETTINGS.hover_scale,
-          font_family_heading: dbSettings.font_family_heading,
-          font_family_body: dbSettings.font_family_body,
-          font_size_base: dbSettings.font_size_base,
-          font_weight_normal: dbSettings.font_weight_normal,
-          font_weight_bold: dbSettings.font_weight_bold,
-          line_height_base: dbSettings.line_height_base,
-          letter_spacing: dbSettings.letter_spacing,
-          transition_type: dbSettings.transition_type || 'fade',
-        };
-        
-        console.log("Processed settings data:", settingsData);
-        setSettings(settingsData);
-      } catch (error) {
-        console.error("Detailed fetch error:", error);
-        toast.error("Failed to load settings");
-      } finally {
-        setIsLoading(false);
+      if (error) {
+        console.error("Error fetching settings:", error);
+        toast.error("Failed to load site settings");
+        throw error;
       }
-    };
 
-    fetchSettings();
-  }, []);
-
-  return {
-    settings,
-    isLoading,
-    setSettings,
-  };
+      console.log("Settings fetched successfully:", data);
+      return data as Settings;
+    },
+    retry: 1,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
 };
