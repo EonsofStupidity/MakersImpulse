@@ -1,8 +1,9 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { AuthSession } from '@/integrations/supabase/types';
 
 interface SessionContextType {
-  session: any;
+  session: AuthSession | null;
 }
 
 export const SessionContext = createContext<SessionContextType | null>(null);
@@ -16,7 +17,7 @@ export const useSession = () => {
 };
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<AuthSession | null>(null);
 
   useEffect(() => {
     const fetchSession = async () => {
