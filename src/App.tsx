@@ -24,18 +24,18 @@ const App = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <AuthProvider>
-            <TooltipProvider>
-              <ThemeProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <ThemeProvider>
+              <TooltipProvider>
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
                 <Toaster position="top-right" expand={false} richColors closeButton />
-              </ThemeProvider>
-            </TooltipProvider>
-          </AuthProvider>
-        </BrowserRouter>
+              </TooltipProvider>
+            </ThemeProvider>
+          </BrowserRouter>
+        </AuthProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

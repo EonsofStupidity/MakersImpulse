@@ -3,12 +3,12 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { memo } from "react";
 
 export const NavigationLinks = memo(() => {
-  const { session } = useAuth();
+  const { session, user } = useAuth();
 
   console.log('NavigationLinks render - Session:', {
     isAuthenticated: !!session,
     userId: session?.user?.id,
-    role: session?.user?.role
+    role: user?.role
   });
 
   return (
@@ -31,7 +31,7 @@ export const NavigationLinks = memo(() => {
         <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
       </Link>
 
-      {session?.user?.role === 'admin' && (
+      {user?.role === 'admin' && (
         <Link 
           to="/admin/dashboard"
           className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
