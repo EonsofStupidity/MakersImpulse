@@ -17,18 +17,34 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         const { data: rawData, error } = await supabase
           .from("site_settings")
           .select("*")
+          .limit(1)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          if (error.code === 'PGRST116') {
+            // If no settings exist, create default settings
+            const { data: newSettings, error: insertError } = await supabase
+              .from("site_settings")
+              .insert([{}])
+              .select()
+              .single();
 
-        // Type assertion to DatabaseSettingsRow
+            if (insertError) throw insertError;
+            
+            const themeData = convertDbSettingsToTheme(newSettings as DatabaseSettingsRow);
+            setTheme(themeData);
+            applyThemeToDocument(themeData);
+            return;
+          }
+          throw error;
+        }
+
         const dbSettings = rawData as DatabaseSettingsRow;
         const themeData = convertDbSettingsToTheme(dbSettings);
 
         console.log("Initial theme settings fetched:", themeData);
         setTheme(themeData);
         applyThemeToDocument(themeData);
-        toast.success("Theme settings loaded");
       } catch (error) {
         console.error("Error fetching theme:", error);
         toast.error("Failed to load theme settings");

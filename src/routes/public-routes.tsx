@@ -1,20 +1,47 @@
-import { RouteObject } from "react-router-dom";
-import Landing from "@/pages/site/landing";
-import Login from "@/pages/auth/login";
-import Register from "@/pages/auth/register";
+import { lazy } from 'react';
+import { Navigate } from 'react-router-dom';
 
-const publicRoutes: RouteObject[] = [
+const LatestUpdates = lazy(() => import('@/pages/content/blog/latest-updates'));
+const Login = lazy(() => import('@/pages/auth/login'));
+const Register = lazy(() => import('@/pages/auth/register'));
+const MakerSpace = lazy(() => import('@/pages/content/maker-space'));
+const About = lazy(() => import('@/pages/site/about'));
+const Landing = lazy(() => import('@/pages/site/landing'));
+const Privacy = lazy(() => import('@/pages/site/privacy'));
+const Terms = lazy(() => import('@/pages/site/terms'));
+
+const publicRoutes = [
   {
-    path: "/",
+    path: '/',
     element: <Landing />
   },
   {
-    path: "/login",
+    path: '/login',
     element: <Login />
   },
   {
-    path: "/register", 
+    path: '/register',
     element: <Register />
+  },
+  {
+    path: '/maker-space',
+    element: <MakerSpace />
+  },
+  {
+    path: '/blog',
+    element: <LatestUpdates />
+  },
+  {
+    path: '/about',
+    element: <About />
+  },
+  {
+    path: '/privacy',
+    element: <Privacy />
+  },
+  {
+    path: '/terms',
+    element: <Terms />
   }
 ];
 
