@@ -10,6 +10,7 @@ import RichTextEditor from "@/components/content/blog/components/RichTextEditor"
 import { Database } from "@/integrations/supabase/types";
 import { PreviewDialog } from "@/components/content/blog/components/preview/PreviewDialog";
 import { X } from "lucide-react";
+import type { BaseContent } from "@/components/content/types/cms";
 
 type PostCategory = Database["public"]["Enums"]["post_category"];
 
@@ -20,6 +21,15 @@ const PostEditor = () => {
   const [images, setImages] = useState<File[]>([]);
   const [category, setCategory] = useState<PostCategory | null>(null);
   const [tags, setTags] = useState<string[]>([]);
+
+  // Create a preview content object that matches BaseContent type
+  const previewContent: BaseContent = {
+    id: "",
+    type: "page",
+    title: title,
+    content: content.body,
+    status: "draft"
+  };
 
   const handleSave = async () => {
     try {
@@ -97,7 +107,7 @@ const PostEditor = () => {
         <Card className="glass border-white/10 p-6 bg-black/40 backdrop-blur-xl shadow-[0_0_15px_rgba(65,240,219,0.2)] animate-fade-in">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-white">Create New Post</h1>
-            <PreviewDialog title={title} content={content.body} />
+            <PreviewDialog content={previewContent} />
           </div>
 
           <div className="space-y-6">
