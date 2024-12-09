@@ -37,24 +37,37 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     retry: false
   });
 
-  // Get and sync session
+  // Get and sync session with improved error handling
   const { data: session, isLoading } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
       try {
+        console.log('Fetching session...');
         const { data: { session }, error } = await supabase.auth.getSession();
+        
         if (error) {
+          console.error('Session fetch error:', error);
           if (error.message.includes('refresh_token_not_found')) {
-            console.log('Refresh token not found, signing out');
+            console.log('Refresh token not found, signing out...');
             await supabase.auth.signOut();
+            queryClient.clear();
             return null;
           }
           throw error;
         }
+
+        if (!session) {
+          console.log('No session found');
+          return null;
+        }
+
+        console.log('Session found:', session.user.id);
         return session;
       } catch (error) {
-        console.error('Session fetch error:', error);
+        console.error('Session error:', error);
+        // Clear all queries and sign out on critical errors
         await supabase.auth.signOut();
+        queryClient.clear();
         return null;
       }
     },
@@ -62,24 +75,40 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     staleTime: 5 * 60 * 1000 // Cache for 5 minutes
   });
 
-  // Subscribe to auth changes
+  // Subscribe to auth changes with improved error handling
   useEffect(() => {
     console.log('Setting up auth subscription');
+    
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
+      
+      // Update session in query client
       queryClient.setQueryData(['session'], session);
 
-      if (event === 'SIGNED_IN') {
-        toast.success('Successfully signed in');
-        queryClient.invalidateQueries({ queryKey: ['profile'] });
-      } else if (event === 'SIGNED_OUT') {
-        queryClient.clear();
-        toast.info('Signed out');
-      } else if (event === 'TOKEN_REFRESHED') {
-        console.log('Token refreshed successfully');
-        queryClient.invalidateQueries({ queryKey: ['profile'] });
+      switch (event) {
+        case 'SIGNED_IN':
+          console.log('User signed in:', session?.user?.id);
+          toast.success('Successfully signed in');
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
+          break;
+          
+        case 'SIGNED_OUT':
+          console.log('User signed out');
+          queryClient.clear();
+          toast.info('Signed out');
+          break;
+          
+        case 'TOKEN_REFRESHED':
+          console.log('Token refreshed successfully');
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
+          break;
+          
+        case 'USER_UPDATED':
+          console.log('User updated');
+          queryClient.invalidateQueries({ queryKey: ['profile'] });
+          break;
       }
     });
 
