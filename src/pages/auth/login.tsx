@@ -8,40 +8,18 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-import { toast } from "sonner";
 
 const Login = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    console.log('Login page mounted, checking session:', { session, isLoading });
-
-    // If already logged in, redirect to home
+    console.log('Login page mounted, session:', session?.user?.id);
     if (session?.user) {
-      console.log('User already logged in, redirecting to home');
       navigate("/");
-      return;
     }
-
-    // Handle auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession?.user?.id);
-      
-      if (event === 'SIGNED_IN' && currentSession) {
-        console.log('Sign in successful, redirecting to home');
-        toast.success("Successfully signed in!");
-        navigate("/");
-      }
-    });
-
-    return () => {
-      console.log('Login component unmounting, cleaning up subscription');
-      subscription.unsubscribe();
-    };
   }, [session, navigate]);
 
-  // Show loading state only during initial session check
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">

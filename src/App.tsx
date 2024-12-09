@@ -21,25 +21,25 @@ const queryClient = new QueryClient({
 const App = () => {
   return (
     <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <SessionProvider>
-          <ThemeProvider>
-            <TooltipProvider>
-              <BrowserRouter>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider>
+            <ThemeProvider>
+              <TooltipProvider>
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
-              </BrowserRouter>
-              <Toaster 
-                position="top-right"
-                expand={false}
-                richColors
-                closeButton
-              />
-            </TooltipProvider>
-          </ThemeProvider>
-        </SessionProvider>
-      </QueryClientProvider>
+                <Toaster 
+                  position="top-right"
+                  expand={false}
+                  richColors
+                  closeButton
+                />
+              </TooltipProvider>
+            </ThemeProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
     </ErrorBoundary>
   );
 };

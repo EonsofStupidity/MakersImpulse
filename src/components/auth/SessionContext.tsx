@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -13,6 +14,7 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let mounted = true;
@@ -37,7 +39,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
           if (profileError) {
             console.error('Profile fetch error:', profileError);
-            // Don't throw here, just set basic session
             setSession({
               user: {
                 id: initialSession.user.id,
@@ -63,11 +64,17 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         } else if (mounted) {
           console.log('No initial session found');
           setSession(null);
+          // Redirect to login if not on a public route
+          const publicRoutes = ['/', '/login', '/register', '/about', '/privacy', '/terms'];
+          if (!publicRoutes.includes(window.location.pathname)) {
+            navigate('/login');
+          }
         }
       } catch (error) {
         console.error('Session initialization error:', error);
         if (mounted) {
           setSession(null);
+          navigate('/login');
         }
       } finally {
         if (mounted) {
@@ -100,7 +107,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: currentSession.expires_at
           };
 
-          console.log('Setting session with data:', sessionData);
           if (mounted) {
             setSession(sessionData);
             if (event === 'SIGNED_IN') {
@@ -111,11 +117,17 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           console.error('Error in auth state change:', error);
           if (mounted) {
             setSession(null);
+            navigate('/login');
           }
         }
       } else if (mounted) {
         console.log('No session in auth state change');
         setSession(null);
+        // Only redirect if not on a public route
+        const publicRoutes = ['/', '/login', '/register', '/about', '/privacy', '/terms'];
+        if (!publicRoutes.includes(window.location.pathname)) {
+          navigate('/login');
+        }
       }
       
       if (mounted) {
@@ -125,10 +137,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     return () => {
       mounted = false;
-      console.log('SessionProvider: Cleaning up subscription');
       subscription.unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <SessionContext.Provider value={{ session, isLoading }}>
