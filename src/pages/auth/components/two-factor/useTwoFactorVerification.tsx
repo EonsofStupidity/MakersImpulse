@@ -22,7 +22,9 @@ export const useTwoFactorVerification = (email: string, password: string) => {
 
       if (verifyError) throw verifyError;
 
-      if (data.verified) {
+      const result = data as { verified: boolean };
+      
+      if (result.verified) {
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password,

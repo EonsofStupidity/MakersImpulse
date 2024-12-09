@@ -1244,6 +1244,12 @@ export type Database = {
         }
         Returns: string
       }
+      resend_2fa_code: {
+        Args: {
+          p_email: string
+        }
+        Returns: undefined
+      }
       update_site_settings:
         | {
             Args: {
@@ -1344,6 +1350,13 @@ export type Database = {
             }
             Returns: Json
           }
+      verify_2fa_code: {
+        Args: {
+          p_code: string
+          p_email: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       content_status: "draft" | "published" | "archived"

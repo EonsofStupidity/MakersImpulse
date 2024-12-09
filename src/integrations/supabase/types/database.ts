@@ -682,7 +682,7 @@ export type Database = {
           blog_post_id?: string | null
           created_at?: string
           id?: string
-          name?: string
+          name: string
           size?: number | null
           type?: string | null
           updated_at?: string
@@ -830,7 +830,7 @@ export type Database = {
           code: string
           created_at?: string | null
           expires_at: string
-          id?: string
+          id: string
           used?: boolean | null
           used_at?: string | null
           user_id?: string | null
@@ -1226,106 +1226,19 @@ export type Database = {
         }
         Returns: string
       }
-      update_site_settings:
-        | {
-            Args: {
-              p_font_family_heading?: string
-              p_font_family_body?: string
-              p_font_size_base?: string
-              p_font_weight_normal?: string
-              p_font_weight_bold?: string
-              p_line_height_base?: string
-              p_letter_spacing?: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              p_site_title?: string
-              p_tagline?: string
-              p_primary_color?: string
-              p_secondary_color?: string
-              p_accent_color?: string
-              p_logo_url?: string
-              p_favicon_url?: string
-              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              p_site_title?: string
-              p_tagline?: string
-              p_primary_color?: string
-              p_secondary_color?: string
-              p_accent_color?: string
-              p_logo_url?: string
-              p_favicon_url?: string
-              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
-              p_text_primary_color?: string
-              p_text_secondary_color?: string
-              p_text_link_color?: string
-              p_text_heading_color?: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              p_site_title?: string
-              p_tagline?: string
-              p_primary_color?: string
-              p_secondary_color?: string
-              p_accent_color?: string
-              p_logo_url?: string
-              p_favicon_url?: string
-              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
-              p_text_primary_color?: string
-              p_text_secondary_color?: string
-              p_text_link_color?: string
-              p_text_heading_color?: string
-              p_neon_cyan?: string
-              p_neon_pink?: string
-              p_neon_purple?: string
-              p_border_radius?: string
-              p_spacing_unit?: string
-              p_transition_duration?: string
-              p_shadow_color?: string
-              p_hover_scale?: string
-            }
-            Returns: Json
-          }
-        | {
-            Args: {
-              p_site_title?: string
-              p_tagline?: string
-              p_primary_color?: string
-              p_secondary_color?: string
-              p_accent_color?: string
-              p_logo_url?: string
-              p_favicon_url?: string
-              p_theme_mode?: Database["public"]["Enums"]["theme_mode"]
-              p_text_primary_color?: string
-              p_text_secondary_color?: string
-              p_text_link_color?: string
-              p_text_heading_color?: string
-              p_neon_cyan?: string
-              p_neon_pink?: string
-              p_neon_purple?: string
-              p_border_radius?: string
-              p_spacing_unit?: string
-              p_transition_duration?: string
-              p_shadow_color?: string
-              p_hover_scale?: string
-              p_font_family_heading?: string
-              p_font_family_body?: string
-              p_font_size_base?: string
-              p_font_weight_normal?: string
-              p_font_weight_bold?: string
-              p_line_height_base?: string
-              p_letter_spacing?: string
-            }
-            Returns: Json
-          }
+      verify_2fa_code: {
+        Args: {
+          p_code: string
+          p_email: string
+        }
+        Returns: Json
+      }
+      resend_2fa_code: {
+        Args: {
+          p_email: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       content_status: "draft" | "published" | "archived"
@@ -1410,10 +1323,10 @@ export type TablesUpdate<
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
     ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
-        Update: infer U
-      }
-      ? U
-      : never
+      Update: infer U
+    }
+    ? U
+    : never
     : never
 
 export type Enums<
@@ -1443,5 +1356,3 @@ export type CompositeTypes<
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
     ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
-
-// This file will contain the main Database type that was previously in types.ts
