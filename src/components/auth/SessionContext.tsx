@@ -16,21 +16,32 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    console.log('SessionProvider: Starting initialization');
 
     const initializeSession = async () => {
       try {
+        console.log('Initializing session...');
+        setIsLoading(true);
+
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        if (error) throw error;
-        
+        if (error) {
+          console.error('Error getting session:', error);
+          throw error;
+        }
+
         if (initialSession && mounted) {
-          console.log('Initial session found:', initialSession.user.id);
-          const { data: profile } = await supabase
+          console.log('Found initial session for user:', initialSession.user.id);
+          
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', initialSession.user.id)
             .single();
+
+          if (profileError) {
+            console.error('Error fetching profile:', profileError);
+            throw profileError;
+          }
 
           const sessionData: AuthSession = {
             user: {
@@ -41,7 +52,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: initialSession.expires_at,
           };
 
-          console.log('Session initialized with role:', sessionData.user.role);
+          console.log('Setting session with data:', sessionData);
           setSession(sessionData);
         } else {
           console.log('No initial session found');
@@ -50,6 +61,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error('Session initialization error:', error);
         toast.error('Error initializing session');
+        setSession(null);
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -57,20 +69,24 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
+    // Initialize session
     initializeSession();
 
+    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession?.user?.id);
-
       if (!mounted) return;
+
+      console.log('Auth state changed:', event, currentSession?.user?.id);
 
       try {
         if (currentSession) {
-          const { data: profile } = await supabase
+          const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', currentSession.user.id)
             .single();
+
+          if (profileError) throw profileError;
 
           const sessionData: AuthSession = {
             user: {
@@ -81,7 +97,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: currentSession.expires_at,
           };
 
-          console.log('Session updated:', sessionData);
+          console.log('Updating session with new data:', sessionData);
           setSession(sessionData);
 
           if (event === 'SIGNED_IN') {
@@ -90,25 +106,32 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         } else {
           console.log('Clearing session state');
           setSession(null);
+          
           if (event === 'SIGNED_OUT') {
             toast.info('Signed out');
           }
         }
       } catch (error) {
-        console.error('Error updating session:', error);
+        console.error('Error handling auth state change:', error);
         toast.error('Error updating session');
+        setSession(null);
       }
     });
 
     return () => {
-      console.log('SessionProvider: Cleaning up');
+      console.log('Cleaning up session provider');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
+  const value = {
+    session,
+    isLoading
+  };
+
   return (
-    <SessionContext.Provider value={{ session, isLoading }}>
+    <SessionContext.Provider value={value}>
       {children}
     </SessionContext.Provider>
   );
