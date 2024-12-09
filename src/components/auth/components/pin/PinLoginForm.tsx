@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { PinDisplay } from "./PinDisplay";
+import { NumberPad } from "./NumberPad";
 import type { PinVerificationResponse } from "../../types/pin-auth";
 
 interface PinLoginFormProps {
@@ -15,9 +16,11 @@ interface PinLoginFormProps {
 export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) => {
   const navigate = useNavigate();
   const [pin, setPin] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePinSubmit = async (pin: string) => {
     try {
+      setIsSubmitting(true);
       const { data: { user } } = await supabase.auth.getUser();
       
       const { data, error } = await supabase.rpc('verify_pin_login', {
@@ -44,6 +47,23 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
     } catch (error) {
       console.error("PIN verification error:", error);
       toast.error("Failed to verify PIN");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDigitPress = (digit: string) => {
+    if (digit === 'del') {
+      setPin(prev => prev.slice(0, -1));
+      return;
+    }
+
+    if (pin.length < 4) {
+      const newPin = pin + digit;
+      setPin(newPin);
+      if (newPin.length === 4) {
+        handlePinSubmit(newPin);
+      }
     }
   };
 
@@ -56,11 +76,16 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
         disabled
         className="text-center bg-muted"
       />
+      <NumberPad 
+        onDigitPress={handleDigitPress}
+        disabled={isSubmitting}
+      />
       <div className="flex gap-2">
         <Button
           variant="outline"
           className="w-full"
           onClick={onSwitchToPassword}
+          disabled={isSubmitting}
         >
           Use Password Instead
         </Button>
