@@ -43,6 +43,7 @@
 
   .letter-hover {
     display: inline-block;
+    position: relative;
   }
 
   .letter-span {
@@ -50,19 +51,36 @@
     position: relative;
     transition: color 0.3s ease, transform 0.3s ease;
     cursor: default;
+    color: inherit;
   }
 
-  .letter-hover .letter-span {
-    color: inherit;
-    transition: color 0.3s ease;
+  .letter-span.active {
+    color: #ff0abe;
+    text-shadow: 0 0 8px rgba(255, 10, 190, calc(var(--intensity, 0) * 0.5));
+    transform: scale(calc(1 + (var(--intensity, 0) * 0.1)));
+    transition: all 0.3s ease;
+    transition-delay: calc(var(--letter-index) * 0.02s);
   }
 
   .letter-hover:hover .letter-span {
-    transition-delay: calc(var(--distance) * 0.05s);
+    transition-delay: calc(var(--letter-index) * 0.02s);
   }
 
-  .letter-hover:hover .letter-span.active {
-    color: #ff0abe;
+  /* Gradient background for active spans */
+  .letter-span.active::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(
+      45deg,
+      rgba(65, 240, 219, calc(var(--intensity, 0) * 0.2)),
+      rgba(255, 10, 190, calc(var(--intensity, 0) * 0.2)),
+      rgba(128, 0, 255, calc(var(--intensity, 0) * 0.2))
+    );
+    filter: blur(4px);
+    z-index: -1;
+    opacity: var(--intensity, 0);
+    transition: opacity 0.3s ease;
   }
 }
 

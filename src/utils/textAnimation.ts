@@ -18,10 +18,11 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   wrapper.className = 'letter-hover';
   
   // Create spans for each letter
-  const letters = text.split('').map(char => {
+  const letters = text.split('').map((char, index) => {
     const span = document.createElement('span');
     span.textContent = char === ' ' ? '\u00A0' : char;
     span.className = 'letter-span';
+    span.style.setProperty('--letter-index', index.toString());
     return span;
   });
   
@@ -44,8 +45,11 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       span.style.setProperty('--distance', Math.abs(index - letters.length).toString());
       
       // Add or remove active class based on distance
-      if (distance < 50) { // Adjust this value to control spread distance
+      if (distance < 100) { // Increased spread distance
         span.classList.add('active');
+        // Calculate intensity based on distance
+        const intensity = 1 - (distance / 100);
+        span.style.setProperty('--intensity', intensity.toString());
       } else {
         span.classList.remove('active');
       }
@@ -54,7 +58,10 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
   // Reset on mouse leave
   wrapper.addEventListener('mouseleave', () => {
-    letters.forEach(span => span.classList.remove('active'));
+    letters.forEach(span => {
+      span.classList.remove('active');
+      span.style.removeProperty('--intensity');
+    });
   });
   
   console.log('Successfully split text into letters');
@@ -63,7 +70,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 // Initialize on page load
 const initializeLetterEffects = () => {
   console.log('Initializing letter effects');
-  const elements = document.querySelectorAll('h1:not(.letter-hover), h2:not(.letter-hover), p:not(.letter-hover)');
+  const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span:not(.letter-span)');
   console.log('Found elements to process:', elements.length);
   
   elements.forEach(element => {
@@ -81,7 +88,7 @@ const observer = new MutationObserver((mutations) => {
   mutations.forEach(mutation => {
     mutation.addedNodes.forEach(node => {
       if (node instanceof HTMLElement) {
-        const elements = node.querySelectorAll('h1:not(.letter-hover), h2:not(.letter-hover), p:not(.letter-hover)');
+        const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span:not(.letter-span)');
         elements.forEach(element => {
           if (element instanceof HTMLElement) {
             splitTextIntoLetters(element);
