@@ -2,6 +2,8 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSession } from "@/components/auth/SessionContext";
 import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 
 interface MenuItem {
@@ -43,6 +45,25 @@ interface MobileNavContentProps {
 
 export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
   const { session } = useSession();
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    const checkAdminStatus = async () => {
+      if (session?.user?.id) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        
+        setIsAdmin(profile?.role === 'admin' || profile?.role === 'super_admin');
+      }
+    };
+
+    checkAdminStatus();
+  }, [session]);
+
+  console.log('Session status:', { session, isAdmin });
   
   // Base menu items
   const baseMenuItems: MenuItem[] = [
@@ -53,7 +74,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/blog", label: "Blog", icon: Mail },
   ];
 
-  // Auth-related items
+  // Auth-related items - always show these at the top for easy access
   const authItems: MenuItem[] = session ? [
     { to: "/profile", label: "Profile", icon: UserCircle }
   ] : [
@@ -61,14 +82,13 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
-  // Check if user is admin
-  const isAdmin = session?.user && session.user.app_metadata?.role === 'admin';
+  // Admin items
   const adminItems: MenuItem[] = isAdmin ? [
     { to: "/admin", label: "Admin Dashboard", icon: Shield }
   ] : [];
 
-  // Combine all menu items
-  const menuItems = [...baseMenuItems, ...authItems, ...adminItems];
+  // Combine all menu items - put auth items first for better visibility
+  const menuItems = [...authItems, ...baseMenuItems, ...adminItems];
 
   return (
     <motion.div
