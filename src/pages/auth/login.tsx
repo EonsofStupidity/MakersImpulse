@@ -14,8 +14,9 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    console.log('Login page mounted, session:', session?.user?.id);
+    console.log('Login page mounted, checking session:', session?.user?.id);
     if (session?.user) {
+      console.log('User is authenticated, redirecting to home');
       navigate("/");
     }
   }, [session, navigate]);

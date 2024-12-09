@@ -18,7 +18,6 @@ export const AppRoutes = () => {
     hasSession: !!session
   });
 
-  // Only show loading spinner during initial session load
   if (isLoading) {
     return <LoadingSpinner />;
   }
