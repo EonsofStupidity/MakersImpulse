@@ -4,7 +4,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft, Github, Mail, Phone } from "lucide-react";
+import { ArrowLeft, Github, Mail, Phone, Shield, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { toast } from "sonner";
@@ -140,7 +140,17 @@ const Login = () => {
             theme="dark"
             providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/maker-space`}
+            view="magic_link"
+            showLinks={true}
+            magicLink={true}
           />
+
+          <div className="mt-4 flex items-center justify-center gap-2">
+            <Shield className="h-4 w-4 text-primary" />
+            <span className="text-sm text-muted-foreground">
+              Two-factor authentication available
+            </span>
+          </div>
         </motion.div>
 
         <div className="mt-8 space-y-4">
