@@ -19,3 +19,13 @@ export interface AuthUser {
   role?: UserRole;
   profile?: Profile;
 }
+
+export interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: string | null;
+}
+
+export interface RoleHierarchy {
+  [key: string]: number;
+}

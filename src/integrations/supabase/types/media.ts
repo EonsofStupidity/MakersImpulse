@@ -3,17 +3,23 @@ import { Database } from './database';
 export type MediaItem = Database['public']['Tables']['media']['Row'];
 
 export interface MediaMetadata {
-  fileName: string;
-  fileSize: number;
+  size: number;
   mimeType: string;
   dimensions?: {
     width: number;
     height: number;
   };
+  duration?: number;
+  thumbnail?: string;
 }
 
-export interface StorageOptions {
-  bucket?: string;
-  path?: string;
-  metadata?: Record<string, any>;
+export interface MediaUploadConfig {
+  maxSize: number;
+  allowedTypes: string[];
+  dimensions?: {
+    minWidth?: number;
+    maxWidth?: number;
+    minHeight?: number;
+    maxHeight?: number;
+  };
 }
