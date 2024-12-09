@@ -1,8 +1,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import type { AuthSession } from './types';
 import { toast } from 'sonner';
 import { Session } from '@supabase/supabase-js';
+import type { AuthSession } from './types'; // Ensure ./types exports this interface
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -17,9 +17,9 @@ const convertSession = (session: Session | null): AuthSession | null => {
     user: {
       id: session.user.id,
       email: session.user.email,
-      role: session.user.role as AuthSession['user']['role'] || 'subscriber',
+      role: (session.user.user_metadata?.role as AuthSession['user']['role']) || 'subscriber',
     },
-    expires_at: session.expires_at
+    expires_at: session.expires_at,
   };
 };
 
@@ -44,13 +44,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (mounted) {
-          if (initialSession) {
-            console.log('Session found:', initialSession.user.id);
-            setSession(convertSession(initialSession));
-          } else {
-            console.log('No active session');
-            setSession(null);
-          }
+          setSession(initialSession ? convertSession(initialSession) : null);
           setIsLoading(false);
         }
       } catch (error) {
@@ -65,9 +59,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     initializeSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
-      
+
       if (mounted) {
         if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
           setSession(convertSession(currentSession));
