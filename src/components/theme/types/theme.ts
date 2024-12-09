@@ -40,5 +40,6 @@ export interface Theme extends Settings {}
 
 export interface ThemeContextType {
   theme: Theme | null;
+  setTheme: (theme: Theme) => void;
   updateTheme: (newTheme: Theme) => void;
 }
