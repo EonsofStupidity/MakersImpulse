@@ -1,14 +1,4 @@
-import { Settings } from "@/components/admin/settings/types";
-
-export interface Theme extends Settings {}
-
-export interface ThemeContextType {
-  theme: Theme | null;
-  updateTheme: (newTheme: Theme) => void;
-}
-
-export interface DatabaseSettingsRow {
-  id: string;
+export interface ThemeSettings {
   site_title: string;
   tagline?: string;
   primary_color: string;
