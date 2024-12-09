@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { Toaster } from "sonner";
-import { AuthProvider } from "@/components/auth/AuthProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,14 +26,14 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <ThemeProvider>
-              <TooltipProvider>
+            <TooltipProvider>
+              <ThemeProvider>
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
                 <Toaster position="top-right" expand={false} richColors closeButton />
-              </TooltipProvider>
-            </ThemeProvider>
+              </ThemeProvider>
+            </TooltipProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
