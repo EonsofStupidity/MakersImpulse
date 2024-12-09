@@ -18,18 +18,27 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
 
   const handleSubmit = async (data: PageContent | ComponentContent) => {
     try {
+      // Ensure required fields are present
+      if (!data.title) {
+        toast.error('Title is required');
+        return;
+      }
+
+      const contentData = {
+        ...data,
+        type: contentType,
+        title: data.title,
+        metadata: data.metadata as Record<string, any> || {},
+      };
+
       if (contentId) {
         await updateContent.mutateAsync({ 
           id: contentId, 
-          ...data,
-          type: data.type // Ensure type is explicitly passed
+          ...contentData
         });
         toast.success('Content updated successfully');
       } else {
-        await createContent.mutateAsync({
-          ...data,
-          type: data.type // Ensure type is explicitly passed
-        });
+        await createContent.mutateAsync(contentData);
         toast.success('Content created successfully');
       }
     } catch (error) {
@@ -43,16 +52,22 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
       return null;
     }
 
-    // Prepare initial data with explicit type casting
-    const formProps = content ? {
-      initialData: {
-        ...content,
-        content: content.content || {},
-        type: contentType // Ensure type is set correctly
-      },
-      onSubmit: handleSubmit,
+    // Prepare initial data with proper type casting
+    const baseInitialData = content ? {
+      ...content,
+      type: contentType,
+      title: content.title || '',
+      metadata: content.metadata as Record<string, any> || {},
+      content: content.content || {},
     } : {
-      initialData: { type: contentType },
+      type: contentType,
+      title: '',
+      metadata: {},
+      content: {},
+    };
+
+    const formProps = {
+      initialData: baseInitialData,
       onSubmit: handleSubmit,
     };
 
