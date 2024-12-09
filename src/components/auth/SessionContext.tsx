@@ -17,17 +17,25 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
-      if (!supabaseSession) return null;
+      if (!supabaseSession) {
+        console.log('No Supabase session found');
+        return null;
+      }
 
       try {
+        console.log('Fetching user profile for:', supabaseSession.user.id);
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', supabaseSession.user.id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching profile:', error);
+          throw error;
+        }
 
+        console.log('Profile fetched:', profile);
         return {
           user: {
             id: supabaseSession.user.id,
@@ -37,7 +45,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           expires_at: supabaseSession.expires_at
         };
       } catch (error) {
-        console.error('Error fetching user profile:', error);
+        console.error('Error in transformSession:', error);
         toast.error('Error loading user profile');
         return null;
       }
@@ -45,8 +53,10 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     const fetchSession = async () => {
       try {
+        console.log('Fetching initial session');
         const { data: { session: supabaseSession } } = await supabase.auth.getSession();
         const authSession = await transformSession(supabaseSession);
+        console.log('Initial session transformed:', authSession);
         setSession(authSession);
       } catch (error) {
         console.error('Error fetching session:', error);
@@ -59,7 +69,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     fetchSession();
 
     const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
+      console.log('Auth state changed:', _event);
       const authSession = await transformSession(supabaseSession);
+      console.log('New session state:', authSession);
       setSession(authSession);
     });
 

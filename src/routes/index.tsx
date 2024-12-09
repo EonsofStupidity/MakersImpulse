@@ -6,6 +6,7 @@ import { adminRoutes } from "./admin-routes";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { toast } from "sonner";
 
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
@@ -18,26 +19,38 @@ export const AppRoutes = () => {
     );
   }
 
+  console.log('AppRoutes: Current session state:', { session, isLoading });
+
   return (
     <PageTransition>
       <Routes>
-        {/* Redirect root to maker-space */}
-        <Route path="/" element={<Navigate to="/maker-space" replace />} />
-        
-        {/* Public Routes */}
+        {/* Public Routes - Always accessible */}
         {PublicRoutes()}
-        
-        {/* Protected Routes */}
-        {ProtectedRoutes()}
-        
-        {/* Admin routes with auth guard */}
+
+        {/* Protected Routes - Require authentication */}
+        <Route
+          element={
+            <AuthGuard
+              requireAuth={true}
+              fallbackPath="/login"
+            >
+              {ProtectedRoutes()}
+            </AuthGuard>
+          }
+        />
+
+        {/* Admin Routes - Require admin role */}
         <Route
           path="admin/*"
           element={
             <AuthGuard 
               requireAuth={true} 
-              requiredRole="admin"
+              requiredRole={["admin", "super_admin"]}
               fallbackPath="/login"
+              onError={(error) => {
+                console.error('Admin access error:', error);
+                toast.error(error.message);
+              }}
             >
               <Routes>
                 {adminRoutes.map((route) => (
@@ -52,7 +65,7 @@ export const AppRoutes = () => {
           }
         />
 
-        {/* Catch-all route */}
+        {/* Fallback route */}
         <Route path="*" element={<Navigate to="/maker-space" replace />} />
       </Routes>
     </PageTransition>

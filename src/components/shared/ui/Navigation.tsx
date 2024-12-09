@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -12,11 +12,14 @@ import {
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
+import { useSession } from "@/components/auth/SessionContext";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const location = useLocation();
+  const navigate = useNavigate();
+  const { session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -34,7 +37,7 @@ export const Navigation = () => {
 
   const handleNavigation = (to: string) => {
     console.log('Navigating to:', to);
-    toast.success(`Navigating to ${to}`);
+    navigate(to);
   };
 
   return (

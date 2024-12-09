@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthGuardProps } from './types';
 import { useRoleCheck } from './hooks/useRoleCheck';
 import { AuthLoading } from './components/AuthLoading';
@@ -11,8 +12,10 @@ export const AuthGuard = ({
   requiredRole,
   fallbackPath = '/',
   loadingComponent,
-  unauthorizedComponent
+  unauthorizedComponent,
+  onError
 }: AuthGuardProps) => {
+  const navigate = useNavigate();
   const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole, fallbackPath);
 
   useEffect(() => {
@@ -20,17 +23,19 @@ export const AuthGuard = ({
     
     if (error) {
       console.error('AuthGuard error:', error);
-      toast.error(error);
+      onError?.(error);
+      toast.error(error.message || 'Access denied');
+      navigate(fallbackPath, { replace: true });
     }
-  }, [isLoading, hasAccess, error, requireAuth, requiredRole]);
+  }, [isLoading, hasAccess, error, requireAuth, requiredRole, fallbackPath, navigate, onError]);
 
   if (isLoading) {
     console.log('AuthGuard: Loading state');
     return loadingComponent || <AuthLoading />;
   }
 
-  if (error || !hasAccess) {
-    console.log('AuthGuard: Access denied', { error, hasAccess });
+  if (!hasAccess) {
+    console.log('AuthGuard: Access denied');
     return unauthorizedComponent || <Unauthorized />;
   }
 
