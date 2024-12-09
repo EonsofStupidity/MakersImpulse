@@ -102,6 +102,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
           if (mounted) {
             setSession(sessionData);
+            setIsLoading(false);
             if (event === 'SIGNED_IN') {
               toast.success(`Welcome back, ${sessionData.user.display_name}`);
               navigate('/');
@@ -111,18 +112,16 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           console.error('Error in auth state change:', error);
           if (mounted) {
             setSession(null);
+            setIsLoading(false);
           }
         }
       } else if (mounted) {
         setSession(null);
+        setIsLoading(false);
         if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out');
           navigate('/login');
         }
-      }
-      
-      if (mounted) {
-        setIsLoading(false);
       }
     });
 
