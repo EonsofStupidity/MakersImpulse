@@ -23,8 +23,8 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <SessionProvider>
-            <ThemeProvider>
+          <ThemeProvider>
+            <SessionProvider>
               <TooltipProvider>
                 <RootLayout>
                   <AppRoutes />
@@ -36,8 +36,8 @@ const App = () => {
                   closeButton
                 />
               </TooltipProvider>
-            </ThemeProvider>
-          </SessionProvider>
+            </SessionProvider>
+          </ThemeProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>

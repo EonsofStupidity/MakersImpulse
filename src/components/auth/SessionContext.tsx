@@ -17,9 +17,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    let mounted = true;
     console.log('SessionProvider: Starting initialization');
-    
+    let mounted = true;
+
     const initializeSession = async () => {
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
@@ -39,16 +39,18 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
           if (profileError) {
             console.error('Profile fetch error:', profileError);
-            setSession({
-              user: {
-                id: initialSession.user.id,
-                email: initialSession.user.email,
-                role: 'subscriber',
-                username: initialSession.user.email?.split('@')[0],
-                display_name: initialSession.user.email?.split('@')[0]
-              },
-              expires_at: initialSession.expires_at
-            });
+            if (mounted) {
+              setSession({
+                user: {
+                  id: initialSession.user.id,
+                  email: initialSession.user.email,
+                  role: 'subscriber',
+                  username: initialSession.user.email?.split('@')[0],
+                  display_name: initialSession.user.email?.split('@')[0]
+                },
+                expires_at: initialSession.expires_at
+              });
+            }
           } else if (mounted) {
             setSession({
               user: {
@@ -61,20 +63,11 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               expires_at: initialSession.expires_at
             });
           }
-        } else if (mounted) {
-          console.log('No initial session found');
-          setSession(null);
-          // Redirect to login if not on a public route
-          const publicRoutes = ['/', '/login', '/register', '/about', '/privacy', '/terms'];
-          if (!publicRoutes.includes(window.location.pathname)) {
-            navigate('/login');
-          }
         }
       } catch (error) {
         console.error('Session initialization error:', error);
         if (mounted) {
           setSession(null);
-          navigate('/login');
         }
       } finally {
         if (mounted) {
@@ -111,21 +104,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             setSession(sessionData);
             if (event === 'SIGNED_IN') {
               toast.success(`Welcome back, ${sessionData.user.display_name}`);
+              navigate('/');
             }
           }
         } catch (error) {
           console.error('Error in auth state change:', error);
           if (mounted) {
             setSession(null);
-            navigate('/login');
           }
         }
       } else if (mounted) {
-        console.log('No session in auth state change');
         setSession(null);
-        // Only redirect if not on a public route
-        const publicRoutes = ['/', '/login', '/register', '/about', '/privacy', '/terms'];
-        if (!publicRoutes.includes(window.location.pathname)) {
+        if (event === 'SIGNED_OUT') {
+          toast.success('Successfully signed out');
           navigate('/login');
         }
       }
@@ -136,6 +127,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      console.log('SessionProvider: Cleaning up subscription');
       mounted = false;
       subscription.unsubscribe();
     };
