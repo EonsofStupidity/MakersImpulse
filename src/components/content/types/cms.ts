@@ -19,23 +19,6 @@ export interface BaseContent {
   updated_at?: string;
 }
 
-export interface ContentRelationship {
-  id: string;
-  parent_id: string;
-  child_id: string;
-  relationship_type: string;
-  order_index?: number;
-}
-
-export interface ContentRevision {
-  id: string;
-  content_id: string;
-  content: Json;
-  metadata?: Json;
-  created_by?: string;
-  created_at: string;
-}
-
 export const contentSchema = z.object({
   title: z.string().min(1, "Title is required"),
   type: z.enum(["page", "component", "template", "workflow"]),
