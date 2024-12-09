@@ -1,29 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import type { ContentFormData } from "../types/cms";
+import type { ContentType } from "../types/contentTypes";
+import { validateContent } from "../utils/contentTypeValidation";
 
 export const useContentMutations = () => {
   const queryClient = useQueryClient();
 
   const createContent = useMutation({
-    mutationFn: async (formData: ContentFormData) => {
-      console.log("Creating content with data:", formData);
+    mutationFn: async ({ type, ...data }: { type: ContentType } & Record<string, any>) => {
+      console.log("Creating content:", { type, data });
       
-      const contentData = {
-        title: formData.title,
-        type: formData.type,
-        content: formData.content || {},
-        status: formData.status || "draft",
-        slug: formData.slug || formData.title.toLowerCase().replace(/\s+/g, '-'),
-        metadata: formData.metadata || {},
-      };
+      const validation = await validateContent(type, { type, ...data });
+      if (!validation.success) {
+        throw new Error("Content validation failed");
+      }
 
-      console.log("Prepared content data:", contentData);
-
-      const { data, error } = await supabase
+      const { data: result, error } = await supabase
         .from("cms_content")
-        .insert(contentData)
+        .insert(validation.data)
         .select()
         .single();
 
@@ -32,8 +27,7 @@ export const useContentMutations = () => {
         throw error;
       }
 
-      console.log("Created content:", data);
-      return data;
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cms_content"] });
@@ -46,11 +40,17 @@ export const useContentMutations = () => {
   });
 
   const updateContent = useMutation({
-    mutationFn: async ({ id, ...formData }: ContentFormData & { id: string }) => {
-      console.log("Updating content:", id, formData);
-      const { data, error } = await supabase
+    mutationFn: async ({ id, type, ...data }: { id: string; type: ContentType } & Record<string, any>) => {
+      console.log("Updating content:", { id, type, data });
+      
+      const validation = await validateContent(type, { type, ...data });
+      if (!validation.success) {
+        throw new Error("Content validation failed");
+      }
+
+      const { data: result, error } = await supabase
         .from("cms_content")
-        .update(formData)
+        .update(validation.data)
         .eq("id", id)
         .select()
         .single();
@@ -60,8 +60,7 @@ export const useContentMutations = () => {
         throw error;
       }
 
-      console.log("Updated content:", data);
-      return data;
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cms_content"] });

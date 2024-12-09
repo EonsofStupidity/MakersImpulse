@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { ContentRelationship } from "../types/cms";
+import { validateContentRelationship } from "../utils/contentTypeValidation";
+import type { ContentType } from "../types/contentTypes";
 
 export const useContentRelationships = (contentId?: string) => {
   const queryClient = useQueryClient();
@@ -14,7 +16,15 @@ export const useContentRelationships = (contentId?: string) => {
 
       const { data, error } = await supabase
         .from("cms_content_relationships")
-        .select("*")
+        .select(`
+          id,
+          parent_id,
+          child_id,
+          relationship_type,
+          order_index,
+          parent:parent_id(type),
+          child:child_id(type)
+        `)
         .or(`parent_id.eq.${contentId},child_id.eq.${contentId}`);
 
       if (error) {
@@ -23,21 +33,44 @@ export const useContentRelationships = (contentId?: string) => {
         throw error;
       }
 
-      return data as ContentRelationship[];
+      return data as (ContentRelationship & {
+        parent: { type: ContentType } | null;
+        child: { type: ContentType } | null;
+      })[];
     },
     enabled: !!contentId,
   });
 
-  const { mutate: createRelationship } = useMutation({
-    mutationFn: async (relationship: Omit<ContentRelationship, "id">) => {
-      console.log("Creating relationship:", relationship);
+  const createRelationship = useMutation({
+    mutationFn: async ({ 
+      parentId, 
+      childId,
+      parentType,
+      childType,
+      relationshipType,
+      orderIndex = 0 
+    }: {
+      parentId: string;
+      childId: string;
+      parentType: ContentType;
+      childType: ContentType;
+      relationshipType: string;
+      orderIndex?: number;
+    }) => {
+      console.log("Creating relationship:", { parentId, childId, relationshipType });
+
+      // Validate relationship between content types
+      if (!validateContentRelationship(parentType, childType)) {
+        throw new Error("Invalid content type relationship");
+      }
+
       const { data, error } = await supabase
         .from("cms_content_relationships")
         .insert({
-          parent_id: relationship.parent_id,
-          child_id: relationship.child_id,
-          relationship_type: relationship.relationship_type,
-          order_index: relationship.order_index || 0
+          parent_id: parentId,
+          child_id: childId,
+          relationship_type: relationshipType,
+          order_index: orderIndex
         })
         .select()
         .single();
