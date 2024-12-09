@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Landing } from "@/pages/site/landing";
+import Landing from "@/pages/site/landing";
 
 const About = lazy(() => import("@/pages/site/about"));
 const Login = lazy(() => import("@/pages/auth/login"));

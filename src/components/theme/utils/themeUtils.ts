@@ -1,5 +1,5 @@
 import { Settings } from "@/components/admin/settings/types";
-import { DatabaseSettingsRow } from "../types/theme";
+import type { DatabaseSettingsRow } from "../types/theme";
 
 export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Settings => {
   return {
@@ -30,7 +30,7 @@ export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Setti
     font_weight_bold: dbSettings.font_weight_bold,
     line_height_base: dbSettings.line_height_base,
     letter_spacing: dbSettings.letter_spacing,
-    transition_type: dbSettings.transition_type || 'fade',
+    transition_type: 'fade', // Default value since it's not in DatabaseSettingsRow
   };
 };
 
