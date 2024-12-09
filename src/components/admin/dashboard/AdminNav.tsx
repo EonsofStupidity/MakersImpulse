@@ -12,7 +12,8 @@ import {
   Settings,
   Navigation,
   CheckCircle2,
-  XCircle
+  XCircle,
+  Loader2
 } from "lucide-react";
 import { toast } from "sonner";
 import { AdminToolbar } from "./AdminToolbar";
@@ -24,6 +25,7 @@ import { supabase } from "@/integrations/supabase/client";
 export const AdminNav = () => {
   const navigate = useNavigate();
   const { session } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
   const [draggedItem, setDraggedItem] = useState<NavItemType | null>(null);
   const [items] = useState<NavItemType[]>([
     { id: "posts", to: "/admin/posts", icon: BookOpen, label: "Posts" },
@@ -39,54 +41,36 @@ export const AdminNav = () => {
 
   React.useEffect(() => {
     const checkAdminAccess = async () => {
-      console.log('Starting admin access check...');
-      console.log('Current session:', session);
-
-      if (!session?.user?.id) {
-        console.error('No session found, redirecting to login');
-        toast.error('Please login to access admin dashboard');
-        navigate('/login');
-        return;
-      }
-
       try {
-        console.log('Checking admin access for user:', session.user.id);
+        if (!session?.user?.id) {
+          console.log('No session found, redirecting to login');
+          toast.error('Please login to access admin dashboard');
+          navigate('/login');
+          return;
+        }
+
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('role, username, display_name')
           .eq('id', session.user.id)
           .single();
 
-        console.log('Profile check result:', { profile, error });
-
         if (error) {
           console.error('Error fetching profile:', error);
-          toast.error('Error verifying admin access');
-          navigate('/');
-          return;
+          throw new Error('Error verifying admin access');
         }
 
-        if (!profile) {
-          console.error('No profile found for user');
-          toast.error('Profile not found');
-          navigate('/');
-          return;
-        }
-
-        console.log('User profile:', profile);
-
-        if (!['admin', 'super_admin'].includes(profile.role)) {
-          console.error('User is not an admin:', profile.role);
-          toast.error('Admin access required');
-          navigate('/');
-          return;
+        if (!profile || !['admin', 'super_admin'].includes(profile.role)) {
+          console.error('User is not an admin:', profile?.role);
+          throw new Error('Admin access required');
         }
 
         console.log('Admin access confirmed for role:', profile.role);
         toast.success(`Welcome back, ${profile.display_name || profile.username || 'Admin'}`);
+        setIsLoading(false);
       } catch (error) {
         console.error('Error in admin access check:', error);
-        toast.error('Error verifying admin access');
+        toast.error(error instanceof Error ? error.message : 'Error verifying admin access');
         navigate('/');
       }
     };
@@ -153,6 +137,14 @@ export const AdminNav = () => {
     console.log('Drag operation ended');
     setDraggedItem(null);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <>
