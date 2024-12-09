@@ -33,7 +33,12 @@ export const useContentRelationships = (contentId?: string) => {
       console.log("Creating relationship:", relationship);
       const { data, error } = await supabase
         .from("cms_content_relationships")
-        .insert([relationship])
+        .insert({
+          parent_id: relationship.parent_id,
+          child_id: relationship.child_id,
+          relationship_type: relationship.relationship_type,
+          order_index: relationship.order_index || 0
+        })
         .select()
         .single();
 
