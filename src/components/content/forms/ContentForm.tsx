@@ -5,8 +5,7 @@ import PageContentForm from './PageContentForm';
 import ComponentContentForm from './ComponentContentForm';
 import { useContent } from '../hooks/useContent';
 import { toast } from 'sonner';
-import type { ContentType } from '../types/contentTypes';
-import type { PageContent, ComponentContent } from '../types/contentTypes';
+import type { ContentType, PageContent, ComponentContent } from '../types/contentTypes';
 
 interface ContentFormProps {
   initialType?: ContentType;
@@ -20,10 +19,17 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
   const handleSubmit = async (data: PageContent | ComponentContent) => {
     try {
       if (contentId) {
-        await updateContent.mutateAsync({ id: contentId, ...data });
+        await updateContent.mutateAsync({ 
+          id: contentId, 
+          ...data,
+          type: data.type // Ensure type is explicitly passed
+        });
         toast.success('Content updated successfully');
       } else {
-        await createContent.mutateAsync(data);
+        await createContent.mutateAsync({
+          ...data,
+          type: data.type // Ensure type is explicitly passed
+        });
         toast.success('Content created successfully');
       }
     } catch (error) {
@@ -37,11 +43,16 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
       return null;
     }
 
-    const formProps = {
-      initialData: content ? {
+    // Prepare initial data with explicit type casting
+    const formProps = content ? {
+      initialData: {
         ...content,
         content: content.content || {},
-      } : undefined,
+        type: contentType // Ensure type is set correctly
+      },
+      onSubmit: handleSubmit,
+    } : {
+      initialData: { type: contentType },
       onSubmit: handleSubmit,
     };
 
