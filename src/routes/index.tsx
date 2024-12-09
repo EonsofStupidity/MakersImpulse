@@ -50,10 +50,12 @@ export const AppRoutes = () => {
               console.error('Protected route access error:', error);
               toast.error('Please sign in to access this content');
             }}
-          />
-        }>
-          {ProtectedRoutes()}
-        </Route>
+          >
+            <Routes>
+              {ProtectedRoutes()}
+            </Routes>
+          </AuthGuard>
+        } />
 
         {/* Admin Routes */}
         <Route
