@@ -1,19 +1,14 @@
 const splitTextIntoLetters = (element: HTMLElement) => {
-  console.log('Attempting to split text for element:', element);
-  
   // Skip if already processed or if it's a child of a processed element
-  if (element.closest('.letter-hover')) {
-    console.log('Element already processed or child of processed element, skipping');
+  if (element.closest('.letter-hover') || element.classList.contains('letter-span')) {
     return;
   }
   
+  console.log('Processing text element:', element.textContent);
   const text = element.textContent || '';
-  console.log('Processing text:', text);
-  
-  // Only process if there's actual text content
   if (!text.trim()) return;
   
-  // Create a wrapper if needed
+  // Create a wrapper
   const wrapper = document.createElement('span');
   wrapper.className = 'letter-hover';
   
@@ -31,7 +26,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   letters.forEach(span => wrapper.appendChild(span));
   element.appendChild(wrapper);
 
-  // Add mousemove handler for the color spread effect
+  // Add mousemove handler
   wrapper.addEventListener('mousemove', (e) => {
     const rect = wrapper.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
@@ -41,13 +36,8 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       const spanCenter = spanRect.left + spanRect.width / 2 - rect.left;
       const distance = Math.abs(mouseX - spanCenter);
       
-      // Set custom property for transition delay
-      span.style.setProperty('--distance', Math.abs(index - letters.length).toString());
-      
-      // Add or remove active class based on distance
-      if (distance < 100) { // Increased spread distance
+      if (distance < 100) {
         span.classList.add('active');
-        // Calculate intensity based on distance
         const intensity = 1 - (distance / 100);
         span.style.setProperty('--intensity', intensity.toString());
       } else {
@@ -64,13 +54,27 @@ const splitTextIntoLetters = (element: HTMLElement) => {
     });
   });
   
-  console.log('Successfully split text into letters');
+  console.log('Successfully processed text element');
 };
 
-// Initialize on page load
+// Initialize on page load and route changes
 const initializeLetterEffects = () => {
   console.log('Initializing letter effects');
-  const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span:not(.letter-span)');
+  
+  // Target specific elements that should have the effect
+  const selectors = [
+    '.nav-text', // Navigation text
+    '.menu-item', // Menu items
+    '.heading-text', // Headings
+    '.animate-text', // Elements with specific class
+    'h1:not(.no-animate)', // Headings that don't have .no-animate
+    'h2:not(.no-animate)',
+    'h3:not(.no-animate)',
+    '.hero-text', // Hero section text
+    '.feature-text' // Feature text
+  ];
+  
+  const elements = document.querySelectorAll(selectors.join(','));
   console.log('Found elements to process:', elements.length);
   
   elements.forEach(element => {
@@ -80,38 +84,57 @@ const initializeLetterEffects = () => {
   });
 };
 
-// Wait for React to finish rendering
-setTimeout(initializeLetterEffects, 100);
-
-// Also set up a mutation observer for dynamic content
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach(mutation => {
-    mutation.addedNodes.forEach(node => {
-      if (node instanceof HTMLElement) {
-        const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span:not(.letter-span)');
-        elements.forEach(element => {
-          if (element instanceof HTMLElement) {
-            splitTextIntoLetters(element);
-          }
-        });
-      }
+// Set up observers for dynamic content and route changes
+const setupObservers = () => {
+  // Mutation Observer for dynamic content
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node instanceof HTMLElement) {
+          const elements = node.querySelectorAll(
+            '.nav-text, .menu-item, .heading-text, .animate-text, h1:not(.no-animate), h2:not(.no-animate), h3:not(.no-animate), .hero-text, .feature-text'
+          );
+          elements.forEach(element => {
+            if (element instanceof HTMLElement) {
+              splitTextIntoLetters(element);
+            }
+          });
+        }
+      });
     });
   });
-});
 
-// Start observing once the document is ready
-if (document.readyState !== 'loading') {
+  // Start observing
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
-} else {
+
+  // Handle route changes
+  const handleRouteChange = () => {
+    console.log('Route changed, reinitializing effects');
+    setTimeout(initializeLetterEffects, 100); // Small delay to ensure DOM is updated
+  };
+
+  // Listen for route changes
+  window.addEventListener('popstate', handleRouteChange);
+  
+  // Clean up function
+  return () => {
+    observer.disconnect();
+    window.removeEventListener('popstate', handleRouteChange);
+  };
+};
+
+// Initialize when the document is ready
+if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+    initializeLetterEffects();
+    setupObservers();
   });
+} else {
+  initializeLetterEffects();
+  setupObservers();
 }
 
 export {};
