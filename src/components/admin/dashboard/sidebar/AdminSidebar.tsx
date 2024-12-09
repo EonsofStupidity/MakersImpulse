@@ -16,16 +16,52 @@ import {
   Database,
   FileSpreadsheet,
   Cog,
-  BookOpen
+  BookOpen,
+  Activity,
+  BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminSidebar } from "./AdminSidebarContext";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
+const NEON_COLORS = ['#4efc03', '#ebfc03', '#03fcf8', '#d10fcb'];
 
 export const AdminSidebar = () => {
   const { isCollapsed, toggleCollapse } = useAdminSidebar();
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [activeColor, setActiveColor] = useState(NEON_COLORS[0]);
+
+  // Fetch actual metrics for the menu items
+  const { data: metrics } = useQuery({
+    queryKey: ['admin-metrics'],
+    queryFn: async () => {
+      const [usersCount, contentCount, activityCount] = await Promise.all([
+        supabase.from('profiles').select('*', { count: 'exact', head: true }),
+        supabase.from('cms_content').select('*', { count: 'exact', head: true }),
+        supabase.from('user_activity').select('*', { count: 'exact', head: true })
+      ]);
+      
+      return {
+        users: usersCount.count || 0,
+        content: contentCount.count || 0,
+        activity: activityCount.count || 0
+      };
+    }
+  });
+
+  // Rotate neon colors
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveColor(prev => {
+        const currentIndex = NEON_COLORS.indexOf(prev);
+        return NEON_COLORS[(currentIndex + 1) % NEON_COLORS.length];
+      });
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   const menuItems = [
     { 
@@ -83,6 +119,18 @@ export const AdminSidebar = () => {
       description: 'Content templates'
     },
     { 
+      icon: Activity, 
+      label: 'Activity', 
+      path: '/admin/activity-logs',
+      description: 'User activity tracking'
+    },
+    { 
+      icon: BarChart3, 
+      label: 'Analytics', 
+      path: '/admin/analytics',
+      description: 'Site analytics'
+    },
+    { 
       icon: Settings, 
       label: 'Settings', 
       path: '/admin/settings',
@@ -105,6 +153,9 @@ export const AdminSidebar = () => {
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
+      style={{
+        background: `linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(${parseInt(activeColor.slice(1,3), 16)},${parseInt(activeColor.slice(3,5), 16)},${parseInt(activeColor.slice(5,7), 16)},0.1) 100%)`
+      }}
     >
       <Button
         variant="ghost"
