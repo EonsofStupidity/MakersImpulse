@@ -51,7 +51,9 @@ export const useSettingsFetch = () => {
         letter_spacing: data.letter_spacing,
         transition_type: (data.transition_type as 'fade' | 'slide' | 'scale') || 'fade',
         box_shadow: data.box_shadow,
-        backdrop_blur: data.backdrop_blur
+        backdrop_blur: data.backdrop_blur,
+        updated_at: data.updated_at,
+        updated_by: data.updated_by
       };
 
       console.log("Settings fetched successfully:", settings);

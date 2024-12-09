@@ -31,4 +31,12 @@ export interface SettingsFormData {
   backdrop_blur?: string;
 }
 
-export type Settings = SettingsFormData;
+export interface Settings extends SettingsFormData {
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface SettingsResponse {
+  success: boolean;
+  data: Settings;
+}
