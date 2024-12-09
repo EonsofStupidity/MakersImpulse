@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 import { 
-  Database, 
-  FileSpreadsheet, 
-  Settings,
-  ChevronLeft,
-  ChevronRight,
   LayoutDashboard,
   Users,
+  Settings,
   FileText,
   Layers,
   GitBranch,
-  Image,
+  Image as ImageIcon,
+  ChevronLeft,
+  ChevronRight,
+  Database,
+  FileSpreadsheet,
+  Cog,
   BookOpen
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useAdminSidebar } from "./AdminSidebarContext";
 
-interface AdminSidebarProps {
-  className?: string;
-}
-
-export const AdminSidebar = ({ className }: AdminSidebarProps) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export const AdminSidebar = () => {
+  const { isCollapsed, toggleCollapse } = useAdminSidebar();
+  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { 
@@ -71,7 +71,7 @@ export const AdminSidebar = ({ className }: AdminSidebarProps) => {
       description: 'Process automation'
     },
     { 
-      icon: Image, 
+      icon: ImageIcon, 
       label: 'Media', 
       path: '/admin/media',
       description: 'Media library'
@@ -101,15 +101,16 @@ export const AdminSidebar = ({ className }: AdminSidebarProps) => {
       animate={{ width: isCollapsed ? 80 : 280 }}
       className={cn(
         "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-black/20 backdrop-blur-xl border-r border-white/10 z-50",
-        "transition-all duration-300",
-        className
+        "transition-all duration-300"
       )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <Button
         variant="ghost"
         size="icon"
         className="absolute -right-4 top-4 bg-black/20 backdrop-blur-xl border border-white/10 rounded-full"
-        onClick={() => setIsCollapsed(!isCollapsed)}
+        onClick={toggleCollapse}
       >
         {isCollapsed ? (
           <ChevronRight className="h-4 w-4 text-white/80" />
@@ -131,7 +132,8 @@ export const AdminSidebar = ({ className }: AdminSidebarProps) => {
               className={cn(
                 "w-full justify-start gap-3 text-white/80 hover:text-white hover:bg-white/5",
                 "transition-all duration-300 relative overflow-hidden",
-                isCollapsed && "justify-center p-2"
+                isCollapsed && "justify-center p-2",
+                location.pathname === item.path && "bg-white/10 text-neon-cyan"
               )}
               onClick={() => handleNavigation(item.path, item.label)}
             >
@@ -150,7 +152,7 @@ export const AdminSidebar = ({ className }: AdminSidebarProps) => {
                 }}
               />
             </Button>
-            {isCollapsed && (
+            {isCollapsed && (isHovered || location.pathname === item.path) && (
               <div className="absolute left-full top-0 ml-2 p-2 bg-black/90 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-50 pointer-events-none">
                 <div className="text-sm font-medium text-white whitespace-nowrap">{item.label}</div>
                 <div className="text-xs text-white/60">{item.description}</div>
