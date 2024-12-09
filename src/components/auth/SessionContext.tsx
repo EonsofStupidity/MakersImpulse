@@ -17,7 +17,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     console.log('SessionProvider: Initializing');
     
-    // Get initial session
     const initSession = async () => {
       try {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
@@ -47,8 +46,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     };
 
     initSession();
-    
-    // Listen for auth changes
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event);
       
@@ -60,7 +58,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             .eq('id', currentSession.user.id)
             .single();
 
-          const sessionData = {
+          setSession({
             user: {
               id: currentSession.user.id,
               email: currentSession.user.email,
@@ -69,29 +67,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               display_name: profile?.display_name || currentSession.user.email?.split('@')[0]
             },
             expires_at: currentSession.expires_at
-          };
-
-          setSession(sessionData);
-          
-          if (event === 'SIGNED_IN') {
-            toast.success(`Welcome back, ${sessionData.user.display_name}!`);
-          }
+          });
         } catch (error) {
           console.error('Error in auth state change:', error);
           setSession(null);
         }
       } else {
         setSession(null);
-        if (event === 'SIGNED_OUT') {
-          toast.success('Successfully signed out');
-        }
       }
       
       setIsLoading(false);
     });
 
     return () => {
-      console.log('SessionProvider: Cleaning up');
       subscription.unsubscribe();
     };
   }, []);
