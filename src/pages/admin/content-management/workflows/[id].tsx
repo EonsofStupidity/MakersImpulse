@@ -15,12 +15,19 @@ interface WorkflowStep {
   id: string;
   name: string;
   type: string;
-  config: Record<string, any>;
+  config: Record<string, unknown>;
 }
 
 interface WorkflowFormData {
   name: string;
   description: string;
+  steps: WorkflowStep[];
+}
+
+interface WorkflowData {
+  id: string;
+  name: string;
+  description: string | null;
   steps: WorkflowStep[];
 }
 
@@ -53,10 +60,7 @@ const WorkflowEditor = () => {
         throw error;
       }
 
-      return {
-        ...data,
-        steps: JSON.parse(data.steps || "[]"), // Ensure steps are parsed from JSON
-      };
+      return data as WorkflowData;
     },
     enabled: !isNewWorkflow,
   });
@@ -67,7 +71,7 @@ const WorkflowEditor = () => {
       setFormData({
         name: workflow.name,
         description: workflow.description || "",
-        steps: workflow.steps as WorkflowStep[],
+        steps: workflow.steps || [],
       });
     }
   }, [workflow]);
@@ -78,7 +82,7 @@ const WorkflowEditor = () => {
       const workflowData = {
         name: formData.name,
         description: formData.description,
-        steps: JSON.stringify(formData.steps), // Convert steps to JSON for Supabase
+        steps: JSON.stringify(formData.steps),
       };
 
       if (isNewWorkflow) {
