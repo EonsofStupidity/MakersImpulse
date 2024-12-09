@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 import { Card } from "@/components/ui/card";
@@ -29,7 +29,7 @@ const WorkflowEditor = () => {
   const navigate = useNavigate();
   const isNewWorkflow = id === "new";
 
-  const [formData, setFormData] = React.useState<WorkflowFormData>({
+  const [formData, setFormData] = useState<WorkflowFormData>({
     name: "",
     description: "",
     steps: [],
@@ -37,50 +37,53 @@ const WorkflowEditor = () => {
 
   // Fetch existing workflow if editing
   const { data: workflow, isLoading } = useQuery({
-    queryKey: ['workflow', id],
+    queryKey: ["workflow", id],
     queryFn: async () => {
       if (isNewWorkflow) return null;
-      
-      console.log('Fetching workflow:', id);
+
+      console.log("Fetching workflow:", id);
       const { data, error } = await supabase
-        .from('cms_workflows')
-        .select('*')
-        .eq('id', id)
+        .from("cms_workflows")
+        .select("*")
+        .eq("id", id)
         .single();
 
       if (error) {
-        console.error('Error fetching workflow:', error);
+        console.error("Error fetching workflow:", error);
         throw error;
       }
 
-      return data;
+      return {
+        ...data,
+        steps: JSON.parse(data.steps || "[]"), // Ensure steps are parsed from JSON
+      };
     },
     enabled: !isNewWorkflow,
   });
 
   // Update form data when workflow is loaded
-  React.useEffect(() => {
+  useEffect(() => {
     if (workflow) {
       setFormData({
         name: workflow.name,
         description: workflow.description || "",
-        steps: Array.isArray(workflow.steps) ? workflow.steps : [],
+        steps: workflow.steps as WorkflowStep[],
       });
     }
   }, [workflow]);
 
   // Save workflow mutation
-  const { mutate: saveWorkflow, isPending: isSaving } = useMutation({
+  const { mutate: saveWorkflow, isLoading: isSaving } = useMutation({
     mutationFn: async () => {
       const workflowData = {
         name: formData.name,
         description: formData.description,
-        steps: formData.steps,
+        steps: JSON.stringify(formData.steps), // Convert steps to JSON for Supabase
       };
 
       if (isNewWorkflow) {
         const { data, error } = await supabase
-          .from('cms_workflows')
+          .from("cms_workflows")
           .insert([workflowData])
           .select()
           .single();
@@ -89,9 +92,9 @@ const WorkflowEditor = () => {
         return data;
       } else {
         const { data, error } = await supabase
-          .from('cms_workflows')
+          .from("cms_workflows")
           .update(workflowData)
-          .eq('id', id)
+          .eq("id", id)
           .select()
           .single();
 
@@ -100,19 +103,19 @@ const WorkflowEditor = () => {
       }
     },
     onSuccess: () => {
-      toast.success(`Workflow ${isNewWorkflow ? 'created' : 'updated'} successfully`);
-      navigate('/admin/content-management/workflows');
+      toast.success(`Workflow ${isNewWorkflow ? "created" : "updated"} successfully`);
+      navigate("/admin/content-management/workflows");
     },
     onError: (error) => {
-      console.error('Error saving workflow:', error);
-      toast.error('Failed to save workflow');
+      console.error("Error saving workflow:", error);
+      toast.error("Failed to save workflow");
     },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      toast.error('Workflow name is required');
+      toast.error("Workflow name is required");
       return;
     }
     saveWorkflow();
@@ -139,13 +142,13 @@ const WorkflowEditor = () => {
               <Button
                 variant="ghost"
                 className="text-white/60 hover:text-white"
-                onClick={() => navigate('/admin/content-management/workflows')}
+                onClick={() => navigate("/admin/content-management/workflows")}
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
               <h1 className="text-3xl font-bold text-white">
-                {isNewWorkflow ? 'Create New Workflow' : 'Edit Workflow'}
+                {isNewWorkflow ? "Create New Workflow" : "Edit Workflow"}
               </h1>
             </div>
             <Button
@@ -186,7 +189,6 @@ const WorkflowEditor = () => {
               />
             </div>
 
-            {/* Steps editor will be implemented in the next iteration */}
             <div className="border border-white/10 rounded-lg p-6 mt-8">
               <h2 className="text-xl font-semibold text-white mb-4">Workflow Steps</h2>
               <p className="text-white/60">Step configuration will be available in the next update.</p>
