@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
 import { toast } from 'sonner';
+import { Session } from '@supabase/supabase-js';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -9,6 +10,18 @@ interface SessionContextType {
 }
 
 const SessionContext = createContext<SessionContextType | undefined>(undefined);
+
+const convertSession = (session: Session | null): AuthSession | null => {
+  if (!session) return null;
+  return {
+    user: {
+      id: session.user.id,
+      email: session.user.email,
+      role: session.user.role as AuthSession['user']['role'] || 'subscriber',
+    },
+    expires_at: session.expires_at
+  };
+};
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
@@ -31,7 +44,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         if (mounted) {
           if (initialSession) {
             console.log('Session found:', initialSession.user.id);
-            setSession(initialSession);
+            setSession(convertSession(initialSession));
           } else {
             console.log('No active session');
             setSession(null);
@@ -54,7 +67,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
       if (mounted) {
-        setSession(currentSession);
+        setSession(convertSession(currentSession));
         setIsLoading(false);
       }
     });
