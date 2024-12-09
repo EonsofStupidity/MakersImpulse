@@ -23,8 +23,10 @@ export const AuthGuard = ({
     
     if (error) {
       console.error('AuthGuard error:', error);
-      onError?.(error);
-      toast.error(error.message || 'Access denied');
+      if (onError) {
+        onError(error);
+      }
+      toast.error(typeof error === 'string' ? error : error.message || 'Access denied');
       navigate(fallbackPath, { replace: true });
     }
   }, [isLoading, hasAccess, error, requireAuth, requiredRole, fallbackPath, navigate, onError]);
