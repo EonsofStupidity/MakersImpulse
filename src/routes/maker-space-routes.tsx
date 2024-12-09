@@ -4,11 +4,11 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 
 const MakerSpace = lazy(() => import("@/pages/content/maker-space"));
 const Builds = lazy(() => import("@/pages/content/maker-space/builds"));
-const BuildDetails = lazy(() => import("@/pages/content/maker-space/builds/[build-id]"));
+const BuildDetails = lazy(() => import("@/pages/content/maker-space/builds/[buildId]"));
 const Guides = lazy(() => import("@/pages/content/maker-space/guides"));
-const GuideDetails = lazy(() => import("@/pages/content/maker-space/guides/[guide-id]"));
+const GuideDetails = lazy(() => import("@/pages/content/maker-space/guides/[guideId]"));
 const Parts = lazy(() => import("@/pages/content/maker-space/parts"));
-const PartDetails = lazy(() => import("@/pages/content/maker-space/parts/[part-id]"));
+const PartDetails = lazy(() => import("@/pages/content/maker-space/parts/[partId]"));
 
 export const makerSpaceRoutes: RouteObject[] = [
   {
