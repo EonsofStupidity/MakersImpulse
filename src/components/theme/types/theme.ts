@@ -1,4 +1,7 @@
-export interface ThemeSettings {
+import { Settings } from "@/components/admin/settings/types";
+
+export interface DatabaseSettingsRow {
+  id: string;
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -31,4 +34,11 @@ export interface ThemeSettings {
   transition_type?: string;
   updated_at?: string;
   updated_by?: string;
+}
+
+export interface Theme extends Settings {}
+
+export interface ThemeContextType {
+  theme: Theme | null;
+  updateTheme: (newTheme: Theme) => void;
 }

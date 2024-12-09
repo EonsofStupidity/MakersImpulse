@@ -30,7 +30,9 @@ export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Setti
     font_weight_bold: dbSettings.font_weight_bold,
     line_height_base: dbSettings.line_height_base,
     letter_spacing: dbSettings.letter_spacing,
-    transition_type: 'fade', // Default value since it's not in DatabaseSettingsRow
+    box_shadow: dbSettings.box_shadow,
+    backdrop_blur: dbSettings.backdrop_blur,
+    transition_type: dbSettings.transition_type || 'fade',
   };
 };
 
