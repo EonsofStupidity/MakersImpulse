@@ -19,8 +19,6 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  console.log("App component mounted");
-
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -31,12 +29,7 @@ const App = () => {
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
-                <Toaster 
-                  position="top-right"
-                  expand={false}
-                  richColors
-                  closeButton
-                />
+                <Toaster position="top-right" expand={false} richColors closeButton />
               </TooltipProvider>
             </ThemeProvider>
           </SessionProvider>
