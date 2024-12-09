@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect } from "react";
-import { ThemeContextType } from "../types/theme";
+import { createContext, useContext } from "react";
+import { Theme, ThemeContextType } from "../types/theme";
 import { useThemeSettings } from "../hooks/useThemeSettings";
 import { useThemeSubscription } from "../hooks/useThemeSubscription";
 import { toast } from "sonner";
@@ -10,12 +10,6 @@ const ThemeContext = createContext<ThemeContextType | null>(null);
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const { theme, setTheme, fetchSettings } = useThemeSettings();
 
-  useEffect(() => {
-    console.log("ThemeProvider: Initializing...");
-    fetchSettings();
-  }, [fetchSettings]);
-
-  // Subscribe to real-time theme updates
   useThemeSubscription(setTheme);
 
   const updateTheme = async (newTheme: Theme) => {
