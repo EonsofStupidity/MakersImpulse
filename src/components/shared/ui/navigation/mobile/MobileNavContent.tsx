@@ -1,7 +1,14 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useSession } from "@/components/auth/SessionContext";
-import { Shield } from "lucide-react";
+import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
+interface MenuItem {
+  to: string;
+  label: string;
+  icon?: LucideIcon;
+}
 
 const menuVariants = {
   open: {
@@ -38,25 +45,25 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   const { session } = useSession();
   
   // Base menu items
-  const baseMenuItems = [
-    { to: "/maker-space", label: "Maker Space" },
-    { to: "/maker-space/builds", label: "Builds" },
-    { to: "/maker-space/guides", label: "Guides" },
-    { to: "/maker-space/parts", label: "Parts" },
-    { to: "/blog", label: "Blog" },
+  const baseMenuItems: MenuItem[] = [
+    { to: "/maker-space", label: "Maker Space", icon: Home },
+    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
+    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
+    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
+    { to: "/blog", label: "Blog", icon: Mail },
   ];
 
   // Auth-related items
-  const authItems = session ? [
-    { to: "/profile", label: "Profile" }
+  const authItems: MenuItem[] = session ? [
+    { to: "/profile", label: "Profile", icon: UserCircle }
   ] : [
-    { to: "/login", label: "Sign In" },
-    { to: "/register", label: "Sign Up" }
+    { to: "/login", label: "Sign In", icon: LogIn },
+    { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
   // Check if user is admin
   const isAdmin = session?.user && session.user.app_metadata?.role === 'admin';
-  const adminItems = isAdmin ? [
+  const adminItems: MenuItem[] = isAdmin ? [
     { to: "/admin", label: "Admin Dashboard", icon: Shield }
   ] : [];
 
