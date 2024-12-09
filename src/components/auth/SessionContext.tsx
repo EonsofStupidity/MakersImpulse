@@ -25,6 +25,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       }
 
       try {
+        console.log('Fetching profile for user:', supabaseSession.user.id);
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('role, username, display_name')
@@ -36,6 +37,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           throw error;
         }
 
+        console.log('Profile fetched successfully:', profile);
         return {
           user: {
             id: supabaseSession.user.id,
@@ -48,25 +50,36 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         };
       } catch (error) {
         console.error('Error transforming session:', error);
+        toast.error('Error loading user profile');
         return null;
       }
     };
 
     const initializeSession = async () => {
       try {
-        console.log('Initializing session...');
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log('Starting session initialization...');
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
+        if (error) {
+          console.error('Session initialization error:', error);
+          throw error;
+        }
+
         if (mounted) {
+          console.log('Processing initial session...');
           const authSession = await transformSession(initialSession);
-          console.log('Session initialized:', authSession ? 'Session exists' : 'No session');
+          console.log('Session transformation complete:', authSession ? 'Valid session' : 'No session');
           setSession(authSession);
         }
       } catch (error) {
-        console.error('Session initialization error:', error);
+        console.error('Session initialization failed:', error);
         setSession(null);
+        toast.error('Failed to initialize session');
       } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+          console.log('Session initialization complete');
+        }
       }
     };
 
@@ -79,10 +92,12 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         setIsLoading(true);
         try {
           const authSession = await transformSession(currentSession);
+          console.log('Session updated after auth change:', authSession ? 'Valid' : 'Invalid');
           setSession(authSession);
         } catch (error) {
           console.error('Auth state change error:', error);
           setSession(null);
+          toast.error('Session update failed');
         } finally {
           setIsLoading(false);
         }
@@ -90,18 +105,14 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      console.log('Cleaning up session provider');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  const contextValue = {
-    session,
-    isLoading
-  };
-
   return (
-    <SessionContext.Provider value={contextValue}>
+    <SessionContext.Provider value={{ session, isLoading }}>
       {children}
     </SessionContext.Provider>
   );

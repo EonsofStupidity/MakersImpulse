@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
-import { AuthChangeEvent } from "@supabase/supabase-js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -18,40 +17,23 @@ const Login = () => {
   useEffect(() => {
     console.log("Login page mounted, session state:", { session, isLoading });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, currentSession) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSession) => {
       console.log("Auth state changed in Login:", event, currentSession?.user?.id);
 
-      switch (event) {
-        case "SIGNED_IN":
-          if (currentSession) {
-            console.log("Session detected, navigating to maker-space");
-            navigate("/maker-space");
-          }
-          break;
-
-        case "SIGNED_OUT":
-          console.log("User signed out");
-          navigate("/login");
-          break;
-
-        case "TOKEN_REFRESHED":
-          console.log("Token refreshed");
-          break;
-
-        default:
-          console.log(`Unhandled auth event: ${event}`);
-          break;
+      if (event === 'SIGNED_IN' && currentSession) {
+        console.log("User signed in, redirecting to maker-space");
+        toast.success("Successfully signed in!");
+        navigate("/maker-space");
       }
     });
 
     return () => {
-      console.log("Login page unmounting, cleaning up subscription");
-      subscription.unsubscribe();
+      console.log("Login page unmounting, cleaning up listener");
+      authListener.subscription.unsubscribe();
     };
   }, [session, navigate]);
 
   if (isLoading) {
-    console.log("Login page showing loading state");
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">
         <LoadingSpinner />
@@ -65,7 +47,6 @@ const Login = () => {
     return null;
   }
 
-  console.log("Rendering login form");
   return (
     <div className="min-h-screen bg-[#0F1114] flex flex-col">
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-border/40">
