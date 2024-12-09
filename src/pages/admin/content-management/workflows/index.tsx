@@ -6,8 +6,11 @@ import { Plus, Settings } from "lucide-react";
 import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 
 const WorkflowsManagement = () => {
+  const navigate = useNavigate();
+  
   const { data: workflows, isLoading, error } = useQuery({
     queryKey: ['workflows'],
     queryFn: async () => {
@@ -49,6 +52,7 @@ const WorkflowsManagement = () => {
               </Button>
               <Button 
                 className="bg-neon-cyan/20 text-white border border-neon-cyan/50 hover:bg-neon-cyan/30"
+                onClick={() => navigate('new')}
               >
                 <Plus className="w-4 h-4 mr-2" />
                 New Workflow
@@ -80,6 +84,7 @@ const WorkflowsManagement = () => {
                     <Button 
                       variant="ghost" 
                       className="text-white/60 hover:text-white hover:bg-white/5"
+                      onClick={() => navigate(workflow.id)}
                     >
                       Manage
                     </Button>
