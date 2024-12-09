@@ -21,97 +21,95 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAdminSidebar } from "./AdminSidebarContext";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { SidebarContainer } from "./styles/SidebarContainer";
-import { SidebarItem } from "./components/SidebarItem";
+import { adminRoutes } from "@/config/navigation";
+
+const menuItems = [
+  { 
+    icon: LayoutDashboard, 
+    label: 'Dashboard', 
+    path: adminRoutes.dashboard,
+    description: 'Overview and analytics'
+  },
+  { 
+    icon: Database, 
+    label: 'Data Maestro', 
+    path: adminRoutes.dataMaestro,
+    description: 'Database management'
+  },
+  { 
+    icon: FileSpreadsheet, 
+    label: 'CSV Operations', 
+    path: `${adminRoutes.dataMaestro}/csv-operations`,
+    description: 'Import/Export data'
+  },
+  { 
+    icon: Users, 
+    label: 'Users', 
+    path: adminRoutes.users,
+    description: 'User management'
+  },
+  { 
+    icon: FileText, 
+    label: 'Posts', 
+    path: adminRoutes.posts,
+    description: 'Content management'
+  },
+  { 
+    icon: Layers, 
+    label: 'Categories', 
+    path: adminRoutes.categories,
+    description: 'Content organization'
+  },
+  { 
+    icon: GitBranch, 
+    label: 'Workflows', 
+    path: adminRoutes.workflows,
+    description: 'Process automation'
+  },
+  { 
+    icon: ImageIcon, 
+    label: 'Media', 
+    path: adminRoutes.media,
+    description: 'Media library'
+  },
+  { 
+    icon: BookOpen, 
+    label: 'Templates', 
+    path: adminRoutes.templates,
+    description: 'Content templates'
+  },
+  { 
+    icon: Activity, 
+    label: 'Activity', 
+    path: adminRoutes.activityLogs,
+    description: 'User activity tracking'
+  },
+  { 
+    icon: BarChart3, 
+    label: 'Analytics', 
+    path: adminRoutes.analytics,
+    description: 'Site analytics'
+  },
+  { 
+    icon: Settings, 
+    label: 'Settings', 
+    path: adminRoutes.settings,
+    description: 'System configuration'
+  }
+];
 
 export const AdminSidebar = () => {
   const { isCollapsed, toggleCollapse } = useAdminSidebar();
-  const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const menuItems = [
-    { 
-      icon: LayoutDashboard, 
-      label: 'Dashboard', 
-      path: '/admin/dashboard',
-      description: 'Overview and analytics'
-    },
-    { 
-      icon: Database, 
-      label: 'Data Maestro', 
-      path: '/admin/data-maestro',
-      description: 'Database management'
-    },
-    { 
-      icon: FileSpreadsheet, 
-      label: 'CSV Operations', 
-      path: '/admin/data-maestro/csv-operations',
-      description: 'Import/Export data'
-    },
-    { 
-      icon: Users, 
-      label: 'Users', 
-      path: '/admin/users',
-      description: 'User management'
-    },
-    { 
-      icon: FileText, 
-      label: 'Posts', 
-      path: '/admin/posts',
-      description: 'Content management'
-    },
-    { 
-      icon: Layers, 
-      label: 'Categories', 
-      path: '/admin/content-management/categories',
-      description: 'Content organization'
-    },
-    { 
-      icon: GitBranch, 
-      label: 'Workflows', 
-      path: '/admin/content-management/workflows',
-      description: 'Process automation'
-    },
-    { 
-      icon: ImageIcon, 
-      label: 'Media', 
-      path: '/admin/media',
-      description: 'Media library'
-    },
-    { 
-      icon: BookOpen, 
-      label: 'Templates', 
-      path: '/admin/content-management/templates',
-      description: 'Content templates'
-    },
-    { 
-      icon: Activity, 
-      label: 'Activity', 
-      path: '/admin/activity-logs',
-      description: 'User activity tracking'
-    },
-    { 
-      icon: BarChart3, 
-      label: 'Analytics', 
-      path: '/admin/analytics',
-      description: 'Site analytics'
-    },
-    { 
-      icon: Settings, 
-      label: 'Settings', 
-      path: '/admin/settings',
-      description: 'System configuration'
-    }
-  ];
-
   return (
-    <SidebarContainer
-      isCollapsed={isCollapsed}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <motion.div
+      initial={false}
+      animate={{ width: isCollapsed ? 60 : 250 }}
+      className={cn(
+        "fixed left-0 top-16 h-[calc(100vh-4rem)] bg-black/20 backdrop-blur-lg border-r border-white/10 transition-all duration-300"
+      )}
     >
       <Button
         variant="ghost"
@@ -128,16 +126,19 @@ export const AdminSidebar = () => {
 
       <div className="flex flex-col gap-2 p-4 pb-[100px]">
         {menuItems.map((item) => (
-          <SidebarItem
+          <Button
             key={item.path}
-            item={item}
-            isCollapsed={isCollapsed}
-            isHovered={isHovered}
-            isActive={location.pathname === item.path}
             onClick={() => navigate(item.path)}
-          />
+            className={cn(
+              "flex items-center gap-2 p-2 rounded-lg transition-all duration-200",
+              location.pathname === item.path ? "bg-white/10 text-white" : "text-white/80 hover:bg-white/5"
+            )}
+          >
+            <item.icon className="w-5 h-5" />
+            <span className="text-sm">{item.label}</span>
+          </Button>
         ))}
       </div>
-    </SidebarContainer>
+    </motion.div>
   );
 };
