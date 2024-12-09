@@ -55,14 +55,6 @@ export const Navigation = () => {
 
   const handleNavigation = async (to: string) => {
     console.log('Navigating to:', to);
-    
-    if (to === '/admin' && (!session || !session.user)) {
-      console.log('Attempting to access admin without auth');
-      toast.error("Please login to access the admin dashboard");
-      navigate('/login');
-      return;
-    }
-
     navigate(to);
   };
 
