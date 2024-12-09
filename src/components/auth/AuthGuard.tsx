@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 export const AuthGuard = ({ 
   children, 
-  requireAuth = false, 
+  requireAuth = false,
   requiredRole,
   fallbackPath = '/login',
   loadingComponent,
