@@ -16,20 +16,16 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    console.log('SessionProvider: Initializing session...');
+    console.log('SessionProvider: Starting initialization');
 
-    // Initial session check
-    supabase.auth.getSession().then(async ({ data: { session: initialSession }, error }) => {
-      if (!mounted) return;
-
-      if (error) {
-        console.error('Session initialization error:', error);
-        setIsLoading(false);
-        return;
-      }
-
-      if (initialSession) {
-        try {
+    const initializeSession = async () => {
+      try {
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+        
+        if (initialSession && mounted) {
+          console.log('Initial session found:', initialSession.user.id);
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
@@ -45,23 +41,31 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: initialSession.expires_at,
           };
 
-          console.log('Initial session loaded:', sessionData);
+          console.log('Session initialized with role:', sessionData.user.role);
           setSession(sessionData);
-        } catch (error) {
-          console.error('Error fetching profile:', error);
+        } else {
+          console.log('No initial session found');
+          setSession(null);
+        }
+      } catch (error) {
+        console.error('Session initialization error:', error);
+        toast.error('Error initializing session');
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
         }
       }
-      setIsLoading(false);
-    });
+    };
 
-    // Listen for auth changes
+    initializeSession();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
 
       if (!mounted) return;
 
-      if (currentSession) {
-        try {
+      try {
+        if (currentSession) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
@@ -83,20 +87,21 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           if (event === 'SIGNED_IN') {
             toast.success('Successfully signed in');
           }
-        } catch (error) {
-          console.error('Error updating session:', error);
-          toast.error('Error updating session');
+        } else {
+          console.log('Clearing session state');
+          setSession(null);
+          if (event === 'SIGNED_OUT') {
+            toast.info('Signed out');
+          }
         }
-      } else {
-        console.log('No session found, clearing session state');
-        setSession(null);
-        if (event === 'SIGNED_OUT') {
-          toast.info('Signed out');
-        }
+      } catch (error) {
+        console.error('Error updating session:', error);
+        toast.error('Error updating session');
       }
     });
 
     return () => {
+      console.log('SessionProvider: Cleaning up');
       mounted = false;
       subscription.unsubscribe();
     };
