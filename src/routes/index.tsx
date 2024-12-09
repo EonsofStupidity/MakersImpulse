@@ -5,8 +5,8 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useSession } from "@/components/auth/SessionContext";
 import { toast } from "sonner";
-import publicRoutes from "./public-routes";
-import { ProtectedRoutes } from "./protected-routes";
+import { publicRoutes } from "./public-routes";
+import { makerSpaceRoutes } from "./maker-space-routes";
 import { adminRoutes } from "./admin-routes";
 
 export const AppRoutes = () => {
@@ -35,24 +35,21 @@ export const AppRoutes = () => {
             />
           ))}
 
-          {/* Protected Routes */}
-          {ProtectedRoutes().map((route) => (
+          {/* Maker Space Routes */}
+          {makerSpaceRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
-              element={
-                <AuthGuard 
-                  requireAuth={true}
-                  fallbackPath="/login"
-                  onError={(error) => {
-                    console.error('Protected route access error:', error);
-                    toast.error('Please sign in to access this content');
-                  }}
-                >
-                  {route.element}
-                </AuthGuard>
-              }
-            />
+              element={route.element}
+            >
+              {route.children?.map((childRoute) => (
+                <Route
+                  key={childRoute.path}
+                  path={childRoute.path}
+                  element={childRoute.element}
+                />
+              ))}
+            </Route>
           ))}
 
           {/* Admin Routes */}

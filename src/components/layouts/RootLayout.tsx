@@ -6,9 +6,9 @@ import { ThemeProvider } from "@/components/theme/ThemeContext";
 export const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-[#1a1a1a] flex flex-col">
+      <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] text-white">
         <Navigation />
-        <main className="flex-1">
+        <main className="flex-1 pt-20">
           {children}
         </main>
         <Toaster />
