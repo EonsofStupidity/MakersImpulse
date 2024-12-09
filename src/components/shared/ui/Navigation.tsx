@@ -1,38 +1,19 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { 
-  Search, 
-  User,
-  LogOut, 
-  Settings, 
-  UserCircle, 
-  LayoutDashboard,
-  LogIn,
-  UserPlus,
-  Wrench,
-  BookOpen,
-  Box
-} from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
 import { useSession } from "@/components/auth/SessionContext";
-import { supabase } from "@/integrations/supabase/client";
+import { NavigationLinks } from "./navigation/NavigationLinks";
+import { UserMenu } from "./navigation/UserMenu";
+import { useNavigationStore } from "./navigation/NavigationState";
 
 export const Navigation = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const location = useLocation();
-  const navigate = useNavigate();
   const { session } = useSession();
+  const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
 
   console.log("Navigation render - Current session:", session?.user);
   console.log("Current location:", location.pathname);
@@ -41,7 +22,7 @@ export const Navigation = () => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [setIsScrolled]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -50,25 +31,6 @@ export const Navigation = () => {
       y: ((e.clientY - rect.top) / rect.height) * 100,
     });
   };
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast.success("Successfully logged out");
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
-      toast.error("Error logging out");
-    }
-  };
-
-  const isAdmin = session?.user?.role === 'admin' || session?.user?.role === 'super_admin';
-
-  const makerSpaceLinks = [
-    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
-    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/maker-space/parts", label: "Parts", icon: Box },
-  ];
 
   return (
     <nav 
@@ -95,22 +57,7 @@ export const Navigation = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6">
-            {session && (
-              <>
-                {makerSpaceLinks.map((link) => (
-                  <Link 
-                    key={link.to}
-                    to={link.to}
-                    className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer flex items-center gap-2"
-                  >
-                    <link.icon className="w-4 h-4" />
-                    <span className="relative z-10 text-white font-medium">{link.label}</span>
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
-                  </Link>
-                ))}
-              </>
-            )}
+            <NavigationLinks session={session} />
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
@@ -134,71 +81,7 @@ export const Navigation = () => {
             </Button>
 
             <div className="hidden md:block">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
-                    <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
-                      <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-                        <User className="h-4 w-4" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border border-white/10">
-                  {!session ? (
-                    <>
-                      <DropdownMenuItem 
-                        onClick={() => navigate('/login')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <LogIn className="mr-2 h-4 w-4" />
-                        Sign In
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => navigate('/register')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <UserPlus className="mr-2 h-4 w-4" />
-                        Sign Up
-                      </DropdownMenuItem>
-                    </>
-                  ) : (
-                    <>
-                      <DropdownMenuItem 
-                        onClick={() => navigate('/profile')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        Profile
-                      </DropdownMenuItem>
-                      {isAdmin && (
-                        <DropdownMenuItem 
-                          onClick={() => navigate('/admin')}
-                          className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                        >
-                          <LayoutDashboard className="mr-2 h-4 w-4" />
-                          Admin Dashboard
-                        </DropdownMenuItem>
-                      )}
-                      <DropdownMenuItem 
-                        onClick={() => navigate('/settings')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Settings className="mr-2 h-4 w-4" />
-                        Settings
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={handleLogout}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <LogOut className="mr-2 h-4 w-4" />
-                        Sign Out
-                      </DropdownMenuItem>
-                    </>
-                  )}
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <UserMenu session={session} />
             </div>
 
             <MobileNav />
