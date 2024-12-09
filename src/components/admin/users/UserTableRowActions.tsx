@@ -1,28 +1,44 @@
-import React, { useState } from "react";
-import { MoreHorizontal, UserCog, Ban, KeyRound } from "lucide-react";
+import React from 'react';
+import { MoreHorizontal, Ban, Shield, Activity } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BanUserDialog } from "./BanUserDialog";
-import { PasswordResetDialog } from "../settings/components/PasswordResetDialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useUserManagement } from '@/hooks/useUserManagement';
+import { useState } from 'react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface UserTableRowActionsProps {
-  user: {
-    id: string;
-    email?: string;
-    is_banned?: boolean;
-    username?: string;
-  };
-  onBanStatusChange: () => void;
+  userId: string;
+  currentRole: string;
 }
 
-export const UserTableRowActions = ({ user, onBanStatusChange }: UserTableRowActionsProps) => {
-  const [showBanDialog, setShowBanDialog] = useState(false);
-  const [showResetDialog, setShowResetDialog] = useState(false);
+export function UserTableRowActions({ userId, currentRole }: UserTableRowActionsProps) {
+  const { updateRole, getUserActivity, getUserCMSActivity } = useUserManagement();
+  const [showActivityDialog, setShowActivityDialog] = useState(false);
+  const [activityData, setActivityData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleViewActivity = async () => {
+    setIsLoading(true);
+    try {
+      const [activity, cmsActivity] = await Promise.all([
+        getUserActivity(userId),
+        getUserCMSActivity(userId)
+      ]);
+      setActivityData({ activity, cmsActivity });
+      setShowActivityDialog(true);
+    } catch (error) {
+      console.error('Error fetching activity:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <>
@@ -33,41 +49,60 @@ export const UserTableRowActions = ({ user, onBanStatusChange }: UserTableRowAct
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-zinc-950 text-zinc-50 border-zinc-800">
-          <DropdownMenuItem
-            className="cursor-pointer hover:bg-zinc-800/50"
-            onClick={() => setShowResetDialog(true)}
-          >
-            <KeyRound className="mr-2 h-4 w-4" />
-            Reset Password
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => updateRole.mutate({ userId, newRole: 'admin' })}>
+            <Shield className="mr-2 h-4 w-4" />
+            Make Admin
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer hover:bg-zinc-800/50"
-            onClick={() => setShowBanDialog(true)}
-          >
-            <Ban className="mr-2 h-4 w-4" />
-            {user.is_banned ? 'Unban User' : 'Ban User'}
+          <DropdownMenuItem onClick={() => updateRole.mutate({ userId, newRole: 'subscriber' })}>
+            <Shield className="mr-2 h-4 w-4" />
+            Remove Admin
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleViewActivity}>
+            <Activity className="mr-2 h-4 w-4" />
+            View Activity
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {user.email && (
-        <PasswordResetDialog
-          open={showResetDialog}
-          onOpenChange={setShowResetDialog}
-          userEmail={user.email}
-        />
-      )}
-
-      <BanUserDialog
-        isOpen={showBanDialog}
-        onClose={() => setShowBanDialog(false)}
-        onConfirm={(reason) => {
-          // Handle ban confirmation
-          onBanStatusChange();
-        }}
-        username={user.username || 'Unknown User'}
-      />
+      <Dialog open={showActivityDialog} onOpenChange={setShowActivityDialog}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>User Activity History</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="h-[500px] p-4">
+            {activityData && (
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">General Activity</h3>
+                  {activityData.activity?.map((item: any) => (
+                    <div key={item.id} className="mb-2 p-2 bg-black/20 rounded">
+                      <p className="text-sm">{item.details}</p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(item.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2">CMS Activity</h3>
+                  {activityData.cmsActivity?.map((item: any) => (
+                    <div key={item.id} className="mb-2 p-2 bg-black/20 rounded">
+                      <p className="text-sm">
+                        {item.activity_type} - {item.cms_content?.title}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {new Date(item.created_at).toLocaleString()}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </ScrollArea>
+        </DialogContent>
+      </Dialog>
     </>
   );
-};
+}
