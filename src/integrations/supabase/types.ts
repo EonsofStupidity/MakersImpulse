@@ -972,7 +972,9 @@ export type Database = {
       site_settings: {
         Row: {
           accent_color: string | null
+          backdrop_blur: string | null
           border_radius: string | null
+          box_shadow: string | null
           favicon_url: string | null
           font_family_body: string
           font_family_heading: string
@@ -984,6 +986,9 @@ export type Database = {
           letter_spacing: string
           line_height_base: string
           logo_url: string | null
+          neon_cyan: string | null
+          neon_pink: string | null
+          neon_purple: string | null
           primary_color: string | null
           secondary_color: string | null
           shadow_color: string | null
@@ -996,12 +1001,15 @@ export type Database = {
           text_secondary_color: string | null
           theme_mode: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration: string | null
+          transition_type: string | null
           updated_at: string | null
           updated_by: string | null
         }
         Insert: {
           accent_color?: string | null
+          backdrop_blur?: string | null
           border_radius?: string | null
+          box_shadow?: string | null
           favicon_url?: string | null
           font_family_body?: string
           font_family_heading?: string
@@ -1013,6 +1021,9 @@ export type Database = {
           letter_spacing?: string
           line_height_base?: string
           logo_url?: string | null
+          neon_cyan?: string | null
+          neon_pink?: string | null
+          neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
           shadow_color?: string | null
@@ -1025,12 +1036,15 @@ export type Database = {
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
+          transition_type?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
         Update: {
           accent_color?: string | null
+          backdrop_blur?: string | null
           border_radius?: string | null
+          box_shadow?: string | null
           favicon_url?: string | null
           font_family_body?: string
           font_family_heading?: string
@@ -1042,6 +1056,9 @@ export type Database = {
           letter_spacing?: string
           line_height_base?: string
           logo_url?: string | null
+          neon_cyan?: string | null
+          neon_pink?: string | null
+          neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
           shadow_color?: string | null
@@ -1054,6 +1071,7 @@ export type Database = {
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
+          transition_type?: string | null
           updated_at?: string | null
           updated_by?: string | null
         }
