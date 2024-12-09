@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Session } from '@supabase/supabase-js';
-import type { AuthSession } from './types'; // Ensure ./types exports this interface
+import type { AuthSession } from './types';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -44,7 +44,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (mounted) {
-          setSession(initialSession ? convertSession(initialSession) : null);
+          const convertedSession = convertSession(initialSession);
+          console.log('Session found:', convertedSession?.user?.id);
+          setSession(convertedSession);
           setIsLoading(false);
         }
       } catch (error) {

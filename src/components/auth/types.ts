@@ -1,4 +1,17 @@
+import type { Session } from '@supabase/supabase-js';
+
 export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
+
+export interface AuthUser {
+  id: string;
+  email?: string | null;
+  role?: UserRole;
+}
+
+export interface AuthSession {
+  user: AuthUser;
+  expires_at?: number;
+}
 
 export interface AuthGuardProps {
   children: React.ReactNode;
@@ -8,14 +21,4 @@ export interface AuthGuardProps {
   loadingComponent?: React.ReactNode;
   unauthorizedComponent?: React.ReactNode;
   onError?: (error: Error | { message: string }) => void;
-}
-
-export interface RoleHierarchy {
-  [key: string]: number;
-}
-
-export interface AuthState {
-  isLoading: boolean;
-  hasAccess: boolean;
-  error: Error | { message: string } | null;
 }

@@ -43,14 +43,14 @@ const Login = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a]">
+      <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">
         <LoadingSpinner />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] flex flex-col">
+    <div className="min-h-screen bg-[#0F1114] flex flex-col">
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-white/10">
         <Button 
           variant="ghost" 
@@ -102,8 +102,9 @@ const Login = () => {
               },
             }}
             theme="dark"
-            providers={[]}
+            providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/`}
+            magicLink={true}
           />
         </div>
       </div>
