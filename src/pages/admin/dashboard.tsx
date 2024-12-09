@@ -32,7 +32,7 @@ const AdminDashboard = () => {
 
         console.log('Admin access confirmed for role:', user.role);
         setIsLoading(false);
-        toast.success(`Welcome to admin dashboard, ${user.display_name || user.username || 'Admin'}`);
+        toast.success(`Welcome to admin dashboard, ${user.displayName || user.username || 'Admin'}`);
       } catch (error) {
         console.error('Error in admin access check:', error);
         toast.error('Error verifying admin access');
@@ -56,7 +56,7 @@ const AdminDashboard = () => {
       <div className="min-h-screen bg-gray-900">
         <AdminTopNav />
         <AdminSidebar />
-        <main className="transition-all duration-300 ml-[280px]">
+        <main className="transition-all duration-300 ml-[210px]">
           <div className="container mx-auto p-8">
             <NewDashboardOverview />
           </div>
