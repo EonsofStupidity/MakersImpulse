@@ -53,12 +53,12 @@ export const PinLogin = ({ onSwitchToPassword }: PinLoginProps) => {
       const userId = profiles.id;
 
       // Verify PIN
-      const { data: result, error } = await supabase.rpc<PinLoginResponse>('verify_pin_login', {
+      const { data: result, error } = await supabase.rpc('verify_pin_login', {
         p_user_id: userId,
         p_pin: data.pin,
         p_ip_address: null, // Could be implemented with IP detection
         p_user_agent: navigator.userAgent
-      });
+      }) as { data: PinLoginResponse | null, error: Error | null };
 
       if (error) throw error;
 

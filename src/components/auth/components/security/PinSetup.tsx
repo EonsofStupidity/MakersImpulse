@@ -51,12 +51,12 @@ export const PinSetup = () => {
 
     setIsLoading(true);
     try {
-      const { data: result, error } = await supabase.rpc<PinSetupResponse>("setup_pin", {
+      const { data: result, error } = await supabase.rpc('setup_pin', {
         p_user_id: user.id,
         p_pin: data.pin,
         p_ip_address: null, // Optional: Implement an IP detection service
         p_user_agent: navigator.userAgent,
-      });
+      }) as { data: PinSetupResponse | null, error: Error | null };
 
       if (error) throw error;
 
