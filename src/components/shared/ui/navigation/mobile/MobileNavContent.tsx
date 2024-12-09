@@ -9,7 +9,7 @@ import type { LucideIcon } from "lucide-react";
 interface MenuItem {
   to: string;
   label: string;
-  icon: LucideIcon;  // Make icon required since we're using it everywhere
+  icon: LucideIcon;
 }
 
 const menuVariants = {
@@ -50,29 +50,21 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   useEffect(() => {
     const checkAdminStatus = async () => {
       if (session?.user?.id) {
+        console.log('Checking admin status for user:', session.user.id);
         const { data: profile } = await supabase
           .from('profiles')
           .select('role')
           .eq('id', session.user.id)
           .single();
         
-        setIsAdmin(profile?.role === 'admin' || profile?.role === 'super_admin');
+        const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
+        console.log('User role:', profile?.role, 'Is admin:', hasAdminRole);
+        setIsAdmin(hasAdminRole);
       }
     };
 
     checkAdminStatus();
   }, [session]);
-
-  console.log('Session status:', { session, isAdmin });
-  
-  // Base menu items
-  const baseMenuItems: MenuItem[] = [
-    { to: "/maker-space", label: "Maker Space", icon: Home },
-    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
-    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
-    { to: "/blog", label: "Blog", icon: Mail },
-  ];
 
   // Auth-related items - always show these at the top for easy access
   const authItems: MenuItem[] = session ? [
@@ -80,6 +72,15 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   ] : [
     { to: "/login", label: "Sign In", icon: LogIn },
     { to: "/register", label: "Sign Up", icon: UserPlus }
+  ];
+
+  // Base menu items
+  const baseMenuItems: MenuItem[] = [
+    { to: "/maker-space", label: "Maker Space", icon: Home },
+    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
+    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
+    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
+    { to: "/blog", label: "Blog", icon: Mail },
   ];
 
   // Admin items
