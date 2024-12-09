@@ -9,12 +9,18 @@ export interface AdminNavItemsProps {
   isIconOnly?: boolean;
   draggedItem?: NavItemType | null;
   setDraggedItem?: (item: NavItemType | null) => void;
+  className?: string;
 }
 
-export const AdminNavItems = ({ isIconOnly = false, draggedItem, setDraggedItem }: AdminNavItemsProps) => {
+export const AdminNavItems = ({ 
+  isIconOnly = false, 
+  draggedItem, 
+  setDraggedItem,
+  className 
+}: AdminNavItemsProps) => {
   return (
     <motion.div 
-      className="flex items-center space-x-4"
+      className={cn("flex items-center gap-4", className)}
       layout
     >
       {defaultNavItems.map((item) => (
@@ -26,12 +32,13 @@ export const AdminNavItems = ({ isIconOnly = false, draggedItem, setDraggedItem 
             "text-white/80 hover:text-[#41f0db]",
             "transition-all duration-300",
             "hover:bg-white/5",
-            "relative group"
+            "relative group",
+            isIconOnly ? "w-8" : "min-w-[120px]"
           )}
         >
           <item.icon className="w-4 h-4" />
           {!isIconOnly && (
-            <span className="ml-2 text-sm font-medium">{item.label}</span>
+            <span className="ml-2 text-sm font-medium whitespace-nowrap">{item.label}</span>
           )}
           <motion.div
             className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100"

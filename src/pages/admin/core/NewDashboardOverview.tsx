@@ -1,14 +1,59 @@
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { Users, ChartBar, Database, FileText } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 const NewDashboardOverview = () => {
-  // Placeholder data - to be replaced with real data
+  const { data: metrics } = useQuery({
+    queryKey: ['dashboard-metrics'],
+    queryFn: async () => {
+      const [
+        { count: usersCount }, 
+        { count: sessionsCount },
+        { count: contentCount },
+        { count: postsCount }
+      ] = await Promise.all([
+        supabase.from('profiles').select('*', { count: 'exact' }),
+        supabase.from('active_2fa_sessions').select('*', { count: 'exact' }),
+        supabase.from('cms_content').select('*', { count: 'exact' }),
+        supabase.from('blog_posts').select('*', { count: 'exact' })
+      ]);
+
+      return {
+        users: usersCount || 0,
+        sessions: sessionsCount || 0,
+        content: contentCount || 0,
+        posts: postsCount || 0
+      };
+    }
+  });
+
   const stats = [
-    { label: "Total Users", value: "1,234", icon: Users, change: "+12%" },
-    { label: "Active Sessions", value: "856", icon: ChartBar, change: "+5%" },
-    { label: "Data Entries", value: "45.2k", icon: Database, change: "+8%" },
-    { label: "Content Items", value: "2,845", icon: FileText, change: "+15%" },
+    { 
+      label: "Total Users", 
+      value: metrics?.users.toLocaleString() || "0", 
+      icon: Users, 
+      change: "+12%" 
+    },
+    { 
+      label: "Active Sessions", 
+      value: metrics?.sessions.toLocaleString() || "0", 
+      icon: ChartBar, 
+      change: "+5%" 
+    },
+    { 
+      label: "Data Entries", 
+      value: metrics?.content.toLocaleString() || "0", 
+      icon: Database, 
+      change: "+8%" 
+    },
+    { 
+      label: "Content Items", 
+      value: metrics?.posts.toLocaleString() || "0", 
+      icon: FileText, 
+      change: "+15%" 
+    },
   ];
 
   return (
