@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthProvider';
-
-interface AuthState {
-  isLoading: boolean;
-  hasAccess: boolean;
-  error: Error | null;
-}
+import { AuthState, UserRole } from '../types';
 
 const roleHierarchy: { [key: string]: number } = {
   'subscriber': 0,
@@ -16,8 +11,8 @@ const roleHierarchy: { [key: string]: number } = {
 
 export const useRoleCheck = (
   requireAuth: boolean,
-  requiredRole?: string | string[]
-) => {
+  requiredRole?: UserRole | UserRole[]
+): AuthState => {
   const { user, isLoading: authLoading } = useAuth();
   const [state, setState] = useState<AuthState>({
     isLoading: true,
@@ -34,7 +29,8 @@ export const useRoleCheck = (
           requireAuth,
           requiredRole,
           userExists: !!user,
-          userId: user?.id
+          userId: user?.id,
+          userRole: user?.role
         });
 
         if (isMounted) {
@@ -76,23 +72,21 @@ export const useRoleCheck = (
           }
 
           if (isMounted) {
-            setState(prev => ({ 
-              ...prev, 
+            setState({ 
               hasAccess: true,
               isLoading: false,
               error: null
-            }));
+            });
           }
         }
       } catch (error) {
         console.error('Error in auth check:', error);
         if (isMounted) {
-          setState(prev => ({ 
-            ...prev, 
+          setState({ 
             error: error instanceof Error ? error : new Error('Error checking permissions'),
             hasAccess: false,
             isLoading: false
-          }));
+          });
         }
       }
     };

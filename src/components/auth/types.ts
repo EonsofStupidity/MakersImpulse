@@ -15,6 +15,12 @@ export interface AuthSession {
   expires_at?: number;
 }
 
+export interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: Error | { message: string } | null;
+}
+
 export interface AuthGuardProps {
   children: React.ReactNode;
   requireAuth?: boolean;
@@ -23,4 +29,8 @@ export interface AuthGuardProps {
   loadingComponent?: React.ReactNode;
   unauthorizedComponent?: React.ReactNode;
   onError?: (error: Error | { message: string }) => void;
+}
+
+export interface RoleHierarchy {
+  [key: string]: number;
 }

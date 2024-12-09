@@ -39,10 +39,23 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: session, isLoading } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      return session;
-    }
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) {
+          if (error.message.includes('refresh_token_not_found')) {
+            console.log('Refresh token not found, signing out');
+            await supabase.auth.signOut();
+            return null;
+          }
+          throw error;
+        }
+        return session;
+      } catch (error) {
+        console.error('Session fetch error:', error);
+        return null;
+      }
+    },
+    retry: false
   });
 
   // Subscribe to auth changes
@@ -59,6 +72,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       } else if (event === 'SIGNED_OUT') {
         queryClient.clear();
         toast.info('Signed out');
+      } else if (event === 'TOKEN_REFRESHED') {
+        console.log('Token refreshed successfully');
       }
     });
 
