@@ -3,12 +3,15 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { defaultNavItems } from './defaultNavItems';
+import type { NavItemType } from './NavItem';
 
-interface AdminNavItemsProps {
-  isIconOnly: boolean;
+export interface AdminNavItemsProps {
+  isIconOnly?: boolean;
+  draggedItem?: NavItemType | null;
+  setDraggedItem?: (item: NavItemType | null) => void;
 }
 
-export const AdminNavItems = ({ isIconOnly }: AdminNavItemsProps) => {
+export const AdminNavItems = ({ isIconOnly = false, draggedItem, setDraggedItem }: AdminNavItemsProps) => {
   return (
     <motion.div 
       className="flex items-center space-x-4"

@@ -1,6 +1,6 @@
 import React from "react";
 import { AdminTopNav } from "@/components/admin/dashboard/nav/AdminTopNav";
-import { NewDashboardOverview } from "./core/NewDashboardOverview";
+import NewDashboardOverview from "./core/NewDashboardOverview";
 
 const AdminDashboard = () => {
   return (
