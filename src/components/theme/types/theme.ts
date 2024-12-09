@@ -14,9 +14,6 @@ export interface DatabaseSettingsRow {
   primary_color: string;
   secondary_color: string;
   accent_color: string;
-  logo_url?: string;
-  favicon_url?: string;
-  theme_mode?: 'light' | 'dark' | 'system';
   text_primary_color: string;
   text_secondary_color: string;
   text_link_color: string;
@@ -38,4 +35,7 @@ export interface DatabaseSettingsRow {
   letter_spacing: string;
   updated_at?: string;
   updated_by?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  transition_type?: string;
 }

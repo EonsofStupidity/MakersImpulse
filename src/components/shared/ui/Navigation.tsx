@@ -2,18 +2,13 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { 
   Search, 
-  User, 
+  User,
   LogOut, 
   Settings, 
   UserCircle, 
   LayoutDashboard,
   LogIn,
-  UserPlus,
-  Wrench,
-  BookOpen,
-  Globe,
-  Mail,
-  Shield
+  UserPlus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -139,7 +134,7 @@ export const Navigation = () => {
                     <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
+                <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border border-white/10">
                   {!session ? (
                     <>
                       <DropdownMenuItem 
@@ -175,27 +170,6 @@ export const Navigation = () => {
                           Admin Dashboard
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem 
-                        onClick={() => handleNavigation('/maker-space/builds')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Wrench className="mr-2 h-4 w-4" />
-                        My Builds
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleNavigation('/maker-space/guides')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <BookOpen className="mr-2 h-4 w-4" />
-                        My Guides
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleNavigation('/maker-space/parts')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Globe className="mr-2 h-4 w-4" />
-                        My Parts
-                      </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleNavigation('/settings')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
