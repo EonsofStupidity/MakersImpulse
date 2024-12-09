@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, User, LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
+import { Search, User, LogOut, Settings, UserCircle, LayoutDashboard, LogIn, UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
