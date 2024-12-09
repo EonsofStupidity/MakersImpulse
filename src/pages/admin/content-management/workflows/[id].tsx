@@ -11,15 +11,28 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
+interface WorkflowStep {
+  id: string;
+  name: string;
+  type: string;
+  config: Record<string, any>;
+}
+
+interface WorkflowFormData {
+  name: string;
+  description: string;
+  steps: WorkflowStep[];
+}
+
 const WorkflowEditor = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isNewWorkflow = id === "new";
 
-  const [formData, setFormData] = React.useState({
+  const [formData, setFormData] = React.useState<WorkflowFormData>({
     name: "",
     description: "",
-    steps: [] as any[],
+    steps: [],
   });
 
   // Fetch existing workflow if editing
@@ -51,7 +64,7 @@ const WorkflowEditor = () => {
       setFormData({
         name: workflow.name,
         description: workflow.description || "",
-        steps: workflow.steps || [],
+        steps: Array.isArray(workflow.steps) ? workflow.steps : [],
       });
     }
   }, [workflow]);
