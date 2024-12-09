@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Loader2, X } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/components/auth/AuthProvider";
@@ -9,11 +9,16 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-const NumberPad = ({ onDigitPress, disabled }: { onDigitPress: (digit: string) => void, disabled?: boolean }) => {
+// Define the type for the RPC response
+type RPCResponse = {
+  success: boolean;
+  message?: string;
+};
+
+const NumberPad = ({ onDigitPress, disabled }: { onDigitPress: (digit: string) => void; disabled?: boolean }) => {
   const digits = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '', '0', 'del'];
 
   return (
@@ -41,10 +46,8 @@ export const PinSetup = () => {
   const [stage, setStage] = useState<"enter" | "confirm">("enter");
 
   useEffect(() => {
-    // Handle ESC key
     const handleEsc = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        // Handle escape - could navigate away or reset
         setPin("");
         setConfirmPin("");
         setStage("enter");
@@ -94,7 +97,7 @@ export const PinSetup = () => {
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.rpc('setup_pin', {
+      const { data, error } = await supabase.rpc<RPCResponse>('setup_pin', {
         p_user_id: user?.id,
         p_pin: originalPin,
         p_ip_address: null,
@@ -103,10 +106,10 @@ export const PinSetup = () => {
 
       if (error) throw error;
 
-      if (data.success) {
+      if (data?.success) {
         toast.success("PIN setup successfully! You can now use PIN login.");
       } else {
-        toast.error(data.message || "Failed to set up PIN");
+        toast.error(data?.message || "Failed to set up PIN");
       }
     } catch (error) {
       console.error("PIN setup error:", error);
