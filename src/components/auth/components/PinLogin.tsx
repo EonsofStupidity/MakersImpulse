@@ -1,160 +1,162 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Loader2, Lock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Loader2, Lock, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import type { PinLoginResponse } from "@/integrations/supabase/types/auth";
+import { Input } from "@/components/ui/input";
+import { useAuth } from "@/components/auth/AuthProvider";
 
-const pinLoginSchema = z.object({
-  email: z.string().email("Please enter a valid email"),
-  pin: z.string().length(4, "PIN must be exactly 4 digits").regex(/^\d+$/, "PIN must contain only numbers"),
-});
-
-type PinLoginFormData = z.infer<typeof pinLoginSchema>;
-
-interface PinLoginProps {
-  onSwitchToPassword: () => void;
-}
-
-export const PinLogin = ({ onSwitchToPassword }: PinLoginProps) => {
+export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => void }) => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const { session } = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setError,
-  } = useForm<PinLoginFormData>({
-    resolver: zodResolver(pinLoginSchema),
-  });
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        if (!session?.user) {
+          toast.error("Please sign in with your password first to use PIN login");
+          onSwitchToPassword();
+          return;
+        }
 
-  const onSubmit = async (data: PinLoginFormData) => {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('pin_enabled, last_password_login')
+          .eq('id', session.user.id)
+          .single();
+
+        if (!profile?.pin_enabled) {
+          toast.error("PIN login not set up. Please log in with password first.");
+          onSwitchToPassword();
+          return;
+        }
+
+        const lastPasswordLogin = new Date(profile.last_password_login);
+        const oneMonthAgo = new Date();
+        oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+
+        if (lastPasswordLogin < oneMonthAgo) {
+          toast.error("Monthly password verification required. Please log in with your password.");
+          onSwitchToPassword();
+          return;
+        }
+
+        setEmail(session.user.email || "");
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Session check error:", error);
+        toast.error("Unable to verify session. Please try again.");
+        onSwitchToPassword();
+      }
+    };
+
+    checkSession();
+
+    // Handle ESC key
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onSwitchToPassword();
+      }
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [session, onSwitchToPassword]);
+
+  const handlePinSubmit = async (pin: string) => {
+    if (!session?.user?.id) return;
+
     setIsLoading(true);
     try {
-      // First get the user profile from the profiles table
-      const { data: profiles, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('email', data.email)
-        .single();
-
-      if (profileError || !profiles?.id) {
-        setError("email", { message: "Email not found" });
-        return;
-      }
-
-      const userId = profiles.id;
-
-      // Verify PIN
-      const { data: result, error } = await supabase.rpc('verify_pin_login', {
-        p_user_id: userId,
-        p_pin: data.pin,
-        p_ip_address: null, // Could be implemented with IP detection
+      const { data, error } = await supabase.rpc('verify_pin_login', {
+        p_user_id: session.user.id,
+        p_pin: pin,
+        p_ip_address: null,
         p_user_agent: navigator.userAgent
-      }) as { data: PinLoginResponse | null, error: Error | null };
+      });
 
       if (error) throw error;
 
-      if (result?.success) {
-        // Sign in the user
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: data.email,
-          password: data.pin // Use PIN as temporary password for this session
-        });
-
-        if (signInError) throw signInError;
-
-        toast.success("Successfully logged in with PIN");
+      if (data.success) {
+        toast.success("PIN verified successfully!");
         navigate("/");
       } else {
-        if (result?.locked_until) {
-          const lockoutTime = new Date(result.locked_until);
-          toast.error(`Account locked until ${lockoutTime.toLocaleTimeString()}`);
-          setError("pin", { 
-            message: "Too many failed attempts. Try password login or wait." 
-          });
+        if (data.locked_until) {
+          toast.error(`Account locked until ${new Date(data.locked_until).toLocaleTimeString()}`);
         } else {
-          setError("pin", { message: result?.message || "Invalid PIN" });
+          toast.error(data.message || "Invalid PIN");
         }
       }
     } catch (error) {
-      console.error('PIN login error:', error);
-      toast.error("Failed to log in with PIN");
+      console.error("PIN verification error:", error);
+      toast.error("Failed to verify PIN");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <div className="space-y-6">
-      <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          PIN Login
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Enter your email and PIN to continue
-        </p>
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </div>
+    );
+  }
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            id="email"
-            type="email"
-            placeholder="Enter your email"
-            {...register("email")}
-          />
-          {errors.email && (
-            <p className="text-sm text-red-500">{errors.email.message}</p>
-          )}
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        className="space-y-6"
+      >
+        <div className="absolute top-4 right-4 flex gap-2">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onSwitchToPassword}
+            className="hover:bg-red-500/10"
+          >
+            <X className="h-5 w-5" />
+          </Button>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="pin">PIN</Label>
-          <Input
-            id="pin"
-            type="password"
-            inputMode="numeric"
-            maxLength={4}
-            placeholder="Enter your PIN"
-            {...register("pin")}
-          />
-          {errors.pin && (
-            <p className="text-sm text-red-500">{errors.pin.message}</p>
-          )}
+        <div className="space-y-2 text-center">
+          <h1 className="text-2xl font-semibold tracking-tight">
+            PIN Login
+          </h1>
+          <p className="text-sm text-muted-foreground">
+            Enter your PIN to continue
+          </p>
         </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Verifying...
-            </>
-          ) : (
-            <>
-              <Lock className="mr-2 h-4 w-4" />
-              Login with PIN
-            </>
-          )}
-        </Button>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Input
+              type="email"
+              value={email}
+              disabled
+              className="text-center bg-muted"
+            />
+          </div>
 
-        <Button
-          type="button"
-          variant="ghost"
-          className="w-full"
-          onClick={onSwitchToPassword}
-        >
-          Use Password Instead
-        </Button>
-      </form>
-    </div>
+          {/* PIN input will be implemented here */}
+          
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={onSwitchToPassword}
+            >
+              Use Password Instead
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
