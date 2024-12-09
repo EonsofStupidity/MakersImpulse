@@ -6,12 +6,14 @@ import {
   LogOut, 
   Settings, 
   UserCircle, 
-  LayoutDashboard, 
-  LogIn, 
+  LayoutDashboard,
+  LogIn,
   UserPlus,
-  Github,
+  Wrench,
+  BookOpen,
+  Globe,
   Mail,
-  Phone
+  Shield
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -62,23 +64,6 @@ export const Navigation = () => {
     }
 
     navigate(to);
-  };
-
-  const handleProviderAuth = async (provider: 'github' | 'google' | 'discord') => {
-    console.log(`Attempting ${provider} authentication`);
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/maker-space`
-        }
-      });
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('OAuth error:', error);
-      toast.error(`Failed to authenticate with ${provider}`);
-    }
   };
 
   const handleLogout = async () => {
@@ -173,27 +158,6 @@ export const Navigation = () => {
                         Sign In
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleProviderAuth('github')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Github className="mr-2 h-4 w-4" />
-                        Continue with GitHub
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleProviderAuth('google')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Mail className="mr-2 h-4 w-4" />
-                        Continue with Google
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleProviderAuth('discord')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        <Phone className="mr-2 h-4 w-4" />
-                        Continue with Discord
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
                         onClick={() => handleNavigation('/register')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
@@ -219,6 +183,27 @@ export const Navigation = () => {
                           Admin Dashboard
                         </DropdownMenuItem>
                       )}
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/maker-space/builds')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Wrench className="mr-2 h-4 w-4" />
+                        My Builds
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/maker-space/guides')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <BookOpen className="mr-2 h-4 w-4" />
+                        My Guides
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/maker-space/parts')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Globe className="mr-2 h-4 w-4" />
+                        My Parts
+                      </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleNavigation('/settings')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
