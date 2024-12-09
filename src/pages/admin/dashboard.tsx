@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { AdminSidebarProvider } from '@/components/admin/dashboard/sidebar/AdminSidebarContext';
-import { NewDashboardOverview } from './core/NewDashboardOverview';
+import NewDashboardOverview from './core/NewDashboardOverview';
 import { CacheManagementSection } from './core/CacheManagementSection';
 
 const AdminDashboard = () => {
