@@ -6,19 +6,19 @@ import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/providers/ThemeProvider";
+import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
 
 const App = () => {
-  console.log('App component rendering');
-  
   return (
     <ErrorBoundary>
       <SessionProvider>
@@ -30,6 +30,12 @@ const App = () => {
                   <AppRoutes />
                 </RootLayout>
               </BrowserRouter>
+              <Toaster 
+                position="top-right"
+                expand={false}
+                richColors
+                closeButton
+              />
             </TooltipProvider>
           </ThemeProvider>
         </QueryClientProvider>
