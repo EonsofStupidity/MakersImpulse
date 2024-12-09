@@ -17,7 +17,7 @@ export const AuthGuard = ({
   onError
 }: AuthGuardProps) => {
   const navigate = useNavigate();
-  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole, fallbackPath);
+  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
 
   useEffect(() => {
     if (error) {
@@ -33,6 +33,7 @@ export const AuthGuard = ({
   }, [error, fallbackPath, navigate, onError]);
 
   if (isLoading) {
+    console.log('AuthGuard: Loading state');
     return loadingComponent || (
       <motion.div
         initial={{ opacity: 0 }}
@@ -45,6 +46,7 @@ export const AuthGuard = ({
   }
 
   if (!hasAccess) {
+    console.log('AuthGuard: Access denied');
     return unauthorizedComponent || (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -56,6 +58,7 @@ export const AuthGuard = ({
     );
   }
 
+  console.log('AuthGuard: Access granted');
   return (
     <motion.div
       initial={{ opacity: 0 }}

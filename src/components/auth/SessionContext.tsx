@@ -16,84 +16,60 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-
-    const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
-      if (!supabaseSession) {
-        console.log('No active session found');
-        return null;
-      }
-
-      try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('role, username, display_name')
-          .eq('id', supabaseSession.user.id)
-          .single();
-
-        if (error) {
-          console.error('Profile fetch error:', error);
-          throw error;
-        }
-
-        const authSession: AuthSession = {
-          user: {
-            id: supabaseSession.user.id,
-            email: supabaseSession.user.email,
-            role: profile?.role || 'subscriber',
-            username: profile?.username || supabaseSession.user.email?.split('@')[0],
-            display_name: profile?.display_name || supabaseSession.user.email?.split('@')[0]
-          },
-          expires_at: supabaseSession.expires_at
-        };
-
-        return authSession;
-      } catch (error) {
-        console.error('Error transforming session:', error);
-        toast.error('Error loading user profile');
-        return null;
-      }
-    };
-
-    const initializeSession = async () => {
-      try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        
-        if (error) throw error;
-
-        if (mounted) {
-          const authSession = await transformSession(initialSession);
-          setSession(authSession);
-        }
-      } catch (error) {
-        console.error('Session initialization error:', error);
-        setSession(null);
-      } finally {
-        if (mounted) setIsLoading(false);
-      }
-    };
-
-    initializeSession();
-
+    console.log('SessionProvider: Initializing...');
+    
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
-      if (mounted) {
-        setIsLoading(true);
+      if (currentSession) {
         try {
-          const authSession = await transformSession(currentSession);
-          setSession(authSession);
+          const { data: profile, error: profileError } = await supabase
+            .from('profiles')
+            .select('role, username, display_name')
+            .eq('id', currentSession.user.id)
+            .single();
+
+          if (profileError) throw profileError;
+
+          setSession({
+            user: {
+              id: currentSession.user.id,
+              email: currentSession.user.email,
+              role: profile?.role || 'subscriber',
+              username: profile?.username || currentSession.user.email?.split('@')[0],
+              display_name: profile?.display_name || currentSession.user.email?.split('@')[0]
+            },
+            expires_at: currentSession.expires_at
+          });
         } catch (error) {
-          console.error('Auth state change error:', error);
+          console.error('Profile fetch error:', error);
           setSession(null);
-        } finally {
-          setIsLoading(false);
         }
+      } else {
+        setSession(null);
+      }
+      
+      setIsLoading(false);
+    });
+
+    // Initial session check
+    supabase.auth.getSession().then(({ data: { session: initialSession }, error }) => {
+      if (error) {
+        console.error('Initial session error:', error);
+        setSession(null);
+        setIsLoading(false);
+        return;
+      }
+
+      if (initialSession) {
+        console.log('Initial session found:', initialSession.user.id);
+      } else {
+        console.log('No initial session');
       }
     });
 
     return () => {
-      mounted = false;
+      console.log('SessionProvider: Cleaning up...');
       subscription.unsubscribe();
     };
   }, []);
