@@ -1,17 +1,3 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import type { ContentRelationship } from "../types/cms";
-import { validateContentRelationship } from "../utils/contentTypeValidation";
-import type { ContentType } from "../types/contentTypes";
-
-interface RelationshipWithContent extends Omit<ContentRelationship, 'parent_id' | 'child_id'> {
-  parent_id: string;
-  child_id: string;
-  parent: { id: string; type: ContentType };
-  child: { id: string; type: ContentType };
-}
-
 export const useContentRelationships = (contentId?: string) => {
   const queryClient = useQueryClient();
 
@@ -41,7 +27,13 @@ export const useContentRelationships = (contentId?: string) => {
       }
 
       console.log("Fetched relationships:", data);
-      return data as RelationshipWithContent[];
+      
+      // Ensure parent and child are single objects, not arrays
+      return data.map((relationship) => ({
+        ...relationship,
+        parent: relationship.parent[0],
+        child: relationship.child[0],
+      })) as RelationshipWithContent[];
     },
     enabled: !!contentId,
   });
