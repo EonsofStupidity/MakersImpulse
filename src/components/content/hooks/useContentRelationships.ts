@@ -22,8 +22,8 @@ export const useContentRelationships = (contentId?: string) => {
           child_id,
           relationship_type,
           order_index,
-          parent:parent_id(type),
-          child:child_id(type)
+          parent:parent_id(id, type),
+          child:child_id(id, type)
         `)
         .or(`parent_id.eq.${contentId},child_id.eq.${contentId}`);
 

@@ -8,17 +8,21 @@ export const useContentMutations = () => {
   const queryClient = useQueryClient();
 
   const createContent = useMutation({
-    mutationFn: async ({ type, ...data }: { type: ContentType } & Record<string, any>) => {
-      console.log("Creating content:", { type, data });
+    mutationFn: async ({ type, title, ...data }: { type: ContentType; title: string } & Record<string, any>) => {
+      console.log("Creating content:", { type, title, data });
       
-      const validation = await validateContent(type, { type, ...data });
+      const validation = await validateContent(type, { type, title, ...data });
       if (!validation.success) {
         throw new Error("Content validation failed");
       }
 
       const { data: result, error } = await supabase
         .from("cms_content")
-        .insert(validation.data)
+        .insert({
+          type,
+          title,
+          ...validation.data
+        })
         .select()
         .single();
 
@@ -40,17 +44,21 @@ export const useContentMutations = () => {
   });
 
   const updateContent = useMutation({
-    mutationFn: async ({ id, type, ...data }: { id: string; type: ContentType } & Record<string, any>) => {
-      console.log("Updating content:", { id, type, data });
+    mutationFn: async ({ id, type, title, ...data }: { id: string; type: ContentType; title: string } & Record<string, any>) => {
+      console.log("Updating content:", { id, type, title, data });
       
-      const validation = await validateContent(type, { type, ...data });
+      const validation = await validateContent(type, { type, title, ...data });
       if (!validation.success) {
         throw new Error("Content validation failed");
       }
 
       const { data: result, error } = await supabase
         .from("cms_content")
-        .update(validation.data)
+        .update({
+          type,
+          title,
+          ...validation.data
+        })
         .eq("id", id)
         .select()
         .single();
