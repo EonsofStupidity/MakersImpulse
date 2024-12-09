@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { StatsCards } from "@/components/admin/dashboard/stats/StatsCards";
 import { ActivitySection } from "@/components/admin/dashboard/activity/ActivitySection";
-import { CacheManagementSection } from "./CacheManagementSection";
+import { RedisDashboardSection } from "./RedisDashboardSection";
 
 const NewDashboardOverview = () => {
   return (
@@ -14,7 +14,7 @@ const NewDashboardOverview = () => {
 
       <StatsCards />
       <ActivitySection />
-      <CacheManagementSection />
+      <RedisDashboardSection />
     </div>
   );
 };

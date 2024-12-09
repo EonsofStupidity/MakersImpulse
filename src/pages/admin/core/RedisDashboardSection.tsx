@@ -1,12 +1,18 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { RedisStatusCard } from '@/components/admin/redis/overview/RedisStatusCard';
 import { RedisConnectionForm } from '@/components/admin/redis/config/RedisConnectionForm';
 import { RedisFeatureToggles } from '@/components/admin/redis/config/RedisFeatureToggles';
 
 export const RedisDashboardSection = () => {
   return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Redis Management</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="space-y-6"
+    >
+      <h2 className="text-2xl font-bold text-white">Redis Management</h2>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RedisStatusCard />
         <div className="space-y-6">
@@ -14,6 +20,6 @@ export const RedisDashboardSection = () => {
           <RedisFeatureToggles />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

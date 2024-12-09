@@ -22,31 +22,41 @@ export const RedisConnectionForm = () => {
   };
 
   return (
-    <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
+    <Card className="bg-black/20 backdrop-blur-xl border-white/10">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Server className="h-5 w-5 text-primary" />
+        <CardTitle className="flex items-center gap-2 text-white">
+          <Server className="h-5 w-5 text-neon-cyan" />
           Connection Details
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Redis Host</label>
-          <Input placeholder="your-redis-host.com" />
+          <label className="text-sm font-medium text-white/80">Redis Host</label>
+          <Input 
+            placeholder="your-redis-host.com" 
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+          />
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium">Port</label>
-          <Input type="number" placeholder="6379" />
+          <label className="text-sm font-medium text-white/80">Port</label>
+          <Input 
+            type="number" 
+            placeholder="6379" 
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+          />
         </div>
         
         <div className="space-y-2">
-          <label className="text-sm font-medium">Password (optional)</label>
-          <Input type="password" />
+          <label className="text-sm font-medium text-white/80">Password (optional)</label>
+          <Input 
+            type="password" 
+            className="bg-white/5 border-white/10 text-white placeholder:text-white/40"
+          />
         </div>
 
         <Button 
-          className="w-full" 
+          className="w-full bg-neon-cyan/20 text-neon-cyan hover:bg-neon-cyan/30 transition-colors" 
           onClick={handleTestConnection}
           disabled={isLoading}
         >

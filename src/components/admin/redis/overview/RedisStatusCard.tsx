@@ -26,42 +26,42 @@ export const RedisStatusCard = () => {
   });
 
   return (
-    <Card className="bg-background/50 backdrop-blur-sm border-primary/20">
+    <Card className="bg-black/20 backdrop-blur-xl border-white/10">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-xl font-bold flex items-center gap-2">
-          <Database className="h-5 w-5 text-primary" />
+        <CardTitle className="text-xl font-bold flex items-center gap-2 text-white">
+          <Database className="h-5 w-5 text-neon-cyan" />
           Services Overview
         </CardTitle>
-        <Badge variant={status?.enabled ? "default" : "destructive"}>
+        <Badge variant={status?.enabled ? "default" : "destructive"} className="bg-neon-cyan/20 text-neon-cyan border-neon-cyan/30">
           {status?.enabled ? "Enabled" : "Disabled"}
         </Badge>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-1">
-            <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <div className="text-sm text-white/60 flex items-center gap-2">
               <Server className="h-4 w-4" />
               Mode
             </div>
-            <p className="text-lg font-semibold">{status?.mode === 'full' ? 'Full' : 'Restricted'}</p>
+            <p className="text-lg font-semibold text-white">{status?.mode === 'full' ? 'Full' : 'Restricted'}</p>
           </div>
           <div className="space-y-1">
-            <div className="text-sm text-muted-foreground flex items-center gap-2">
+            <div className="text-sm text-white/60 flex items-center gap-2">
               <Activity className="h-4 w-4" />
               Uptime
             </div>
-            <p className="text-lg font-semibold">{status?.uptime}</p>
+            <p className="text-lg font-semibold text-white">{status?.uptime}</p>
           </div>
         </div>
 
         <div className="space-y-2">
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm text-white/60">
             <span>Memory Usage</span>
             <span>{status?.memoryUsage} MB / {status?.memoryLimit} MB</span>
           </div>
-          <div className="h-2 bg-secondary rounded-full overflow-hidden">
+          <div className="h-2 bg-white/5 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-primary transition-all duration-500"
+              className="h-full bg-neon-cyan transition-all duration-500"
               style={{ width: `${(status?.memoryUsage / status?.memoryLimit) * 100}%` }}
             />
           </div>
@@ -69,14 +69,16 @@ export const RedisStatusCard = () => {
 
         <div className="flex justify-between items-center pt-4">
           <Button 
-            variant="outline" 
+            variant="ghost" 
             onClick={() => navigate('/admin/redis/configure')}
+            className="hover:bg-white/5 text-white/80 hover:text-neon-cyan"
           >
             Configure Redis
           </Button>
           <Button 
-            variant="outline"
+            variant="ghost"
             onClick={() => navigate('/admin/redis/metrics')}
+            className="hover:bg-white/5 text-white/80 hover:text-neon-cyan"
           >
             View Metrics
           </Button>
