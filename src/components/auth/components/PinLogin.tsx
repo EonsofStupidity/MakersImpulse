@@ -1,22 +1,13 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { useAuth } from "@/components/auth/AuthProvider";
-
-// Define the type for the RPC response
-type RPCResponse = {
-  success: boolean;
-  message?: string;
-  locked_until?: string | null;
-};
+import { PinLoginForm } from "./pin/PinLoginForm";
 
 export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => void }) => {
-  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
   const { session } = useAuth();
@@ -73,38 +64,6 @@ export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => voi
     return () => window.removeEventListener("keydown", handleEsc);
   }, [session, onSwitchToPassword]);
 
-  const handlePinSubmit = async (pin: string) => {
-    if (!session?.user?.id) return;
-
-    setIsLoading(true);
-    try {
-      const { data, error } = await supabase.rpc<RPCResponse>("verify_pin_login", {
-        p_user_id: session.user.id,
-        p_pin: pin,
-        p_ip_address: null,
-        p_user_agent: navigator.userAgent,
-      });
-
-      if (error) throw error;
-
-      if (data?.success) {
-        toast.success("PIN verified successfully!");
-        navigate("/");
-      } else {
-        if (data?.locked_until) {
-          toast.error(`Account locked until ${new Date(data.locked_until).toLocaleTimeString()}`);
-        } else {
-          toast.error(data?.message || "Invalid PIN");
-        }
-      }
-    } catch (error) {
-      console.error("PIN verification error:", error);
-      toast.error("Failed to verify PIN");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -137,27 +96,10 @@ export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => voi
           <p className="text-sm text-muted-foreground">Enter your PIN to continue</p>
         </div>
 
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              type="email"
-              value={email}
-              disabled
-              className="text-center bg-muted"
-            />
-          </div>
-
-          {/* Add PIN input and submission handling */}
-          <div className="flex gap-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={onSwitchToPassword}
-            >
-              Use Password Instead
-            </Button>
-          </div>
-        </div>
+        <PinLoginForm 
+          email={email}
+          onSwitchToPassword={onSwitchToPassword}
+        />
       </motion.div>
     </AnimatePresence>
   );
