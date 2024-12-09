@@ -1,6 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../AuthProvider';
-import type { AuthState } from '../types';
+
+interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: Error | null;
+}
 
 const roleHierarchy: { [key: string]: number } = {
   'subscriber': 0,
