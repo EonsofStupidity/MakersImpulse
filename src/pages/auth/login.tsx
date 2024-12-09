@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -7,12 +7,14 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
+import { PinLogin } from "@/components/auth/components/PinLogin";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useAuth();
+  const [usePinLogin, setUsePinLogin] = useState(false);
 
   useEffect(() => {
     console.log('Login page render:', { session, isLoading });
@@ -78,46 +80,59 @@ const Login = () => {
           className="w-full max-w-md bg-black/30 backdrop-blur-2xl p-8 rounded-xl shadow-xl border border-[#41f0db]/20 relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#41f0db]/5 to-transparent pointer-events-none" />
-          <Auth 
-             
-            supabaseClient={supabase}
-            appearance={{ 
-              theme: ThemeSupa,
-              extend: true,
-              variables: {
-                default: {
-                  colors: {
-                    brand: '#41f0db',
-                    brandAccent: '#ff0abe',
-                    brandButtonText: 'white',
-                    defaultButtonBackground: 'rgba(65, 240, 219, 0.1)',
-                    defaultButtonBackgroundHover: 'rgba(65, 240, 219, 0.2)',
-                    defaultButtonBorder: '#41f0db',
-                    defaultButtonText: '#41f0db',
-                    inputBackground: 'rgba(0, 0, 0, 0.3)',
-                    inputBorder: 'rgba(65, 240, 219, 0.2)',
-                    inputBorderHover: 'rgba(65, 240, 219, 0.4)',
-                    inputBorderFocus: '#41f0db',
-                    inputText: 'white',
-                    inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
+          
+          {usePinLogin ? (
+            <PinLogin onSwitchToPassword={() => setUsePinLogin(false)} />
+          ) : (
+            <>
+              <Auth 
+                supabaseClient={supabase}
+                appearance={{ 
+                  theme: ThemeSupa,
+                  extend: true,
+                  variables: {
+                    default: {
+                      colors: {
+                        brand: '#41f0db',
+                        brandAccent: '#ff0abe',
+                        brandButtonText: 'white',
+                        defaultButtonBackground: 'rgba(65, 240, 219, 0.1)',
+                        defaultButtonBackgroundHover: 'rgba(65, 240, 219, 0.2)',
+                        defaultButtonBorder: '#41f0db',
+                        defaultButtonText: '#41f0db',
+                        inputBackground: 'rgba(0, 0, 0, 0.3)',
+                        inputBorder: 'rgba(65, 240, 219, 0.2)',
+                        inputBorderHover: 'rgba(65, 240, 219, 0.4)',
+                        inputBorderFocus: '#41f0db',
+                        inputText: 'white',
+                        inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
+                      },
+                    },
                   },
-                },
-              },
-              className: {
-                container: 'space-y-4',
-                button: 'w-full h-12 rounded-lg transition-all duration-300 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 hover:bg-[#41f0db]/10',
-                label: 'text-sm font-medium text-[#41f0db]',
-                input: 'h-12 w-full bg-black/20 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 focus:border-[#41f0db] text-white rounded-lg px-4',
-                message: 'text-red-400 text-sm',
-                anchor: 'text-[#41f0db] hover:text-[#ff0abe] transition-colors',
-                divider: 'bg-[#41f0db]/20',
-              },
-            }}
-            theme="dark"
-            providers={['github', 'google', 'discord']}
-            redirectTo={`${window.location.origin}/`}
-            magicLink={true}
-          />
+                  className: {
+                    container: 'space-y-4',
+                    button: 'w-full h-12 rounded-lg transition-all duration-300 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 hover:bg-[#41f0db]/10',
+                    label: 'text-sm font-medium text-[#41f0db]',
+                    input: 'h-12 w-full bg-black/20 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 focus:border-[#41f0db] text-white rounded-lg px-4',
+                    message: 'text-red-400 text-sm',
+                    anchor: 'text-[#41f0db] hover:text-[#ff0abe] transition-colors',
+                    divider: 'bg-[#41f0db]/20',
+                  },
+                }}
+                theme="dark"
+                providers={['github', 'google', 'discord']}
+                redirectTo={`${window.location.origin}/`}
+                magicLink={true}
+              />
+              <Button
+                variant="ghost"
+                className="w-full mt-4"
+                onClick={() => setUsePinLogin(true)}
+              >
+                Login with PIN
+              </Button>
+            </>
+          )}
         </motion.div>
       </div>
     </motion.div>

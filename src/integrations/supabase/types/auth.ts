@@ -1,15 +1,13 @@
-import { Database } from './database';
+import type { Session } from '@supabase/supabase-js';
 
-export type UserRole = Database['public']['Enums']['user_role'];
-export type ThemeMode = Database['public']['Enums']['theme_mode'];
+export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
 
 export interface AuthUser {
   id: string;
-  email?: string;
+  email?: string | null;
   role?: UserRole;
   username?: string;
-  display_name?: string;
-  profile?: Profile;
+  displayName?: string;
 }
 
 export interface AuthSession {
@@ -20,11 +18,26 @@ export interface AuthSession {
 export interface AuthState {
   isLoading: boolean;
   hasAccess: boolean;
-  error: string | null;
+  error: Error | { message: string } | null;
 }
 
-export type Profile = Database['public']['Tables']['profiles']['Row'];
+export interface AuthGuardProps {
+  children: React.ReactNode;
+  requireAuth?: boolean;
+  requiredRole?: UserRole | UserRole[];
+  fallbackPath?: string;
+  loadingComponent?: React.ReactNode;
+  unauthorizedComponent?: React.ReactNode;
+  onError?: (error: Error | { message: string }) => void;
+}
 
 export interface RoleHierarchy {
   [key: string]: number;
+}
+
+export interface PinLoginResponse {
+  success: boolean;
+  message: string;
+  locked_until?: string;
+  attempts_remaining?: number;
 }
