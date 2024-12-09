@@ -12,11 +12,43 @@ const SessionContext = createContext<SessionContextType | undefined>(undefined);
 
 export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<AuthSession | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     console.log('SessionProvider: Initializing');
     
+    // Get initial session
+    const initSession = async () => {
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        if (initialSession) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role, username, display_name')
+            .eq('id', initialSession.user.id)
+            .single();
+
+          setSession({
+            user: {
+              id: initialSession.user.id,
+              email: initialSession.user.email,
+              role: profile?.role || 'subscriber',
+              username: profile?.username || initialSession.user.email?.split('@')[0],
+              display_name: profile?.display_name || initialSession.user.email?.split('@')[0]
+            },
+            expires_at: initialSession.expires_at
+          });
+        }
+      } catch (error) {
+        console.error('Error getting initial session:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initSession();
+    
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event);
       
@@ -40,12 +72,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           };
 
           setSession(sessionData);
+          
+          if (event === 'SIGNED_IN') {
+            toast.success(`Welcome back, ${sessionData.user.display_name}!`);
+          }
         } catch (error) {
           console.error('Error in auth state change:', error);
           setSession(null);
         }
       } else {
         setSession(null);
+        if (event === 'SIGNED_OUT') {
+          toast.success('Successfully signed out');
+        }
       }
       
       setIsLoading(false);

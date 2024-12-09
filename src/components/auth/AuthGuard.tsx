@@ -5,6 +5,7 @@ import { useRoleCheck } from './hooks/useRoleCheck';
 import { AuthLoading } from './components/AuthLoading';
 import { Unauthorized } from './components/Unauthorized';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 export const AuthGuard = ({ 
   children, 
@@ -23,6 +24,7 @@ export const AuthGuard = ({
     
     if (error) {
       console.error('AuthGuard error:', error);
+      toast.error('Please sign in to access this content');
       
       if (onError) {
         onError(error);
