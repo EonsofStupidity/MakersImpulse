@@ -15,28 +15,36 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session: initialSession }, error }) => {
-      if (error) {
-        console.error('Error fetching session:', error);
+    console.log('SessionProvider: Initializing session...');
+
+    const initializeSession = async () => {
+      try {
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error fetching initial session:', error);
+          return;
+        }
+
+        if (initialSession) {
+          setSession({
+            user: {
+              id: initialSession.user.id,
+              email: initialSession.user.email,
+              role: initialSession.user.user_metadata?.role || 'subscriber',
+            },
+            expires_at: initialSession.expires_at,
+          });
+        }
+      } catch (error) {
+        console.error('Session initialization error:', error);
+      } finally {
         setIsLoading(false);
-        return;
       }
+    };
 
-      if (initialSession) {
-        setSession({
-          user: {
-            id: initialSession.user.id,
-            email: initialSession.user.email,
-            role: initialSession.user.user_metadata?.role || 'subscriber',
-          },
-          expires_at: initialSession.expires_at,
-        });
-      }
-      setIsLoading(false);
-    });
+    initializeSession();
 
-    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event);
 
@@ -59,7 +67,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           toast.info('Signed out');
         }
       }
-      setIsLoading(false);
     });
 
     return () => {

@@ -6,13 +6,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { AuthSession } from "@/components/auth/types";
+import { useSession } from "@/components/auth/SessionContext";
 
-interface UserMenuProps {
-  session?: AuthSession | null;
-}
-
-export const UserMenu = ({ session }: UserMenuProps) => {
+export const UserMenu = () => {
   const navigate = useNavigate();
+  const { session, isLoading } = useSession();
 
   const handleLogout = async () => {
     try {
@@ -23,6 +21,18 @@ export const UserMenu = ({ session }: UserMenuProps) => {
       toast.error('Error signing out');
     }
   };
+
+  if (isLoading) {
+    return (
+      <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
+        <Avatar className="h-8 w-8 border-2 border-white/20">
+          <AvatarFallback className="bg-transparent">
+            <User className="h-4 w-4 animate-pulse" />
+          </AvatarFallback>
+        </Avatar>
+      </Button>
+    );
+  }
 
   if (!session) {
     return (
