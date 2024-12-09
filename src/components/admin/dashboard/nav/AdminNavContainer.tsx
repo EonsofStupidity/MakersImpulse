@@ -56,7 +56,7 @@ export const AdminNavContainer = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-neon-cyan" />
       </div>
     );
   }

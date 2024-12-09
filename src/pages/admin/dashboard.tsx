@@ -8,7 +8,7 @@ import { RedisDashboardSection } from './core/RedisDashboardSection';
 const AdminDashboard = () => {
   return (
     <AdminSidebarProvider>
-      <div className="min-h-screen flex bg-gradient-to-b from-black/90 to-black/95">
+      <div className="min-h-screen flex bg-gradient-to-b from-black via-black/95 to-black/90">
         <AdminSidebar />
         <div className="flex-1 relative">
           <AdminNav />
