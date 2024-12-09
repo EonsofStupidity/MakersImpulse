@@ -7,10 +7,6 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
-import Landing from "@/pages/site/landing";
-import Login from "@/pages/auth/login";
-import Register from "@/pages/auth/register";
-import { AuthContainer } from "@/pages/auth/components/auth/components/AuthContainer";
 
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
@@ -28,16 +24,6 @@ export const AppRoutes = () => {
   return (
     <PageTransition>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/" element={<Landing />} />
-        <Route path="/auth" element={<AuthContainer />} />
-        <Route path="/login" element={
-          session ? <Navigate to="/maker-space" replace /> : <Login />
-        } />
-        <Route path="/register" element={
-          session ? <Navigate to="/maker-space" replace /> : <Register />
-        } />
-        
         {/* Map all public routes */}
         {publicRoutes.map((route) => (
           <Route

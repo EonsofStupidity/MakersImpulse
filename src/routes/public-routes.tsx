@@ -1,10 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import Landing from "@/pages/site/landing";
-import About from "@/pages/site/about";
-import Terms from "@/pages/site/terms";
-import Privacy from "@/pages/site/privacy";
-import LatestUpdates from "@/pages/content/blog/latest-updates";
-import MakerSpace from "@/pages/content/maker-space";
+import Login from "@/pages/auth/login";
+import Register from "@/pages/auth/register";
 
 const publicRoutes: RouteObject[] = [
   {
@@ -12,24 +9,12 @@ const publicRoutes: RouteObject[] = [
     element: <Landing />
   },
   {
-    path: "/maker-space",
-    element: <MakerSpace />
+    path: "/login",
+    element: <Login />
   },
   {
-    path: "/about",
-    element: <About />
-  },
-  {
-    path: "/terms",
-    element: <Terms />
-  },
-  {
-    path: "/privacy",
-    element: <Privacy />
-  },
-  {
-    path: "/blog",
-    element: <LatestUpdates />
+    path: "/register", 
+    element: <Register />
   }
 ];
 

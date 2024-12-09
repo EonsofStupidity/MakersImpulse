@@ -22,6 +22,22 @@ const Login = () => {
     }
   }, [session, navigate]);
 
+  const handleProviderAuth = async (provider: 'github' | 'google' | 'discord') => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/maker-space`
+        }
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('OAuth error:', error);
+      toast.error('Failed to authenticate with provider');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0F1114] flex flex-col">
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-border/40">
@@ -39,12 +55,11 @@ const Login = () => {
       </div>
 
       <div className="flex-1 flex flex-col p-4 space-y-6">
-        {/* Quick Access Buttons */}
         <div className="grid grid-cols-1 gap-4 mb-8">
           <Button 
             variant="outline" 
             className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => {/* Handle GitHub login */}}
+            onClick={() => handleProviderAuth('github')}
           >
             <Github className="h-5 w-5" />
             Continue with GitHub
@@ -53,7 +68,7 @@ const Login = () => {
           <Button
             variant="outline"
             className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => {/* Handle Google login */}}
+            onClick={() => handleProviderAuth('google')}
           >
             <Mail className="h-5 w-5" />
             Continue with Google
@@ -62,7 +77,7 @@ const Login = () => {
           <Button
             variant="outline"
             className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => {/* Handle Discord login */}}
+            onClick={() => handleProviderAuth('discord')}
           >
             <Phone className="h-5 w-5" />
             Continue with Discord
@@ -80,12 +95,11 @@ const Login = () => {
           </div>
         </div>
 
-        {/* Supabase Auth UI */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="bg-black/60 backdrop-blur-xl p-6 rounded-lg shadow-lg border border-border/40"
+          className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 animate-fade-in mx-auto p-6"
         >
           <Auth 
             supabaseClient={supabase}
@@ -126,11 +140,9 @@ const Login = () => {
             theme="dark"
             providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/maker-space`}
-            onlyThirdPartyProviders
           />
         </motion.div>
 
-        {/* Navigation Links */}
         <div className="mt-8 space-y-4">
           <Button 
             variant="ghost" 
