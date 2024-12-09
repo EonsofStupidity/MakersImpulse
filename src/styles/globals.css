@@ -69,12 +69,22 @@
     @apply relative z-10 space-y-8;
   }
 
+  /* Fixed: Separated group utility from @apply */
   .nav-item {
-    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-neon-cyan transition-all duration-300 hover:bg-white/5 relative group;
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-neon-cyan transition-all duration-300 hover:bg-white/5 relative;
+  }
+
+  /* Group hover effect handled separately */
+  .group .nav-item-highlight {
+    @apply opacity-0 transition-opacity duration-300;
+  }
+
+  .group:hover .nav-item-highlight {
+    @apply opacity-100;
   }
 
   .nav-item-highlight {
-    @apply absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100;
+    @apply absolute inset-0 rounded-lg;
     background: linear-gradient(45deg, rgba(65, 240, 219, 0.1), rgba(255, 10, 190, 0.1));
   }
 
