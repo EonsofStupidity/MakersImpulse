@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, User } from "lucide-react";
+import { Search, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -102,6 +102,18 @@ export const Navigation = () => {
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
             </Link>
+            <Link 
+              to="/maker-space"
+              className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/maker-space');
+              }}
+            >
+              <span className="relative z-10 text-white font-medium">Maker Space</span>
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
+            </Link>
             <MegaMenu />
           </div>
 
@@ -146,6 +158,12 @@ export const Navigation = () => {
                     </>
                   ) : (
                     <>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/profile')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        Profile
+                      </DropdownMenuItem>
                       {session.user.role === 'admin' && (
                         <DropdownMenuItem 
                           onClick={() => handleNavigation('/admin')}
@@ -158,6 +176,7 @@ export const Navigation = () => {
                         onClick={handleLogout}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
+                        <LogOut className="mr-2 h-4 w-4" />
                         Sign Out
                       </DropdownMenuItem>
                     </>
