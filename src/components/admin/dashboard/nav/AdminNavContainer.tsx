@@ -63,7 +63,7 @@ export const AdminNavContainer = () => {
 
   return (
     <>
-      <nav className={`glass mb-8 p-4 transition-all duration-300 ${draggedItem ? 'opacity-75' : ''}`}>
+      <nav className={`glass mb-8 p-4 transition-all duration-300 ml-[80px] ${draggedItem ? 'opacity-75' : ''}`}>
         <AdminNavItems 
           draggedItem={draggedItem}
           setDraggedItem={setDraggedItem}
