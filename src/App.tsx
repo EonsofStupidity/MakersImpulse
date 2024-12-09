@@ -6,6 +6,7 @@ import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/providers/ThemeProvider";
 import { Toaster } from "sonner";
+import { SessionProvider } from "@/components/auth/SessionContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,19 +23,21 @@ const App = () => {
     <ErrorBoundary>
       <BrowserRouter>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <TooltipProvider>
-              <RootLayout>
-                <AppRoutes />
-              </RootLayout>
-              <Toaster 
-                position="top-right"
-                expand={false}
-                richColors
-                closeButton
-              />
-            </TooltipProvider>
-          </ThemeProvider>
+          <SessionProvider>
+            <ThemeProvider>
+              <TooltipProvider>
+                <RootLayout>
+                  <AppRoutes />
+                </RootLayout>
+                <Toaster 
+                  position="top-right"
+                  expand={false}
+                  richColors
+                  closeButton
+                />
+              </TooltipProvider>
+            </ThemeProvider>
+          </SessionProvider>
         </QueryClientProvider>
       </BrowserRouter>
     </ErrorBoundary>
