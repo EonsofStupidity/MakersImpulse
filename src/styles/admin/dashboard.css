@@ -1,0 +1,56 @@
+/* Admin Dashboard Base Styles */
+.admin-layout {
+  @apply min-h-screen relative overflow-hidden;
+  background: linear-gradient(135deg, 
+    var(--dashboard-bg-dark) 0%,
+    var(--dashboard-bg-secondary) 50%,
+    var(--dashboard-bg-accent) 100%
+  );
+  animation: gradientFlow 15s ease infinite;
+}
+
+.admin-content {
+  @apply relative z-10 space-y-8 px-6 py-8;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Glass Effects */
+.glass-nav {
+  @apply fixed top-0 left-0 right-0 z-50;
+  background: linear-gradient(to right, rgba(155, 135, 245, 0.1), rgba(126, 105, 171, 0.1));
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-card {
+  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border-white/10;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Navigation Elements */
+.nav-item {
+  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 relative cursor-pointer;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.nav-item:hover {
+  @apply text-neon-cyan bg-white/5;
+  transform: translateY(-1px);
+}
+
+.nav-item-highlight {
+  @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
+  background: linear-gradient(45deg, 
+    rgba(65, 240, 219, 0.1), 
+    rgba(255, 10, 190, 0.1)
+  );
+}
+
+.nav-item:hover .nav-item-highlight {
+  @apply opacity-100;
+}

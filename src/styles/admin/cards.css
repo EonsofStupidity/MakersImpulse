@@ -1,0 +1,29 @@
+/* Admin Dashboard Cards */
+.stat-card {
+  @apply relative p-6 rounded-xl overflow-hidden;
+  background: linear-gradient(135deg, 
+    rgba(0,0,0,0.2) 0%, 
+    rgba(65,240,219,0.1) 100%
+  );
+  animation: cardFloat 3s ease-in-out infinite;
+}
+
+.stat-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-10;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+  animation: gradientShift 8s linear infinite;
+}
+
+.data-card {
+  @apply relative overflow-hidden rounded-xl p-6;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.data-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}

@@ -4,10 +4,15 @@ import { AdminSidebar } from '@/components/admin/dashboard/sidebar/AdminSidebar'
 import { AdminNav } from '@/components/admin/dashboard/AdminNav';
 import NewDashboardOverview from './core/NewDashboardOverview';
 
+// Import our new CSS files
+import '@/styles/admin/dashboard.css';
+import '@/styles/admin/animations.css';
+import '@/styles/admin/cards.css';
+
 const AdminDashboard = () => {
   return (
     <AdminSidebarProvider>
-      <div className="min-h-screen flex bg-gradient-to-b from-black via-black/95 to-black/90">
+      <div className="admin-layout">
         <AdminSidebar />
         <div className="flex-1 relative">
           <AdminNav />
