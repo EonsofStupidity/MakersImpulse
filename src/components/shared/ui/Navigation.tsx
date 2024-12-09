@@ -8,7 +8,10 @@ import {
   UserCircle, 
   LayoutDashboard,
   LogIn,
-  UserPlus
+  UserPlus,
+  Wrench,
+  BookOpen,
+  Box
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -48,13 +51,7 @@ export const Navigation = () => {
     });
   };
 
-  const handleNavigation = async (to: string) => {
-    console.log('Navigating to:', to);
-    navigate(to);
-  };
-
   const handleLogout = async () => {
-    console.log('Initiating logout process');
     try {
       await supabase.auth.signOut();
       toast.success("Successfully logged out");
@@ -66,6 +63,12 @@ export const Navigation = () => {
   };
 
   const isAdmin = session?.user?.role === 'admin' || session?.user?.role === 'super_admin';
+
+  const makerSpaceLinks = [
+    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
+    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
+    { to: "/maker-space/parts", label: "Parts", icon: Box },
+  ];
 
   return (
     <nav 
@@ -92,19 +95,27 @@ export const Navigation = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6">
+            {session && (
+              <>
+                {makerSpaceLinks.map((link) => (
+                  <Link 
+                    key={link.to}
+                    to={link.to}
+                    className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer flex items-center gap-2"
+                  >
+                    <link.icon className="w-4 h-4" />
+                    <span className="relative z-10 text-white font-medium">{link.label}</span>
+                    <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
+                  </Link>
+                ))}
+              </>
+            )}
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
-            </Link>
-            <Link 
-              to="/maker-space"
-              className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
-            >
-              <span className="relative z-10 text-white font-medium">Maker Space</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
             </Link>
@@ -138,14 +149,14 @@ export const Navigation = () => {
                   {!session ? (
                     <>
                       <DropdownMenuItem 
-                        onClick={() => handleNavigation('/login')}
+                        onClick={() => navigate('/login')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
                         <LogIn className="mr-2 h-4 w-4" />
                         Sign In
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleNavigation('/register')}
+                        onClick={() => navigate('/register')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
                         <UserPlus className="mr-2 h-4 w-4" />
@@ -155,7 +166,7 @@ export const Navigation = () => {
                   ) : (
                     <>
                       <DropdownMenuItem 
-                        onClick={() => handleNavigation('/profile')}
+                        onClick={() => navigate('/profile')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
                         <UserCircle className="mr-2 h-4 w-4" />
@@ -163,7 +174,7 @@ export const Navigation = () => {
                       </DropdownMenuItem>
                       {isAdmin && (
                         <DropdownMenuItem 
-                          onClick={() => handleNavigation('/admin')}
+                          onClick={() => navigate('/admin')}
                           className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                         >
                           <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -171,7 +182,7 @@ export const Navigation = () => {
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem 
-                        onClick={() => handleNavigation('/settings')}
+                        onClick={() => navigate('/settings')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
                         <Settings className="mr-2 h-4 w-4" />
