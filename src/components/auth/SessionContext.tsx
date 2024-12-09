@@ -16,8 +16,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('SessionProvider mounted');
-    let isMounted = true;
+    let mounted = true;
 
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
       if (!supabaseSession) {
@@ -33,7 +32,10 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', supabaseSession.user.id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error fetching profile:', error);
+          return null;
+        }
 
         const authSession: AuthSession = {
           user: {
@@ -57,14 +59,14 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const initializeSession = async () => {
       try {
         const { data: { session: initialSession } } = await supabase.auth.getSession();
-        if (isMounted) {
+        if (mounted) {
           const authSession = await transformSession(initialSession);
           setSession(authSession);
           setIsLoading(false);
         }
       } catch (error) {
         console.error('Error initializing session:', error);
-        if (isMounted) {
+        if (mounted) {
           setIsLoading(false);
         }
       }
@@ -72,9 +74,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     initializeSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
-      console.log('Auth state changed:', _event);
-      if (isMounted) {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, supabaseSession) => {
+      console.log('Auth state changed:', event);
+      if (mounted) {
         const authSession = await transformSession(supabaseSession);
         setSession(authSession);
         setIsLoading(false);
@@ -82,7 +84,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
-      isMounted = false;
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);

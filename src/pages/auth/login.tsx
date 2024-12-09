@@ -4,39 +4,30 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft, Github, Mail, Phone, Shield, Lock, Key } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
-import { toast } from "sonner";
+import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { session } = useSession();
-
-  console.log("Login page - session:", session);
+  const { session, isLoading } = useSession();
 
   useEffect(() => {
+    console.log("Login page - session state:", { session, isLoading });
     if (session) {
       console.log("User is already logged in, redirecting...");
       navigate("/maker-space");
     }
   }, [session, navigate]);
 
-  const handleProviderAuth = async (provider: 'github' | 'google' | 'discord') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/maker-space`
-        }
-      });
-
-      if (error) throw error;
-    } catch (error) {
-      console.error('OAuth error:', error);
-      toast.error('Failed to authenticate with provider');
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0F1114] flex flex-col">
@@ -55,60 +46,11 @@ const Login = () => {
       </div>
 
       <div className="flex-1 flex flex-col p-4 space-y-6">
-        <div className="grid grid-cols-1 gap-4 mb-8">
-          <Button 
-            variant="outline" 
-            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => handleProviderAuth('github')}
-          >
-            <Github className="h-5 w-5" />
-            Continue with GitHub
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => handleProviderAuth('google')}
-          >
-            <Mail className="h-5 w-5" />
-            Continue with Google
-          </Button>
-
-          <Button
-            variant="outline"
-            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => handleProviderAuth('discord')}
-          >
-            <Phone className="h-5 w-5" />
-            Continue with Discord
-          </Button>
-
-          <Button
-            variant="outline"
-            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
-            onClick={() => navigate('/auth/magic-link')}
-          >
-            <Key className="h-5 w-5" />
-            Sign in with Magic Link
-          </Button>
-        </div>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border/40" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-[#0F1114] px-2 text-muted-foreground">
-              Or continue with email
-            </span>
-          </div>
-        </div>
-
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 animate-fade-in mx-auto p-6"
+          className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 mx-auto p-6"
         >
           <Auth 
             supabaseClient={supabase}
@@ -147,44 +89,11 @@ const Login = () => {
               },
             }}
             theme="dark"
-            providers={['github', 'google', 'discord']}
+            providers={['github', 'google']}
             redirectTo={`${window.location.origin}/maker-space`}
-            view="magic_link"
-            showLinks={true}
-            magicLink={true}
+            onlyThirdPartyProviders={false}
           />
-
-          <div className="mt-4 flex items-center justify-center gap-2">
-            <Shield className="h-4 w-4 text-primary" />
-            <span className="text-sm text-muted-foreground">
-              Two-factor authentication available
-            </span>
-          </div>
         </motion.div>
-
-        <div className="mt-8 space-y-4">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start text-muted-foreground hover:text-primary"
-            onClick={() => navigate('/help')}
-          >
-            Need help?
-          </Button>
-          <Button 
-            variant="ghost"
-            className="w-full justify-start text-muted-foreground hover:text-primary"
-            onClick={() => navigate('/privacy')}
-          >
-            Privacy Policy
-          </Button>
-          <Button 
-            variant="ghost"
-            className="w-full justify-start text-muted-foreground hover:text-primary"
-            onClick={() => navigate('/terms')}
-          >
-            Terms of Service
-          </Button>
-        </div>
       </div>
     </div>
   );
