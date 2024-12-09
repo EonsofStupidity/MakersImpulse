@@ -33,11 +33,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       return data;
     },
     enabled: !!queryClient.getQueryData(['session']),
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000,
     retry: false
   });
 
-  // Get and sync session with improved error handling
+  // Get and sync session
   const { data: session, isLoading } = useQuery({
     queryKey: ['session'],
     queryFn: async () => {
@@ -65,17 +65,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return session;
       } catch (error) {
         console.error('Session error:', error);
-        // Clear all queries and sign out on critical errors
         await supabase.auth.signOut();
         queryClient.clear();
         return null;
       }
     },
     retry: false,
-    staleTime: 5 * 60 * 1000 // Cache for 5 minutes
+    staleTime: 5 * 60 * 1000
   });
 
-  // Subscribe to auth changes with improved error handling
+  // Subscribe to auth changes
   useEffect(() => {
     console.log('Setting up auth subscription');
     
@@ -84,31 +83,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
       
-      // Update session in query client
       queryClient.setQueryData(['session'], session);
 
-      switch (event) {
-        case 'SIGNED_IN':
-          console.log('User signed in:', session?.user?.id);
-          toast.success('Successfully signed in');
-          queryClient.invalidateQueries({ queryKey: ['profile'] });
-          break;
-          
-        case 'SIGNED_OUT':
-          console.log('User signed out');
-          queryClient.clear();
-          toast.info('Signed out');
-          break;
-          
-        case 'TOKEN_REFRESHED':
-          console.log('Token refreshed successfully');
-          queryClient.invalidateQueries({ queryKey: ['profile'] });
-          break;
-          
-        case 'USER_UPDATED':
-          console.log('User updated');
-          queryClient.invalidateQueries({ queryKey: ['profile'] });
-          break;
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
+      }
+      
+      if (event === 'SIGNED_OUT') {
+        queryClient.clear();
+        toast.info('Signed out');
       }
     });
 
@@ -118,7 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [queryClient]);
 
-  // Memoize the user object to prevent unnecessary re-renders
+  // Memoize the user object
   const user: AuthUser | null = useMemo(() => {
     if (!session) return null;
     return {
