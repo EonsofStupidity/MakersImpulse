@@ -26,7 +26,6 @@ const Login = () => {
       }
     };
 
-    // Check for existing session
     if (session) {
       console.log("Existing session found, redirecting");
       navigate("/");
@@ -50,8 +49,8 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0F1114] flex flex-col">
-      <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-white/10">
+    <div className="min-h-screen bg-gradient-to-br from-[#0F1114] to-[#1A1F2C] flex flex-col">
+      <div className="sticky top-0 z-50 flex items-center p-4 bg-black/40 backdrop-blur-xl border-b border-[#41f0db]/20">
         <Button 
           variant="ghost" 
           size="icon"
@@ -66,7 +65,8 @@ const Login = () => {
       </div>
 
       <div className="flex-1 flex flex-col p-4 items-center justify-center">
-        <div className="w-full max-w-md bg-black/60 backdrop-blur-xl p-6 rounded-lg shadow-lg border border-white/10">
+        <div className="w-full max-w-md bg-black/30 backdrop-blur-2xl p-8 rounded-xl shadow-xl border border-[#41f0db]/20 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#41f0db]/5 to-transparent pointer-events-none" />
           <Auth 
             supabaseClient={supabase}
             appearance={{ 
@@ -78,13 +78,13 @@ const Login = () => {
                     brand: '#41f0db',
                     brandAccent: '#ff0abe',
                     brandButtonText: 'white',
-                    defaultButtonBackground: '#41f0db',
-                    defaultButtonBackgroundHover: '#ff0abe',
-                    defaultButtonBorder: 'transparent',
-                    defaultButtonText: 'white',
-                    inputBackground: 'rgba(0, 0, 0, 0.4)',
-                    inputBorder: 'rgba(255, 255, 255, 0.1)',
-                    inputBorderHover: 'rgba(255, 255, 255, 0.2)',
+                    defaultButtonBackground: 'rgba(65, 240, 219, 0.1)',
+                    defaultButtonBackgroundHover: 'rgba(65, 240, 219, 0.2)',
+                    defaultButtonBorder: '#41f0db',
+                    defaultButtonText: '#41f0db',
+                    inputBackground: 'rgba(0, 0, 0, 0.3)',
+                    inputBorder: 'rgba(65, 240, 219, 0.2)',
+                    inputBorderHover: 'rgba(65, 240, 219, 0.4)',
                     inputBorderFocus: '#41f0db',
                     inputText: 'white',
                     inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
@@ -93,12 +93,12 @@ const Login = () => {
               },
               className: {
                 container: 'space-y-4',
-                button: 'w-full h-12 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium',
-                label: 'text-sm font-medium text-gray-300',
-                input: 'h-12 bg-black/40 border-white/10 text-white rounded-lg px-4 w-full',
+                button: 'w-full h-12 rounded-lg transition-all duration-300 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 hover:bg-[#41f0db]/10',
+                label: 'text-sm font-medium text-[#41f0db]',
+                input: 'h-12 w-full bg-black/20 backdrop-blur-sm border border-[#41f0db]/20 hover:border-[#41f0db]/40 focus:border-[#41f0db] text-white rounded-lg px-4',
                 message: 'text-red-400 text-sm',
                 anchor: 'text-[#41f0db] hover:text-[#ff0abe] transition-colors',
-                divider: 'bg-white/10',
+                divider: 'bg-[#41f0db]/20',
               },
             }}
             theme="dark"
@@ -109,7 +109,13 @@ const Login = () => {
               variables: {
                 sign_in: {
                   email_label: 'Email address',
-                  password_label: 'Your Password',
+                  password_label: 'Password',
+                  email_input_placeholder: 'Enter your email',
+                  password_input_placeholder: 'Enter your password',
+                  button_label: 'Sign in',
+                  loading_button_label: 'Signing in ...',
+                  social_provider_text: 'Sign in with {{provider}}',
+                  link_text: 'Already have an account? Sign in',
                 }
               }
             }}
