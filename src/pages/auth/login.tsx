@@ -73,14 +73,16 @@ const Login = () => {
         </h1>
       </div>
 
-      <div className="flex-1 flex flex-col p-4 items-center justify-center">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex-1 flex flex-col p-4 items-center justify-center"
+      >
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md bg-black/30 backdrop-blur-2xl p-8 rounded-xl shadow-xl border border-[#41f0db]/20 relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#41f0db]/5 to-transparent pointer-events-none" />
-          
           {usePinLogin ? (
             <PinLogin onSwitchToPassword={() => setUsePinLogin(false)} />
           ) : (
@@ -134,7 +136,7 @@ const Login = () => {
             </>
           )}
         </motion.div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
