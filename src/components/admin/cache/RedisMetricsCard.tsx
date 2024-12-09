@@ -5,6 +5,16 @@ import { RedisOperationsChart } from './metrics/RedisOperationsChart';
 import { RedisLogViewer } from './logs/RedisLogViewer';
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
+// Define the log level type
+type LogLevel = 'info' | 'warn' | 'error';
+
+// Define the log entry interface
+interface LogEntry {
+  level: LogLevel;
+  message: string;
+  timestamp: string;
+}
+
 export const RedisMetricsCard = () => {
   const { data: metrics, error } = useQuery({
     queryKey: ['redis-metrics'],
@@ -22,15 +32,16 @@ export const RedisMetricsCard = () => {
     refetchInterval: 5000
   });
 
-  const { data: logs } = useQuery({
+  const { data: logs } = useQuery<LogEntry[]>({
     queryKey: ['redis-logs'],
     queryFn: async () => {
       // This would be replaced with actual Redis logs fetching
-      return [
+      const mockLogs: LogEntry[] = [
         { level: 'info', message: 'Redis connected successfully', timestamp: '2024-03-20 10:00:00' },
         { level: 'warn', message: 'High memory usage detected', timestamp: '2024-03-20 10:01:00' },
         { level: 'error', message: 'Connection timeout', timestamp: '2024-03-20 10:02:00' },
       ];
+      return mockLogs;
     },
     refetchInterval: 10000
   });
