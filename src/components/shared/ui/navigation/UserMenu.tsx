@@ -15,10 +15,17 @@ export const UserMenu = memo(() => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
+      navigate('/');
+      toast.success('Logged out successfully');
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Error signing out');
     }
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    toast.success(`Navigating to ${path}`);
   };
 
   if (isLoading) {
@@ -38,7 +45,7 @@ export const UserMenu = memo(() => {
       <Button 
         variant="ghost" 
         size="icon" 
-        onClick={() => navigate('/login')}
+        onClick={() => handleNavigation('/login')}
         className="relative group hover:bg-transparent"
       >
         <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
@@ -64,7 +71,7 @@ export const UserMenu = memo(() => {
       <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border border-white/10">
         {user?.role === 'admin' && (
           <DropdownMenuItem 
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => handleNavigation('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
           >
             <UserCircle className="mr-2 h-4 w-4" />
@@ -72,14 +79,14 @@ export const UserMenu = memo(() => {
           </DropdownMenuItem>
         )}
         <DropdownMenuItem 
-          onClick={() => navigate('/profile')}
+          onClick={() => handleNavigation('/profile')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
         >
           <UserCircle className="mr-2 h-4 w-4" />
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => navigate('/settings')}
+          onClick={() => handleNavigation('/settings')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
         >
           <Settings className="mr-2 h-4 w-4" />

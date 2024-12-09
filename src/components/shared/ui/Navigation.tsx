@@ -54,6 +54,7 @@ export const Navigation = () => {
   const handleNavigation = (path: string) => {
     console.log('Navigating to:', path);
     navigate(path);
+    toast.success(`Navigating to ${path}`);
   };
 
   return (
