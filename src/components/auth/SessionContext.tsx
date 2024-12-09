@@ -26,7 +26,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         console.log('Fetching user profile for:', supabaseSession.user.id);
         const { data: profile, error } = await supabase
           .from('profiles')
-          .select('role')
+          .select('role, username, display_name')
           .eq('id', supabaseSession.user.id)
           .single();
 
@@ -40,7 +40,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           user: {
             id: supabaseSession.user.id,
             email: supabaseSession.user.email,
-            role: profile?.role || 'subscriber'
+            role: profile?.role || 'subscriber',
+            username: profile?.username,
+            display_name: profile?.display_name
           },
           expires_at: supabaseSession.expires_at
         };

@@ -16,22 +16,26 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <ErrorBoundary>
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <TooltipProvider>
-            <BrowserRouter>
-              <RootLayout>
-                <AppRoutes />
-              </RootLayout>
-            </BrowserRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
-    </SessionProvider>
-  </ErrorBoundary>
-);
+const App = () => {
+  console.log('App component rendering');
+  
+  return (
+    <ErrorBoundary>
+      <SessionProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <RootLayout>
+                  <AppRoutes />
+                </RootLayout>
+              </BrowserRouter>
+            </TooltipProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </SessionProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, User, LogOut } from "lucide-react";
+import { Search, User, LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -22,7 +22,7 @@ export const Navigation = () => {
   const navigate = useNavigate();
   const { session } = useSession();
 
-  console.log("Navigation render - Current session:", session);
+  console.log("Navigation render - Current session:", session?.user);
   console.log("Current location:", location.pathname);
 
   useEffect(() => {
@@ -50,7 +50,6 @@ export const Navigation = () => {
     }
 
     navigate(to);
-    toast.success(`Navigating to ${to.replace('/', '').toUpperCase()}`);
   };
 
   const handleLogout = async () => {
@@ -63,6 +62,8 @@ export const Navigation = () => {
       toast.error("Error logging out");
     }
   };
+
+  const isAdmin = session?.user?.role === 'admin' || session?.user?.role === 'super_admin';
 
   return (
     <nav 
@@ -81,7 +82,6 @@ export const Navigation = () => {
           <Link 
             to="/"
             className="flex items-center cursor-pointer"
-            onClick={() => handleNavigation('/')}
           >
             <span className="text-2xl font-bold">
               <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
@@ -93,10 +93,6 @@ export const Navigation = () => {
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/blog');
-              }}
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
@@ -105,10 +101,6 @@ export const Navigation = () => {
             <Link 
               to="/maker-space"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/maker-space');
-              }}
             >
               <span className="relative z-10 text-white font-medium">Maker Space</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
@@ -162,16 +154,25 @@ export const Navigation = () => {
                         onClick={() => handleNavigation('/profile')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
+                        <UserCircle className="mr-2 h-4 w-4" />
                         Profile
                       </DropdownMenuItem>
-                      {session.user.role === 'admin' && (
+                      {isAdmin && (
                         <DropdownMenuItem 
                           onClick={() => handleNavigation('/admin')}
                           className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                         >
+                          <LayoutDashboard className="mr-2 h-4 w-4" />
                           Admin Dashboard
                         </DropdownMenuItem>
                       )}
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/settings')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Settings className="mr-2 h-4 w-4" />
+                        Settings
+                      </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={handleLogout}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
