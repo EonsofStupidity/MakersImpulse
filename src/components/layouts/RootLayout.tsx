@@ -10,13 +10,9 @@ export const RootLayout = ({ children }: { children: React.ReactNode }) => {
 
   if (isLoading) {
     return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] text-white flex items-center justify-center"
-      >
+      <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] text-white flex items-center justify-center">
         <LoadingSpinner />
-      </motion.div>
+      </div>
     );
   }
 
