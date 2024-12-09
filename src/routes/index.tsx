@@ -18,12 +18,9 @@ export const AppRoutes = () => {
     hasSession: !!session
   });
 
+  // Only show loading spinner during initial session load
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   return (
@@ -58,7 +55,7 @@ export const AppRoutes = () => {
             />
           ))}
 
-          {/* Admin Routes - Restricted to admin/super_admin */}
+          {/* Admin Routes */}
           {adminRoutes.map((route) => (
             <Route
               key={route.path}

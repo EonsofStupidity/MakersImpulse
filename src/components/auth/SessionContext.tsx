@@ -1,7 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
-import { Session } from '@supabase/supabase-js';
 import { toast } from 'sonner';
 
 interface SessionContextType {
@@ -16,6 +15,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     console.log('SessionProvider: Starting initialization');
     
     const initializeSession = async () => {
@@ -27,7 +27,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           throw error;
         }
 
-        if (initialSession) {
+        if (initialSession && mounted) {
           console.log('Initial session found:', initialSession.user.id);
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
@@ -37,29 +37,42 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
           if (profileError) {
             console.error('Profile fetch error:', profileError);
-            throw profileError;
+            // Don't throw here, just set basic session
+            setSession({
+              user: {
+                id: initialSession.user.id,
+                email: initialSession.user.email,
+                role: 'subscriber',
+                username: initialSession.user.email?.split('@')[0],
+                display_name: initialSession.user.email?.split('@')[0]
+              },
+              expires_at: initialSession.expires_at
+            });
+          } else if (mounted) {
+            setSession({
+              user: {
+                id: initialSession.user.id,
+                email: initialSession.user.email,
+                role: profile?.role || 'subscriber',
+                username: profile?.username || initialSession.user.email?.split('@')[0],
+                display_name: profile?.display_name || initialSession.user.email?.split('@')[0]
+              },
+              expires_at: initialSession.expires_at
+            });
           }
-
-          setSession({
-            user: {
-              id: initialSession.user.id,
-              email: initialSession.user.email,
-              role: profile?.role || 'subscriber',
-              username: profile?.username || initialSession.user.email?.split('@')[0],
-              display_name: profile?.display_name || initialSession.user.email?.split('@')[0]
-            },
-            expires_at: initialSession.expires_at
-          });
-        } else {
+        } else if (mounted) {
           console.log('No initial session found');
           setSession(null);
         }
       } catch (error) {
         console.error('Session initialization error:', error);
-        toast.error('Error initializing session');
-        setSession(null);
+        if (mounted) {
+          setSession(null);
+        }
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
@@ -68,15 +81,13 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
-      if (currentSession) {
+      if (currentSession && mounted) {
         try {
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role, username, display_name')
             .eq('id', currentSession.user.id)
             .single();
-
-          if (profileError) throw profileError;
 
           const sessionData = {
             user: {
@@ -90,22 +101,30 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           };
 
           console.log('Setting session with data:', sessionData);
-          setSession(sessionData);
-          toast.success(`Welcome back, ${sessionData.user.display_name}`);
+          if (mounted) {
+            setSession(sessionData);
+            if (event === 'SIGNED_IN') {
+              toast.success(`Welcome back, ${sessionData.user.display_name}`);
+            }
+          }
         } catch (error) {
           console.error('Error in auth state change:', error);
-          toast.error('Error updating session');
-          setSession(null);
+          if (mounted) {
+            setSession(null);
+          }
         }
-      } else {
+      } else if (mounted) {
         console.log('No session in auth state change');
         setSession(null);
       }
       
-      setIsLoading(false);
+      if (mounted) {
+        setIsLoading(false);
+      }
     });
 
     return () => {
+      mounted = false;
       console.log('SessionProvider: Cleaning up subscription');
       subscription.unsubscribe();
     };
