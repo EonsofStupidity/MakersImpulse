@@ -6,34 +6,20 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { memo, useCallback } from "react";
+import { memo } from "react";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, user, isLoading } = useAuth();
 
-  console.log('UserMenu render - Session:', {
-    isAuthenticated: !!session,
-    userId: session?.user?.id,
-    role: user?.role,
-    isLoading
-  });
-
-  const handleLogout = useCallback(async () => {
+  const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      toast.success('Successfully signed out');
-      navigate('/login');
     } catch (error) {
       console.error('Logout error:', error);
       toast.error('Error signing out');
     }
-  }, [navigate]);
-
-  const handleNavigation = useCallback((path: string) => {
-    console.log('UserMenu navigation:', path);
-    navigate(path);
-  }, [navigate]);
+  };
 
   if (isLoading) {
     return (
@@ -52,7 +38,7 @@ export const UserMenu = memo(() => {
       <Button 
         variant="ghost" 
         size="icon" 
-        onClick={() => handleNavigation('/login')}
+        onClick={() => navigate('/login')}
         className="relative group hover:bg-transparent"
       >
         <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
@@ -70,7 +56,7 @@ export const UserMenu = memo(() => {
         <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
           <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
             <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-              <User className="h-4 w-4" />
+              {user?.displayName?.[0] || user?.email?.[0] || <User className="h-4 w-4" />}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -78,7 +64,7 @@ export const UserMenu = memo(() => {
       <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border border-white/10">
         {user?.role === 'admin' && (
           <DropdownMenuItem 
-            onClick={() => handleNavigation('/admin/dashboard')}
+            onClick={() => navigate('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
           >
             <UserCircle className="mr-2 h-4 w-4" />
@@ -86,14 +72,14 @@ export const UserMenu = memo(() => {
           </DropdownMenuItem>
         )}
         <DropdownMenuItem 
-          onClick={() => handleNavigation('/profile')}
+          onClick={() => navigate('/profile')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
         >
           <UserCircle className="mr-2 h-4 w-4" />
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => handleNavigation('/settings')}
+          onClick={() => navigate('/settings')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
         >
           <Settings className="mr-2 h-4 w-4" />
