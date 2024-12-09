@@ -5,6 +5,11 @@ import type { ContentRelationship } from "../types/cms";
 import { validateContentRelationship } from "../utils/contentTypeValidation";
 import type { ContentType } from "../types/contentTypes";
 
+interface RelationshipWithContent extends ContentRelationship {
+  parent: { id: string; type: ContentType };
+  child: { id: string; type: ContentType };
+}
+
 export const useContentRelationships = (contentId?: string) => {
   const queryClient = useQueryClient();
 
@@ -34,10 +39,7 @@ export const useContentRelationships = (contentId?: string) => {
       }
 
       console.log("Fetched relationships:", data);
-      return data as (ContentRelationship & {
-        parent: { id: string; type: ContentType } | null;
-        child: { id: string; type: ContentType } | null;
-      })[];
+      return data as RelationshipWithContent[];
     },
     enabled: !!contentId,
   });
