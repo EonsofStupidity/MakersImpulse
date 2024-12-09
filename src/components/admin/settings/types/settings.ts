@@ -29,6 +29,8 @@ export interface Settings {
   transition_type: 'fade' | 'slide' | 'scale';
   box_shadow?: string;
   backdrop_blur?: string;
+  updated_at?: string;
+  updated_by?: string;
 }
 
 export interface SettingsResponse {

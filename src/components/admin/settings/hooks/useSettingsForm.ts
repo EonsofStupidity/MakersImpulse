@@ -1,9 +1,10 @@
+import { useState } from "react";
 import { useSettingsFetch } from "./handlers/useSettingsFetch";
 import { useSettingsUpdateHandlers } from "./handlers/useSettingsUpdateHandlers";
 import { useSettingsReset } from "./handlers/useSettingsReset";
 
 export const useSettingsForm = () => {
-  const { settings, isLoading, setSettings } = useSettingsFetch();
+  const { data: settings, isLoading } = useSettingsFetch();
   const { 
     isSaving, 
     logoFile, 
