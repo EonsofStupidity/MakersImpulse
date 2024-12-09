@@ -45,17 +45,28 @@ export const useSettingsFetch = () => {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        console.log("Fetching settings from database...");
+        console.log("Attempting to fetch settings...");
+        console.log("Supabase client config:", {
+          url: supabase.config.url,
+          hasAuth: !!supabase.auth,
+        });
+
         const { data, error } = await supabase
           .from("site_settings")
           .select("*")
           .single();
 
         if (error) {
-          console.error("Error fetching settings:", error);
+          console.error("Error details:", {
+            message: error.message,
+            code: error.code,
+            details: error.details,
+            hint: error.hint
+          });
           throw error;
         }
         
+        console.log("Raw settings data:", data);
         const dbSettings = data as unknown as DatabaseSettings;
         const settingsData: Settings = {
           site_title: dbSettings.site_title,
@@ -88,10 +99,10 @@ export const useSettingsFetch = () => {
           transition_type: dbSettings.transition_type || 'fade',
         };
         
-        console.log("Settings fetched successfully:", settingsData);
+        console.log("Processed settings data:", settingsData);
         setSettings(settingsData);
       } catch (error) {
-        console.error("Error in fetchSettings:", error);
+        console.error("Detailed fetch error:", error);
         toast.error("Failed to load settings");
       } finally {
         setIsLoading(false);
