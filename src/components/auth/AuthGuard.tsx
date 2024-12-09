@@ -4,12 +4,11 @@ import { AuthGuardProps } from './types';
 import { useRoleCheck } from './hooks/useRoleCheck';
 import { AuthLoading } from './components/AuthLoading';
 import { Unauthorized } from './components/Unauthorized';
-import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 export const AuthGuard = ({ 
   children, 
-  requireAuth = true, 
+  requireAuth = false, 
   requiredRole,
   fallbackPath = '/login',
   loadingComponent,
@@ -24,7 +23,6 @@ export const AuthGuard = ({
     
     if (error) {
       console.error('AuthGuard error:', error);
-      toast.error(error instanceof Error ? error.message : 'Authentication error');
       
       if (onError) {
         onError(error);
@@ -33,6 +31,11 @@ export const AuthGuard = ({
       navigate(fallbackPath, { replace: true });
     }
   }, [error, fallbackPath, navigate, onError, requireAuth]);
+
+  // If auth is not required, render children immediately
+  if (!requireAuth) {
+    return <>{children}</>;
+  }
 
   if (isLoading) {
     return loadingComponent || (
