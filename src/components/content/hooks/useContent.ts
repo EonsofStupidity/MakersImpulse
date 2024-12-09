@@ -31,10 +31,21 @@ export const useContent = (contentId?: string) => {
 
   const { mutate: createContent } = useMutation({
     mutationFn: async (formData: ContentFormData) => {
-      console.log("Creating content:", formData);
+      console.log("Creating content with data:", formData);
+      
+      // Ensure required fields are present
+      const contentData = {
+        title: formData.title,
+        type: formData.type,
+        content: formData.content || {},
+        status: formData.status || "draft",
+        slug: formData.slug,
+        metadata: formData.metadata || {},
+      };
+
       const { data, error } = await supabase
         .from("cms_content")
-        .insert([formData])
+        .insert(contentData)
         .select()
         .single();
 

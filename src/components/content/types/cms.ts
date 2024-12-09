@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Json } from "@/integrations/supabase/types";
 
 export type ContentStatus = "draft" | "published" | "archived";
 export type ContentType = "page" | "component" | "template" | "workflow";
@@ -8,8 +9,8 @@ export interface BaseContent {
   type: ContentType;
   title: string;
   slug?: string;
-  content: Record<string, any>;
-  metadata?: Record<string, any>;
+  content: Json;
+  metadata?: Json;
   status: ContentStatus;
   version: number;
   created_by?: string;
@@ -29,19 +30,19 @@ export interface ContentRelationship {
 export interface ContentRevision {
   id: string;
   content_id: string;
-  content: Record<string, any>;
-  metadata?: Record<string, any>;
+  content: Json;
+  metadata?: Json;
   created_by?: string;
   created_at: string;
 }
 
 export const contentSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  type: z.enum(["page", "component", "template", "workflow"]),
   slug: z.string().optional(),
   content: z.record(z.any()),
   metadata: z.record(z.any()).optional(),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
-  type: z.enum(["page", "component", "template", "workflow"]),
 });
 
 export type ContentFormData = z.infer<typeof contentSchema>;
