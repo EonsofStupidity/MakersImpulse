@@ -6,6 +6,7 @@ import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
+import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
@@ -27,12 +28,14 @@ const App = () => {
         <AuthProvider>
           <BrowserRouter>
             <ThemeProvider>
-              <TooltipProvider>
-                <RootLayout>
-                  <AppRoutes />
-                </RootLayout>
-                <Toaster position="top-right" expand={false} richColors closeButton />
-              </TooltipProvider>
+              <AdminSidebarProvider>
+                <TooltipProvider>
+                  <RootLayout>
+                    <AppRoutes />
+                  </RootLayout>
+                  <Toaster position="top-right" expand={false} richColors closeButton />
+                </TooltipProvider>
+              </AdminSidebarProvider>
             </ThemeProvider>
           </BrowserRouter>
         </AuthProvider>
