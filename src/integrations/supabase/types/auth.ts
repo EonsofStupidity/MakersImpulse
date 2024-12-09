@@ -7,6 +7,8 @@ export interface AuthUser {
   id: string;
   email?: string;
   role?: UserRole;
+  username?: string;
+  display_name?: string;
   profile?: Profile;
 }
 
