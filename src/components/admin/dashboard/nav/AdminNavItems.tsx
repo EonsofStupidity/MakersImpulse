@@ -20,7 +20,11 @@ export const AdminNavItems = ({
 }: AdminNavItemsProps) => {
   return (
     <motion.div 
-      className={cn("flex items-center gap-4", className)}
+      className={cn(
+        "flex items-center",
+        "min-h-[2.5rem]",
+        className
+      )}
       layout
     >
       {defaultNavItems.map((item) => (
@@ -28,17 +32,17 @@ export const AdminNavItems = ({
           key={item.id}
           to={item.to}
           className={cn(
-            "flex items-center px-3 py-1 rounded-lg",
-            "text-white/80 hover:text-[#41f0db]",
+            "flex items-center gap-2 px-3 py-1.5 rounded-lg",
+            "text-white/80 hover:text-neon-cyan",
             "transition-all duration-300",
             "hover:bg-white/5",
             "relative group",
-            isIconOnly ? "w-8" : "min-w-[120px]"
+            isIconOnly ? "w-10" : "min-w-[100px]"
           )}
         >
-          <item.icon className="w-4 h-4" />
+          <item.icon className="w-5 h-5" />
           {!isIconOnly && (
-            <span className="ml-2 text-sm font-medium whitespace-nowrap">{item.label}</span>
+            <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
           )}
           <motion.div
             className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100"

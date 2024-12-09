@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { SidebarClose, SidebarOpen } from 'lucide-react';
-import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
 
 interface IconToggleProps {
   isIconOnly: boolean;
@@ -9,22 +9,21 @@ interface IconToggleProps {
 }
 
 export const IconToggle = ({ isIconOnly, onToggle }: IconToggleProps) => {
-  const handleToggle = () => {
-    onToggle();
-    toast.success(`Switched to ${isIconOnly ? 'full' : 'icon-only'} view`);
-  };
-
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={handleToggle}
-      className="relative group hover:bg-white/5"
+      onClick={onToggle}
+      className={cn(
+        "relative group",
+        "hover:bg-white/5",
+        "ml-4 transition-all duration-300"
+      )}
     >
       {isIconOnly ? (
-        <SidebarOpen className="w-4 h-4 text-white/80 group-hover:text-[#41f0db]" />
+        <SidebarOpen className="w-5 h-5 text-white/80 group-hover:text-neon-cyan" />
       ) : (
-        <SidebarClose className="w-4 h-4 text-white/80 group-hover:text-[#41f0db]" />
+        <SidebarClose className="w-5 h-5 text-white/80 group-hover:text-neon-cyan" />
       )}
     </Button>
   );
