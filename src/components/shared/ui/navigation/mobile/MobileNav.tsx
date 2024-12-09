@@ -6,7 +6,6 @@ import { MobileNavContent } from "./MobileNavContent";
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // Prevent body scroll when menu is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";

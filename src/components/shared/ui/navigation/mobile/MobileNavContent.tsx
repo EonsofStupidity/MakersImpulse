@@ -1,9 +1,7 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useSession } from "@/components/auth/SessionContext";
 import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -45,33 +43,24 @@ interface MobileNavContentProps {
 }
 
 export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
+  const navigate = useNavigate();
   const { session } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
-  
-  useEffect(() => {
-    const checkAdminStatus = async () => {
-      if (session?.user?.id) {
-        console.log('Checking admin status for user:', session.user.id);
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        
-        const hasAdminRole = profile?.role === 'admin' || profile?.role === 'super_admin';
-        console.log('User role:', profile?.role, 'Is admin:', hasAdminRole);
-        setIsAdmin(hasAdminRole);
-      }
-    };
-
-    checkAdminStatus();
-  }, [session]);
 
   const handleNavigation = (to: string) => {
-    console.log('Navigating to:', to);
+    console.log('Mobile nav: Navigating to:', to);
     onClose();
-    toast.success(`Navigating to ${to}`);
+    navigate(to);
+    toast.success(`Navigating to ${to.replace('/', '').toUpperCase()}`);
   };
+
+  // Base menu items
+  const menuItems: MenuItem[] = [
+    { to: "/maker-space", label: "Maker Space", icon: Home },
+    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
+    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
+    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
+    { to: "/blog", label: "Blog", icon: Mail },
+  ];
 
   // Auth-related items
   const authItems: MenuItem[] = session ? [
@@ -81,22 +70,13 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
-  // Base menu items
-  const baseMenuItems: MenuItem[] = [
-    { to: "/maker-space", label: "Maker Space", icon: Home },
-    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
-    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
-    { to: "/blog", label: "Blog", icon: Mail },
-  ];
-
-  // Admin items
-  const adminItems: MenuItem[] = isAdmin ? [
+  // Admin items if user has admin role
+  const adminItems: MenuItem[] = session?.user?.role === 'admin' ? [
     { to: "/admin", label: "Admin Dashboard", icon: Shield }
   ] : [];
 
   // Combine all menu items
-  const menuItems = [...authItems, ...baseMenuItems, ...adminItems];
+  const allMenuItems = [...authItems, ...menuItems, ...adminItems];
 
   return (
     <motion.div
@@ -118,12 +98,11 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
         variants={menuVariants}
         className="flex flex-col gap-2 p-6 pt-24"
       >
-        {menuItems.map((item) => (
+        {allMenuItems.map((item) => (
           <motion.div key={item.to} variants={menuItemVariants}>
-            <Link
-              to={item.to}
+            <div
               onClick={() => handleNavigation(item.to)}
-              className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group"
+              className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group cursor-pointer"
             >
               <item.icon className="w-5 h-5 mr-2" />
               {item.label}
@@ -131,7 +110,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
                 className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                 layoutId={`highlight-${item.to}`}
               />
-            </Link>
+            </div>
           </motion.div>
         ))}
       </motion.nav>

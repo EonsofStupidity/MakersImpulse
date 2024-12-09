@@ -24,36 +24,26 @@ export const AppRoutes = () => {
   return (
     <PageTransition>
       <Routes>
-        {/* Public Routes - Always accessible */}
+        {/* Public Routes */}
         {PublicRoutes()}
 
-        {/* Protected Routes - Require authentication */}
-        <Route
-          element={
-            <AuthGuard
-              requireAuth={true}
-              fallbackPath="/login"
-            >
-              {ProtectedRoutes()}
-            </AuthGuard>
-          }
-        />
+        {/* Protected Routes */}
+        {ProtectedRoutes()}
 
-        {/* Admin Routes - Require admin role */}
+        {/* Admin Routes */}
         <Route
-          path="admin/*"
+          path="/admin/*"
           element={
             <AuthGuard 
               requireAuth={true} 
               requiredRole={["admin", "super_admin"]}
               fallbackPath="/login"
               onError={(error) => {
-                const errorMessage = error instanceof Error ? error.message : 
+                console.error('Admin access error:', error);
+                toast.error(error instanceof Error ? error.message : 
                   typeof error === 'string' ? error : 
                   'message' in error ? error.message : 
-                  'Access denied';
-                console.error('Admin access error:', error);
-                toast.error(errorMessage);
+                  'Access denied');
               }}
             >
               <Routes>
