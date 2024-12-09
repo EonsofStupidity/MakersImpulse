@@ -28,40 +28,22 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           throw error;
         }
 
-        if (initialSession && mounted) {
-          try {
-            const { data: profile, error: profileError } = await supabase
-              .from('profiles')
-              .select('role, username, display_name')
-              .eq('id', initialSession.user.id)
-              .single();
-
-            if (profileError) throw profileError;
-
-            const enrichedSession: AuthSession = {
-              user: {
-                id: initialSession.user.id,
-                email: initialSession.user.email,
-                role: profile?.role || 'subscriber',
-                username: profile?.username || initialSession.user.email?.split('@')[0],
-                display_name: profile?.display_name || initialSession.user.email?.split('@')[0]
-              },
-              expires_at: initialSession.expires_at
-            };
-
-            console.log('Session initialized with profile:', enrichedSession);
-            setSession(enrichedSession);
-          } catch (error) {
-            console.error('Profile fetch error:', error);
+        if (mounted) {
+          if (initialSession) {
+            console.log('Session found:', initialSession.user.id);
+            setSession(initialSession);
+          } else {
+            console.log('No active session');
             setSession(null);
           }
+          setIsLoading(false);
         }
       } catch (error) {
         console.error('Session initialization error:', error);
-        toast.error('Failed to initialize session');
-      } finally {
         if (mounted) {
+          setSession(null);
           setIsLoading(false);
+          toast.error('Failed to initialize session');
         }
       }
     };
@@ -71,39 +53,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
-      if (currentSession && mounted) {
-        try {
-          const { data: profile, error: profileError } = await supabase
-            .from('profiles')
-            .select('role, username, display_name')
-            .eq('id', currentSession.user.id)
-            .single();
-
-          if (profileError) throw profileError;
-
-          const enrichedSession: AuthSession = {
-            user: {
-              id: currentSession.user.id,
-              email: currentSession.user.email,
-              role: profile?.role || 'subscriber',
-              username: profile?.username || currentSession.user.email?.split('@')[0],
-              display_name: profile?.display_name || currentSession.user.email?.split('@')[0]
-            },
-            expires_at: currentSession.expires_at
-          };
-
-          setSession(enrichedSession);
-          setIsLoading(false);
-        } catch (error) {
-          console.error('Profile fetch error:', error);
-          setSession(null);
-          setIsLoading(false);
-        }
-      } else {
-        if (mounted) {
-          setSession(null);
-          setIsLoading(false);
-        }
+      if (mounted) {
+        setSession(currentSession);
+        setIsLoading(false);
       }
     });
 
