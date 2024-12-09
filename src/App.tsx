@@ -13,16 +13,18 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
     },
   },
 });
 
 const App = () => {
+  console.log("App component rendering");
+  
   return (
     <ErrorBoundary>
-      <SessionProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>
           <ThemeProvider>
             <TooltipProvider>
               <BrowserRouter>
@@ -38,8 +40,8 @@ const App = () => {
               />
             </TooltipProvider>
           </ThemeProvider>
-        </QueryClientProvider>
-      </SessionProvider>
+        </SessionProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 };

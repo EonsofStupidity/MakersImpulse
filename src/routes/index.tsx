@@ -12,7 +12,11 @@ import { adminRoutes } from "./admin-routes";
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
   
-  console.log('AppRoutes: Current session state:', { session, isLoading });
+  console.log('AppRoutes: Session state:', { 
+    session: session?.user?.id, 
+    isLoading,
+    hasSession: !!session
+  });
 
   if (isLoading) {
     return (
@@ -31,16 +35,32 @@ export const AppRoutes = () => {
             <Route
               key={route.path}
               path={route.path}
-              element={route.element}
+              element={
+                route.path === "/login" && session ? (
+                  <Navigate to="/maker-space" replace />
+                ) : (
+                  route.element
+                )
+              }
             />
           ))}
 
-          {/* Maker Space Routes */}
+          {/* Protected Routes */}
           {makerSpaceRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
-              element={route.element}
+              element={
+                <AuthGuard 
+                  requireAuth={true}
+                  onError={(error) => {
+                    console.error('Auth error:', error);
+                    toast.error('Please sign in to access this page');
+                  }}
+                >
+                  {route.element}
+                </AuthGuard>
+              }
             >
               {route.children?.map((childRoute) => (
                 <Route
