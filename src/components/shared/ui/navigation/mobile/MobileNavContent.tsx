@@ -4,6 +4,7 @@ import { useSession } from "@/components/auth/SessionContext";
 import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
 interface MenuItem {
@@ -66,7 +67,13 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     checkAdminStatus();
   }, [session]);
 
-  // Auth-related items - always show these at the top for easy access
+  const handleNavigation = (to: string) => {
+    console.log('Navigating to:', to);
+    onClose();
+    toast.success(`Navigating to ${to}`);
+  };
+
+  // Auth-related items
   const authItems: MenuItem[] = session ? [
     { to: "/profile", label: "Profile", icon: UserCircle }
   ] : [
@@ -88,7 +95,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/admin", label: "Admin Dashboard", icon: Shield }
   ] : [];
 
-  // Combine all menu items - put auth items first for better visibility
+  // Combine all menu items
   const menuItems = [...authItems, ...baseMenuItems, ...adminItems];
 
   return (
@@ -115,7 +122,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
           <motion.div key={item.to} variants={menuItemVariants}>
             <Link
               to={item.to}
-              onClick={onClose}
+              onClick={() => handleNavigation(item.to)}
               className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group"
             >
               <item.icon className="w-5 h-5 mr-2" />

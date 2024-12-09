@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
+import { toast } from "sonner";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,6 +32,11 @@ export const Navigation = () => {
     });
   };
 
+  const handleNavigation = (to: string) => {
+    console.log('Navigating to:', to);
+    toast.success(`Navigating to ${to}`);
+  };
+
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -45,7 +51,7 @@ export const Navigation = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <Link to="/" className="flex items-center">
+          <Link to="/" onClick={() => handleNavigation('/')} className="flex items-center">
             <span className="text-2xl font-bold">
               <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
               <span className="text-[#ff0abe] animate-neon-glow">Impulse</span>
@@ -55,6 +61,7 @@ export const Navigation = () => {
           <div className="hidden md:flex items-center space-x-6">
             <Link 
               to="/blog"
+              onClick={() => handleNavigation('/blog')}
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group"
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
@@ -69,6 +76,7 @@ export const Navigation = () => {
               variant="ghost"
               size="icon"
               className="relative group hover:bg-transparent"
+              onClick={() => toast.info('Search feature coming soon!')}
             >
               <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
@@ -88,13 +96,31 @@ export const Navigation = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
                   <DropdownMenuItem asChild>
-                    <Link to="/login" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign In</Link>
+                    <Link 
+                      to="/login" 
+                      onClick={() => handleNavigation('/login')}
+                      className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                    >
+                      Sign In
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/register" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Sign Up</Link>
+                    <Link 
+                      to="/register" 
+                      onClick={() => handleNavigation('/register')}
+                      className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                    >
+                      Sign Up
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
-                    <Link to="/admin" className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium">Admin Dashboard</Link>
+                    <Link 
+                      to="/admin" 
+                      onClick={() => handleNavigation('/admin')}
+                      className="w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                    >
+                      Admin Dashboard
+                    </Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
