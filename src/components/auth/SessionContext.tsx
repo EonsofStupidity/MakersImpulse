@@ -28,31 +28,23 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('SessionProvider: Starting initialization');
-    
     let mounted = true;
 
     const initializeSession = async () => {
       try {
+        console.log('Initializing session...');
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('Session initialization error:', error);
-          if (error.message.includes('refresh_token_not_found')) {
-            await supabase.auth.signOut();
-          }
           throw error;
         }
 
         if (mounted) {
           const convertedSession = convertSession(initialSession);
-          console.log('Session initialization result:', {
-            hasSession: !!convertedSession,
-            userId: convertedSession?.user?.id
-          });
+          console.log('Initial session state:', convertedSession);
           
           if (convertedSession?.user?.id) {
-            // Fetch profile data including role
             const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
@@ -63,7 +55,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               console.error('Profile fetch error:', profileError);
             } else if (profile) {
               convertedSession.user.role = profile.role;
-              console.log('Profile role fetched:', profile.role);
+              console.log('User role set to:', profile.role);
             }
           }
 
@@ -71,11 +63,10 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           setIsLoading(false);
         }
       } catch (error) {
-        console.error('Session initialization error:', error);
+        console.error('Session initialization failed:', error);
         if (mounted) {
           setSession(null);
           setIsLoading(false);
-          toast.error('Failed to initialize session');
         }
       }
     };
@@ -83,14 +74,13 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     initializeSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession?.user?.id);
+      console.log('Auth state changed:', event);
 
       if (mounted) {
-        if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+        if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           const convertedSession = convertSession(currentSession);
           
           if (convertedSession?.user?.id) {
-            // Fetch profile data including role
             const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
@@ -101,26 +91,22 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               console.error('Profile fetch error:', profileError);
             } else if (profile) {
               convertedSession.user.role = profile.role;
-              console.log('Profile role updated:', profile.role);
+              console.log('Updated user role:', profile.role);
             }
           }
 
           setSession(convertedSession);
-          console.log('Session updated:', {
-            hasSession: !!convertedSession,
-            userId: convertedSession?.user?.id,
-            role: convertedSession?.user?.role
-          });
+          toast.success('Successfully signed in');
         } else if (event === 'SIGNED_OUT') {
-          console.log('User signed out, clearing session');
           setSession(null);
+          toast.info('Signed out');
         }
         setIsLoading(false);
       }
     });
 
     return () => {
-      console.log('SessionProvider: Cleaning up...');
+      console.log('Cleaning up session listener');
       mounted = false;
       subscription.unsubscribe();
     };
