@@ -7,29 +7,9 @@ import { ArrowLeft, Save } from "lucide-react";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
-
-interface WorkflowStep {
-  id: string;
-  name: string;
-  type: string;
-  config: Record<string, unknown>;
-}
-
-interface WorkflowFormData {
-  name: string;
-  description: string;
-  steps: WorkflowStep[];
-}
-
-interface WorkflowData {
-  id: string;
-  name: string;
-  description: string | null;
-  steps: WorkflowStep[];
-}
+import { WorkflowForm } from "@/components/admin/workflows/WorkflowForm";
+import type { WorkflowFormData, WorkflowData, ParsedWorkflowData, WorkflowStep } from "@/components/content/types/workflow";
 
 const WorkflowEditor = () => {
   const { id } = useParams();
@@ -42,7 +22,6 @@ const WorkflowEditor = () => {
     steps: [],
   });
 
-  // Fetch existing workflow if editing
   const { data: workflow, isLoading } = useQuery({
     queryKey: ["workflow", id],
     queryFn: async () => {
@@ -60,29 +39,33 @@ const WorkflowEditor = () => {
         throw error;
       }
 
-      return data as WorkflowData;
+      // Parse the workflow data
+      const parsedData: ParsedWorkflowData = {
+        ...data,
+        steps: Array.isArray(data.steps) ? data.steps : [],
+      };
+
+      return parsedData;
     },
     enabled: !isNewWorkflow,
   });
 
-  // Update form data when workflow is loaded
   useEffect(() => {
     if (workflow) {
       setFormData({
         name: workflow.name,
         description: workflow.description || "",
-        steps: workflow.steps || [],
+        steps: workflow.steps as WorkflowStep[],
       });
     }
   }, [workflow]);
 
-  // Save workflow mutation
-  const { mutate: saveWorkflow, isLoading: isSaving } = useMutation({
+  const { mutate: saveWorkflow, isPending } = useMutation({
     mutationFn: async () => {
       const workflowData = {
         name: formData.name,
         description: formData.description,
-        steps: JSON.stringify(formData.steps),
+        steps: formData.steps,
       };
 
       if (isNewWorkflow) {
@@ -125,6 +108,10 @@ const WorkflowEditor = () => {
     saveWorkflow();
   };
 
+  const handleFormChange = (updates: Partial<WorkflowFormData>) => {
+    setFormData(prev => ({ ...prev, ...updates }));
+  };
+
   if (!isNewWorkflow && isLoading) {
     return (
       <div className="min-h-screen bg-[#1a1a1a] pt-20 p-8">
@@ -158,9 +145,9 @@ const WorkflowEditor = () => {
             <Button
               onClick={handleSubmit}
               className="bg-neon-cyan/20 text-white border border-neon-cyan/50 hover:bg-neon-cyan/30"
-              disabled={isSaving}
+              disabled={isPending}
             >
-              {isSaving ? (
+              {isPending ? (
                 <LoadingSpinner />
               ) : (
                 <>
@@ -171,33 +158,11 @@ const WorkflowEditor = () => {
             </Button>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-white mb-2">Workflow Name</label>
-              <Input
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Enter workflow name"
-                className="bg-white/5 border-white/10 text-white"
-              />
-            </div>
-
-            <div>
-              <label className="block text-white mb-2">Description</label>
-              <Textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Enter workflow description"
-                className="bg-white/5 border-white/10 text-white"
-                rows={4}
-              />
-            </div>
-
-            <div className="border border-white/10 rounded-lg p-6 mt-8">
-              <h2 className="text-xl font-semibold text-white mb-4">Workflow Steps</h2>
-              <p className="text-white/60">Step configuration will be available in the next update.</p>
-            </div>
-          </form>
+          <WorkflowForm 
+            formData={formData}
+            onChange={handleFormChange}
+            onSubmit={handleSubmit}
+          />
         </Card>
       </div>
     </div>
