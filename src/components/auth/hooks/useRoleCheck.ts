@@ -115,18 +115,20 @@ export const useRoleCheck = (
         }
       } catch (error) {
         console.error('Error in auth check:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Error checking permissions';
+        const errorObj = error instanceof Error 
+          ? error 
+          : { message: 'Error checking permissions' };
         
         if (isMounted) {
           setState(prev => ({ 
             ...prev, 
-            error: errorMessage,
+            error: errorObj,
             hasAccess: false,
             isLoading: false
           }));
         }
 
-        toast.error(errorMessage);
+        toast.error(errorObj.message);
         navigate(fallbackPath, { replace: true });
       }
     };
