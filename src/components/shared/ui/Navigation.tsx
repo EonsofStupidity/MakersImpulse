@@ -82,7 +82,7 @@ export const Navigation = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-6">
-            <NavigationLinks session={session} />
+            <NavigationLinks />
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
@@ -107,7 +107,7 @@ export const Navigation = () => {
             </Button>
 
             <div className="hidden md:block">
-              <UserMenu session={session} />
+              <UserMenu />
             </div>
 
             <MobileNav />
