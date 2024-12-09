@@ -149,6 +149,14 @@ export default {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" }
+        },
+        "gradient-flow": {
+          "0%, 100%": {
+            "background-position": "0% 50%"
+          },
+          "50%": {
+            "background-position": "100% 50%"
+          }
         }
       },
       animation: {
@@ -159,7 +167,8 @@ export default {
         "neon-pulse": "neon-pulse 2s ease-in-out infinite",
         "neon-glow": "neon-glow 2s ease-in-out infinite",
         glitch: "glitch 2s ease-in-out infinite",
-        gradient: "gradient 15s ease infinite"
+        gradient: "gradient 15s ease infinite",
+        "gradient": "gradient-flow 15s ease infinite",
       },
     },
   },
