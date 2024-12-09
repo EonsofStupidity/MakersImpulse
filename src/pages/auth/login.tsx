@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
+import { AuthChangeEvent } from "@supabase/supabase-js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,8 +18,7 @@ const Login = () => {
   useEffect(() => {
     console.log("Login page mounted, session state:", { session, isLoading });
 
-    // Set up primary auth state change subscription
-    const { subscription } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event: AuthChangeEvent, currentSession) => {
       console.log("Auth state changed in Login:", event, currentSession?.user?.id);
 
       switch (event) {
@@ -34,26 +34,19 @@ const Login = () => {
           navigate("/login");
           break;
 
-        // Add other default cases if needed
+        case "TOKEN_REFRESHED":
+          console.log("Token refreshed");
+          break;
+
         default:
           console.log(`Unhandled auth event: ${event}`);
           break;
       }
     });
 
-    // Example: Handling user deletion through alternative logic
-    const deleteSubscription = supabase.auth.onAuthStateChange((event) => {
-      if (event === "USER_DELETED") {
-        console.error("User account was deleted");
-        toast.error("User account was deleted");
-        navigate("/login");
-      }
-    });
-
     return () => {
       console.log("Login page unmounting, cleaning up subscription");
       subscription.unsubscribe();
-      deleteSubscription.subscription.unsubscribe();
     };
   }, [session, navigate]);
 
