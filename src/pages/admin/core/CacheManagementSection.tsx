@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { RedisConfigCard } from '@/components/admin/cache/RedisConfigCard';
 import { RedisMetricsCard } from '@/components/admin/cache/RedisMetricsCard';
 import { Card } from '@/components/ui/card';
