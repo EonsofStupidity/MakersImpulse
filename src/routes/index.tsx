@@ -38,7 +38,7 @@ export const AppRoutes = () => {
           session ? <Navigate to="/maker-space" replace /> : <Register />
         } />
         
-        {/* Map public routes */}
+        {/* Map all public routes */}
         {PublicRoutes().map((route) => (
           <Route
             key={route.path}
