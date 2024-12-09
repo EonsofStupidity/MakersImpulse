@@ -2,11 +2,10 @@
 .admin-layout {
   @apply min-h-screen relative overflow-hidden;
   background: linear-gradient(135deg, 
-    var(--dashboard-bg-dark) 0%,
-    var(--dashboard-bg-secondary) 50%,
-    var(--dashboard-bg-accent) 100%
+    rgba(65,240,219,0.05) 0%,
+    rgba(255,10,190,0.05) 50%,
+    rgba(128,0,255,0.05) 100%
   );
-  animation: gradientFlow 15s ease infinite;
 }
 
 .admin-content {
@@ -17,7 +16,7 @@
 /* Glass Effects */
 .glass-nav {
   @apply fixed top-0 left-0 right-0 z-50;
-  background: linear-gradient(to right, rgba(155, 135, 245, 0.1), rgba(126, 105, 171, 0.1));
+  background: linear-gradient(135deg, rgba(65,240,219,0.1), rgba(255,10,190,0.1));
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -39,7 +38,7 @@
 }
 
 .nav-item:hover {
-  @apply text-neon-cyan bg-white/5;
+  @apply text-[#41f0db] bg-white/5;
   transform: translateY(-1px);
 }
 

@@ -12,7 +12,7 @@ export const AdminNav = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-[#9b87f5]/10 via-[#7E69AB]/10 to-[#6E59A5]/10 backdrop-blur-xl border-b border-white/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/10 via-[#ff0abe]/10 to-[#8000ff]/10 backdrop-blur-xl border-b border-white/10" />
         <div className="absolute inset-0 bg-gradient-radial from-neon-cyan/5 via-transparent to-transparent opacity-50" />
         <AdminNavContainer routes={adminRoutes} />
         <AdminToolbar />
