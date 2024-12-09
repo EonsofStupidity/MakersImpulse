@@ -4,7 +4,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Github, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { toast } from "sonner";
@@ -39,6 +39,48 @@ const Login = () => {
       </div>
 
       <div className="flex-1 flex flex-col p-4 space-y-6">
+        {/* Quick Access Buttons */}
+        <div className="grid grid-cols-1 gap-4 mb-8">
+          <Button 
+            variant="outline" 
+            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
+            onClick={() => {/* Handle GitHub login */}}
+          >
+            <Github className="h-5 w-5" />
+            Continue with GitHub
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
+            onClick={() => {/* Handle Google login */}}
+          >
+            <Mail className="h-5 w-5" />
+            Continue with Google
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
+            onClick={() => {/* Handle Discord login */}}
+          >
+            <Phone className="h-5 w-5" />
+            Continue with Discord
+          </Button>
+        </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border/40" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-[#0F1114] px-2 text-muted-foreground">
+              Or continue with email
+            </span>
+          </div>
+        </div>
+
+        {/* Supabase Auth UI */}
         <motion.div 
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -82,10 +124,36 @@ const Login = () => {
               },
             }}
             theme="dark"
-            providers={['github', 'google']}
+            providers={['github', 'google', 'discord']}
             redirectTo={`${window.location.origin}/maker-space`}
+            onlyThirdPartyProviders
           />
         </motion.div>
+
+        {/* Navigation Links */}
+        <div className="mt-8 space-y-4">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start text-muted-foreground hover:text-primary"
+            onClick={() => navigate('/help')}
+          >
+            Need help?
+          </Button>
+          <Button 
+            variant="ghost"
+            className="w-full justify-start text-muted-foreground hover:text-primary"
+            onClick={() => navigate('/privacy')}
+          >
+            Privacy Policy
+          </Button>
+          <Button 
+            variant="ghost"
+            className="w-full justify-start text-muted-foreground hover:text-primary"
+            onClick={() => navigate('/terms')}
+          >
+            Terms of Service
+          </Button>
+        </div>
       </div>
     </div>
   );

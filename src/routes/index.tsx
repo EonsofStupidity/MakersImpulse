@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import Landing from "@/pages/site/landing";
 import Login from "@/pages/auth/login";
 import Register from "@/pages/auth/register";
+import { AuthContainer } from "@/pages/auth/components/auth/components/AuthContainer";
 
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
@@ -29,6 +30,7 @@ export const AppRoutes = () => {
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Landing />} />
+        <Route path="/auth" element={<AuthContainer />} />
         <Route path="/login" element={
           session ? <Navigate to="/maker-space" replace /> : <Login />
         } />

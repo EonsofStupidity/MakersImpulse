@@ -9,16 +9,12 @@ import LatestUpdates from "@/pages/content/blog/latest-updates";
 import MakerSpace from "@/pages/content/maker-space";
 
 export const PublicRoutes = () => {
-  const routes = [
+  return [
     { path: "/", element: <Landing /> },
     { path: "/maker-space", element: <MakerSpace /> },
     { path: "/about", element: <About /> },
     { path: "/terms", element: <Terms /> },
     { path: "/privacy", element: <Privacy /> },
-    { path: "/login", element: <Login /> },
-    { path: "/register", element: <Register /> },
     { path: "/blog", element: <LatestUpdates /> }
   ];
-
-  return routes;
 };
