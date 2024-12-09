@@ -1,13 +1,13 @@
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import type { Session } from '@supabase/supabase-js';
-import type { AuthUser } from './types';
+import { useAuthStore } from '@/lib/store/auth-store';
+import { useCacheStore } from '@/lib/store/cache-store';
 
 interface AuthContextType {
-  session: Session | null;
-  user: AuthUser | null;
+  session: any | null;
+  user: any | null;
   isLoading: boolean;
 }
 
@@ -15,11 +15,14 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const queryClient = useQueryClient();
+  const { setSession, setUser, setLoading, reset } = useAuthStore();
+  const { clearCache } = useCacheStore();
 
   // Fetch user profile data when session exists
   const { data: profile } = useQuery({
     queryKey: ['profile'],
     queryFn: async () => {
+      console.log('Fetching profile...');
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) return null;
 
@@ -30,6 +33,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .single();
 
       if (error) throw error;
+      console.log('Profile fetched:', data);
       return data;
     },
     enabled: !!queryClient.getQueryData(['session']),
@@ -83,13 +87,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log('Auth state changed:', event, session?.user?.id);
       
-      queryClient.setQueryData(['session'], session);
-
       if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setSession(session);
         queryClient.invalidateQueries({ queryKey: ['profile'] });
+        console.log('User signed in:', session?.user?.id);
       }
       
       if (event === 'SIGNED_OUT') {
+        reset();
+        clearCache();
         queryClient.clear();
         toast.info('Signed out');
       }
@@ -99,26 +105,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       console.log('Cleaning up auth subscription');
       subscription.unsubscribe();
     };
-  }, [queryClient]);
+  }, [queryClient, setSession, reset, clearCache]);
 
-  // Memoize the user object
-  const user: AuthUser | null = useMemo(() => {
-    if (!session) return null;
-    return {
-      id: session.user.id,
-      email: session.user.email,
-      role: profile?.role || 'subscriber',
-      username: profile?.username,
-      displayName: profile?.display_name,
-    };
-  }, [session, profile]);
+  // Update loading state
+  useEffect(() => {
+    setLoading(isLoading);
+  }, [isLoading, setLoading]);
 
-  // Memoize the context value
-  const contextValue = useMemo(() => ({
+  // Update user state when profile changes
+  useEffect(() => {
+    if (session && profile) {
+      setUser({
+        id: session.user.id,
+        email: session.user.email,
+        role: profile.role || 'subscriber',
+        username: profile.username,
+        displayName: profile.display_name,
+      });
+    } else if (!session) {
+      setUser(null);
+    }
+  }, [session, profile, setUser]);
+
+  const contextValue = {
     session,
-    user,
-    isLoading
-  }), [session, user, isLoading]);
+    user: useAuthStore((state) => state.user),
+    isLoading: useAuthStore((state) => state.isLoading)
+  };
 
   return (
     <AuthContext.Provider value={contextValue}>

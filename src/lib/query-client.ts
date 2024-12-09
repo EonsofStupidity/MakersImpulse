@@ -6,8 +6,8 @@ export const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 60, // 1 hour
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes
       meta: {
         errorMessage: "Failed to fetch data",
       },
@@ -18,8 +18,9 @@ export const queryClient = new QueryClient({
         successMessage: "Operation completed successfully",
         errorMessage: "Operation failed",
       },
-      onError: (error: Error, variables: unknown, context: unknown): unknown => {
+      onError: (error: Error, variables: unknown, context: unknown) => {
         const meta = (context as any)?.meta;
+        console.error('Mutation error:', error);
         toast.error(
           meta?.errorMessage || "An error occurred",
           {
@@ -28,7 +29,7 @@ export const queryClient = new QueryClient({
         );
         return { error, variables, context };
       },
-      onSuccess: (data: unknown, variables: unknown, context: unknown): unknown => {
+      onSuccess: (data: unknown, variables: unknown, context: unknown) => {
         const meta = (context as any)?.meta;
         if (meta?.successMessage) {
           toast.success(meta.successMessage);
