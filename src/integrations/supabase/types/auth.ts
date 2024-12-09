@@ -41,3 +41,16 @@ export interface PinLoginResponse {
   locked_until?: string;
   attempts_remaining?: number;
 }
+
+export interface PinSetupResponse {
+  success: boolean;
+  message: string;
+}
+
+export interface Profile {
+  id: string;
+  username?: string | null;
+  display_name?: string | null;
+  avatar_url?: string | null;
+  role?: UserRole;
+}

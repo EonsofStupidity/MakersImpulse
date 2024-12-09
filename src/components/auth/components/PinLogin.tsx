@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import type { PinLoginResponse } from "@/integrations/supabase/types/auth";
 
 const pinLoginSchema = z.object({
   email: z.string().email("Please enter a valid email"),
@@ -37,22 +38,22 @@ export const PinLogin = ({ onSwitchToPassword }: PinLoginProps) => {
   const onSubmit = async (data: PinLoginFormData) => {
     setIsLoading(true);
     try {
-      // First get the user ID from the email
-      const { data: { users }, error: userError } = await supabase.auth.admin.listUsers({
-        filters: {
-          email: data.email
-        }
-      });
+      // First get the user profile from the profiles table
+      const { data: profiles, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', data.email)
+        .single();
 
-      if (userError || !users?.length) {
+      if (profileError || !profiles?.id) {
         setError("email", { message: "Email not found" });
         return;
       }
 
-      const userId = users[0].id;
+      const userId = profiles.id;
 
       // Verify PIN
-      const { data: result, error } = await supabase.rpc('verify_pin_login', {
+      const { data: result, error } = await supabase.rpc<PinLoginResponse>('verify_pin_login', {
         p_user_id: userId,
         p_pin: data.pin,
         p_ip_address: null, // Could be implemented with IP detection
@@ -61,9 +62,7 @@ export const PinLogin = ({ onSwitchToPassword }: PinLoginProps) => {
 
       if (error) throw error;
 
-      const response = result as { success: boolean; message: string; locked_until?: string };
-
-      if (response.success) {
+      if (result?.success) {
         // Sign in the user
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: data.email,
@@ -75,14 +74,14 @@ export const PinLogin = ({ onSwitchToPassword }: PinLoginProps) => {
         toast.success("Successfully logged in with PIN");
         navigate("/");
       } else {
-        if (response.locked_until) {
-          const lockoutTime = new Date(response.locked_until);
+        if (result?.locked_until) {
+          const lockoutTime = new Date(result.locked_until);
           toast.error(`Account locked until ${lockoutTime.toLocaleTimeString()}`);
           setError("pin", { 
             message: "Too many failed attempts. Try password login or wait." 
           });
         } else {
-          setError("pin", { message: response.message });
+          setError("pin", { message: result?.message || "Invalid PIN" });
         }
       }
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Database } from './database';
-import { Profile } from './auth';
+import type { Profile } from './auth';
 
 export type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
 export type CMSContent = Database['public']['Tables']['cms_content']['Row'];

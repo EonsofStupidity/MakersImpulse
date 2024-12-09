@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import type { PinSetupResponse } from "@/integrations/supabase/types/auth";
 
 const pinSchema = z
   .object({
@@ -31,11 +32,6 @@ const pinSchema = z
   });
 
 type PinFormData = z.infer<typeof pinSchema>;
-
-interface SetupPinResponse {
-  success: boolean;
-  message: string;
-}
 
 export const PinSetup = () => {
   const { user } = useAuth();
@@ -55,7 +51,7 @@ export const PinSetup = () => {
 
     setIsLoading(true);
     try {
-      const { data: result, error } = await supabase.rpc<SetupPinResponse>("setup_pin", {
+      const { data: result, error } = await supabase.rpc<PinSetupResponse>("setup_pin", {
         p_user_id: user.id,
         p_pin: data.pin,
         p_ip_address: null, // Optional: Implement an IP detection service
