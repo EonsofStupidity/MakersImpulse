@@ -19,7 +19,7 @@ export const useContentRelationships = (contentId?: string) => {
     queryFn: async () => {
       if (!contentId) return [];
 
-      console.log('Fetching relationships for content:', contentId);
+      console.log("Fetching relationships for content:", contentId);
 
       const { data, error } = await supabase
         .from("cms_content_relationships")
@@ -39,14 +39,23 @@ export const useContentRelationships = (contentId?: string) => {
         .or(`parent_id.eq.${contentId},child_id.eq.${contentId}`);
 
       if (error) {
-        console.error('Error fetching relationships:', error);
+        console.error("Error fetching relationships:", error);
         toast.error("Failed to load relationships");
         throw error;
       }
 
-      console.log('Fetched relationships:', data);
+      console.log("Fetched relationships:", data);
 
-      return data as RelationshipWithContent[];
+      // Flatten parent and child fields to ensure they are single objects
+      return data.map((relationship) => ({
+        ...relationship,
+        parent: Array.isArray(relationship.parent)
+          ? relationship.parent[0]
+          : relationship.parent,
+        child: Array.isArray(relationship.child)
+          ? relationship.child[0]
+          : relationship.child,
+      })) as RelationshipWithContent[];
     },
     enabled: !!contentId,
   });
