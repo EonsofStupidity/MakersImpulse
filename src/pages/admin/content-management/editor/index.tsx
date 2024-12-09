@@ -70,8 +70,8 @@ const PostEditor = () => {
         .insert({
           title,
           slug: slug || title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
-          content,
-          rich_content: content.body,
+          content: content.body,
+          rich_content: content,
           status: "draft",
           author_id: user.id,
           images: uploadedImageUrls,
