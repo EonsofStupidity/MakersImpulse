@@ -4,6 +4,8 @@ import { Users, ChartBar, Database, FileText, Activity, Settings, HardDrive } fr
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { CacheManagementSection } from './CacheManagementSection';
+import { DataManagementSection } from './DataManagementSection';
 
 const GLASS_TINT_COLORS = ['#4efc03', '#ebfc03', '#03fcf8', '#d10fcb'];
 
@@ -185,6 +187,15 @@ const NewDashboardOverview = () => {
           </div>
         </Card>
       </div>
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <h2 className="text-2xl font-bold mb-4">Cache Management</h2>
+        <CacheManagementSection />
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-6 backdrop-blur-lg bg-black/20 border-white/10">
