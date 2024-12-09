@@ -8,11 +8,19 @@ import { Button } from '@/components/ui/button';
 import { History, ArrowLeft, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import type { Profile } from '@/hooks/useProfiles';
+
+interface Revision {
+  id: string;
+  content: any;
+  created_at: string;
+  created_by: Profile | null;
+}
 
 interface RevisionHistoryProps {
   contentId: string;
-  onRestore?: (revision: any) => void;
-  onPreview?: (revision: any) => void;
+  onRestore?: (revision: Revision) => void;
+  onPreview?: (revision: Revision) => void;
 }
 
 export const RevisionHistory: React.FC<RevisionHistoryProps> = ({ 
@@ -23,11 +31,12 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
   const { data: revisions, isLoading } = useQuery({
     queryKey: ['content-revisions', contentId],
     queryFn: async () => {
+      console.log('Fetching revisions for content:', contentId);
       const { data, error } = await supabase
         .from('cms_content_revisions')
         .select(`
           *,
-          created_by (
+          created_by:profiles!cms_content_revisions_created_by_fkey (
             display_name,
             avatar_url
           )
@@ -36,11 +45,13 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
         .order('created_at', { ascending: false });
 
       if (error) {
+        console.error('Error fetching revisions:', error);
         toast.error('Failed to load revision history');
         throw error;
       }
 
-      return data;
+      console.log('Fetched revisions:', data);
+      return data as Revision[];
     }
   });
 
