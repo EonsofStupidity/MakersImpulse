@@ -1,14 +1,18 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
-import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
-import { History, ArrowLeft, Eye } from 'lucide-react';
-import { motion } from 'framer-motion';
-import { toast } from 'sonner';
-import type { Profile } from '@/hooks/useProfiles';
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
+import { Card } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { History, ArrowLeft, Eye } from "lucide-react";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
+
+interface Profile {
+  display_name: string;
+  avatar_url?: string;
+}
 
 interface Revision {
   id: string;
@@ -23,36 +27,45 @@ interface RevisionHistoryProps {
   onPreview?: (revision: Revision) => void;
 }
 
-export const RevisionHistory: React.FC<RevisionHistoryProps> = ({ 
+export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
   contentId,
   onRestore,
-  onPreview 
+  onPreview,
 }) => {
   const { data: revisions, isLoading } = useQuery({
-    queryKey: ['content-revisions', contentId],
+    queryKey: ["content-revisions", contentId],
     queryFn: async () => {
-      console.log('Fetching revisions for content:', contentId);
       const { data, error } = await supabase
-        .from('cms_content_revisions')
+        .from("cms_content_revisions")
         .select(`
-          *,
+          id,
+          content,
+          created_at,
           created_by:profiles!cms_content_revisions_created_by_fkey (
             display_name,
             avatar_url
           )
         `)
-        .eq('content_id', contentId)
-        .order('created_at', { ascending: false });
+        .eq("content_id", contentId)
+        .order("created_at", { ascending: false });
 
       if (error) {
-        console.error('Error fetching revisions:', error);
-        toast.error('Failed to load revision history');
+        toast.error("Failed to load revision history");
         throw error;
       }
 
-      console.log('Fetched revisions:', data);
-      return data as Revision[];
-    }
+      return data.map((item) => ({
+        id: item.id,
+        content: item.content,
+        created_at: item.created_at,
+        created_by: item.created_by
+          ? {
+              display_name: item.created_by.display_name,
+              avatar_url: item.created_by.avatar_url,
+            }
+          : null,
+      })) as Revision[];
+    },
   });
 
   if (isLoading) {
@@ -84,10 +97,10 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    {format(new Date(revision.created_at), 'PPpp')}
+                    {format(new Date(revision.created_at), "PPpp")}
                   </p>
                   <p className="text-sm">
-                    By: {revision.created_by?.display_name || 'Unknown'}
+                    By: {revision.created_by?.display_name || "Unknown"}
                   </p>
                 </div>
                 <div className="flex gap-2">
@@ -96,7 +109,6 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onPreview(revision)}
-                      className="text-primary hover:text-primary/80"
                     >
                       <Eye className="w-4 h-4 mr-1" />
                       Preview
@@ -107,7 +119,6 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
                       variant="ghost"
                       size="sm"
                       onClick={() => onRestore(revision)}
-                      className="text-primary hover:text-primary/80"
                     >
                       <ArrowLeft className="w-4 h-4 mr-1" />
                       Restore
