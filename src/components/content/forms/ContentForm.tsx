@@ -18,17 +18,25 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
 
   const handleSubmit = async (data: PageContent | ComponentContent) => {
     try {
-      // Ensure required fields are present
       if (!data.title) {
         toast.error('Title is required');
         return;
       }
 
+      // Ensure content type is properly set based on form type
       const contentData = {
         ...data,
         type: contentType,
         title: data.title,
-        metadata: data.metadata as Record<string, any> || {},
+        metadata: data.metadata || {},
+        status: data.status || 'draft',
+        content: contentType === 'page' 
+          ? { body: (data as PageContent).content?.body || '', seo: (data as PageContent).content?.seo || {} }
+          : { 
+              componentType: (data as ComponentContent).content?.componentType || '',
+              props: (data as ComponentContent).content?.props || {},
+              styles: (data as ComponentContent).content?.styles || {}
+            }
       };
 
       if (contentId) {
@@ -52,30 +60,44 @@ const ContentForm: React.FC<ContentFormProps> = ({ initialType = 'page', content
       return null;
     }
 
-    // Prepare initial data with proper type casting
+    // Prepare initial data based on content type
     const baseInitialData = content ? {
       ...content,
       type: contentType,
       title: content.title || '',
-      metadata: content.metadata as Record<string, any> || {},
-      content: content.content || {},
+      metadata: content.metadata || {},
+      status: content.status || 'draft',
+      content: contentType === 'page'
+        ? { 
+            body: (content.content as PageContent['content'])?.body || '',
+            seo: (content.content as PageContent['content'])?.seo || {}
+          }
+        : {
+            componentType: (content.content as ComponentContent['content'])?.componentType || '',
+            props: (content.content as ComponentContent['content'])?.props || {},
+            styles: (content.content as ComponentContent['content'])?.styles || {}
+          }
     } : {
       type: contentType,
       title: '',
       metadata: {},
-      content: {},
-    };
-
-    const formProps = {
-      initialData: baseInitialData,
-      onSubmit: handleSubmit,
+      status: 'draft',
+      content: contentType === 'page'
+        ? { body: '', seo: {} }
+        : { componentType: '', props: {}, styles: {} }
     };
 
     switch (contentType) {
       case 'page':
-        return <PageContentForm {...formProps} />;
+        return <PageContentForm 
+          initialData={baseInitialData as Partial<PageContent>}
+          onSubmit={handleSubmit as (data: PageContent) => Promise<void>}
+        />;
       case 'component':
-        return <ComponentContentForm {...formProps} />;
+        return <ComponentContentForm 
+          initialData={baseInitialData as Partial<ComponentContent>}
+          onSubmit={handleSubmit as (data: ComponentContent) => Promise<void>}
+        />;
       default:
         return <div>Form for {contentType} type is not implemented yet</div>;
     }
