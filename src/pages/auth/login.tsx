@@ -14,7 +14,6 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    console.log("Login page - session state:", { session, isLoading });
     if (session) {
       console.log("User is already logged in, redirecting...");
       navigate("/maker-space");
@@ -23,11 +22,13 @@ const Login = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-[#0F1114]">
         <LoadingSpinner />
       </div>
     );
   }
+
+  if (session) return null;
 
   return (
     <div className="min-h-screen bg-[#0F1114] flex flex-col">
@@ -50,49 +51,48 @@ const Login = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 mx-auto p-6"
+          className="w-full max-w-md mx-auto"
         >
-          <Auth 
-            supabaseClient={supabase}
-            appearance={{ 
-              theme: ThemeSupa,
-              extend: true,
-              variables: {
-                default: {
-                  colors: {
-                    brand: '#34ebbd',
-                    brandAccent: '#fa19a7',
-                    brandButtonText: 'white',
-                    defaultButtonBackground: '#34ebbd',
-                    defaultButtonBackgroundHover: '#fa19a7',
-                    defaultButtonBorder: 'transparent',
-                    defaultButtonText: 'white',
-                    dividerBackground: '#2D2D2D',
-                    inputBackground: 'transparent',
-                    inputBorder: '#2D2D2D',
-                    inputBorderHover: '#4D4D4D',
-                    inputBorderFocus: '#34ebbd',
-                    inputText: 'white',
-                    inputLabelText: '#666',
-                    inputPlaceholder: '#444',
+          <div className="bg-black/60 backdrop-blur-xl p-6 rounded-lg shadow-lg border border-border/40">
+            <Auth 
+              supabaseClient={supabase}
+              appearance={{ 
+                theme: ThemeSupa,
+                extend: true,
+                variables: {
+                  default: {
+                    colors: {
+                      brand: '#34ebbd',
+                      brandAccent: '#fa19a7',
+                      brandButtonText: 'white',
+                      defaultButtonBackground: '#34ebbd',
+                      defaultButtonBackgroundHover: '#fa19a7',
+                      defaultButtonBorder: 'transparent',
+                      defaultButtonText: 'white',
+                      inputBackground: 'transparent',
+                      inputBorder: '#2D2D2D',
+                      inputBorderHover: '#4D4D4D',
+                      inputBorderFocus: '#34ebbd',
+                      inputText: 'white',
+                      inputLabelText: '#666',
+                      inputPlaceholder: '#444',
+                    },
                   },
                 },
-              },
-              className: {
-                container: 'space-y-4',
-                button: 'w-full h-12 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium',
-                label: 'text-sm font-medium text-gray-400',
-                input: 'h-12 bg-black/40 border-border/40 text-white rounded-lg px-4',
-                message: 'text-red-500 text-sm',
-                divider: 'bg-border/40',
-                anchor: 'text-primary hover:text-primary/80 transition-colors',
-              },
-            }}
-            theme="dark"
-            providers={['github', 'google']}
-            redirectTo={`${window.location.origin}/maker-space`}
-            onlyThirdPartyProviders={false}
-          />
+                className: {
+                  container: 'space-y-4',
+                  button: 'w-full h-12 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium',
+                  label: 'text-sm font-medium text-gray-400',
+                  input: 'h-12 bg-black/40 border-border/40 text-white rounded-lg px-4',
+                  message: 'text-red-500 text-sm',
+                  anchor: 'text-primary hover:text-primary/80 transition-colors',
+                },
+              }}
+              theme="dark"
+              providers={['github', 'google']}
+              redirectTo={`${window.location.origin}/maker-space`}
+            />
+          </div>
         </motion.div>
       </div>
     </div>

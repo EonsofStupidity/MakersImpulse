@@ -16,6 +16,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log('SessionProvider mounted');
     let mounted = true;
 
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
@@ -34,7 +35,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
         if (error) {
           console.error('Error fetching profile:', error);
-          return null;
+          throw error;
         }
 
         const authSession: AuthSession = {
@@ -58,7 +59,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeSession = async () => {
       try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        
         if (mounted) {
           const authSession = await transformSession(initialSession);
           setSession(authSession);
@@ -76,10 +79,16 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, supabaseSession) => {
       console.log('Auth state changed:', event);
+      
       if (mounted) {
-        const authSession = await transformSession(supabaseSession);
-        setSession(authSession);
-        setIsLoading(false);
+        if (event === 'SIGNED_IN') {
+          const authSession = await transformSession(supabaseSession);
+          setSession(authSession);
+          setIsLoading(false);
+        } else if (event === 'SIGNED_OUT') {
+          setSession(null);
+          setIsLoading(false);
+        }
       }
     });
 
