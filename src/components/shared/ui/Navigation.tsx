@@ -1,6 +1,18 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search, User, LogOut, Settings, UserCircle, LayoutDashboard, LogIn, UserPlus } from "lucide-react";
+import { 
+  Search, 
+  User, 
+  LogOut, 
+  Settings, 
+  UserCircle, 
+  LayoutDashboard, 
+  LogIn, 
+  UserPlus,
+  Github,
+  Mail,
+  Phone
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -52,7 +64,25 @@ export const Navigation = () => {
     navigate(to);
   };
 
+  const handleProviderAuth = async (provider: 'github' | 'google' | 'discord') => {
+    console.log(`Attempting ${provider} authentication`);
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/maker-space`
+        }
+      });
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('OAuth error:', error);
+      toast.error(`Failed to authenticate with ${provider}`);
+    }
+  };
+
   const handleLogout = async () => {
+    console.log('Initiating logout process');
     try {
       await supabase.auth.signOut();
       toast.success("Successfully logged out");
@@ -141,6 +171,27 @@ export const Navigation = () => {
                       >
                         <LogIn className="mr-2 h-4 w-4" />
                         Sign In
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleProviderAuth('github')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Github className="mr-2 h-4 w-4" />
+                        Continue with GitHub
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleProviderAuth('google')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Mail className="mr-2 h-4 w-4" />
+                        Continue with Google
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleProviderAuth('discord')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        <Phone className="mr-2 h-4 w-4" />
+                        Continue with Discord
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleNavigation('/register')}
