@@ -12,7 +12,7 @@ export const NavigationLinks = ({ session }: NavigationLinksProps) => {
   const makerSpaceLinks = [
     { to: "/maker-space/builds", label: "Builds", icon: Wrench },
     { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/maker-space/parts", label: "Parts", icon: Box },
+    { to: "/maker-space/parts", label: "Parts", icon: Box }
   ];
 
   return (

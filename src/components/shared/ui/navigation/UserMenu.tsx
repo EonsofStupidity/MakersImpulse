@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, UserCircle, LayoutDashboard, LogIn, UserPlus } from "lucide-react";
+import { User, LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { AuthSession } from '@/integrations/supabase/types/auth';
+import { AuthSession } from '@/components/auth/types';
+import { useQuery } from "@tanstack/react-query";
 
 interface UserMenuProps {
   session: AuthSession | null;
@@ -13,7 +14,28 @@ interface UserMenuProps {
 
 export const UserMenu = ({ session }: UserMenuProps) => {
   const navigate = useNavigate();
-  const isAdmin = session?.user?.role === 'admin' || session?.user?.role === 'super_admin';
+
+  const { data: profile } = useQuery({
+    queryKey: ['profile', session?.user?.id],
+    queryFn: async () => {
+      if (!session?.user?.id) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', session.user.id)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching profile:', error);
+        throw error;
+      }
+      return data;
+    },
+    enabled: !!session?.user?.id
+  });
+
+  const isAdmin = profile?.role === 'admin' || profile?.role === 'super_admin';
+  console.log('UserMenu - Profile role:', profile?.role, 'Is admin:', isAdmin);
 
   const handleLogout = async () => {
     try {
@@ -45,15 +67,8 @@ export const UserMenu = ({ session }: UserMenuProps) => {
               onClick={() => navigate('/login')}
               className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
             >
-              <LogIn className="mr-2 h-4 w-4" />
+              <User className="mr-2 h-4 w-4" />
               Sign In
-            </DropdownMenuItem>
-            <DropdownMenuItem 
-              onClick={() => navigate('/register')}
-              className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-            >
-              <UserPlus className="mr-2 h-4 w-4" />
-              Sign Up
             </DropdownMenuItem>
           </>
         ) : (
@@ -65,6 +80,7 @@ export const UserMenu = ({ session }: UserMenuProps) => {
               <UserCircle className="mr-2 h-4 w-4" />
               Profile
             </DropdownMenuItem>
+
             {isAdmin && (
               <DropdownMenuItem 
                 onClick={() => navigate('/admin')}
@@ -74,6 +90,7 @@ export const UserMenu = ({ session }: UserMenuProps) => {
                 Admin Dashboard
               </DropdownMenuItem>
             )}
+
             <DropdownMenuItem 
               onClick={() => navigate('/settings')}
               className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
@@ -81,6 +98,7 @@ export const UserMenu = ({ session }: UserMenuProps) => {
               <Settings className="mr-2 h-4 w-4" />
               Settings
             </DropdownMenuItem>
+
             <DropdownMenuItem 
               onClick={handleLogout}
               className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
