@@ -26,7 +26,12 @@ export const AuthGuard = ({
       if (onError) {
         onError(error);
       }
-      toast.error(typeof error === 'string' ? error : error.message || 'Access denied');
+      const errorMessage = error instanceof Error ? error.message : 
+        typeof error === 'string' ? error : 
+        'message' in error ? error.message : 
+        'Access denied';
+      
+      toast.error(errorMessage);
       navigate(fallbackPath, { replace: true });
     }
   }, [isLoading, hasAccess, error, requireAuth, requiredRole, fallbackPath, navigate, onError]);

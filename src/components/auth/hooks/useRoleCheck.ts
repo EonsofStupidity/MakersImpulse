@@ -41,13 +41,11 @@ export const useRoleCheck = (
           setState(prev => ({ ...prev, isLoading: true, error: null }));
         }
 
-        // Handle unauthenticated users
         if (!session && requireAuth) {
           console.log('Auth required but no session found');
           throw new Error('Authentication required');
         }
 
-        // Handle authenticated users with no role requirement
         if (session && !requiredRole) {
           console.log('User authenticated, no role required');
           if (isMounted) {
@@ -56,7 +54,6 @@ export const useRoleCheck = (
           return;
         }
 
-        // Handle role checks
         if (session && requiredRole) {
           console.log('Checking user role for session:', session.user.id);
           

@@ -48,8 +48,12 @@ export const AppRoutes = () => {
               requiredRole={["admin", "super_admin"]}
               fallbackPath="/login"
               onError={(error) => {
+                const errorMessage = error instanceof Error ? error.message : 
+                  typeof error === 'string' ? error : 
+                  'message' in error ? error.message : 
+                  'Access denied';
                 console.error('Admin access error:', error);
-                toast.error(error.message);
+                toast.error(errorMessage);
               }}
             >
               <Routes>
