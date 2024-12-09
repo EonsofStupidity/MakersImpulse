@@ -21,10 +21,10 @@ export interface BaseContent {
 
 export interface ContentRelationship {
   id: string;
-  parent_id?: string;
-  child_id?: string;
+  parent_id: string;
+  child_id: string;
   relationship_type: string;
-  order_index?: number;
+  order_index: number;
 }
 
 export const contentSchema = z.object({

@@ -22,8 +22,8 @@ export const useContentRelationships = (contentId?: string) => {
           child_id,
           relationship_type,
           order_index,
-          parent:parent_id(id, type),
-          child:child_id(id, type)
+          parent:cms_content!parent_id(id, type),
+          child:cms_content!child_id(id, type)
         `)
         .or(`parent_id.eq.${contentId},child_id.eq.${contentId}`);
 
@@ -33,9 +33,10 @@ export const useContentRelationships = (contentId?: string) => {
         throw error;
       }
 
+      console.log("Fetched relationships:", data);
       return data as (ContentRelationship & {
-        parent: { type: ContentType } | null;
-        child: { type: ContentType } | null;
+        parent: { id: string; type: ContentType } | null;
+        child: { id: string; type: ContentType } | null;
       })[];
     },
     enabled: !!contentId,
