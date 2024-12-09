@@ -49,6 +49,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               expires_at: initialSession.expires_at
             };
 
+            console.log('Session initialized with profile:', enrichedSession);
             setSession(enrichedSession);
           } catch (error) {
             console.error('Profile fetch error:', error);
