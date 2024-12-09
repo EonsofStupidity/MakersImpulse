@@ -25,23 +25,27 @@ const Login = () => {
         navigate("/maker-space");
       }
 
-      if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
-        console.log("User signed out or deleted");
+      if (event === 'SIGNED_OUT') {
+        console.log("User signed out");
         navigate("/login");
       }
     });
 
-    // Handle auth errors globally
-    const handleAuthError = (error: Error) => {
-      console.error("Auth error:", error);
-      toast.error(error.message);
-    };
-
-    supabase.auth.onError(handleAuthError);
+    // Set up error handling through the event listener
+    const {
+      data: { subscription: errorSubscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'USER_DELETED') {
+        console.error("User account was deleted");
+        toast.error("User account was deleted");
+        navigate("/login");
+      }
+    });
 
     return () => {
       console.log("Login page unmounting, cleaning up subscription");
       subscription.unsubscribe();
+      errorSubscription.unsubscribe();
     };
   }, [session, navigate]);
 
