@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useSession } from "@/components/auth/SessionContext";
+import { memo } from "react";
 
-export const NavigationLinks = () => {
+export const NavigationLinks = memo(() => {
   const { session } = useSession();
 
   console.log('NavigationLinks render - Session:', {
@@ -31,4 +32,6 @@ export const NavigationLinks = () => {
       </Link>
     </div>
   );
-};
+});
+
+NavigationLinks.displayName = 'NavigationLinks';

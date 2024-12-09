@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { AuthSession } from './types';
@@ -16,32 +16,22 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    console.log('SessionProvider mounted');
 
     const initializeSession = async () => {
       try {
-        console.log('Initializing session...');
-        setIsLoading(true);
-
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
-        if (error) {
-          console.error('Error getting session:', error);
-          throw error;
-        }
+        if (error) throw error;
 
         if (initialSession && mounted) {
-          console.log('Found initial session for user:', initialSession.user.id);
-          
           const { data: profile, error: profileError } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', initialSession.user.id)
             .single();
 
-          if (profileError) {
-            console.error('Error fetching profile:', profileError);
-            throw profileError;
-          }
+          if (profileError) throw profileError;
 
           const sessionData: AuthSession = {
             user: {
@@ -52,16 +42,17 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: initialSession.expires_at,
           };
 
-          console.log('Setting session with data:', sessionData);
-          setSession(sessionData);
-        } else {
-          console.log('No initial session found');
-          setSession(null);
+          if (mounted) {
+            console.log('Setting initial session:', sessionData);
+            setSession(sessionData);
+          }
         }
       } catch (error) {
         console.error('Session initialization error:', error);
-        toast.error('Error initializing session');
-        setSession(null);
+        if (mounted) {
+          setSession(null);
+          toast.error('Error initializing session');
+        }
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -69,13 +60,10 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    // Initialize session
     initializeSession();
 
-    // Set up auth state change listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       if (!mounted) return;
-
       console.log('Auth state changed:', event, currentSession?.user?.id);
 
       try {
@@ -97,15 +85,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: currentSession.expires_at,
           };
 
-          console.log('Updating session with new data:', sessionData);
-          setSession(sessionData);
+          if (mounted) {
+            console.log('Updating session on auth change:', sessionData);
+            setSession(sessionData);
+          }
 
           if (event === 'SIGNED_IN') {
             toast.success('Successfully signed in');
           }
         } else {
-          console.log('Clearing session state');
-          setSession(null);
+          if (mounted) {
+            console.log('Clearing session state');
+            setSession(null);
+          }
           
           if (event === 'SIGNED_OUT') {
             toast.info('Signed out');
@@ -113,22 +105,24 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         }
       } catch (error) {
         console.error('Error handling auth state change:', error);
-        toast.error('Error updating session');
-        setSession(null);
+        if (mounted) {
+          setSession(null);
+          toast.error('Error updating session');
+        }
       }
     });
 
     return () => {
-      console.log('Cleaning up session provider');
+      console.log('SessionProvider unmounting');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     session,
     isLoading
-  };
+  }), [session, isLoading]);
 
   return (
     <SessionContext.Provider value={value}>

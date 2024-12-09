@@ -6,8 +6,9 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSession } from "@/components/auth/SessionContext";
+import { memo } from "react";
 
-export const UserMenu = () => {
+export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
 
@@ -93,4 +94,6 @@ export const UserMenu = () => {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+});
+
+UserMenu.displayName = 'UserMenu';
