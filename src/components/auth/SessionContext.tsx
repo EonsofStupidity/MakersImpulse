@@ -16,6 +16,8 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    console.log('SessionProvider mounted');
+    
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
       if (!supabaseSession) {
         console.log('No Supabase session found');
@@ -35,8 +37,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           throw error;
         }
 
-        console.log('Profile fetched:', profile);
-        return {
+        const authSession: AuthSession = {
           user: {
             id: supabaseSession.user.id,
             email: supabaseSession.user.email,
@@ -46,6 +47,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           },
           expires_at: supabaseSession.expires_at
         };
+
+        console.log('Transformed session:', authSession);
+        return authSession;
       } catch (error) {
         console.error('Error in transformSession:', error);
         toast.error('Error loading user profile');
@@ -53,24 +57,26 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       }
     };
 
-    const fetchSession = async () => {
+    // Initial session check
+    const initializeSession = async () => {
       try {
-        console.log('Fetching initial session');
-        const { data: { session: supabaseSession } } = await supabase.auth.getSession();
-        const authSession = await transformSession(supabaseSession);
-        console.log('Initial session transformed:', authSession);
+        console.log('Checking initial session');
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        const authSession = await transformSession(initialSession);
+        console.log('Initial auth session:', authSession);
         setSession(authSession);
       } catch (error) {
-        console.error('Error fetching session:', error);
+        console.error('Error initializing session:', error);
         toast.error('Error loading session');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchSession();
+    initializeSession();
 
-    const { data: subscription } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
+    // Subscribe to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
       console.log('Auth state changed:', _event);
       const authSession = await transformSession(supabaseSession);
       console.log('New session state:', authSession);
@@ -78,7 +84,8 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
-      subscription.subscription.unsubscribe();
+      console.log('Cleaning up auth subscription');
+      subscription.unsubscribe();
     };
   }, []);
 

@@ -9,6 +9,7 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
 import Landing from "@/pages/site/landing";
 import Login from "@/pages/auth/login";
+import Register from "@/pages/auth/register";
 
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
@@ -30,13 +31,29 @@ export const AppRoutes = () => {
         <Route path="/" element={<Landing />} />
         
         {/* Auth routes */}
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={
+          session ? <Navigate to="/maker-space" replace /> : <Login />
+        } />
+        <Route path="/register" element={
+          session ? <Navigate to="/maker-space" replace /> : <Register />
+        } />
         
         {/* Public Routes */}
         {PublicRoutes()}
 
         {/* Protected Routes */}
-        {ProtectedRoutes()}
+        <Route element={
+          <AuthGuard 
+            requireAuth={true}
+            fallbackPath="/login"
+            onError={(error) => {
+              console.error('Protected route access error:', error);
+              toast.error('Please sign in to access this content');
+            }}
+          />
+        }>
+          {ProtectedRoutes()}
+        </Route>
 
         {/* Admin Routes */}
         <Route
