@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { AdminSidebarProvider } from '@/components/admin/dashboard/sidebar/AdminSidebarContext';
 import { AdminSidebar } from '@/components/admin/dashboard/sidebar/AdminSidebar';
 import { AdminNav } from '@/components/admin/dashboard/AdminNav';
@@ -9,19 +8,15 @@ import { RedisDashboardSection } from './core/RedisDashboardSection';
 const AdminDashboard = () => {
   return (
     <AdminSidebarProvider>
-      <div className="min-h-screen bg-background flex">
+      <div className="min-h-screen flex bg-gradient-to-b from-black/90 to-black/95">
         <AdminSidebar />
-        <div className="flex-1">
+        <div className="flex-1 relative">
           <AdminNav />
-          <main className="p-8 pt-20 ml-[60px]">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-8"
-            >
+          <main className="p-8 pt-32 ml-[60px]">
+            <div className="space-y-8 relative z-10">
               <NewDashboardOverview />
               <RedisDashboardSection />
-            </motion.div>
+            </div>
           </main>
         </div>
       </div>
