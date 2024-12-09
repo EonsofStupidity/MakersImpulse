@@ -32,7 +32,7 @@ export const BanUserDialog = ({ isOpen, onClose, onConfirm, username }: BanUserD
         <DialogHeader>
           <DialogTitle>Ban User: {username}</DialogTitle>
           <DialogDescription className="text-gray-400">
-            This action will prevent the user from accessing their account.
+            This action will prevent the user from accessing their account. Please provide a reason for the ban.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
@@ -40,7 +40,7 @@ export const BanUserDialog = ({ isOpen, onClose, onConfirm, username }: BanUserD
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             placeholder="Enter reason for ban..."
-            className="bg-gray-700/50 border-gray-600 text-white"
+            className="bg-gray-700/50 border-gray-600 text-white min-h-[100px]"
           />
         </div>
         <DialogFooter>
