@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
+import { Session } from '@supabase/supabase-js';
+import { toast } from 'sonner';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -14,71 +16,84 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('SessionProvider: Initializing');
-    
-    const initSession = async () => {
-      try {
-        const { data: { session: initialSession } } = await supabase.auth.getSession();
-        if (initialSession) {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role, username, display_name')
-            .eq('id', initialSession.user.id)
-            .single();
+    let mounted = true;
 
-          setSession({
-            user: {
-              id: initialSession.user.id,
-              email: initialSession.user.email,
-              role: profile?.role || 'subscriber',
-              username: profile?.username || initialSession.user.email?.split('@')[0],
-              display_name: profile?.display_name || initialSession.user.email?.split('@')[0]
-            },
-            expires_at: initialSession.expires_at
-          });
+    const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
+      if (!supabaseSession) {
+        console.log('No active session found');
+        return null;
+      }
+
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('role, username, display_name')
+          .eq('id', supabaseSession.user.id)
+          .single();
+
+        if (error) {
+          console.error('Profile fetch error:', error);
+          throw error;
         }
+
+        const authSession: AuthSession = {
+          user: {
+            id: supabaseSession.user.id,
+            email: supabaseSession.user.email,
+            role: profile?.role || 'subscriber',
+            username: profile?.username || supabaseSession.user.email?.split('@')[0],
+            display_name: profile?.display_name || supabaseSession.user.email?.split('@')[0]
+          },
+          expires_at: supabaseSession.expires_at
+        };
+
+        return authSession;
       } catch (error) {
-        console.error('Error getting initial session:', error);
-      } finally {
-        setIsLoading(false);
+        console.error('Error transforming session:', error);
+        toast.error('Error loading user profile');
+        return null;
       }
     };
 
-    initSession();
+    const initializeSession = async () => {
+      try {
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) throw error;
+
+        if (mounted) {
+          const authSession = await transformSession(initialSession);
+          setSession(authSession);
+        }
+      } catch (error) {
+        console.error('Session initialization error:', error);
+        setSession(null);
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    initializeSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event);
+      console.log('Auth state changed:', event, currentSession?.user?.id);
       
-      if (currentSession) {
+      if (mounted) {
+        setIsLoading(true);
         try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role, username, display_name')
-            .eq('id', currentSession.user.id)
-            .single();
-
-          setSession({
-            user: {
-              id: currentSession.user.id,
-              email: currentSession.user.email,
-              role: profile?.role || 'subscriber',
-              username: profile?.username || currentSession.user.email?.split('@')[0],
-              display_name: profile?.display_name || currentSession.user.email?.split('@')[0]
-            },
-            expires_at: currentSession.expires_at
-          });
+          const authSession = await transformSession(currentSession);
+          setSession(authSession);
         } catch (error) {
-          console.error('Error in auth state change:', error);
+          console.error('Auth state change error:', error);
           setSession(null);
+        } finally {
+          setIsLoading(false);
         }
-      } else {
-        setSession(null);
       }
-      
-      setIsLoading(false);
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);

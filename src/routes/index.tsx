@@ -19,23 +19,33 @@ export const AppRoutes = () => {
   });
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <LoadingSpinner />
+      </div>
+    );
   }
 
   return (
     <PageTransition>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          {/* Public Routes - Always Accessible */}
+          {/* Public Routes */}
           {publicRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
-              element={route.element}
+              element={
+                route.path === "/login" && session ? (
+                  <Navigate to="/maker-space" replace />
+                ) : (
+                  route.element
+                )
+              }
             />
           ))}
 
-          {/* Protected Maker Space Routes */}
+          {/* Protected Routes */}
           {makerSpaceRoutes.map((route) => (
             <Route
               key={route.path}
@@ -43,16 +53,23 @@ export const AppRoutes = () => {
               element={
                 <AuthGuard 
                   requireAuth={true}
-                  fallbackPath="/login"
                   onError={(error) => {
                     console.error('Auth error:', error);
-                    toast.error('Please sign in to access this content');
+                    toast.error('Please sign in to access this page');
                   }}
                 >
                   {route.element}
                 </AuthGuard>
               }
-            />
+            >
+              {route.children?.map((childRoute) => (
+                <Route
+                  key={childRoute.path}
+                  path={childRoute.path}
+                  element={childRoute.element}
+                />
+              ))}
+            </Route>
           ))}
 
           {/* Admin Routes */}

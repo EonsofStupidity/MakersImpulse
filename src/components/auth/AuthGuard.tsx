@@ -4,11 +4,12 @@ import { AuthGuardProps } from './types';
 import { useRoleCheck } from './hooks/useRoleCheck';
 import { AuthLoading } from './components/AuthLoading';
 import { Unauthorized } from './components/Unauthorized';
+import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 
 export const AuthGuard = ({ 
   children, 
-  requireAuth = false,
+  requireAuth = true, 
   requiredRole,
   fallbackPath = '/login',
   loadingComponent,
@@ -16,13 +17,12 @@ export const AuthGuard = ({
   onError
 }: AuthGuardProps) => {
   const navigate = useNavigate();
-  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
+  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole, fallbackPath);
 
   useEffect(() => {
-    if (!requireAuth) return;
-    
     if (error) {
       console.error('AuthGuard error:', error);
+      toast.error(error instanceof Error ? error.message : 'Authentication error');
       
       if (onError) {
         onError(error);
@@ -30,11 +30,7 @@ export const AuthGuard = ({
       
       navigate(fallbackPath, { replace: true });
     }
-  }, [error, fallbackPath, navigate, onError, requireAuth]);
-
-  if (!requireAuth) {
-    return <>{children}</>;
-  }
+  }, [error, fallbackPath, navigate, onError]);
 
   if (isLoading) {
     return loadingComponent || (
@@ -48,7 +44,7 @@ export const AuthGuard = ({
     );
   }
 
-  if (requireAuth && !hasAccess) {
+  if (!hasAccess) {
     return unauthorizedComponent || (
       <motion.div
         initial={{ opacity: 0, y: 20 }}

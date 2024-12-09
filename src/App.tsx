@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
+import { SessionProvider } from "@/components/auth/SessionContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/providers/ThemeProvider";
 import { Toaster } from "sonner";
-import { SessionProvider } from "@/components/auth/SessionContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,27 +19,29 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  console.log("App component rendering");
+  
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <QueryClientProvider client={queryClient}>
-          <SessionProvider>
-            <ThemeProvider>
-              <TooltipProvider>
+      <QueryClientProvider client={queryClient}>
+        <SessionProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              <BrowserRouter>
                 <RootLayout>
                   <AppRoutes />
                 </RootLayout>
-                <Toaster 
-                  position="top-right"
-                  expand={false}
-                  richColors
-                  closeButton
-                />
-              </TooltipProvider>
-            </ThemeProvider>
-          </SessionProvider>
-        </QueryClientProvider>
-      </BrowserRouter>
+              </BrowserRouter>
+              <Toaster 
+                position="top-right"
+                expand={false}
+                richColors
+                closeButton
+              />
+            </TooltipProvider>
+          </ThemeProvider>
+        </SessionProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 };
