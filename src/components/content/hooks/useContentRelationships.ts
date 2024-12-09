@@ -30,10 +30,10 @@ export const useContentRelationships = (contentId?: string) => {
           relationship_type,
           order_index,
           parent:cms_content!parent_id (
-            id, type, title, status
+            id, type, title, status, content, metadata
           ),
           child:cms_content!child_id (
-            id, type, title, status
+            id, type, title, status, content, metadata
           )
         `)
         .or(`parent_id.eq.${contentId},child_id.eq.${contentId}`);
@@ -46,11 +46,11 @@ export const useContentRelationships = (contentId?: string) => {
 
       console.log("Fetched relationships:", data);
 
-      // Flatten parent and child fields to ensure they are single objects
+      // Transform the data to match the RelationshipWithContent type
       return data.map((relationship) => ({
         ...relationship,
-        parent: Array.isArray(relationship.parent)
-          ? relationship.parent[0]
+        parent: Array.isArray(relationship.parent) 
+          ? relationship.parent[0] 
           : relationship.parent,
         child: Array.isArray(relationship.child)
           ? relationship.child[0]

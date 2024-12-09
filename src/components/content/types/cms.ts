@@ -8,11 +8,10 @@ export interface BaseContent {
   id: string;
   type: ContentType;
   title: string;
-  slug?: string;
   content: Json;
   metadata?: Json;
   status: ContentStatus;
-  version: number;
+  version?: number;
   created_by?: string;
   updated_by?: string;
   created_at?: string;
