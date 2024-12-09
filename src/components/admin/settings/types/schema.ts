@@ -29,5 +29,3 @@ export const settingsSchema = z.object({
   box_shadow: z.string().optional(),
   backdrop_blur: z.string().optional(),
 });
-
-export type SettingsFormData = z.infer<typeof settingsSchema>;

@@ -1,3 +1,4 @@
+// Define the base settings form data interface
 export interface SettingsFormData {
   site_title: string;
   tagline?: string;
@@ -31,11 +32,13 @@ export interface SettingsFormData {
   backdrop_blur?: string;
 }
 
+// Extend SettingsFormData for the full Settings interface
 export interface Settings extends SettingsFormData {
   updated_at?: string;
   updated_by?: string;
 }
 
+// Response type for settings operations
 export interface SettingsResponse {
   success: boolean;
   data: Settings;
