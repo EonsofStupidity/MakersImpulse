@@ -73,7 +73,12 @@ export const PinSetupForm = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      const { data, error } = await supabase.rpc<PinSetupResponse>('setup_pin', {
+      const { data, error } = await supabase.rpc<PinSetupResponse, {
+        p_user_id: string | undefined;
+        p_pin: string;
+        p_ip_address: string | null;
+        p_user_agent: string;
+      }>('setup_pin', {
         p_user_id: user?.id,
         p_pin: originalPin,
         p_ip_address: null,

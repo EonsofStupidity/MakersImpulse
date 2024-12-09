@@ -20,7 +20,12 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      const { data, error } = await supabase.rpc<PinVerificationResponse>('verify_pin_login', {
+      const { data, error } = await supabase.rpc<PinVerificationResponse, { 
+        p_user_id: string | undefined;
+        p_pin: string;
+        p_ip_address: string | null;
+        p_user_agent: string;
+      }>('verify_pin_login', {
         p_user_id: user?.id,
         p_pin: pin,
         p_ip_address: null,
