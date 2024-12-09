@@ -21,7 +21,7 @@ export const AdminNavItems = ({
   return (
     <motion.div 
       className={cn(
-        "flex items-center",
+        "flex items-center gap-4",
         "min-h-[2.5rem]",
         className
       )}
@@ -31,24 +31,14 @@ export const AdminNavItems = ({
         <Link
           key={item.id}
           to={item.to}
-          className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-lg",
-            "text-white/80 hover:text-neon-cyan",
-            "transition-all duration-300",
-            "hover:bg-white/5",
-            "relative group",
-            isIconOnly ? "w-10" : "min-w-[100px]"
-          )}
+          className="nav-item"
         >
           <item.icon className="w-5 h-5" />
           {!isIconOnly && (
             <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>
           )}
           <motion.div
-            className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100"
-            style={{
-              background: 'linear-gradient(45deg, rgba(65, 240, 219, 0.1), rgba(255, 10, 190, 0.1))',
-            }}
+            className="nav-item-highlight"
             layoutId={`highlight-${item.id}`}
           />
         </Link>

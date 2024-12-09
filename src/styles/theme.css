@@ -27,39 +27,69 @@
   --letter-spacing: normal;
 }
 
-/* Apply variables to global elements */
-body {
-  color: var(--text-primary);
-  font-family: var(--font-family-body);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  letter-spacing: var(--letter-spacing);
-  transition: all var(--transition-duration) ease;
+/* Glass effects */
+.glass {
+  @apply bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-heading);
-  font-family: var(--font-heading);
-  font-weight: var(--font-weight-bold);
+.glass-nav {
+  @apply fixed top-0 left-0 right-0 z-50 bg-black/40 backdrop-blur-xl border-b border-[#8000ff]/30;
+  transition: border-color 0.3s ease;
 }
 
-a {
-  color: var(--text-link);
-  transition: all var(--transition-duration) ease;
+.glass-nav:hover {
+  border-color: rgba(128, 0, 255, 0.6);
 }
 
-button, .button {
-  border-radius: var(--border-radius);
-  transition: all var(--transition-duration) ease;
+/* Card effects */
+.glass-card {
+  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border-white/10 hover:border-white/20 transition-all duration-300;
 }
 
-button:hover, .button:hover {
-  transform: scale(var(--hover-scale));
+.glass-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-10 hover:opacity-20 transition-opacity duration-300;
+  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
 }
 
-.text-primary { color: var(--primary); }
-.text-secondary { color: var(--secondary); }
-.text-accent { color: var(--accent); }
-.bg-primary { background-color: var(--primary); }
-.bg-secondary { background-color: var(--secondary); }
-.bg-accent { background-color: var(--accent); }
+/* Admin layout specific */
+.admin-layout {
+  @apply min-h-screen bg-gradient-to-b from-black/90 to-black/95;
+}
+
+.admin-content {
+  @apply relative z-10 space-y-8;
+}
+
+/* Navigation elements */
+.nav-item {
+  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-neon-cyan transition-all duration-300 hover:bg-white/5 relative group;
+}
+
+.nav-item-highlight {
+  @apply absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100;
+  background: linear-gradient(45deg, rgba(65, 240, 219, 0.1), rgba(255, 10, 190, 0.1));
+}
+
+/* Stats cards */
+.stat-card {
+  @apply relative p-6 rounded-xl overflow-hidden;
+  background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(65,240,219,0.1) 100%);
+}
+
+.stat-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-10;
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+}
+
+/* Animations */
+@keyframes glow {
+  0%, 100% { filter: brightness(100%); }
+  50% { filter: brightness(120%); }
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite;
+}

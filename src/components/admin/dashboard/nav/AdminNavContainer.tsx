@@ -56,20 +56,20 @@ export const AdminNavContainer = () => {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin text-neon-cyan" />
       </div>
     );
   }
 
   return (
-    <>
-      <nav className={`glass mb-8 p-4 transition-all duration-300 ml-[80px] ${draggedItem ? 'opacity-75' : ''}`}>
+    <nav className="relative z-20">
+      <div className="glass-nav mb-8 p-4 transition-all duration-300 ml-[80px]">
         <AdminNavItems 
           draggedItem={draggedItem}
           setDraggedItem={setDraggedItem}
+          className="relative z-10"
         />
-      </nav>
-      <AdminToolbar />
-    </>
+      </div>
+    </nav>
   );
 };
