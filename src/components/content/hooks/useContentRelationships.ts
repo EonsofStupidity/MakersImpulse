@@ -1,3 +1,32 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import type { ContentType } from "../types/contentTypes";
+
+// Define the RelationshipWithContent interface
+interface RelationshipWithContent {
+  id: string;
+  parent_id: string;
+  child_id: string;
+  relationship_type: string;
+  order_index: number;
+  parent: {
+    id: string;
+    type: ContentType;
+  };
+  child: {
+    id: string;
+    type: ContentType;
+  };
+}
+
+// Validation helper function
+const validateContentRelationship = (parentType: ContentType, childType: ContentType): boolean => {
+  // Add validation logic based on your content type rules
+  // For now, returning true as a placeholder
+  return true;
+};
+
 export const useContentRelationships = (contentId?: string) => {
   const queryClient = useQueryClient();
 
