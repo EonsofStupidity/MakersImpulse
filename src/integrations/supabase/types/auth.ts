@@ -1,6 +1,5 @@
 import { Database } from './database';
 
-export type Profile = Database['public']['Tables']['profiles']['Row'];
 export type UserRole = Database['public']['Enums']['user_role'];
 export type ThemeMode = Database['public']['Enums']['theme_mode'];
 
@@ -25,6 +24,8 @@ export interface AuthState {
   hasAccess: boolean;
   error: string | null;
 }
+
+export type Profile = Database['public']['Tables']['profiles']['Row'];
 
 export interface RoleHierarchy {
   [key: string]: number;

@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { AuthSession } from '@/integrations/supabase/types/auth';
+import { Session } from '@supabase/supabase-js';
 
 interface SessionContextType {
   session: AuthSession | null;
@@ -21,14 +22,48 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
+      const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+      if (supabaseSession) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', supabaseSession.user.id)
+          .single();
+
+        const authSession: AuthSession = {
+          user: {
+            id: supabaseSession.user.id,
+            email: supabaseSession.user.email,
+            role: profile?.role || 'subscriber'
+          },
+          expires_at: supabaseSession.expires_at
+        };
+        setSession(authSession);
+      }
     };
 
     fetchSession();
 
-    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+    const { data } = supabase.auth.onAuthStateChange(async (_event, supabaseSession) => {
+      if (supabaseSession) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', supabaseSession.user.id)
+          .single();
+
+        const authSession: AuthSession = {
+          user: {
+            id: supabaseSession.user.id,
+            email: supabaseSession.user.email,
+            role: profile?.role || 'subscriber'
+          },
+          expires_at: supabaseSession.expires_at
+        };
+        setSession(authSession);
+      } else {
+        setSession(null);
+      }
     });
 
     return () => {

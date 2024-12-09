@@ -46,10 +46,6 @@ export const useSettingsFetch = () => {
     const fetchSettings = async () => {
       try {
         console.log("Attempting to fetch settings...");
-        console.log("Supabase client config:", {
-          url: supabase.config.url,
-          hasAuth: !!supabase.auth,
-        });
 
         const { data, error } = await supabase
           .from("site_settings")
