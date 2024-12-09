@@ -5,7 +5,9 @@ import type { ContentRelationship } from "../types/cms";
 import { validateContentRelationship } from "../utils/contentTypeValidation";
 import type { ContentType } from "../types/contentTypes";
 
-interface RelationshipWithContent extends ContentRelationship {
+interface RelationshipWithContent extends Omit<ContentRelationship, 'parent_id' | 'child_id'> {
+  parent_id: string;
+  child_id: string;
   parent: { id: string; type: ContentType };
   child: { id: string; type: ContentType };
 }
