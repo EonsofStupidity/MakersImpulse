@@ -10,13 +10,13 @@
     --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-    --primary: 222.2 47.4% 11.2%;
+    --primary: #9b87f5;
     --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
+    --secondary: #7E69AB;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
+    --accent: #6E59A5;
     --accent-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
@@ -24,55 +24,19 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
     --radius: 0.5rem;
-  }
-
-  /* Text animation styles */
-  .letter-hover {
-    display: inline-block;
-    position: relative;
-  }
-
-  .letter-span {
-    display: inline-block;
-    position: relative;
-    transition: color 0.3s ease, transform 0.3s ease;
-    cursor: default;
-    color: inherit;
-  }
-
-  .letter-span.active {
-    color: #ff0abe;
-    text-shadow: 0 0 8px rgba(255, 10, 190, calc(var(--intensity, 0) * 0.5));
-    transform: scale(calc(1 + (var(--intensity, 0) * 0.1)));
-    transition: all 0.3s ease;
-    transition-delay: calc(var(--letter-index) * 0.02s);
-  }
-
-  .letter-hover:hover .letter-span {
-    transition-delay: calc(var(--letter-index) * 0.02s);
-  }
-
-  /* Gradient background for active spans */
-  .letter-span.active::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: linear-gradient(
-      45deg,
-      rgba(65, 240, 219, calc(var(--intensity, 0) * 0.2)),
-      rgba(255, 10, 190, calc(var(--intensity, 0) * 0.2)),
-      rgba(128, 0, 255, calc(var(--intensity, 0) * 0.2))
-    );
-    filter: blur(4px);
-    z-index: -1;
-    opacity: var(--intensity, 0);
-    transition: opacity 0.3s ease;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-heading: #FFFFFF;
+    --neon-cyan: #41f0db;
+    --neon-pink: #ff0abe;
+    --neon-purple: #8000ff;
   }
 }
 
 @layer components {
   .glass {
-    @apply bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg;
+    @apply bg-black/20 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
   }
 
   .glass-nav {
@@ -84,51 +48,69 @@
     border-color: rgba(128, 0, 255, 0.6);
   }
 
-  .letter-hover {
-    display: inline-block;
-    position: relative;
+  .glass-card {
+    @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border-white/10 hover:border-white/20 transition-all duration-300;
   }
 
-  .letter-span {
-    display: inline-block;
-    position: relative;
-    transition: color 0.3s ease, transform 0.3s ease;
-    cursor: default;
-    color: inherit;
-  }
-
-  .letter-span.active {
-    color: #ff0abe;
-    text-shadow: 0 0 8px rgba(255, 10, 190, calc(var(--intensity, 0) * 0.5));
-    transform: scale(calc(1 + (var(--intensity, 0) * 0.1)));
-    transition: all 0.3s ease;
-    transition-delay: calc(var(--letter-index) * 0.02s);
-  }
-
-  .letter-hover:hover .letter-span {
-    transition-delay: calc(var(--letter-index) * 0.02s);
-  }
-
-  /* Gradient background for active spans */
-  .letter-span.active::before {
+  .glass-card::before {
     content: '';
-    position: absolute;
-    inset: -2px;
-    background: linear-gradient(
-      45deg,
-      rgba(65, 240, 219, calc(var(--intensity, 0) * 0.2)),
-      rgba(255, 10, 190, calc(var(--intensity, 0) * 0.2)),
-      rgba(128, 0, 255, calc(var(--intensity, 0) * 0.2))
-    );
-    filter: blur(4px);
-    z-index: -1;
-    opacity: var(--intensity, 0);
-    transition: opacity 0.3s ease;
+    @apply absolute inset-0 opacity-10 hover:opacity-20 transition-opacity duration-300;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+  }
+
+  .admin-layout {
+    @apply min-h-screen;
+    background: linear-gradient(-45deg, #41f0db20, #ff0abe20, #8000ff20);
+    background-size: 400% 400%;
+    animation: gradient-flow 15s ease infinite;
+  }
+
+  .admin-content {
+    @apply relative z-10 space-y-8;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-neon-cyan transition-all duration-300 hover:bg-white/5 relative group;
+  }
+
+  .nav-item-highlight {
+    @apply absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100;
+    background: linear-gradient(45deg, rgba(65, 240, 219, 0.1), rgba(255, 10, 190, 0.1));
+  }
+
+  .stat-card {
+    @apply relative p-6 rounded-xl overflow-hidden;
+    background: linear-gradient(135deg, rgba(0,0,0,0.2) 0%, rgba(65,240,219,0.1) 100%);
+  }
+
+  .stat-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-10;
+    background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
   }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient-flow 15s ease infinite;
+  }
+
+  .text-glow {
+    text-shadow: 0 0 10px currentColor;
+  }
+
+  .neon-border {
+    box-shadow: 0 0 10px var(--neon-cyan),
+                inset 0 0 10px var(--neon-cyan);
+  }
+
+  .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.05);
   }
 }

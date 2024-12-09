@@ -27,7 +27,7 @@ export const SidebarContainer = ({
         "bg-black/20 backdrop-blur-xl border-r border-white/10",
         "after:content-[''] after:absolute after:bottom-0 after:right-0",
         "after:w-full after:h-[150px]",
-        "after:bg-transparent",
+        "after:bg-gradient-to-t after:from-black/20 after:to-transparent",
         "after:border-r after:border-white/10",
         "z-50 transition-all duration-300",
         className
