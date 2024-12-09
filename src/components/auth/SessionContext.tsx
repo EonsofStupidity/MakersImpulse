@@ -32,7 +32,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeSession = async () => {
       try {
-        console.log('SessionProvider: Starting initialization');
+        console.log('SessionProvider: Initializing session...');
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -41,25 +41,33 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         }
 
         if (mounted) {
-          const convertedSession = convertSession(initialSession);
-          console.log('Initial session state:', convertedSession);
-          
-          if (convertedSession?.user?.id) {
-            const { data: profile, error: profileError } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', convertedSession.user.id)
-              .single();
+          if (initialSession?.user) {
+            console.log('Initial session found:', initialSession.user.id);
+            const convertedSession = convertSession(initialSession);
+            
+            try {
+              const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', initialSession.user.id)
+                .single();
 
-            if (profileError) {
-              console.error('Profile fetch error:', profileError);
-            } else if (profile) {
-              convertedSession.user.role = profile.role;
-              console.log('User role set from profile:', profile.role);
+              if (profileError) {
+                console.error('Profile fetch error:', profileError);
+              } else if (profile && convertedSession) {
+                convertedSession.user.role = profile.role;
+                console.log('User role set from profile:', profile.role);
+              }
+
+              setSession(convertedSession);
+            } catch (profileError) {
+              console.error('Profile fetch failed:', profileError);
+              setSession(convertedSession);
             }
+          } else {
+            console.log('No active session');
+            setSession(null);
           }
-
-          setSession(convertedSession);
           setIsLoading(false);
         }
       } catch (error) {
@@ -78,26 +86,32 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
       if (mounted) {
         if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-          const convertedSession = convertSession(currentSession);
-          
-          if (convertedSession?.user?.id) {
-            const { data: profile, error: profileError } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', convertedSession.user.id)
-              .single();
+          if (currentSession?.user) {
+            const convertedSession = convertSession(currentSession);
+            
+            try {
+              const { data: profile, error: profileError } = await supabase
+                .from('profiles')
+                .select('role')
+                .eq('id', currentSession.user.id)
+                .single();
 
-            if (profileError) {
-              console.error('Profile fetch error:', profileError);
-            } else if (profile) {
-              convertedSession.user.role = profile.role;
-              console.log('Updated user role:', profile.role);
+              if (profileError) {
+                console.error('Profile fetch error:', profileError);
+              } else if (profile && convertedSession) {
+                convertedSession.user.role = profile.role;
+                console.log('Updated user role:', profile.role);
+              }
+
+              setSession(convertedSession);
+              toast.success('Successfully signed in');
+            } catch (error) {
+              console.error('Profile update failed:', error);
+              setSession(convertedSession);
             }
           }
-
-          setSession(convertedSession);
-          toast.success('Successfully signed in');
         } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out');
           setSession(null);
           toast.info('Signed out');
         }
@@ -106,13 +120,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      console.log('Cleaning up session subscription');
       mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
+  const value = {
+    session,
+    isLoading
+  };
+
   return (
-    <SessionContext.Provider value={{ session, isLoading }}>
+    <SessionContext.Provider value={value}>
       {children}
     </SessionContext.Provider>
   );

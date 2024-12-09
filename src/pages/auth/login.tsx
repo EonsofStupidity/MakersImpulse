@@ -15,6 +15,8 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
+    console.log('Login page render:', { session, isLoading });
+    
     if (session?.user) {
       console.log("Existing session found, redirecting to home");
       navigate("/");
@@ -35,7 +37,7 @@ const Login = () => {
       console.log("Cleaning up auth listener in login page");
       subscription.unsubscribe();
     };
-  }, [session, navigate]);
+  }, [session, navigate, isLoading]);
 
   if (isLoading) {
     return (
