@@ -7,10 +7,12 @@ import { AuthGuard } from "@/components/auth/AuthGuard";
 import { useSession } from "@/components/auth/SessionContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { toast } from "sonner";
+import Landing from "@/pages/site/landing";
+import Login from "@/pages/auth/login";
 
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
-
+  
   console.log('AppRoutes: Current session state:', { session, isLoading });
 
   if (isLoading) {
@@ -24,6 +26,12 @@ export const AppRoutes = () => {
   return (
     <PageTransition>
       <Routes>
+        {/* Public landing page */}
+        <Route path="/" element={<Landing />} />
+        
+        {/* Auth routes */}
+        <Route path="/login" element={<Login />} />
+        
         {/* Public Routes */}
         {PublicRoutes()}
 

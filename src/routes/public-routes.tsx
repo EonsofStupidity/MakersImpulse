@@ -9,6 +9,7 @@ import LatestUpdates from "@/pages/content/blog/latest-updates";
 import MakerSpace from "@/pages/content/maker-space";
 
 export const PublicRoutes = () => [
+  <Route key="/" path="/" element={<Landing />} />,
   <Route key="/maker-space" path="/maker-space" element={<MakerSpace />} />,
   <Route key="/about" path="/about" element={<About />} />,
   <Route key="/terms" path="/terms" element={<Terms />} />,

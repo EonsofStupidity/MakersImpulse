@@ -93,7 +93,10 @@ export const Navigation = () => {
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
-              onClick={() => handleNavigation('/blog')}
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/blog');
+              }}
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
@@ -143,12 +146,14 @@ export const Navigation = () => {
                     </>
                   ) : (
                     <>
-                      <DropdownMenuItem 
-                        onClick={() => handleNavigation('/admin')}
-                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                      >
-                        Admin Dashboard
-                      </DropdownMenuItem>
+                      {session.user.role === 'admin' && (
+                        <DropdownMenuItem 
+                          onClick={() => handleNavigation('/admin')}
+                          className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                        >
+                          Admin Dashboard
+                        </DropdownMenuItem>
+                      )}
                       <DropdownMenuItem 
                         onClick={handleLogout}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"

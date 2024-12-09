@@ -1,119 +1,92 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
+import { motion } from "framer-motion";
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useSession } from "@/components/auth/SessionContext";
+import { toast } from "sonner";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { session } = useSession();
+
+  console.log("Login page - session:", session);
 
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        navigate('/');
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, [navigate]);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "You have been logged in successfully.",
-      });
-      navigate("/");
+    if (session) {
+      console.log("User is already logged in, redirecting...");
+      navigate("/maker-space");
     }
-
-    setIsLoading(false);
-  };
+  }, [session, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden dark">
-      <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+    <div className="min-h-screen bg-[#0F1114] flex flex-col">
+      <div className="sticky top-0 z-50 flex items-center p-4 bg-black/80 backdrop-blur-lg border-b border-border/40">
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={() => navigate(-1)}
+          className="mr-2"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-xl font-bold bg-gradient-to-r from-[#34ebbd] to-[#fa19a7] text-transparent bg-clip-text">
+          Sign In
+        </h1>
       </div>
-      
-      <div 
-        className="absolute inset-0 opacity-20 bg-cover bg-center"
-        style={{
-          backgroundImage: "url('/lovable-uploads/4edf410a-5bd3-426b-8efe-fb8acb60e39c.png')",
-          backgroundPosition: "center 40%"
-        }}
-      />
 
-      <Card className="w-full max-w-md bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl shadow-lg relative z-10 animate-fade-in">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-white">Welcome back</CardTitle>
-          <CardDescription className="text-center text-gray-400">
-            Enter your credentials to access your account
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleLogin}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white/5 border-white/10 text-white placeholder:text-gray-400"
-                required
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
-              disabled={isLoading}
-            >
-              {isLoading ? "Signing in..." : "Sign in"}
-            </Button>
-            <p className="text-sm text-center text-gray-400">
-              Don't have an account?{" "}
-              <Button
-                variant="link"
-                className="text-primary hover:text-primary/90 p-0"
-                onClick={() => navigate("/register")}
-              >
-                Sign up
-              </Button>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+      <div className="flex-1 flex flex-col p-4 space-y-6">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.2 }}
+          className="bg-black/60 backdrop-blur-xl p-6 rounded-lg shadow-lg border border-border/40"
+        >
+          <Auth 
+            supabaseClient={supabase}
+            appearance={{ 
+              theme: ThemeSupa,
+              extend: true,
+              variables: {
+                default: {
+                  colors: {
+                    brand: '#34ebbd',
+                    brandAccent: '#fa19a7',
+                    brandButtonText: 'white',
+                    defaultButtonBackground: '#34ebbd',
+                    defaultButtonBackgroundHover: '#fa19a7',
+                    defaultButtonBorder: 'transparent',
+                    defaultButtonText: 'white',
+                    dividerBackground: '#2D2D2D',
+                    inputBackground: 'transparent',
+                    inputBorder: '#2D2D2D',
+                    inputBorderHover: '#4D4D4D',
+                    inputBorderFocus: '#34ebbd',
+                    inputText: 'white',
+                    inputLabelText: '#666',
+                    inputPlaceholder: '#444',
+                  },
+                },
+              },
+              className: {
+                container: 'space-y-4',
+                button: 'w-full h-12 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium',
+                label: 'text-sm font-medium text-gray-400',
+                input: 'h-12 bg-black/40 border-border/40 text-white rounded-lg px-4',
+                message: 'text-red-500 text-sm',
+                divider: 'bg-border/40',
+                anchor: 'text-primary hover:text-primary/80 transition-colors',
+              },
+            }}
+            theme="dark"
+            providers={['github', 'google']}
+            redirectTo={`${window.location.origin}/maker-space`}
+          />
+        </motion.div>
+      </div>
     </div>
   );
 };
