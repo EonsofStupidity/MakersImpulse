@@ -2,6 +2,16 @@ import { Settings } from "@/components/admin/settings/types";
 import type { DatabaseSettingsRow } from "../types/theme";
 
 export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Settings => {
+  // Type guard function to validate transition type
+  const isValidTransitionType = (value: string | null | undefined): value is 'fade' | 'slide' | 'scale' => {
+    return value === 'fade' || value === 'slide' || value === 'scale';
+  };
+
+  // Get transition type with validation
+  const transitionType = isValidTransitionType(dbSettings.transition_type) 
+    ? dbSettings.transition_type 
+    : 'fade';
+
   return {
     site_title: dbSettings.site_title,
     tagline: dbSettings.tagline,
@@ -32,7 +42,7 @@ export const convertDbSettingsToTheme = (dbSettings: DatabaseSettingsRow): Setti
     letter_spacing: dbSettings.letter_spacing,
     box_shadow: dbSettings.box_shadow,
     backdrop_blur: dbSettings.backdrop_blur,
-    transition_type: dbSettings.transition_type || 'fade',
+    transition_type: transitionType,
   };
 };
 
