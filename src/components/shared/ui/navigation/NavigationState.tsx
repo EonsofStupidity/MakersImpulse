@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { AuthSession } from '@/integrations/supabase/types/auth';
 
 interface NavigationState {
   isScrolled: boolean;

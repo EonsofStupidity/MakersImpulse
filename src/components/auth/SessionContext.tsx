@@ -16,8 +16,8 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log('SessionProvider mounted');
     let mounted = true;
+    console.log('SessionProvider mounted');
 
     const transformSession = async (supabaseSession: Session | null): Promise<AuthSession | null> => {
       if (!supabaseSession) {
@@ -33,10 +33,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', supabaseSession.user.id)
           .single();
 
-        if (error) {
-          console.error('Error fetching profile:', error);
-          throw error;
-        }
+        if (error) throw error;
 
         const authSession: AuthSession = {
           user: {
@@ -49,7 +46,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           expires_at: supabaseSession.expires_at
         };
 
-        console.log('Transformed session:', authSession);
         return authSession;
       } catch (error) {
         console.error('Error in transformSession:', error);
@@ -84,11 +80,10 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         if (event === 'SIGNED_IN') {
           const authSession = await transformSession(supabaseSession);
           setSession(authSession);
-          setIsLoading(false);
         } else if (event === 'SIGNED_OUT') {
           setSession(null);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       }
     });
 

@@ -15,21 +15,33 @@ export const Navigation = () => {
   const { session } = useSession();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
 
-  console.log("Navigation render - Current session:", session?.user);
-  console.log("Current location:", location.pathname);
+  // Prevent excessive logging
+  useEffect(() => {
+    console.log("Navigation render - Current session:", session?.user);
+    console.log("Current location:", location.pathname);
+  }, [session?.user, location.pathname]);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    const handleScroll = () => {
+      const shouldBeScrolled = window.scrollY > 20;
+      if (shouldBeScrolled !== isScrolled) {
+        setIsScrolled(shouldBeScrolled);
+      }
+    };
+    
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [setIsScrolled]);
+  }, [isScrolled, setIsScrolled]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    setMousePosition({
-      x: ((e.clientX - rect.left) / rect.width) * 100,
-      y: ((e.clientY - rect.top) / rect.height) * 100,
-    });
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    
+    // Only update if there's a significant change
+    if (Math.abs(x - mousePosition.x) > 1 || Math.abs(y - mousePosition.y) > 1) {
+      setMousePosition({ x, y });
+    }
   };
 
   return (
