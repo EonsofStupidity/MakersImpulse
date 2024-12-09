@@ -15,23 +15,27 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
+    console.log('Login component mounted, session state:', { session, isLoading });
+
     if (session) {
-      console.log("Active session found, redirecting to home");
+      console.log('Active session found, redirecting to home');
       navigate("/");
       return;
     }
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      console.log("Auth state changed:", event, currentSession?.user?.id);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed in login:', event, session?.user?.id);
       
-      if (event === 'SIGNED_IN' && currentSession) {
+      if (event === 'SIGNED_IN' && session) {
+        console.log('Sign in successful, redirecting');
         toast.success("Successfully signed in!");
         navigate("/");
       }
     });
 
     return () => {
-      authListener.subscription.unsubscribe();
+      console.log('Login component unmounting');
+      subscription.unsubscribe();
     };
   }, [session, navigate]);
 
