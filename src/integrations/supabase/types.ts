@@ -699,6 +699,47 @@ export type Database = {
           },
         ]
       }
+      pin_auth_logs: {
+        Row: {
+          attempt_type: string | null
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          success: boolean | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          attempt_type?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          attempt_type?: string | null
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          success?: boolean | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pin_auth_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       printer_builds: {
         Row: {
           author_id: string | null
@@ -743,13 +784,18 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
+          failed_pin_attempts: number | null
           gamification_enabled: boolean | null
           id: string
           is_banned: boolean | null
           last_login_at: string | null
+          last_password_login: string | null
           last_seen: string | null
           location: string | null
+          lockout_until: string | null
           onboarding_completed: boolean | null
+          pin_enabled: boolean | null
+          pin_hash: string | null
           role: Database["public"]["Enums"]["user_role"] | null
           two_factor_enabled: boolean | null
           two_factor_secret: string | null
@@ -766,13 +812,18 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id: string
           is_banned?: boolean | null
           last_login_at?: string | null
+          last_password_login?: string | null
           last_seen?: string | null
           location?: string | null
+          lockout_until?: string | null
           onboarding_completed?: boolean | null
+          pin_enabled?: boolean | null
+          pin_hash?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
@@ -789,13 +840,18 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id?: string
           is_banned?: boolean | null
           last_login_at?: string | null
+          last_password_login?: string | null
           last_seen?: string | null
           location?: string | null
+          lockout_until?: string | null
           onboarding_completed?: boolean | null
+          pin_enabled?: boolean | null
+          pin_hash?: string | null
           role?: Database["public"]["Enums"]["user_role"] | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
@@ -1250,6 +1306,21 @@ export type Database = {
         }
         Returns: undefined
       }
+      reset_pin_lockout: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: undefined
+      }
+      setup_pin: {
+        Args: {
+          p_user_id: string
+          p_pin: string
+          p_ip_address?: string
+          p_user_agent?: string
+        }
+        Returns: Json
+      }
       update_site_settings:
         | {
             Args: {
@@ -1354,6 +1425,15 @@ export type Database = {
         Args: {
           p_code: string
           p_email: string
+        }
+        Returns: Json
+      }
+      verify_pin_login: {
+        Args: {
+          p_user_id: string
+          p_pin: string
+          p_ip_address?: string
+          p_user_agent?: string
         }
         Returns: Json
       }
