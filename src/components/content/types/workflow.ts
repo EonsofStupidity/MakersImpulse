@@ -4,7 +4,7 @@ export interface WorkflowStep {
   id: string;
   name: string;
   type: string;
-  config: Record<string, unknown>;
+  config: Json;
   [key: string]: Json; // Add index signature for Json compatibility
 }
 
