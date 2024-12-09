@@ -20,11 +20,24 @@ const Login = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
       console.log("Auth state changed in Login:", event, currentSession?.user?.id);
       
-      if (currentSession) {
+      if (event === 'SIGNED_IN' && currentSession) {
         console.log("Session detected, navigating to maker-space");
         navigate("/maker-space");
       }
+
+      if (event === 'USER_DELETED' || event === 'SIGNED_OUT') {
+        console.log("User signed out or deleted");
+        navigate("/login");
+      }
     });
+
+    // Handle auth errors globally
+    const handleAuthError = (error: Error) => {
+      console.error("Auth error:", error);
+      toast.error(error.message);
+    };
+
+    supabase.auth.onError(handleAuthError);
 
     return () => {
       console.log("Login page unmounting, cleaning up subscription");
@@ -109,10 +122,6 @@ const Login = () => {
               theme="dark"
               providers={[]}
               redirectTo={`${window.location.origin}/maker-space`}
-              onError={(error) => {
-                console.error("Auth error:", error);
-                toast.error(error.message);
-              }}
             />
           </div>
         </motion.div>
