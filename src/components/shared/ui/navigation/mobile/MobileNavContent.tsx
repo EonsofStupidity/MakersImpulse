@@ -9,7 +9,7 @@ import type { LucideIcon } from "lucide-react";
 interface MenuItem {
   to: string;
   label: string;
-  icon?: LucideIcon;
+  icon: LucideIcon;  // Make icon required since we're using it everywhere
 }
 
 const menuVariants = {
@@ -117,7 +117,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
               onClick={onClose}
               className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group"
             >
-              {item.icon && <item.icon className="w-5 h-5 mr-2" />}
+              <item.icon className="w-5 h-5 mr-2" />
               {item.label}
               <motion.div
                 className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
