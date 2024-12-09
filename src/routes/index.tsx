@@ -13,7 +13,8 @@ export const AppRoutes = () => {
   const { session, isLoading } = useSession();
   
   console.log('AppRoutes: Session state:', { 
-    session: session?.user?.id, 
+    userId: session?.user?.id,
+    role: session?.user?.role,
     isLoading,
     hasSession: !!session
   });

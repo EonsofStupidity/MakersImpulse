@@ -37,6 +37,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
+          console.error('Session initialization error:', error);
           if (error.message.includes('refresh_token_not_found')) {
             await supabase.auth.signOut();
           }
@@ -45,7 +46,27 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
         if (mounted) {
           const convertedSession = convertSession(initialSession);
-          console.log('Session found:', convertedSession?.user?.id);
+          console.log('Session initialization result:', {
+            hasSession: !!convertedSession,
+            userId: convertedSession?.user?.id
+          });
+          
+          if (convertedSession?.user?.id) {
+            // Fetch profile data including role
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', convertedSession.user.id)
+              .single();
+
+            if (profileError) {
+              console.error('Profile fetch error:', profileError);
+            } else if (profile) {
+              convertedSession.user.role = profile.role;
+              console.log('Profile role fetched:', profile.role);
+            }
+          }
+
           setSession(convertedSession);
           setIsLoading(false);
         }
@@ -61,13 +82,37 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     initializeSession();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
 
       if (mounted) {
         if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
-          setSession(convertSession(currentSession));
+          const convertedSession = convertSession(currentSession);
+          
+          if (convertedSession?.user?.id) {
+            // Fetch profile data including role
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', convertedSession.user.id)
+              .single();
+
+            if (profileError) {
+              console.error('Profile fetch error:', profileError);
+            } else if (profile) {
+              convertedSession.user.role = profile.role;
+              console.log('Profile role updated:', profile.role);
+            }
+          }
+
+          setSession(convertedSession);
+          console.log('Session updated:', {
+            hasSession: !!convertedSession,
+            userId: convertedSession?.user?.id,
+            role: convertedSession?.user?.role
+          });
         } else if (event === 'SIGNED_OUT') {
+          console.log('User signed out, clearing session');
           setSession(null);
         }
         setIsLoading(false);

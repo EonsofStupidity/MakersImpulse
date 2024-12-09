@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MegaMenu } from "./navigation/MegaMenu";
@@ -12,17 +12,22 @@ import { useNavigationStore } from "./navigation/NavigationState";
 
 export const Navigation = () => {
   const location = useLocation();
-  const { session } = useSession();
+  const navigate = useNavigate();
+  const { session, isLoading } = useSession();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
   const [hasLogged, setHasLogged] = useState(false);
 
   useEffect(() => {
     if (!hasLogged) {
-      console.log("Navigation render - Current session:", session?.user);
+      console.log("Navigation render - Session state:", {
+        userId: session?.user?.id,
+        role: session?.user?.role,
+        isLoading
+      });
       console.log("Current location:", location.pathname);
       setHasLogged(true);
     }
-  }, [session?.user, location.pathname, hasLogged]);
+  }, [session, location.pathname, hasLogged, isLoading]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,6 +51,11 @@ export const Navigation = () => {
     }
   };
 
+  const handleNavigation = (path: string) => {
+    console.log('Navigating to:', path);
+    navigate(path);
+  };
+
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -63,6 +73,7 @@ export const Navigation = () => {
           <Link 
             to="/"
             className="flex items-center cursor-pointer"
+            onClick={() => handleNavigation('/')}
           >
             <span className="text-2xl font-bold">
               <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
@@ -75,6 +86,7 @@ export const Navigation = () => {
             <Link 
               to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
+              onClick={() => handleNavigation('/blog')}
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
