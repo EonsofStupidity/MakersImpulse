@@ -20,12 +20,7 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      const { data, error } = await supabase.rpc<PinVerificationResponse, { 
-        p_user_id: string | undefined;
-        p_pin: string;
-        p_ip_address: string | null;
-        p_user_agent: string;
-      }>('verify_pin_login', {
+      const { data, error } = await supabase.rpc('verify_pin_login', {
         p_user_id: user?.id,
         p_pin: pin,
         p_ip_address: null,
@@ -34,14 +29,16 @@ export const PinLoginForm = ({ email, onSwitchToPassword }: PinLoginFormProps) =
 
       if (error) throw error;
 
-      if (data?.success) {
+      const response = data as PinVerificationResponse;
+
+      if (response.success) {
         toast.success("PIN verified successfully!");
         navigate("/");
       } else {
-        if (data?.locked_until) {
-          toast.error(`Account locked until ${new Date(data.locked_until).toLocaleTimeString()}`);
+        if (response.locked_until) {
+          toast.error(`Account locked until ${new Date(response.locked_until).toLocaleTimeString()}`);
         } else {
-          toast.error(data?.message || "Invalid PIN");
+          toast.error(response.message || "Invalid PIN");
         }
       }
     } catch (error) {

@@ -73,12 +73,7 @@ export const PinSetupForm = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       
-      const { data, error } = await supabase.rpc<PinSetupResponse, {
-        p_user_id: string | undefined;
-        p_pin: string;
-        p_ip_address: string | null;
-        p_user_agent: string;
-      }>('setup_pin', {
+      const { data, error } = await supabase.rpc('setup_pin', {
         p_user_id: user?.id,
         p_pin: originalPin,
         p_ip_address: null,
@@ -87,10 +82,12 @@ export const PinSetupForm = () => {
 
       if (error) throw error;
 
-      if (data?.success) {
+      const response = data as PinSetupResponse;
+
+      if (response.success) {
         toast.success("PIN setup successfully! You can now use PIN login.");
       } else {
-        toast.error(data?.message || "Failed to set up PIN");
+        toast.error(response.message || "Failed to set up PIN");
       }
     } catch (error) {
       console.error("PIN setup error:", error);
