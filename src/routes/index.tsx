@@ -11,6 +11,8 @@ import { toast } from "sonner";
 export const AppRoutes = () => {
   const { session, isLoading } = useSession();
 
+  console.log('AppRoutes: Current session state:', { session, isLoading });
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -18,8 +20,6 @@ export const AppRoutes = () => {
       </div>
     );
   }
-
-  console.log('AppRoutes: Current session state:', { session, isLoading });
 
   return (
     <PageTransition>

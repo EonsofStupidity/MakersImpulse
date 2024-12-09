@@ -13,6 +13,7 @@ import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
 import { useSession } from "@/components/auth/SessionContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -20,6 +21,9 @@ export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { session } = useSession();
+
+  console.log("Navigation render - Current session:", session);
+  console.log("Current location:", location.pathname);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -35,10 +39,29 @@ export const Navigation = () => {
     });
   };
 
-  const handleNavigation = (to: string) => {
+  const handleNavigation = async (to: string) => {
     console.log('Navigating to:', to);
+    
+    if (to === '/admin' && (!session || !session.user)) {
+      console.log('Attempting to access admin without auth');
+      toast.error("Please login to access the admin dashboard");
+      navigate('/login');
+      return;
+    }
+
     navigate(to);
     toast.success(`Navigating to ${to.replace('/', '').toUpperCase()}`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Successfully logged out");
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      toast.error("Error logging out");
+    }
   };
 
   return (
@@ -55,25 +78,27 @@ export const Navigation = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
-          <div 
-            onClick={() => handleNavigation('/')}
+          <Link 
+            to="/"
             className="flex items-center cursor-pointer"
+            onClick={() => handleNavigation('/')}
           >
             <span className="text-2xl font-bold">
               <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
               <span className="text-[#ff0abe] animate-neon-glow">Impulse</span>
             </span>
-          </div>
+          </Link>
 
           <div className="hidden md:flex items-center space-x-6">
-            <div 
-              onClick={() => handleNavigation('/blog')}
+            <Link 
+              to="/blog"
               className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
+              onClick={() => handleNavigation('/blog')}
             >
               <span className="relative z-10 text-white font-medium">Blog</span>
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
-            </div>
+            </Link>
             <MegaMenu />
           </div>
 
@@ -101,24 +126,37 @@ export const Navigation = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border-white/10">
-                  <DropdownMenuItem 
-                    onClick={() => handleNavigation('/login')}
-                    className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                  >
-                    Sign In
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => handleNavigation('/register')}
-                    className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                  >
-                    Sign Up
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => handleNavigation('/admin')}
-                    className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
-                  >
-                    Admin Dashboard
-                  </DropdownMenuItem>
+                  {!session ? (
+                    <>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/login')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        Sign In
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/register')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        Sign Up
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <>
+                      <DropdownMenuItem 
+                        onClick={() => handleNavigation('/admin')}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        Admin Dashboard
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={handleLogout}
+                        className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
+                      >
+                        Sign Out
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
