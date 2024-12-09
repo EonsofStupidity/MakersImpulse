@@ -1,12 +1,9 @@
-import { Route } from "react-router-dom";
-import { AuthGuard } from "@/components/auth/AuthGuard";
+import { RouteObject } from "react-router-dom";
 import MakerSpace from "@/pages/content/maker-space";
 
-export const ProtectedRoutes = () => (
-  <>
-    <Route 
-      path="/maker-space" 
-      element={<AuthGuard><MakerSpace /></AuthGuard>} 
-    />
-  </>
-);
+export const ProtectedRoutes = (): RouteObject[] => [
+  {
+    path: "/maker-space",
+    element: <MakerSpace />
+  }
+];

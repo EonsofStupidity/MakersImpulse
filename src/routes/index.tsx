@@ -50,8 +50,8 @@ export const AppRoutes = () => {
         {/* Protected Routes */}
         {ProtectedRoutes().map((route) => (
           <Route
-            key={route.props.path}
-            path={route.props.path}
+            key={route.path}
+            path={route.path}
             element={
               <AuthGuard 
                 requireAuth={true}
@@ -61,7 +61,7 @@ export const AppRoutes = () => {
                   toast.error('Please sign in to access this content');
                 }}
               >
-                {route.props.element}
+                {route.element}
               </AuthGuard>
             }
           />
