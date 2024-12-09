@@ -8,7 +8,13 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { supabase } from "@/integrations/supabase/client";
 import type { NavItemType } from "./NavItem";
 
-export const AdminNavContainer = () => {
+interface AdminNavContainerProps {
+  routes: {
+    [key: string]: string;
+  };
+}
+
+export const AdminNavContainer: React.FC<AdminNavContainerProps> = ({ routes }) => {
   const navigate = useNavigate();
   const { session } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
