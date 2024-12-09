@@ -15,52 +15,50 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     console.log('SessionProvider: Initializing session...');
 
-    const initializeSession = async () => {
-      try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          if (error.message.includes('refresh_token_not_found')) {
-            console.error('Refresh token not found, signing out');
-            await supabase.auth.signOut();
-            setSession(null);
-            return;
-          }
-          throw error;
-        }
+    // Initial session check
+    supabase.auth.getSession().then(async ({ data: { session: initialSession }, error }) => {
+      if (!mounted) return;
 
-        if (initialSession) {
+      if (error) {
+        console.error('Session initialization error:', error);
+        setIsLoading(false);
+        return;
+      }
+
+      if (initialSession) {
+        try {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', initialSession.user.id)
             .single();
 
-          setSession({
+          const sessionData: AuthSession = {
             user: {
               id: initialSession.user.id,
               email: initialSession.user.email,
               role: profile?.role || 'subscriber',
             },
             expires_at: initialSession.expires_at,
-          });
-          
-          console.log('Session initialized with role:', profile?.role);
+          };
+
+          console.log('Initial session loaded:', sessionData);
+          setSession(sessionData);
+        } catch (error) {
+          console.error('Error fetching profile:', error);
         }
-      } catch (error) {
-        console.error('Session initialization error:', error);
-        toast.error('Error initializing session');
-      } finally {
-        setIsLoading(false);
       }
-    };
+      setIsLoading(false);
+    });
 
-    initializeSession();
-
+    // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event);
+      console.log('Auth state changed:', event, currentSession?.user?.id);
+
+      if (!mounted) return;
 
       if (currentSession) {
         try {
@@ -70,14 +68,17 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             .eq('id', currentSession.user.id)
             .single();
 
-          setSession({
+          const sessionData: AuthSession = {
             user: {
               id: currentSession.user.id,
               email: currentSession.user.email,
               role: profile?.role || 'subscriber',
             },
             expires_at: currentSession.expires_at,
-          });
+          };
+
+          console.log('Session updated:', sessionData);
+          setSession(sessionData);
 
           if (event === 'SIGNED_IN') {
             toast.success('Successfully signed in');
@@ -87,6 +88,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           toast.error('Error updating session');
         }
       } else {
+        console.log('No session found, clearing session state');
         setSession(null);
         if (event === 'SIGNED_OUT') {
           toast.info('Signed out');
@@ -95,6 +97,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
