@@ -32,7 +32,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
 
     const initializeSession = async () => {
       try {
-        console.log('Initializing session...');
+        console.log('SessionProvider: Starting initialization');
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
@@ -55,7 +55,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
               console.error('Profile fetch error:', profileError);
             } else if (profile) {
               convertedSession.user.role = profile.role;
-              console.log('User role set to:', profile.role);
+              console.log('User role set from profile:', profile.role);
             }
           }
 
@@ -106,7 +106,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
     });
 
     return () => {
-      console.log('Cleaning up session listener');
       mounted = false;
       subscription.unsubscribe();
     };

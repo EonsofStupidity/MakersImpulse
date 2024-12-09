@@ -26,6 +26,7 @@ const Login = () => {
       
       if (event === 'SIGNED_IN' && session) {
         console.log("User signed in, redirecting to home");
+        toast.success("Successfully signed in!");
         navigate("/");
       }
     });

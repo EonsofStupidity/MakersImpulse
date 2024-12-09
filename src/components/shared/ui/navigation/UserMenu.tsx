@@ -43,7 +43,9 @@ export const UserMenu = ({ session }: UserMenuProps) => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
       toast.success("Successfully logged out");
       navigate('/login');
     } catch (error) {
