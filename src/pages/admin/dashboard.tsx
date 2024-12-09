@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { AdminSidebarProvider } from '@/components/admin/dashboard/sidebar/AdminSidebarContext';
 import NewDashboardOverview from './core/NewDashboardOverview';
-import { CacheManagementSection } from './core/CacheManagementSection';
+import { RedisDashboardSection } from './core/RedisDashboardSection';
 
 const AdminDashboard = () => {
   return (
@@ -15,7 +15,7 @@ const AdminDashboard = () => {
             className="space-y-8"
           >
             <NewDashboardOverview />
-            <CacheManagementSection />
+            <RedisDashboardSection />
           </motion.div>
         </main>
       </div>
