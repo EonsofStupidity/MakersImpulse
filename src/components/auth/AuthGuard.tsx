@@ -20,6 +20,8 @@ export const AuthGuard = ({
   const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
 
   useEffect(() => {
+    if (!requireAuth) return;
+    
     if (error) {
       console.error('AuthGuard error:', error);
       toast.error(error instanceof Error ? error.message : 'Authentication error');
@@ -30,10 +32,9 @@ export const AuthGuard = ({
       
       navigate(fallbackPath, { replace: true });
     }
-  }, [error, fallbackPath, navigate, onError]);
+  }, [error, fallbackPath, navigate, onError, requireAuth]);
 
   if (isLoading) {
-    console.log('AuthGuard: Loading state');
     return loadingComponent || (
       <motion.div
         initial={{ opacity: 0 }}
@@ -45,8 +46,7 @@ export const AuthGuard = ({
     );
   }
 
-  if (!hasAccess) {
-    console.log('AuthGuard: Access denied');
+  if (requireAuth && !hasAccess) {
     return unauthorizedComponent || (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -58,7 +58,6 @@ export const AuthGuard = ({
     );
   }
 
-  console.log('AuthGuard: Access granted');
   return (
     <motion.div
       initial={{ opacity: 0 }}

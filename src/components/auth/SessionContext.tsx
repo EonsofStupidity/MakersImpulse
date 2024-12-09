@@ -15,16 +15,15 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    let mounted = true;
-    console.log('SessionProvider: Starting initialization');
-
+    console.log('SessionProvider: Initializing');
+    
     const initializeSession = async () => {
       try {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) throw error;
 
-        if (initialSession && mounted) {
+        if (initialSession) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role, username, display_name')
@@ -42,30 +41,22 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
             expires_at: initialSession.expires_at
           };
 
-          if (mounted) {
-            setSession(sessionData);
-            setIsLoading(false);
-          }
-        } else if (mounted) {
-          setSession(null);
-          setIsLoading(false);
+          setSession(sessionData);
         }
+        
+        setIsLoading(false);
       } catch (error) {
         console.error('Session initialization error:', error);
-        if (mounted) {
-          setSession(null);
-          setIsLoading(false);
-        }
+        setSession(null);
+        setIsLoading(false);
       }
     };
 
     initializeSession();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
-      console.log('Auth state changed:', event, currentSession?.user?.id);
+      console.log('Auth state changed:', event);
       
-      if (!mounted) return;
-
       if (currentSession) {
         try {
           const { data: profile } = await supabase
@@ -86,7 +77,6 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           };
 
           setSession(sessionData);
-          setIsLoading(false);
 
           if (event === 'SIGNED_IN') {
             toast.success(`Welcome back, ${sessionData.user.display_name}`);
@@ -94,21 +84,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         } catch (error) {
           console.error('Error in auth state change:', error);
           setSession(null);
-          setIsLoading(false);
         }
       } else {
         setSession(null);
-        setIsLoading(false);
-        
         if (event === 'SIGNED_OUT') {
           toast.success('Successfully signed out');
         }
       }
+      
+      setIsLoading(false);
     });
 
     return () => {
-      console.log('SessionProvider: Cleaning up subscription');
-      mounted = false;
+      console.log('SessionProvider: Cleaning up');
       subscription.unsubscribe();
     };
   }, []);
