@@ -98,7 +98,7 @@ export const AdminNav = () => {
       event.dataTransfer.setData('application/json', JSON.stringify(itemData));
       event.dataTransfer.effectAllowed = 'move';
 
-      // Create custom drag image using DOM API
+      // Create custom drag preview using DOM API
       const dragPreview = document.createElement('div');
       dragPreview.innerHTML = `
         <div style="
