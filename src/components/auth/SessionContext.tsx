@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { AuthSession } from '@/integrations/supabase/types/auth';
+import type { AuthSession } from './types';
 import { toast } from 'sonner';
 import { Session } from '@supabase/supabase-js';
 
@@ -37,7 +37,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         const { data: { session: initialSession }, error } = await supabase.auth.getSession();
         
         if (error) {
-          console.error('Session initialization error:', error);
+          if (error.message.includes('refresh_token_not_found')) {
+            await supabase.auth.signOut();
+          }
           throw error;
         }
 
@@ -67,7 +69,11 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       console.log('Auth state changed:', event, currentSession?.user?.id);
       
       if (mounted) {
-        setSession(convertSession(currentSession));
+        if (event === 'TOKEN_REFRESHED' || event === 'SIGNED_IN') {
+          setSession(convertSession(currentSession));
+        } else if (event === 'SIGNED_OUT') {
+          setSession(null);
+        }
         setIsLoading(false);
       }
     });
