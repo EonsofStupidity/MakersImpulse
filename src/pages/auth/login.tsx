@@ -14,40 +14,48 @@ const Login = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useSession();
 
-  useEffect(() => {
-    console.log("Login page mounted, session state:", { session, isLoading });
+ useEffect(() => {
+  console.log("Login page mounted, session state:", { session, isLoading });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      console.log("Auth state changed in Login:", event, currentSession?.user?.id);
-      
-      if (event === 'SIGNED_IN' && currentSession) {
-        console.log("Session detected, navigating to maker-space");
-        navigate("/maker-space");
-      }
+  // Set up primary auth state change subscription
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+    console.log("Auth state changed in Login:", event, currentSession?.user?.id);
 
-      if (event === 'SIGNED_OUT') {
+    switch (event) {
+      case "SIGNED_IN":
+        if (currentSession) {
+          console.log("Session detected, navigating to maker-space");
+          navigate("/maker-space");
+        }
+        break;
+
+      case "SIGNED_OUT":
         console.log("User signed out");
         navigate("/login");
-      }
-    });
+        break;
 
-    // Set up error handling through the event listener
-    const {
-      data: { subscription: errorSubscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'USER_DELETED') {
-        console.error("User account was deleted");
-        toast.error("User account was deleted");
-        navigate("/login");
-      }
-    });
+      // Add other default cases if needed
+      default:
+        console.log(`Unhandled auth event: ${event}`);
+        break;
+    }
+  });
 
-    return () => {
-      console.log("Login page unmounting, cleaning up subscription");
-      subscription.unsubscribe();
-      errorSubscription.unsubscribe();
-    };
-  }, [session, navigate]);
+  // Example: Handling user deletion through alternative logic
+  const deleteSubscription = supabase.auth.onAuthStateChange((event) => {
+    if (event as string === "USER_DELETED") {
+      console.error("User account was deleted");
+      toast.error("User account was deleted");
+      navigate("/login");
+    }
+  });
+
+  return () => {
+    console.log("Login page unmounting, cleaning up subscription");
+    subscription.unsubscribe();
+    deleteSubscription.unsubscribe();
+  };
+}, [session, navigate])
 
   if (isLoading) {
     console.log("Login page showing loading state");
