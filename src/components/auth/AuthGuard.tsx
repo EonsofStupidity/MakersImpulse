@@ -6,6 +6,7 @@ import { AuthLoading } from './components/AuthLoading';
 import { Unauthorized } from './components/Unauthorized';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
+import { useAuth } from './AuthProvider';
 
 export const AuthGuard = ({ 
   children, 
@@ -17,6 +18,7 @@ export const AuthGuard = ({
   onError
 }: AuthGuardProps) => {
   const navigate = useNavigate();
+  const { session, isLoading: authLoading } = useAuth();
   const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export const AuthGuard = ({
     }
   }, [error, fallbackPath, navigate, onError]);
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     console.log('AuthGuard: Loading state');
     return loadingComponent || (
       <motion.div

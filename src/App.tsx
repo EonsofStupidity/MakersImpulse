@@ -1,12 +1,12 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
-import { SessionProvider } from "@/components/auth/SessionContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { Toaster } from "sonner";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,7 +25,7 @@ const App = () => {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <SessionProvider>
+          <AuthProvider>
             <ThemeProvider>
               <TooltipProvider>
                 <RootLayout>
@@ -34,7 +34,7 @@ const App = () => {
                 <Toaster position="top-right" expand={false} richColors closeButton />
               </TooltipProvider>
             </ThemeProvider>
-          </SessionProvider>
+          </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>

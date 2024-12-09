@@ -1,14 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSession } from '../SessionContext';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-
-interface AuthState {
-  isLoading: boolean;
-  hasAccess: boolean;
-  error: Error | { message: string } | null;
-}
+import { useAuth } from '../AuthProvider';
+import type { AuthState } from '../types';
 
 const roleHierarchy: { [key: string]: number } = {
   'subscriber': 0,
@@ -19,11 +11,9 @@ const roleHierarchy: { [key: string]: number } = {
 
 export const useRoleCheck = (
   requireAuth: boolean,
-  requiredRole?: string | string[],
-  fallbackPath: string = '/login'
+  requiredRole?: string | string[]
 ) => {
-  const { session } = useSession();
-  const navigate = useNavigate();
+  const { user, isLoading: authLoading } = useAuth();
   const [state, setState] = useState<AuthState>({
     isLoading: true,
     hasAccess: false,
@@ -38,20 +28,20 @@ export const useRoleCheck = (
         console.log('Starting role check with:', {
           requireAuth,
           requiredRole,
-          sessionExists: !!session,
-          userId: session?.user?.id
+          userExists: !!user,
+          userId: user?.id
         });
 
         if (isMounted) {
           setState(prev => ({ ...prev, isLoading: true, error: null }));
         }
 
-        if (!session && requireAuth) {
-          console.log('Auth required but no session found');
+        if (!user && requireAuth) {
+          console.log('Auth required but no user found');
           throw new Error('Authentication required');
         }
 
-        if (session && !requiredRole) {
+        if (user && !requiredRole) {
           console.log('User authenticated, no role required');
           if (isMounted) {
             setState(prev => ({ ...prev, hasAccess: true, isLoading: false }));
@@ -59,44 +49,18 @@ export const useRoleCheck = (
           return;
         }
 
-        if (session && requiredRole) {
-          console.log('Checking user role for session:', session.user.id);
+        if (user && requiredRole && user.role) {
+          console.log('Checking user role:', user.role);
           
-          const { data: profile, error: fetchError } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-
-          console.log('Profile query result:', { profile, fetchError });
-
-          if (fetchError) {
-            console.error('Error fetching user role:', fetchError);
-            throw new Error('Error verifying permissions');
-          }
-
-          if (!profile) {
-            console.error('No profile found for user');
-            throw new Error('No profile found');
-          }
-
-          const userRole = profile.role;
-          console.log('User role found:', userRole);
-          
-          if (!userRole) {
-            console.error('No role assigned to user profile');
-            throw new Error('No role assigned');
-          }
-
+          const userRoleLevel = roleHierarchy[user.role];
           const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-          const userRoleLevel = roleHierarchy[userRole];
           
           const hasRequiredRole = requiredRoles.some(role => 
             userRoleLevel >= roleHierarchy[role]
           );
 
           console.log('Role check result:', {
-            userRole,
+            userRole: user.role,
             requiredRoles,
             userRoleLevel,
             hasRequiredRole
@@ -117,30 +81,25 @@ export const useRoleCheck = (
         }
       } catch (error) {
         console.error('Error in auth check:', error);
-        const errorObj = error instanceof Error 
-          ? error 
-          : { message: 'Error checking permissions' };
-        
         if (isMounted) {
           setState(prev => ({ 
             ...prev, 
-            error: errorObj,
+            error: error instanceof Error ? error : new Error('Error checking permissions'),
             hasAccess: false,
             isLoading: false
           }));
         }
-
-        toast.error(errorObj.message);
-        navigate(fallbackPath, { replace: true });
       }
     };
 
-    checkAccess();
+    if (!authLoading) {
+      checkAccess();
+    }
 
     return () => {
       isMounted = false;
     };
-  }, [session, requireAuth, requiredRole, navigate, fallbackPath]);
+  }, [user, requireAuth, requiredRole, authLoading]);
 
   return state;
 };

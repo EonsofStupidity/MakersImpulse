@@ -1,99 +1,75 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Auth } from "@supabase/auth-ui-react";
+import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
+import { Card } from "@/components/ui/card";
+import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useToast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 export const Register = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const handleRegister = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
-    } else {
-      toast({
-        title: "Success",
-        description: "Please check your email to confirm your account.",
-      });
-      navigate("/login");
-    }
-
-    setIsLoading(false);
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1A1F2C] px-4">
-      <Card className="w-full max-w-md bg-white shadow-lg rounded-xl animate-fade-in">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center text-gray-800">
-            Create an account
-          </CardTitle>
-          <CardDescription className="text-center text-gray-500">
-            Enter your email below to create your account
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleRegister}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="bg-white border-gray-200 text-gray-900 placeholder:text-gray-400"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="bg-white border-gray-200 text-gray-900 placeholder:text-gray-400"
-                required
-              />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full bg-[#4EEAB1] hover:bg-[#4EEAB1]/90 text-gray-800"
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating account..." : "Create account"}
-            </Button>
-            <p className="text-sm text-center text-gray-500">
-              Already have an account?{" "}
-              <Button
-                variant="link"
-                className="text-[#4EEAB1] hover:text-[#4EEAB1]/90 p-0"
-                onClick={() => navigate("/login")}
-              >
-                Sign in
-              </Button>
-            </p>
-          </CardFooter>
-        </form>
-      </Card>
+      <div className="w-full max-w-md">
+        <div className="mb-8">
+          <Button 
+            variant="ghost" 
+            size="icon"
+            onClick={() => navigate(-1)}
+            className="text-white hover:text-[#41f0db]"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card className="p-6 bg-black/30 backdrop-blur-xl border border-white/10">
+            <Auth
+              supabaseClient={supabase}
+              appearance={{
+                theme: ThemeSupa,
+                extend: true,
+                variables: {
+                  default: {
+                    colors: {
+                      brand: '#41f0db',
+                      brandAccent: '#ff0abe',
+                      brandButtonText: 'white',
+                      defaultButtonBackground: 'rgba(65, 240, 219, 0.1)',
+                      defaultButtonBackgroundHover: 'rgba(65, 240, 219, 0.2)',
+                      defaultButtonBorder: '#41f0db',
+                      defaultButtonText: '#41f0db',
+                      inputBackground: 'rgba(0, 0, 0, 0.3)',
+                      inputBorder: 'rgba(65, 240, 219, 0.2)',
+                      inputBorderHover: 'rgba(65, 240, 219, 0.4)',
+                      inputBorderFocus: '#41f0db',
+                      inputText: 'white',
+                      inputPlaceholder: 'rgba(255, 255, 255, 0.4)',
+                    },
+                  },
+                },
+                className: {
+                  container: 'space-y-4',
+                  button: 'w-full h-12 rounded-lg transition-all duration-300',
+                  label: 'text-sm font-medium text-[#41f0db]',
+                  input: 'h-12 w-full rounded-lg px-4',
+                  message: 'text-red-400 text-sm',
+                  anchor: 'text-[#41f0db] hover:text-[#ff0abe] transition-colors',
+                },
+              }}
+              theme="dark"
+              providers={['github', 'google']}
+              redirectTo={`${window.location.origin}/`}
+            />
+          </Card>
+        </motion.div>
+      </div>
     </div>
   );
 };
