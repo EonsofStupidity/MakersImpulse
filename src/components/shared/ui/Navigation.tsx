@@ -139,12 +139,14 @@ export const Navigation = () => {
                         onClick={() => handleNavigation('/login')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
+                        <LogIn className="mr-2 h-4 w-4" />
                         Sign In
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => handleNavigation('/register')}
                         className="cursor-pointer w-full text-white hover:text-[#41f0db] transition-colors duration-300 font-medium"
                       >
+                        <UserPlus className="mr-2 h-4 w-4" />
                         Sign Up
                       </DropdownMenuItem>
                     </>

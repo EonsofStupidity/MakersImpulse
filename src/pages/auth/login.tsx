@@ -4,7 +4,7 @@ import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { motion } from "framer-motion";
-import { ArrowLeft, Github, Mail, Phone, Shield, Lock } from "lucide-react";
+import { ArrowLeft, Github, Mail, Phone, Shield, Lock, Key } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/components/auth/SessionContext";
 import { toast } from "sonner";
@@ -81,6 +81,15 @@ const Login = () => {
           >
             <Phone className="h-5 w-5" />
             Continue with Discord
+          </Button>
+
+          <Button
+            variant="outline"
+            className="w-full h-12 flex items-center justify-center gap-2 bg-black/40 backdrop-blur-sm border-border/40 hover:bg-black/60"
+            onClick={() => navigate('/auth/magic-link')}
+          >
+            <Key className="h-5 w-5" />
+            Sign in with Magic Link
           </Button>
         </div>
 
