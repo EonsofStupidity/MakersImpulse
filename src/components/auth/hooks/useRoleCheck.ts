@@ -3,9 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useSession } from '../SessionContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { UserRole, RoleHierarchy, AuthState } from '../types';
 
-const roleHierarchy: RoleHierarchy = {
+interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: Error | { message: string } | null;
+}
+
+const roleHierarchy: { [key: string]: number } = {
   'subscriber': 0,
   'maker': 1,
   'admin': 2,
@@ -14,8 +19,8 @@ const roleHierarchy: RoleHierarchy = {
 
 export const useRoleCheck = (
   requireAuth: boolean,
-  requiredRole?: UserRole | UserRole[],
-  fallbackPath: string = '/'
+  requiredRole?: string | string[],
+  fallbackPath: string = '/login'
 ) => {
   const { session } = useSession();
   const navigate = useNavigate();
@@ -84,7 +89,7 @@ export const useRoleCheck = (
           }
 
           const requiredRoles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
-          const userRoleLevel = roleHierarchy[userRole as UserRole];
+          const userRoleLevel = roleHierarchy[userRole];
           
           const hasRequiredRole = requiredRoles.some(role => 
             userRoleLevel >= roleHierarchy[role]
