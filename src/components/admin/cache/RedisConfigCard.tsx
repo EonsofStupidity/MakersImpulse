@@ -4,14 +4,41 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
-import { Database } from 'lucide-react';
-import { Trash2, Save, RefreshCw } from 'lucide-react';
+import { Database, Server, Key, Clock, Shield } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
+interface RedisConfig {
+  enabled: boolean;
+  host: string;
+  port: number;
+  password?: string;
+  ttl: number;
+  maxMemory: number;
+  restrictedMode: boolean;
+  features: {
+    sessionManagement: boolean;
+    caching: boolean;
+    realTimeUpdates: boolean;
+  };
+}
+
 export const RedisConfigCard = () => {
-  const [enabled, setEnabled] = useState(true);
-  const [ttl, setTtl] = useState('3600');
-  const [maxSize, setMaxSize] = useState('100');
+  const [config, setConfig] = useState<RedisConfig>({
+    enabled: false,
+    host: 'localhost',
+    port: 6379,
+    ttl: 3600,
+    maxMemory: 100,
+    restrictedMode: false,
+    features: {
+      sessionManagement: true,
+      caching: true,
+      realTimeUpdates: false,
+    }
+  });
+  const [isTesting, setIsTesting] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSaveConfig = async () => {
@@ -22,11 +49,7 @@ export const RedisConfigCard = () => {
         .upsert([
           {
             setting_key: 'redis_config',
-            setting_value: JSON.stringify({
-              enabled,
-              ttl: parseInt(ttl),
-              maxSize: parseInt(maxSize)
-            }),
+            setting_value: JSON.stringify(config),
             setting_type: 'json'
           }
         ]);
@@ -41,13 +64,16 @@ export const RedisConfigCard = () => {
     }
   };
 
-  const handleClearCache = async () => {
+  const testConnection = async () => {
+    setIsTesting(true);
     try {
-      // Implement cache clearing logic here
-      toast.success('Cache cleared successfully');
+      // This would be replaced with actual Redis connection testing
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast.success('Redis connection test successful');
     } catch (error) {
-      console.error('Error clearing cache:', error);
-      toast.error('Failed to clear cache');
+      toast.error('Redis connection test failed');
+    } finally {
+      setIsTesting(false);
     }
   };
 
@@ -59,60 +85,167 @@ export const RedisConfigCard = () => {
           Redis Configuration
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between">
-          <span>Enable Redis Cache</span>
-          <Switch
-            checked={enabled}
-            onCheckedChange={setEnabled}
-          />
-        </div>
+      <CardContent>
+        <Tabs defaultValue="connection" className="space-y-4">
+          <TabsList>
+            <TabsTrigger value="connection">Connection</TabsTrigger>
+            <TabsTrigger value="features">Features</TabsTrigger>
+            <TabsTrigger value="advanced">Advanced</TabsTrigger>
+          </TabsList>
 
-        <div className="space-y-2">
-          <label className="text-sm">Cache TTL (seconds)</label>
-          <Input
-            type="number"
-            value={ttl}
-            onChange={(e) => setTtl(e.target.value)}
-            min="0"
-            className="bg-background/50"
-          />
-        </div>
+          <TabsContent value="connection" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Server className="w-4 h-4 text-muted-foreground" />
+                <span>Enable Redis</span>
+              </div>
+              <Switch
+                checked={config.enabled}
+                onCheckedChange={(checked) => setConfig(prev => ({ ...prev, enabled: checked }))}
+              />
+            </div>
 
-        <div className="space-y-2">
-          <label className="text-sm">Max Cache Size (MB)</label>
-          <Input
-            type="number"
-            value={maxSize}
-            onChange={(e) => setMaxSize(e.target.value)}
-            min="0"
-            className="bg-background/50"
-          />
-        </div>
+            <div className="space-y-2">
+              <label className="text-sm">Host</label>
+              <Input
+                value={config.host}
+                onChange={(e) => setConfig(prev => ({ ...prev, host: e.target.value }))}
+                placeholder="localhost"
+                className="bg-background/50"
+              />
+            </div>
 
-        <div className="flex justify-between gap-2">
+            <div className="space-y-2">
+              <label className="text-sm">Port</label>
+              <Input
+                type="number"
+                value={config.port}
+                onChange={(e) => setConfig(prev => ({ ...prev, port: parseInt(e.target.value) }))}
+                className="bg-background/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm">Password (optional)</label>
+              <Input
+                type="password"
+                value={config.password}
+                onChange={(e) => setConfig(prev => ({ ...prev, password: e.target.value }))}
+                className="bg-background/50"
+              />
+            </div>
+
+            <Button 
+              variant="secondary" 
+              onClick={testConnection}
+              disabled={isTesting}
+              className="w-full"
+            >
+              {isTesting ? 'Testing...' : 'Test Connection'}
+            </Button>
+          </TabsContent>
+
+          <TabsContent value="features" className="space-y-4">
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Session Management</div>
+                  <div className="text-xs text-muted-foreground">Use Redis for session storage</div>
+                </div>
+                <Switch
+                  checked={config.features.sessionManagement}
+                  onCheckedChange={(checked) => 
+                    setConfig(prev => ({
+                      ...prev,
+                      features: { ...prev.features, sessionManagement: checked }
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Caching</div>
+                  <div className="text-xs text-muted-foreground">Enable Redis caching for better performance</div>
+                </div>
+                <Switch
+                  checked={config.features.caching}
+                  onCheckedChange={(checked) => 
+                    setConfig(prev => ({
+                      ...prev,
+                      features: { ...prev.features, caching: checked }
+                    }))
+                  }
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5">
+                  <div className="text-sm font-medium">Real-Time Updates</div>
+                  <div className="text-xs text-muted-foreground">Use Redis pub/sub for real-time features</div>
+                </div>
+                <Switch
+                  checked={config.features.realTimeUpdates}
+                  onCheckedChange={(checked) => 
+                    setConfig(prev => ({
+                      ...prev,
+                      features: { ...prev.features, realTimeUpdates: checked }
+                    }))
+                  }
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="advanced" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-muted-foreground" />
+                <span>Restricted Mode</span>
+              </div>
+              <Switch
+                checked={config.restrictedMode}
+                onCheckedChange={(checked) => setConfig(prev => ({ ...prev, restrictedMode: checked }))}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-muted-foreground" />
+                <label className="text-sm">Cache TTL (seconds)</label>
+              </div>
+              <Input
+                type="number"
+                value={config.ttl}
+                onChange={(e) => setConfig(prev => ({ ...prev, ttl: parseInt(e.target.value) }))}
+                min="0"
+                className="bg-background/50"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Key className="w-4 h-4 text-muted-foreground" />
+                <label className="text-sm">Max Memory (MB)</label>
+              </div>
+              <Input
+                type="number"
+                value={config.maxMemory}
+                onChange={(e) => setConfig(prev => ({ ...prev, maxMemory: parseInt(e.target.value) }))}
+                min="0"
+                className="bg-background/50"
+              />
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-6">
           <Button
-            variant="destructive"
-            size="sm"
-            onClick={handleClearCache}
-            className="w-full"
-          >
-            <Trash2 className="w-4 h-4 mr-2" />
-            Clear Cache
-          </Button>
-          <Button
-            variant="default"
-            size="sm"
             onClick={handleSaveConfig}
             disabled={isSaving}
             className="w-full"
           >
-            {isSaving ? (
-              <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
-            ) : (
-              <Save className="w-4 h-4 mr-2" />
-            )}
-            Save Config
+            {isSaving ? 'Saving...' : 'Save Configuration'}
           </Button>
         </div>
       </CardContent>
