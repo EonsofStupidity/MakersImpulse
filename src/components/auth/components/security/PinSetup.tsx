@@ -17,18 +17,25 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 
-const pinSchema = z.object({
-  pin: z
-    .string()
-    .length(4, "PIN must be exactly 4 digits")
-    .regex(/^\d+$/, "PIN must contain only numbers"),
-  confirmPin: z.string(),
-}).refine((data) => data.pin === data.confirmPin, {
-  message: "PINs don't match",
-  path: ["confirmPin"],
-});
+const pinSchema = z
+  .object({
+    pin: z
+      .string()
+      .length(4, "PIN must be exactly 4 digits")
+      .regex(/^\d+$/, "PIN must contain only numbers"),
+    confirmPin: z.string(),
+  })
+  .refine((data) => data.pin === data.confirmPin, {
+    message: "PINs don't match",
+    path: ["confirmPin"],
+  });
 
 type PinFormData = z.infer<typeof pinSchema>;
+
+interface SetupPinResponse {
+  success: boolean;
+  message: string;
+}
 
 export const PinSetup = () => {
   const { user } = useAuth();
@@ -45,26 +52,26 @@ export const PinSetup = () => {
 
   const onSubmit = async (data: PinFormData) => {
     if (!user) return;
-    
+
     setIsLoading(true);
     try {
-      const { data: result, error } = await supabase.rpc('setup_pin', {
+      const { data: result, error } = await supabase.rpc<SetupPinResponse>("setup_pin", {
         p_user_id: user.id,
         p_pin: data.pin,
-        p_ip_address: null, // Could be implemented with an IP detection service
-        p_user_agent: navigator.userAgent
+        p_ip_address: null, // Optional: Implement an IP detection service
+        p_user_agent: navigator.userAgent,
       });
 
       if (error) throw error;
 
-      if (result.success) {
+      if (result?.success) {
         toast.success("PIN setup successfully");
         reset();
       } else {
-        toast.error(result.message || "Failed to set up PIN");
+        toast.error(result?.message || "Failed to set up PIN");
       }
     } catch (error) {
-      console.error('PIN setup error:', error);
+      console.error("PIN setup error:", error);
       toast.error("Failed to set up PIN");
     } finally {
       setIsLoading(false);
