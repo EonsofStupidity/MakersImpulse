@@ -30,22 +30,16 @@ export const AppRoutes = () => {
     <PageTransition>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          {/* Public Routes */}
+          {/* Public Routes - Always Accessible */}
           {publicRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
-              element={
-                route.path === "/login" && session ? (
-                  <Navigate to="/maker-space" replace />
-                ) : (
-                  route.element
-                )
-              }
+              element={route.element}
             />
           ))}
 
-          {/* Protected Routes */}
+          {/* Protected Maker Space Routes */}
           {makerSpaceRoutes.map((route) => (
             <Route
               key={route.path}
@@ -55,24 +49,16 @@ export const AppRoutes = () => {
                   requireAuth={true}
                   onError={(error) => {
                     console.error('Auth error:', error);
-                    toast.error('Please sign in to access this page');
+                    toast.error('Please sign in to access this content');
                   }}
                 >
                   {route.element}
                 </AuthGuard>
               }
-            >
-              {route.children?.map((childRoute) => (
-                <Route
-                  key={childRoute.path}
-                  path={childRoute.path}
-                  element={childRoute.element}
-                />
-              ))}
-            </Route>
+            />
           ))}
 
-          {/* Admin Routes */}
+          {/* Admin Routes - Restricted to admin/super_admin */}
           {adminRoutes.map((route) => (
             <Route
               key={route.path}
@@ -81,7 +67,7 @@ export const AppRoutes = () => {
                 <AuthGuard 
                   requireAuth={true}
                   requiredRole={["admin", "super_admin"]}
-                  fallbackPath="/login"
+                  fallbackPath="/"
                   onError={(error) => {
                     console.error('Admin access error:', error);
                     toast.error('Admin access required');

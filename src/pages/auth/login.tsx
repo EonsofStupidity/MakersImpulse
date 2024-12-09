@@ -15,20 +15,22 @@ const Login = () => {
   const { session, isLoading } = useSession();
 
   useEffect(() => {
-    console.log("Login page mounted, session state:", { session, isLoading });
+    if (session) {
+      console.log("Active session found, redirecting to home");
+      navigate("/");
+      return;
+    }
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSession) => {
-      console.log("Auth state changed in Login:", event, currentSession?.user?.id);
-
+      console.log("Auth state changed:", event, currentSession?.user?.id);
+      
       if (event === 'SIGNED_IN' && currentSession) {
-        console.log("User signed in, redirecting to maker-space");
         toast.success("Successfully signed in!");
-        navigate("/maker-space");
+        navigate("/");
       }
     });
 
     return () => {
-      console.log("Login page unmounting, cleaning up listener");
       authListener.subscription.unsubscribe();
     };
   }, [session, navigate]);
@@ -39,12 +41,6 @@ const Login = () => {
         <LoadingSpinner />
       </div>
     );
-  }
-
-  if (session) {
-    console.log("Session exists, redirecting to maker-space");
-    navigate("/maker-space");
-    return null;
   }
 
   return (
@@ -107,7 +103,7 @@ const Login = () => {
               }}
               theme="dark"
               providers={[]}
-              redirectTo={`${window.location.origin}/maker-space`}
+              redirectTo={`${window.location.origin}/`}
             />
           </div>
         </motion.div>
