@@ -5,6 +5,18 @@ import { History, Calendar, Clock } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
+interface Profile {
+  display_name: string | null;
+}
+
+interface Revision {
+  id: string;
+  content: any;
+  created_at: string;
+  created_by: string | null;
+  profiles?: Profile;
+}
+
 interface RevisionHistoryViewerProps {
   contentId: string | null;
 }
@@ -23,7 +35,7 @@ export const RevisionHistoryViewer: React.FC<RevisionHistoryViewerProps> = ({ co
           content,
           created_at,
           created_by,
-          profiles:created_by (
+          profiles!cms_content_revisions_created_by_fkey (
             display_name
           )
         `)
@@ -37,7 +49,7 @@ export const RevisionHistoryViewer: React.FC<RevisionHistoryViewerProps> = ({ co
       }
 
       console.log("Revisions fetched:", data);
-      return data;
+      return data as Revision[];
     },
     enabled: !!contentId,
   });
