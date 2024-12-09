@@ -33,15 +33,32 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
           .eq('id', supabaseSession.user.id)
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('Profile fetch error:', error);
+          throw error;
+        }
+
+        if (!profile) {
+          console.log('No profile found, creating default profile');
+          return {
+            user: {
+              id: supabaseSession.user.id,
+              email: supabaseSession.user.email,
+              role: 'subscriber',
+              username: supabaseSession.user.email?.split('@')[0],
+              display_name: supabaseSession.user.email?.split('@')[0]
+            },
+            expires_at: supabaseSession.expires_at
+          };
+        }
 
         const authSession: AuthSession = {
           user: {
             id: supabaseSession.user.id,
             email: supabaseSession.user.email,
-            role: profile?.role || 'subscriber',
-            username: profile?.username,
-            display_name: profile?.display_name
+            role: profile.role || 'subscriber',
+            username: profile.username,
+            display_name: profile.display_name
           },
           expires_at: supabaseSession.expires_at
         };
@@ -49,6 +66,7 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
         return authSession;
       } catch (error) {
         console.error('Error in transformSession:', error);
+        toast.error('Error loading user profile');
         return null;
       }
     };
@@ -66,7 +84,9 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       } catch (error) {
         console.error('Error initializing session:', error);
         if (mounted) {
+          setSession(null);
           setIsLoading(false);
+          toast.error('Error initializing session');
         }
       }
     };
@@ -77,13 +97,19 @@ export const SessionProvider = ({ children }: { children: ReactNode }) => {
       console.log('Auth state changed:', event);
       
       if (mounted) {
-        if (event === 'SIGNED_IN') {
-          const authSession = await transformSession(supabaseSession);
-          setSession(authSession);
-        } else if (event === 'SIGNED_OUT') {
-          setSession(null);
+        try {
+          if (event === 'SIGNED_IN') {
+            const authSession = await transformSession(supabaseSession);
+            setSession(authSession);
+          } else if (event === 'SIGNED_OUT') {
+            setSession(null);
+          }
+        } catch (error) {
+          console.error('Error handling auth state change:', error);
+          toast.error('Error updating session');
+        } finally {
+          setIsLoading(false);
         }
-        setIsLoading(false);
       }
     });
 

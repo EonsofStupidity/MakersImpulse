@@ -14,12 +14,15 @@ export const Navigation = () => {
   const location = useLocation();
   const { session } = useSession();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
+  const [hasLogged, setHasLogged] = useState(false);
 
-  // Prevent excessive logging
   useEffect(() => {
-    console.log("Navigation render - Current session:", session?.user);
-    console.log("Current location:", location.pathname);
-  }, [session?.user, location.pathname]);
+    if (!hasLogged) {
+      console.log("Navigation render - Current session:", session?.user);
+      console.log("Current location:", location.pathname);
+      setHasLogged(true);
+    }
+  }, [session?.user, location.pathname, hasLogged]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,7 +41,6 @@ export const Navigation = () => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     
-    // Only update if there's a significant change
     if (Math.abs(x - mousePosition.x) > 1 || Math.abs(y - mousePosition.y) > 1) {
       setMousePosition({ x, y });
     }
