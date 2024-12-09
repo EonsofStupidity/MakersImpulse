@@ -12,13 +12,6 @@ export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, isLoading } = useAuth();
 
-  console.log('UserMenu render - Session:', {
-    isAuthenticated: !!session,
-    userId: session?.user?.id,
-    role: session?.user?.role,
-    isLoading
-  });
-
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();

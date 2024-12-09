@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -32,7 +32,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       return data;
     },
-    enabled: !!queryClient.getQueryData(['session'])
+    enabled: !!queryClient.getQueryData(['session']),
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    retry: false
   });
 
   // Get and sync session
@@ -52,10 +54,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return session;
       } catch (error) {
         console.error('Session fetch error:', error);
+        await supabase.auth.signOut();
         return null;
       }
     },
-    retry: false
+    retry: false,
+    staleTime: 5 * 60 * 1000 // Cache for 5 minutes
   });
 
   // Subscribe to auth changes
@@ -69,11 +73,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (event === 'SIGNED_IN') {
         toast.success('Successfully signed in');
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
       } else if (event === 'SIGNED_OUT') {
         queryClient.clear();
         toast.info('Signed out');
       } else if (event === 'TOKEN_REFRESHED') {
         console.log('Token refreshed successfully');
+        queryClient.invalidateQueries({ queryKey: ['profile'] });
       }
     });
 
@@ -83,16 +89,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [queryClient]);
 
-  const user: AuthUser | null = session ? {
-    id: session.user.id,
-    email: session.user.email,
-    role: profile?.role || 'subscriber',
-    username: profile?.username,
-    displayName: profile?.display_name,
-  } : null;
+  // Memoize the user object to prevent unnecessary re-renders
+  const user: AuthUser | null = useMemo(() => {
+    if (!session) return null;
+    return {
+      id: session.user.id,
+      email: session.user.email,
+      role: profile?.role || 'subscriber',
+      username: profile?.username,
+      displayName: profile?.display_name,
+    };
+  }, [session, profile]);
+
+  // Memoize the context value
+  const contextValue = useMemo(() => ({
+    session,
+    user,
+    isLoading
+  }), [session, user, isLoading]);
 
   return (
-    <AuthContext.Provider value={{ session, user, isLoading }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );
