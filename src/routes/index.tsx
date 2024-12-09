@@ -1,6 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { PageTransition } from "@/components/shared/transitions/PageTransition";
-import { PublicRoutes } from "./public-routes";
+import publicRoutes from "./public-routes";
 import { ProtectedRoutes } from "./protected-routes";
 import { adminRoutes } from "./admin-routes";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -39,7 +39,7 @@ export const AppRoutes = () => {
         } />
         
         {/* Map all public routes */}
-        {PublicRoutes().map((route) => (
+        {publicRoutes.map((route) => (
           <Route
             key={route.path}
             path={route.path}

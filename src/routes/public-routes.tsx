@@ -6,7 +6,7 @@ import Privacy from "@/pages/site/privacy";
 import LatestUpdates from "@/pages/content/blog/latest-updates";
 import MakerSpace from "@/pages/content/maker-space";
 
-export const PublicRoutes = (): RouteObject[] => [
+const publicRoutes: RouteObject[] = [
   {
     path: "/",
     element: <Landing />
@@ -32,3 +32,5 @@ export const PublicRoutes = (): RouteObject[] => [
     element: <LatestUpdates />
   }
 ];
+
+export default publicRoutes;
