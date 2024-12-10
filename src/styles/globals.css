@@ -37,41 +37,31 @@
   .text-balance {
     text-wrap: balance;
   }
-
-  .text-glow {
-    text-shadow: 0 0 10px currentColor;
-  }
-
-  .text-glow-lg {
-    text-shadow: 
-      0 0 10px currentColor,
-      0 0 20px currentColor,
-      0 0 30px currentColor;
-  }
 }
 
 /* Letter hover effect */
 .letter-span {
   display: inline-block;
   transition: color 0.3s ease-out;
-  position: relative;
+  transition-delay: var(--delay, 0ms);
   color: inherit;
+  cursor: default;
 }
 
-.letter-span.active {
+.letter-span.letter-active {
   color: #ff0abe;
-  transition: color 0.2s ease-out;
+  transition: color 0.3s ease-out;
+  transition-delay: var(--delay, 0ms);
 }
 
-.letter-hover {
+.letter-hover-wrapper {
   display: inline-block;
   position: relative;
   cursor: default;
-  pointer-events: auto;
 }
 
 /* Make sure parent elements don't interfere */
-h1, h2, h3, h4, h5, h6, p, a, span, div {
+h1, h2, h3, h4, h5, h6, p, a, span {
   pointer-events: auto !important;
 }
 
