@@ -1,13 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useAdminSidebar } from './AdminSidebarContext';
+import { useAdminSidebar } from './sidebar/AdminSidebarContext';
 import { cn } from '@/lib/utils';
 import { Link } from 'react-router-dom';
 import { 
   LayoutDashboard, Database, FileSpreadsheet, 
   Users, FileText, Layers, GitBranch, 
   Image, Activity, Settings, Zap, 
-  Cpu, Radio, MessageSquare
+  Cpu, Radio
 } from 'lucide-react';
 
 const tabs = [
@@ -24,8 +24,7 @@ const menuItems = {
     { id: 'data', label: 'Data Maestro', icon: Database, path: '/admin/data-maestro', color: 'admin-neon-text-pink' },
     { id: 'performance', label: 'Performance', icon: Zap, path: '/admin/performance', color: 'admin-neon-text-pink' },
     { id: 'system', label: 'System Status', icon: Cpu, path: '/admin/system', color: 'admin-neon-text-cyan' },
-    { id: 'monitoring', label: 'Monitoring', icon: Radio, path: '/admin/monitoring', color: 'admin-neon-text-cyan' },
-    { id: 'forum', label: 'Forum Management', icon: MessageSquare, path: '/admin/forum', color: 'admin-neon-text-cyan' }
+    { id: 'monitoring', label: 'Monitoring', icon: Radio, path: '/admin/monitoring', color: 'admin-neon-text-cyan' }
   ],
   content: [
     { id: 'posts', label: 'Posts', icon: FileText, path: '/admin/posts' },
