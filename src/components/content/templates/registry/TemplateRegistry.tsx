@@ -1,6 +1,6 @@
-import BuildTemplate from '../templates/BuildTemplate';
-import GuideTemplate from '../templates/GuideTemplate';
-import PartTemplate from '../templates/PartTemplate';
+import BuildTemplate from '../BuildTemplate';
+import GuideTemplate from '../GuideTemplate';
+import PartTemplate from '../PartTemplate';
 import { TemplateType, TemplateConfig } from '../types/template';
 import { Layout, Book, Wrench } from 'lucide-react';
 
@@ -80,3 +80,6 @@ export const getAvailableTemplates = () => {
     ...config
   }));
 };
+
+// Re-export TemplateType to fix the export error
+export type { TemplateType };
