@@ -87,14 +87,14 @@ export const Navigation = () => {
             className="flex items-center space-x-2 cursor-pointer group"
             onClick={() => handleNavigation('/')}
           >
-            <span className="text-2xl font-bold flex items-center">
-              <span className="text-[#41f0db] group-hover:animate-cyber-pulse relative">
+            <span className="text-2xl font-bold flex items-center space-x-1">
+              <span className="animate-neon-pulse-cyan relative">
                 Makers
-                <span className="absolute inset-0 blur-sm bg-[#41f0db] opacity-50 group-hover:animate-pulse"></span>
+                <span className="absolute inset-0 blur-sm bg-[#41f0db] opacity-50"></span>
               </span>
-              <span className="text-[#ff0abe] group-hover:animate-cyber-pulse relative">
+              <span className="animate-neon-pulse-pink relative">
                 Impulse
-                <span className="absolute inset-0 blur-sm bg-[#ff0abe] opacity-50 group-hover:animate-pulse"></span>
+                <span className="absolute inset-0 blur-sm bg-[#ff0abe] opacity-50"></span>
               </span>
             </span>
           </Link>

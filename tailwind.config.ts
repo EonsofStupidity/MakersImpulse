@@ -41,21 +41,6 @@ export default {
           pink: "var(--neon-pink)",
           purple: "var(--neon-purple)",
         },
-        admin: {
-          dark: "#151A24",
-          medium: "#373840",
-          light: "#5C596C",
-          green: "#26c766",
-          pink: "#c726b2",
-          purple: "#8000ff",
-        },
-        cyber: {
-          yellow: "#FFE29F",
-          green: "#7FFF00",
-          pink: "#FF1493",
-          purple: "#9932CC",
-          neon: "#41f0db"
-        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -63,9 +48,6 @@ export default {
         'glass': 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
         'glass-card': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
         'glass-hover': 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
-        'admin-gradient': 'linear-gradient(135deg, #151A24, #373840, #5C596C)',
-        'admin-card': 'linear-gradient(135deg, rgba(38,199,102,0.05), rgba(199,38,178,0.05))',
-        'admin-hover': 'linear-gradient(135deg, rgba(38,199,102,0.15), rgba(199,38,178,0.15))',
         'cyber-texture': "url('/textures/cyber-grid.png')",
         'scratch-overlay': "url('/textures/scratches.png')"
       },
@@ -82,43 +64,53 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "gradient-flow": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" }
+        "neon-pulse-cyan": {
+          "0%, 100%": {
+            textShadow: "0 0 7px #41f0db, 0 0 10px #41f0db, 0 0 21px #41f0db",
+            color: "#41f0db"
+          },
+          "50%": {
+            textShadow: "0 0 14px #41f0db, 0 0 20px #41f0db, 0 0 42px #41f0db",
+            color: "#41f0db"
+          }
+        },
+        "neon-pulse-pink": {
+          "0%, 100%": {
+            textShadow: "0 0 7px #ff0abe, 0 0 10px #ff0abe, 0 0 21px #ff0abe",
+            color: "#ff0abe"
+          },
+          "50%": {
+            textShadow: "0 0 14px #ff0abe, 0 0 20px #ff0abe, 0 0 42px #ff0abe",
+            color: "#ff0abe"
+          }
         },
         "text-glow": {
           "0%, 100%": {
-            textShadow: "0 0 10px currentColor"
+            textShadow: "0 0 4px #ff0abe, 0 0 11px #ff0abe, 0 0 19px #ff0abe",
           },
           "50%": {
-            textShadow: "0 0 20px currentColor"
+            textShadow: "0 0 8px #ff0abe, 0 0 22px #ff0abe, 0 0 38px #ff0abe",
           }
         },
-        "cyber-pulse": {
-          "0%, 100%": { 
-            textShadow: "0 0 10px var(--cyber-glow)",
-            transform: "scale(1)"
+        "letter-hover": {
+          "0%": {
+            color: "currentColor",
+            textShadow: "none"
           },
-          "50%": { 
-            textShadow: "0 0 20px var(--cyber-glow), 0 0 30px var(--cyber-glow)",
-            transform: "scale(1.05)"
+          "100%": {
+            color: "#ff0abe",
+            textShadow: "0 0 8px #ff0abe, 0 0 22px #ff0abe"
           }
-        },
-        "menu-wave": {
-          "0%": { backgroundPosition: "0% 50%" },
-          "50%": { backgroundPosition: "100% 50%" },
-          "100%": { backgroundPosition: "0% 50%" }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
-        "gradient-flow": "gradient-flow 15s ease infinite",
+        "neon-pulse-cyan": "neon-pulse-cyan 2.5s ease-in-out infinite alternate",
+        "neon-pulse-pink": "neon-pulse-pink 2.5s ease-in-out infinite alternate",
         "text-glow": "text-glow 2s ease-in-out infinite",
-        "cyber-pulse": "cyber-pulse 2s ease-in-out infinite",
-        "menu-wave": "menu-wave 15s ease infinite"
+        "letter-hover": "letter-hover 0.3s ease-out forwards"
       },
     },
   },
