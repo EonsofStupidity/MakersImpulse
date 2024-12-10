@@ -4,9 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { RootLayout } from "@/components/layouts/RootLayout";
 import { AppRoutes } from "@/routes";
 import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
-import { AuthProvider } from "@/lib/auth/AuthContext";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
+import { AuthProvider } from "@/lib/auth/AuthContext";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
@@ -27,8 +27,8 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AuthProvider>
-            <ThemeProvider>
-              <AdminSidebarProvider>
+            <AdminSidebarProvider>
+              <ThemeProvider>
                 <TooltipProvider>
                   <RootLayout>
                     <AppRoutes />
@@ -40,8 +40,8 @@ const App = () => {
                     closeButton 
                   />
                 </TooltipProvider>
-              </AdminSidebarProvider>
-            </ThemeProvider>
+              </ThemeProvider>
+            </AdminSidebarProvider>
           </AuthProvider>
         </BrowserRouter>
       </QueryClientProvider>

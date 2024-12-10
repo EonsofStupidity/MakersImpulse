@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { useAuthStore } from '../store/auth-store';
 
 interface AuthContextType {
   session: Session | null;
@@ -13,8 +14,9 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { setSession, setUser, reset } = useAuthStore();
+  const [localSession, setLocalSession] = useState<Session | null>(null);
 
   useEffect(() => {
     console.log('AuthProvider: Initializing');
@@ -37,7 +39,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             console.log('Loaded user role:', profile.role);
           }
           
+          setLocalSession(initialSession);
           setSession(initialSession);
+          setUser(initialSession.user);
         } catch (error) {
           console.error('Error loading user profile:', error);
         }
@@ -63,12 +67,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               console.log('Updated session with role:', profile.role);
             }
             
+            setLocalSession(currentSession);
             setSession(currentSession);
+            setUser(currentSession.user);
           } catch (error) {
             console.error('Error updating session:', error);
           }
         } else if (mounted) {
-          setSession(null);
+          setLocalSession(null);
+          reset();
         }
         
         if (mounted) setIsLoading(false);
@@ -80,13 +87,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [setSession, setUser, reset]);
 
   const signOut = async () => {
     try {
       setIsLoading(true);
       await supabase.auth.signOut();
-      setSession(null);
+      setLocalSession(null);
+      reset();
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error signing out:", error);
@@ -97,8 +105,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const value = {
-    session,
-    user: session?.user ?? null,
+    session: localSession,
+    user: localSession?.user ?? null,
     isLoading,
     signOut,
   };
