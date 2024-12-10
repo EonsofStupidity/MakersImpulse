@@ -8,6 +8,7 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
+import "@/utils/textAnimation"; // Import the text animation utility
 
 const queryClient = new QueryClient({
   defaultOptions: {
