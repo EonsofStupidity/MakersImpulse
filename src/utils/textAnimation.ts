@@ -1,5 +1,5 @@
 const splitTextIntoLetters = (element: HTMLElement) => {
-  // Skip if already processed or if it's a child of a processed element
+  // Skip if already processed
   if (element.closest('.letter-hover') || element.classList.contains('letter-span')) {
     return;
   }
@@ -8,7 +8,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   const text = element.textContent || '';
   if (!text.trim()) return;
   
-  // Create a wrapper
+  // Create wrapper
   const wrapper = document.createElement('span');
   wrapper.className = 'letter-hover';
   
@@ -53,30 +53,18 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       span.style.removeProperty('--intensity');
     });
   });
-  
-  console.log('Successfully processed text element');
 };
 
 // Initialize on page load and route changes
 const initializeLetterEffects = () => {
-  console.log('Initializing letter effects');
-  
-  // Target specific elements that should have the effect
   const selectors = [
-    '.nav-text', // Navigation text
-    '.menu-item', // Menu items
-    '.heading-text', // Headings
-    '.animate-text', // Elements with specific class
-    'h1:not(.no-animate)', // Headings that don't have .no-animate
-    'h2:not(.no-animate)',
-    'h3:not(.no-animate)',
-    '.hero-text', // Hero section text
-    '.feature-text' // Feature text
-  ];
+    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'a', 'span', 'div',
+    '.nav-text', '.menu-item', '.heading-text',
+    '.animate-text', '.hero-text', '.feature-text'
+  ].join(',');
   
-  const elements = document.querySelectorAll(selectors.join(','));
-  console.log('Found elements to process:', elements.length);
-  
+  const elements = document.querySelectorAll(selectors);
   elements.forEach(element => {
     if (element instanceof HTMLElement) {
       splitTextIntoLetters(element);
@@ -84,16 +72,14 @@ const initializeLetterEffects = () => {
   });
 };
 
-// Set up observers for dynamic content and route changes
+// Set up observers for dynamic content
 const setupObservers = () => {
-  // Mutation Observer for dynamic content
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         if (node instanceof HTMLElement) {
-          const elements = node.querySelectorAll(
-            '.nav-text, .menu-item, .heading-text, .animate-text, h1:not(.no-animate), h2:not(.no-animate), h3:not(.no-animate), .hero-text, .feature-text'
-          );
+          splitTextIntoLetters(node);
+          const elements = node.querySelectorAll('p, h1, h2, h3, h4, h5, h6, a, span, div');
           elements.forEach(element => {
             if (element instanceof HTMLElement) {
               splitTextIntoLetters(element);
@@ -104,29 +90,15 @@ const setupObservers = () => {
     });
   });
 
-  // Start observing
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
 
-  // Handle route changes
-  const handleRouteChange = () => {
-    console.log('Route changed, reinitializing effects');
-    setTimeout(initializeLetterEffects, 100); // Small delay to ensure DOM is updated
-  };
-
-  // Listen for route changes
-  window.addEventListener('popstate', handleRouteChange);
-  
-  // Clean up function
-  return () => {
-    observer.disconnect();
-    window.removeEventListener('popstate', handleRouteChange);
-  };
+  return () => observer.disconnect();
 };
 
-// Initialize when the document is ready
+// Initialize when document is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
     initializeLetterEffects();

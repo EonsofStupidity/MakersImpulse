@@ -88,11 +88,11 @@ export const Navigation = () => {
             onClick={() => handleNavigation('/')}
           >
             <span className="text-2xl font-bold flex items-center space-x-1">
-              <span className="animate-neon-pulse-cyan relative">
+              <span className="neon-text-cyan relative">
                 Makers
                 <span className="absolute inset-0 blur-sm bg-[#41f0db] opacity-50"></span>
               </span>
-              <span className="animate-neon-pulse-pink relative">
+              <span className="neon-text-pink relative">
                 Impulse
                 <span className="absolute inset-0 blur-sm bg-[#ff0abe] opacity-50"></span>
               </span>
