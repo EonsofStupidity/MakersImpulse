@@ -1,16 +1,26 @@
-import { Navigation } from "@/components/shared/ui/Navigation";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import React, { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { Navigation } from '../shared/ui/Navigation';
+import { Toaster } from '@/components/ui/sonner';
 
-export const RootLayout = ({ children }: { children: React.ReactNode }) => {
+export const RootLayout = () => {
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#0a0a0a] to-[#1a1a1a] text-white">
+    <div className="min-h-screen bg-background">
       <Navigation />
-      <main className="flex-1 pt-16">
-        {children}
+      <main>
+        <Outlet />
       </main>
       <Toaster />
-      <Sonner />
     </div>
   );
 };
