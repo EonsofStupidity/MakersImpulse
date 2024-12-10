@@ -7,6 +7,9 @@ import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary"
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
+import { useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +23,27 @@ const queryClient = new QueryClient({
 
 const App = () => {
   console.log('App component mounting...');
+  const { setSession, setUser, setLoading } = useAuthStore();
+  
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [setSession, setUser, setLoading]);
   
   return (
     <ErrorBoundary>

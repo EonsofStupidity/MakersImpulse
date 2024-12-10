@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { Session } from '@supabase/supabase-js';
 import type { UserRole } from '@/components/auth/types';
-import { supabase } from "@/integrations/supabase/client";
 
 interface AuthState {
   session: Session | null;
