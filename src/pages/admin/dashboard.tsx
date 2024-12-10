@@ -22,9 +22,15 @@ const AdminDashboard = () => {
     <div 
       className="admin-layout"
       onMouseMove={handleMouseMove}
+      style={{
+        backgroundImage: `url('/lovable-uploads/293dada8-67ab-4da3-8f66-2f83623340b5.png')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat'
+      }}
     >
-      <AdminNav />
       <AdminSidebar />
+      <AdminNav />
       
       <div 
         className="admin-gradient-bg" 
@@ -46,21 +52,21 @@ const AdminDashboard = () => {
                 <TabsList className="w-full bg-black/50 border-b border-white/10 p-1">
                   <TabsTrigger 
                     value="content" 
-                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
+                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Content
                   </TabsTrigger>
                   <TabsTrigger 
                     value="workflows" 
-                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
+                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
                   >
                     <GitBranch className="w-4 h-4 mr-2" />
                     Workflows
                   </TabsTrigger>
                   <TabsTrigger 
                     value="history" 
-                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
+                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
                   >
                     <History className="w-4 h-4 mr-2" />
                     History

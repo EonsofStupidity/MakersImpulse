@@ -12,13 +12,13 @@ import {
 
 const tabs = {
   main: [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', color: 'admin-neon-text-cyan' },
-    { id: 'users', label: 'Users', icon: Users, path: '/admin/users', color: 'admin-neon-text-pink' },
-    { id: 'data', label: 'Data Maestro', icon: Database, path: '/admin/data-maestro', color: 'admin-neon-text-pink' },
-    { id: 'performance', label: 'Performance', icon: Zap, path: '/admin/performance', color: 'admin-neon-text-pink' },
-    { id: 'system', label: 'System Status', icon: Cpu, path: '/admin/system', color: 'admin-neon-text-cyan' },
-    { id: 'monitoring', label: 'Monitoring', icon: Radio, path: '/admin/monitoring', color: 'admin-neon-text-cyan' },
-    { id: 'forum', label: 'Forum Management', icon: MessageSquare, path: '/admin/forum', color: 'admin-neon-text-cyan' }
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', color: 'text-[#b0e653]' },
+    { id: 'users', label: 'Users', icon: Users, path: '/admin/users', color: 'text-[#72228c]' },
+    { id: 'data', label: 'Data Maestro', icon: Database, path: '/admin/data-maestro', color: 'text-[#4d00b3]' },
+    { id: 'performance', label: 'Performance', icon: Zap, path: '/admin/performance', color: 'text-[#b0e653]' },
+    { id: 'system', label: 'System Status', icon: Cpu, path: '/admin/system', color: 'text-[#72228c]' },
+    { id: 'monitoring', label: 'Monitoring', icon: Radio, path: '/admin/monitoring', color: 'text-[#4d00b3]' },
+    { id: 'forum', label: 'Forum Management', icon: MessageSquare, path: '/admin/forum', color: 'text-[#b0e653]' }
   ],
   content: [
     { id: 'posts', label: 'Posts', icon: FileText, path: '/admin/posts' },
@@ -51,21 +51,21 @@ export const AdminSidebar = () => {
       className="admin-sidebar"
       onMouseMove={handleMouseMove}
       style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.05), rgba(255, 10, 190, 0.05))`,
+        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(176, 230, 83, 0.05), rgba(77, 0, 179, 0.05))`,
       }}
     >
-      <div className="flex border-b border-white/10">
+      <div className="flex border-b border-[#b0e653]/10">
         {Object.keys(tabs).map((tab) => (
           <button
             key={tab}
             className={cn(
               "flex-1 px-4 py-3 text-sm font-medium transition-colors relative z-50",
-              "hover:text-[#41f0db] focus:outline-none group",
+              "hover:text-[#b0e653] focus:outline-none group",
               "text-white/60"
             )}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/10 to-[#ff0abe]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#b0e653]/10 to-[#4d00b3]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
           </button>
         ))}
       </div>
@@ -87,11 +87,11 @@ export const AdminSidebar = () => {
                 >
                   <Icon className={cn(
                     "w-5 h-5 transition-colors",
-                    item.color || "text-white/70 group-hover:text-[#41f0db]"
+                    item.color || "text-white/70 group-hover:text-[#b0e653]"
                   )} />
                   <span className="relative">
                     {item.label}
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#41f0db] to-[#ff0abe] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#b0e653] to-[#4d00b3] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
                   </span>
                   <div className="admin-nav-highlight" />
                 </Link>
