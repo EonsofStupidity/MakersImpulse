@@ -17,55 +17,79 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
     console.log("AuthProvider: Initializing...");
     
     const fetchUserProfile = async (userId: string) => {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .single();
+      try {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', userId)
+          .single();
 
-      if (error) {
-        console.error('Error fetching user profile:', error);
+        if (error) {
+          console.error('Error fetching user profile:', error);
+          return null;
+        }
+
+        return profile;
+      } catch (error) {
+        console.error('Error in fetchUserProfile:', error);
         return null;
       }
-
-      return profile;
     };
 
     // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      console.log("Initial session:", initialSession?.user?.id);
-      
-      if (initialSession?.user) {
-        const profile = await fetchUserProfile(initialSession.user.id);
-        if (profile) {
-          initialSession.user.role = profile.role;
+    const initializeAuth = async () => {
+      try {
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        console.log("Initial session:", initialSession?.user?.id);
+        
+        if (initialSession?.user && mounted) {
+          const profile = await fetchUserProfile(initialSession.user.id);
+          if (profile) {
+            initialSession.user.role = profile.role;
+          }
+          setSession(initialSession);
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+      } finally {
+        if (mounted) {
+          setIsLoading(false);
         }
       }
-      
-      setSession(initialSession);
-      setIsLoading(false);
-    });
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed:", event, session?.user?.id);
       
-      if (session?.user) {
-        const profile = await fetchUserProfile(session.user.id);
-        if (profile) {
-          session.user.role = profile.role;
+      if (session?.user && mounted) {
+        try {
+          const profile = await fetchUserProfile(session.user.id);
+          if (profile) {
+            session.user.role = profile.role;
+          }
+          setSession(session);
+        } catch (error) {
+          console.error("Error handling auth state change:", error);
         }
+      } else if (mounted) {
+        setSession(null);
       }
       
-      setSession(session);
-      setIsLoading(false);
+      if (mounted) {
+        setIsLoading(false);
+      }
     });
 
     return () => {
       console.log("AuthProvider: Cleaning up subscription");
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
