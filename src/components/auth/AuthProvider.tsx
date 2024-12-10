@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    console.log("AuthProvider: Initializing...");
     
     const fetchUserProfile = async (userId: string) => {
       try {
@@ -38,6 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const initializeAuth = async () => {
       try {
+        setIsLoading(true);
         const { data: { session: initialSession } } = await supabase.auth.getSession();
         
         if (initialSession?.user && mounted) {
@@ -84,11 +84,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const signOut = async () => {
     try {
+      setIsLoading(true);
       await supabase.auth.signOut();
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error signing out:", error);
       toast.error("Error signing out");
+    } finally {
+      setIsLoading(false);
     }
   };
 

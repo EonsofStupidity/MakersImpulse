@@ -28,7 +28,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  if (!session) {
+  if (!session || !user) {
     return (
       <Button 
         variant="ghost" 
@@ -45,7 +45,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  const userInitial = user?.email?.[0]?.toUpperCase() || '?';
+  const userInitial = user.email?.[0]?.toUpperCase() || '?';
 
   return (
     <DropdownMenu>
@@ -66,7 +66,7 @@ export const UserMenu = memo(() => {
         align="end" 
         className="w-56 bg-black/95 backdrop-blur-xl border border-white/10 mt-2"
       >
-        {user?.role === 'admin' && (
+        {user.role === 'admin' && (
           <DropdownMenuItem 
             onClick={() => handleNavigation('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
