@@ -8,6 +8,19 @@ import { toast } from 'sonner';
 import { Card } from '@/components/ui/card';
 import { useNavigate } from 'react-router-dom';
 
+interface ContentWithAuthor {
+  id: string;
+  title: string;
+  status: string;
+  updated_at: string;
+  created_by: {
+    display_name: string | null;
+  } | null;
+  updated_by: {
+    display_name: string | null;
+  } | null;
+}
+
 export const ContentManager = () => {
   const navigate = useNavigate();
   
@@ -19,12 +32,8 @@ export const ContentManager = () => {
         .from('cms_content')
         .select(`
           *,
-          created_by (
-            display_name
-          ),
-          updated_by (
-            display_name
-          )
+          created_by:profiles!cms_content_created_by_fkey(display_name),
+          updated_by:profiles!cms_content_updated_by_fkey(display_name)
         `)
         .order('updated_at', { ascending: false });
 
@@ -34,7 +43,8 @@ export const ContentManager = () => {
         throw error;
       }
 
-      return data;
+      console.log('Fetched content:', data);
+      return data as ContentWithAuthor[];
     }
   });
 
