@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { PageTransition } from "@/components/shared/transitions/PageTransition";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { toast } from "sonner";
 import { publicRoutes } from "./public-routes";
 import { makerSpaceRoutes } from "./maker-space-routes";

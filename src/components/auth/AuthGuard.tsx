@@ -1,73 +1,66 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthGuardProps } from './types';
-import { useRoleCheck } from './hooks/useRoleCheck';
-import { AuthLoading } from './components/AuthLoading';
-import { Unauthorized } from './components/Unauthorized';
-import { toast } from 'sonner';
+import { useAuth } from '@/lib/auth/AuthContext';
 import { motion } from 'framer-motion';
-import { useAuth } from './AuthProvider';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+
+interface AuthGuardProps {
+  children: React.ReactNode;
+  requireAuth?: boolean;
+  requiredRole?: string | string[];
+  fallbackPath?: string;
+}
 
 export const AuthGuard = ({ 
   children, 
-  requireAuth = true, 
+  requireAuth = true,
   requiredRole,
-  fallbackPath = '/login',
-  loadingComponent,
-  unauthorizedComponent,
-  onError
+  fallbackPath = '/login'
 }: AuthGuardProps) => {
   const navigate = useNavigate();
-  const { session, isLoading: authLoading } = useAuth();
-  const { isLoading, hasAccess, error } = useRoleCheck(requireAuth, requiredRole);
+  const { session, user, isLoading } = useAuth();
 
   useEffect(() => {
-    if (error) {
-      console.error('AuthGuard error:', error);
-      toast.error(error instanceof Error ? error.message : 'Authentication error');
-      
-      if (onError) {
-        onError(error);
-      }
-      
-      navigate(fallbackPath, { replace: true });
-    }
-  }, [error, fallbackPath, navigate, onError]);
+    console.log('AuthGuard: Checking access', {
+      requireAuth,
+      requiredRole,
+      hasSession: !!session,
+      userRole: user?.role
+    });
 
-  if (authLoading || isLoading) {
-    console.log('AuthGuard: Loading state');
-    return loadingComponent || (
+    if (!isLoading) {
+      if (requireAuth && !session) {
+        console.log('AuthGuard: No session, redirecting to', fallbackPath);
+        toast.error('Please sign in to continue');
+        navigate(fallbackPath);
+        return;
+      }
+
+      if (requiredRole && user) {
+        const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole];
+        if (!roles.includes(user.role as string)) {
+          console.log('AuthGuard: Insufficient permissions');
+          toast.error('You do not have permission to access this page');
+          navigate(fallbackPath);
+          return;
+        }
+      }
+    }
+  }, [session, user, isLoading, requireAuth, requiredRole, navigate, fallbackPath]);
+
+  if (isLoading) {
+    return (
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
+        className="flex items-center justify-center min-h-screen"
       >
-        <AuthLoading />
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
       </motion.div>
     );
   }
 
-  if (!hasAccess) {
-    console.log('AuthGuard: Access denied');
-    return unauthorizedComponent || (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-      >
-        <Unauthorized />
-      </motion.div>
-    );
-  }
-
-  console.log('AuthGuard: Access granted');
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <>{children}</>;
 };
