@@ -28,7 +28,6 @@ export interface AuthGuardProps {
   fallbackPath?: string;
   loadingComponent?: React.ReactNode;
   unauthorizedComponent?: React.ReactNode;
-  onError?: (error: Error | { message: string }) => void;
 }
 
 export interface RoleHierarchy {

@@ -46,7 +46,10 @@ export const AppRoutes = () => {
               key={route.path}
               path={route.path}
               element={
-                <AuthGuard requireAuth={true}>
+                <AuthGuard 
+                  requireAuth={true}
+                  fallbackPath="/login"
+                >
                   {route.element}
                 </AuthGuard>
               }
