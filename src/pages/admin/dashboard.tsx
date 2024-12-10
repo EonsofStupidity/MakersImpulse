@@ -158,7 +158,7 @@ const Dashboard = () => {
                   )}
                 >
                   <Link to={card.path} className="block p-6" onClick={() => {
-                    addShortcut(card.title.toLowerCase());
+                    addShortcut(card.title);
                     toast.success(`Added ${card.title} to shortcuts`);
                   }}>
                     <div className="relative z-10">

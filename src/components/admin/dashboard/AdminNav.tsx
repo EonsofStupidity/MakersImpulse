@@ -19,8 +19,8 @@ export const AdminNav = () => {
 
   return (
     <motion.div
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 h-16",
@@ -46,7 +46,8 @@ export const AdminNav = () => {
                 className={cn(
                   "px-4 py-2 rounded-lg text-white/80",
                   "hover:text-neon-pink transition-colors duration-300",
-                  "bg-white/5 hover:bg-white/10"
+                  "bg-white/5 hover:bg-white/10",
+                  "animate-fade-in"
                 )}
               >
                 {shortcut}
