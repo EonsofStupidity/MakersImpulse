@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import { RouteObject } from "react-router-dom";
 import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 import { StatsCards } from "@/components/admin/dashboard/stats/StatsCards";
