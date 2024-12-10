@@ -6,8 +6,7 @@ import type { UserRole } from '@/components/auth/types';
 export const useUserManagement = () => {
   const queryClient = useQueryClient();
 
-  // Fetch users with their profiles and related CMS content
-  const { data: users, isLoading } = useQuery({
+  const { data: users, isLoading, error, refetch } = useQuery({
     queryKey: ['admin-users'],
     queryFn: async () => {
       console.log('Fetching users with profiles and CMS data...');
@@ -31,7 +30,6 @@ export const useUserManagement = () => {
     },
   });
 
-  // Update user role with activity logging
   const updateRole = useMutation({
     mutationFn: async ({ userId, newRole }: { userId: string; newRole: UserRole }) => {
       console.log('Updating user role:', { userId, newRole });
@@ -43,7 +41,6 @@ export const useUserManagement = () => {
 
       if (updateError) throw updateError;
 
-      // Log the role change in user_activity
       const { error: activityError } = await supabase
         .from('user_activity')
         .insert({
@@ -65,7 +62,6 @@ export const useUserManagement = () => {
     }
   });
 
-  // Ban user with activity logging
   const banUser = useMutation({
     mutationFn: async ({ userId, reason }: { userId: string; reason: string }) => {
       console.log('Banning user:', { userId, reason });
@@ -78,7 +74,6 @@ export const useUserManagement = () => {
 
       if (banError) throw banError;
 
-      // Log the ban in user_activity
       const { error: activityError } = await supabase
         .from('user_activity')
         .insert({
@@ -100,56 +95,37 @@ export const useUserManagement = () => {
     }
   });
 
-  // Get user activity history
-  const getUserActivity = async (userId: string) => {
-    console.log('Fetching user activity:', userId);
-    
-    const { data, error } = await supabase
-      .from('user_activity')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
+  const unbanUser = useMutation({
+    mutationFn: async (userId: string) => {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ 
+          is_banned: false,
+          ban_reason: null,
+          banned_at: null,
+          banned_by: null
+        })
+        .eq('id', userId);
 
-    if (error) {
-      console.error('Error fetching user activity:', error);
-      throw error;
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
+      toast.success('User unbanned successfully');
+    },
+    onError: (error) => {
+      console.error('Error unbanning user:', error);
+      toast.error('Failed to unban user');
     }
-
-    return data;
-  };
-
-  // Get user CMS activity
-  const getUserCMSActivity = async (userId: string) => {
-    console.log('Fetching user CMS activity:', userId);
-    
-    const { data, error } = await supabase
-      .from('user_activity_cms')
-      .select(`
-        *,
-        cms_content(
-          id,
-          title,
-          type,
-          status
-        )
-      `)
-      .eq('user_id', userId)
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      console.error('Error fetching user CMS activity:', error);
-      throw error;
-    }
-
-    return data;
-  };
+  });
 
   return {
     users,
     isLoading,
+    error,
+    refetch,
     updateRole,
     banUser,
-    getUserActivity,
-    getUserCMSActivity
+    unbanUser
   };
 };
