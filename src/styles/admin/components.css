@@ -1,70 +1,63 @@
-/* Admin Navigation Items */
-.admin-nav-item {
-  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 relative;
-  @apply text-white/80 hover:text-[#41f0db] hover:bg-white/5;
-  transform-origin: center;
+/* Admin UI Components */
+.admin-button {
+  @apply px-4 py-2 rounded-lg transition-all duration-300 
+         relative overflow-hidden group;
 }
 
-.admin-nav-item:hover {
-  transform: translateY(-1px);
-}
-
-.admin-nav-highlight {
-  @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
-  background: linear-gradient(45deg, 
-    rgba(65, 240, 219, 0.1), 
+.admin-button::before {
+  content: '';
+  @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+  background: linear-gradient(135deg, 
+    rgba(65, 240, 219, 0.1),
     rgba(255, 10, 190, 0.1)
   );
 }
 
-.admin-nav-item:hover .admin-nav-highlight {
+.admin-button:hover::before {
   @apply opacity-100;
 }
 
-/* Glass Card Effects */
-.glass-card {
-  @apply relative overflow-hidden backdrop-blur-lg;
-  @apply bg-black/20 border border-white/10;
-  @apply hover:border-white/20 transition-all duration-300;
+/* Admin Form Controls */
+.admin-input {
+  @apply bg-black/20 border border-white/10 rounded-lg px-4 py-2
+         focus:border-[#41f0db]/50 focus:ring-1 focus:ring-[#41f0db]/50
+         transition-all duration-300;
 }
 
-.glass-card::before {
-  content: '';
-  @apply absolute inset-0 opacity-10 hover:opacity-20 transition-opacity duration-300;
-  background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+/* Admin Data Display */
+.admin-table {
+  @apply w-full border-collapse;
 }
 
-/* Stats Cards */
-.stat-card {
+.admin-table th {
+  @apply px-4 py-2 text-left text-white/70 border-b border-white/10;
+}
+
+.admin-table td {
+  @apply px-4 py-2 border-b border-white/10;
+}
+
+/* Admin Cards */
+.admin-stat-card {
   @apply relative p-6 rounded-xl overflow-hidden;
   background: linear-gradient(135deg, 
-    rgba(65, 240, 219, 0.1) 0%, 
-    rgba(255, 10, 190, 0.1) 50%,
-    rgba(128, 0, 255, 0.1) 100%
+    rgba(65,240,219,0.1) 0%, 
+    rgba(255,10,190,0.1) 100%
   );
-  animation: float 3s ease-in-out infinite;
 }
 
-.stat-card::before {
-  content: '';
-  @apply absolute inset-0 opacity-10;
-  background: linear-gradient(45deg, #41f0db, #ff0abe, #8000ff);
-  animation: gradientFlow 8s linear infinite;
-}
-
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
-}
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Mobile Optimizations */
+@media (max-width: 640px) {
+  .admin-button {
+    @apply w-full justify-center;
+  }
+  
+  .admin-table {
+    @apply text-sm;
+  }
+  
+  .admin-table th,
+  .admin-table td {
+    @apply px-2 py-1;
+  }
 }

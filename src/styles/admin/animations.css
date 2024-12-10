@@ -1,55 +1,47 @@
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* Core Animations */
+@keyframes adminFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes fadeIn {
-  from { 
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to { 
-    opacity: 1;
-    transform: translateY(0);
-  }
+@keyframes adminScaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
-@keyframes glitch {
-  0% { transform: translate(0) }
-  20% { transform: translate(-2px, 2px) }
-  40% { transform: translate(-2px, -2px) }
-  60% { transform: translate(2px, 2px) }
-  80% { transform: translate(2px, -2px) }
-  100% { transform: translate(0) }
+@keyframes adminSlideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
 
-@keyframes neonPulse {
-  0%, 100% { 
-    text-shadow: 0 0 5px rgba(65, 240, 219, 0.5),
-                0 0 10px rgba(255, 10, 190, 0.5),
-                0 0 15px rgba(128, 0, 255, 0.5);
-  }
-  50% { 
-    text-shadow: 0 0 10px rgba(65, 240, 219, 0.7),
-                0 0 20px rgba(255, 10, 190, 0.7),
-                0 0 30px rgba(128, 0, 255, 0.7);
-  }
+/* Animation Classes */
+.admin-fade-in {
+  animation: adminFadeIn 0.3s ease-out;
 }
 
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradientFlow 15s ease infinite;
+.admin-scale-in {
+  animation: adminScaleIn 0.2s ease-out;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease-out;
+.admin-slide-in {
+  animation: adminSlideIn 0.3s ease-out;
 }
 
-.animate-glitch {
-  animation: glitch 0.5s ease-in-out infinite;
+/* Hover Effects */
+.admin-hover-glow {
+  @apply transition-all duration-300;
 }
 
-.animate-neon-pulse {
-  animation: neonPulse 2s ease-in-out infinite;
+.admin-hover-glow:hover {
+  filter: drop-shadow(0 0 8px rgba(65, 240, 219, 0.5));
+}
+
+/* Loading States */
+@keyframes adminPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.admin-loading {
+  animation: adminPulse 1.5s ease-in-out infinite;
 }
