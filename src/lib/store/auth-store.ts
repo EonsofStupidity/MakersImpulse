@@ -1,9 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { UserRole } from '@/integrations/supabase/types/auth';
+import type { Session } from '@supabase/supabase-js';
+import type { UserRole } from '@/components/auth/types';
 
 interface AuthState {
-  session: any | null;
+  session: Session | null;
   user: {
     id: string;
     email?: string | null;
@@ -12,7 +13,7 @@ interface AuthState {
     displayName?: string;
   } | null;
   isLoading: boolean;
-  setSession: (session: any | null) => void;
+  setSession: (session: Session | null) => void;
   setUser: (user: any | null) => void;
   setLoading: (isLoading: boolean) => void;
   reset: () => void;

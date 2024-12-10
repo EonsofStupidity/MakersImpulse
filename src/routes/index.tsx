@@ -3,18 +3,18 @@ import { Suspense } from "react";
 import { PageTransition } from "@/components/shared/transitions/PageTransition";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { AuthGuard } from "@/lib/auth/AuthGuard";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { toast } from "sonner";
 import { publicRoutes } from "./public-routes";
 import { makerSpaceRoutes } from "./maker-space-routes";
 import { adminRoutes } from "./admin-routes";
 
 export const AppRoutes = () => {
-  const { session, isLoading } = useAuth();
+  const { session, user, isLoading } = useAuthStore();
   
   console.log('AppRoutes: Session state:', { 
     userId: session?.user?.id,
-    role: session?.user?.role,
+    role: user?.role,
     isLoading,
     hasSession: !!session
   });
