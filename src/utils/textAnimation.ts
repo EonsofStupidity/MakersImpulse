@@ -20,7 +20,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
     const span = document.createElement('span');
     span.textContent = char === ' ' ? '\u00A0' : char;
     span.className = 'letter-span';
-    span.style.setProperty('--index', index.toString());
+    span.style.setProperty('--delay', `${index * 50}ms`);
     return span;
   });
   
@@ -38,12 +38,17 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       const spanRect = span.getBoundingClientRect();
       const spanCenter = spanRect.left + spanRect.width / 2 - rect.left;
       const distance = Math.abs(mouseX - spanCenter);
-      const maxDistance = 100; // Adjust for spread distance
+      const maxDistance = 30; // Smaller radius for more gradual spread
       
       if (distance < maxDistance) {
-        const delay = Math.abs(mouseX - spanCenter) * 10; // Creates the spreading effect
+        const delay = Math.abs(mouseX - spanCenter) * 20; // Slower spread
         span.style.setProperty('--delay', `${delay}ms`);
         span.classList.add('letter-active');
+      } else if (distance < maxDistance * 2) {
+        // Create a fade out effect for letters just outside the immediate range
+        const delay = distance * 15;
+        span.style.setProperty('--delay', `${delay}ms`);
+        span.classList.remove('letter-active');
       }
     });
   });
@@ -51,7 +56,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   // Reset on mouse leave with staggered delay
   wrapper.addEventListener('mouseleave', () => {
     letters.forEach((span, index) => {
-      const delay = index * 50; // Staggered retreat
+      const delay = index * 30; // Slower retreat
       span.style.setProperty('--delay', `${delay}ms`);
       span.classList.remove('letter-active');
     });
@@ -65,7 +70,9 @@ const initializeLetterEffects = () => {
   console.log('Found text elements:', textElements.length);
   
   textElements.forEach(element => {
-    if (element instanceof HTMLElement && !element.classList.contains('text-processed')) {
+    if (element instanceof HTMLElement && 
+        !element.classList.contains('text-processed') && 
+        !element.closest('.letter-hover-wrapper')) {
       splitTextIntoLetters(element);
     }
   });
@@ -78,13 +85,16 @@ const setupObservers = () => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         if (node instanceof HTMLElement) {
-          if (!node.classList.contains('text-processed')) {
+          if (!node.classList.contains('text-processed') && 
+              !node.closest('.letter-hover-wrapper')) {
             splitTextIntoLetters(node);
           }
           
           const textElements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span');
           textElements.forEach(element => {
-            if (element instanceof HTMLElement && !element.classList.contains('text-processed')) {
+            if (element instanceof HTMLElement && 
+                !element.classList.contains('text-processed') && 
+                !element.closest('.letter-hover-wrapper')) {
               splitTextIntoLetters(element);
             }
           });

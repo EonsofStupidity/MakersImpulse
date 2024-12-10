@@ -45,7 +45,7 @@
   transition: color 0.3s ease-out;
   transition-delay: var(--delay, 0ms);
   color: inherit;
-  cursor: default;
+  position: relative;
 }
 
 .letter-span.letter-active {
@@ -57,7 +57,6 @@
 .letter-hover-wrapper {
   display: inline-block;
   position: relative;
-  cursor: default;
 }
 
 /* Make sure parent elements don't interfere */
@@ -71,11 +70,45 @@ h1, h2, h3, h4, h5, h6, p, a, span {
   text-shadow: 
     0 0 7px #41f0db,
     0 0 10px #41f0db,
-    0 0 21px #41f0db,
-    0 0 42px #41f0db,
-    0 0 82px #41f0db,
-    0 0 92px #41f0db,
-    0 0 102px #41f0db,
-    0 0 151px #41f0db;
+    0 0 21px #41f0db;
   animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
+}
+
+.neon-text-pink {
+  color: #ff0abe;
+  text-shadow: 
+    0 0 7px #ff0abe,
+    0 0 10px #ff0abe,
+    0 0 21px #ff0abe;
+  animation: neon-pulse-pink 3s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse-cyan {
+  0%, 100% {
+    text-shadow: 
+      0 0 7px #41f0db,
+      0 0 10px #41f0db,
+      0 0 21px #41f0db;
+  }
+  50% {
+    text-shadow: 
+      0 0 14px #41f0db,
+      0 0 20px #41f0db,
+      0 0 42px #41f0db;
+  }
+}
+
+@keyframes neon-pulse-pink {
+  0%, 100% {
+    text-shadow: 
+      0 0 7px #ff0abe,
+      0 0 10px #ff0abe,
+      0 0 21px #ff0abe;
+  }
+  50% {
+    text-shadow: 
+      0 0 14px #ff0abe,
+      0 0 20px #ff0abe,
+      0 0 42px #ff0abe;
+  }
 }
