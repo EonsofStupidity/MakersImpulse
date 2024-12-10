@@ -1,21 +1,26 @@
 import React from 'react';
-import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
-import { ImportWizard } from "@/components/admin/components/csv/ImportWizard";
+import { ImportWizard } from '@/components/admin/components/import/ImportWizard';
+import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
 
 export const UnifiedDataImport = () => {
+  const handleImport = async (data: any) => {
+    try {
+      // Handle import logic here
+      console.log('Importing data:', data);
+      toast.success('Import successful');
+    } catch (error) {
+      console.error('Import error:', error);
+      toast.error('Import failed');
+    }
+  };
+
   return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Import Data</h3>
-      <motion.div 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <ImportWizard />
-      </motion.div>
+    <Card className="p-6 bg-black/40 border-white/10">
+      <ImportWizard 
+        type="csv" 
+        onImport={handleImport}
+      />
     </Card>
   );
 };
-
-export default UnifiedDataImport;

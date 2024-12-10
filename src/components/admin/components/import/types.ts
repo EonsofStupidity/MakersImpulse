@@ -1,20 +1,18 @@
-export interface ImportConfig {
-  type: 'page' | 'theme' | 'template';
-  schema: Record<string, any>;
-  validator: (data: any) => boolean;
-}
-
-export interface ImportedAsset {
+export interface ImportSession {
   id: string;
-  type: 'page' | 'theme' | 'template';
-  name: string;
-  content: any;
-  metadata?: Record<string, any>;
-  createdAt: string;
-  updatedAt: string;
+  user_id: string;
+  status: string;
+  file_name: string;
+  file_size: number;
+  row_count: number;
+  created_at: string;
+  completed_at: string;
+  error_message: string;
+  type: string;
+  metadata: Record<string, any>;
 }
 
-export interface ImportValidationResult {
-  isValid: boolean;
-  errors?: string[];
+export interface ImportWizardProps {
+  type: 'page' | 'theme' | 'template' | 'csv';
+  onImport: (data: any) => Promise<void>;
 }
