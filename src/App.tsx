@@ -7,10 +7,9 @@ import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary"
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuthStore } from '@/lib/store/auth-store';
-import { toast } from "sonner";
+import { useAuthSetup } from '@/hooks/useAuthSetup';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,9 +17,10 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
-      useErrorBoundary: true, // Enable error boundary for queries
+      throwOnError: true, // This replaces useErrorBoundary
     },
     mutations: {
+      retry: 1,
       onError: (error: Error) => {
         console.error('Mutation error:', error);
         toast.error('Operation failed', {
@@ -33,55 +33,7 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const { setSession, setUser, setLoading } = useAuthStore();
-  const initialSetupDone = useRef(false);
-  
-  const handleAuthChange = useCallback(async (session) => {
-    console.log('Handling auth change:', session?.user?.id);
-    
-    if (session?.user) {
-      try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-          
-        if (error) {
-          console.error('Error fetching profile:', error);
-          toast.error('Error fetching user profile', {
-            description: error.message,
-          });
-          return;
-        }
-
-        if (!profile) {
-          console.error('No profile found');
-          toast.error('No user profile found');
-          return;
-        }
-
-        setSession(session);
-        setUser({ ...session.user, role: profile.role });
-        console.log('User role set:', profile.role);
-        
-        if (profile.role !== 'admin' && profile.role !== 'super_admin') {
-          toast.error('Access denied', {
-            description: 'You need admin privileges to access the dashboard'
-          });
-        }
-      } catch (error) {
-        console.error('Error in auth change handler:', error);
-        toast.error('Authentication error', {
-          description: error.message
-        });
-      }
-    } else {
-      setSession(null);
-      setUser(null);
-    }
-    setLoading(false);
-  }, [setSession, setUser, setLoading]);
+  const { handleAuthChange, initialSetupDone } = useAuthSetup();
 
   useEffect(() => {
     if (initialSetupDone.current) return;
