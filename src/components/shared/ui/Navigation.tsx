@@ -73,7 +73,11 @@ export const Navigation = () => {
       style={{
         background: `
           linear-gradient(135deg, rgba(77, 0, 179, 0.1), rgba(114, 34, 140, 0.1), rgba(176, 230, 83, 0.1)),
-          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.08), rgba(128, 0, 255, 0.08))
+          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+            rgba(65, 240, 219, 0.15), 
+            rgba(255, 10, 190, 0.15), 
+            rgba(128, 0, 255, 0.15)
+          )
         `,
         backdropFilter: "blur(10px)",
         borderBottom: "1px solid rgba(128, 0, 255, 0.3)",
@@ -120,7 +124,7 @@ export const Navigation = () => {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="w-32 h-32 -mt-20 -mb-16 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
+                  <Avatar className="w-32 h-32 -mt-37 -mb-16 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
                     before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
                   >

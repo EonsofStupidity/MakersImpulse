@@ -4,7 +4,52 @@
 
 @layer base {
   :root {
-    /* ... keep existing code */
+    /* Colors */
+    --primary: #7FFFD4;
+    --secondary: #FFB6C1;
+    --accent: #E6E6FA;
+    --text-primary: #FFFFFF;
+    --text-secondary: #A1A1AA;
+    --text-link: #3B82F6;
+    --text-heading: #FFFFFF;
+    --neon-cyan: #41f0db;
+    --neon-pink: #ff0abe;
+    --neon-purple: #8000ff;
+
+    /* Layout */
+    --border-radius: 0.5rem;
+    --spacing-unit: 1rem;
+    --transition-duration: 0.3s;
+    --shadow-color: #000000;
+    --hover-scale: 1.05;
+
+    /* Typography */
+    --font-heading: 'Inter';
+    --font-size-base: 16px;
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+    --line-height-base: 1.5;
+    --letter-spacing: normal;
+  }
+
+  /* Global mouse gradient effect */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+    background: radial-gradient(
+      circle 200px at var(--mouse-x, 0) var(--mouse-y, 0),
+      rgba(65, 240, 219, 0.15),
+      rgba(255, 10, 190, 0.15),
+      rgba(128, 0, 255, 0.15),
+      transparent 70%
+    );
   }
 }
 
@@ -23,6 +68,23 @@
       0 0 20px currentColor,
       0 0 30px currentColor;
   }
+}
+
+/* Cyberpunk gradients */
+.cyber-gradient {
+  background: linear-gradient(135deg,
+    rgba(65, 240, 219, 0.2),
+    rgba(255, 10, 190, 0.2),
+    rgba(128, 0, 255, 0.2)
+  );
+}
+
+.cyber-gradient-hover {
+  background: linear-gradient(135deg,
+    rgba(65, 240, 219, 0.4),
+    rgba(255, 10, 190, 0.4),
+    rgba(128, 0, 255, 0.4)
+  );
 }
 
 /* Landing page specific letter hover effect */

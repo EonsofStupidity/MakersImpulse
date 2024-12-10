@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { LogIn, LogOut, Settings, User, LayoutDashboard } from "lucide-react";
+import { LayoutDashboard, LogOut, Settings, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
@@ -48,28 +47,11 @@ export const UserMenu = memo(({ onClose }: UserMenuProps) => {
     );
   }
 
-  if (!session || !user) {
-    return (
-      <Button 
-        variant="ghost" 
-        size="sm"
-        onClick={() => {
-          navigate('/login');
-          onClose?.();
-        }}
-        className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
-      >
-        <LogIn className="mr-2 h-4 w-4" />
-        Sign In
-      </Button>
-    );
-  }
-
-  const isAdmin = user.role === 'admin' || user.role === 'super_admin';
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
 
   return (
     <div className="absolute right-0 mt-2 w-56 rounded-xl overflow-hidden">
-      <div className="bg-black/90 border border-white/10 backdrop-blur-xl p-2 space-y-1">
+      <div className="bg-black/90 border border-[#4d00b3]/30 backdrop-blur-xl p-2 space-y-1 cyber-gradient">
         {isAdmin && (
           <button
             onClick={() => handleNavigation('/admin/dashboard', 'Admin Dashboard')}
