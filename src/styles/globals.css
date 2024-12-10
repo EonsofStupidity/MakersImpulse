@@ -4,32 +4,7 @@
 
 @layer base {
   :root {
-    /* Colors */
-    --primary: #7FFFD4;
-    --secondary: #FFB6C1;
-    --accent: #E6E6FA;
-    --text-primary: #FFFFFF;
-    --text-secondary: #A1A1AA;
-    --text-link: #3B82F6;
-    --text-heading: #FFFFFF;
-    --neon-cyan: #41f0db;
-    --neon-pink: #ff0abe;
-    --neon-purple: #8000ff;
-
-    /* Layout */
-    --border-radius: 0.5rem;
-    --spacing-unit: 1rem;
-    --transition-duration: 0.3s;
-    --shadow-color: #000000;
-    --hover-scale: 1.05;
-
-    /* Typography */
-    --font-heading: 'Inter';
-    --font-size-base: 16px;
-    --font-weight-normal: 400;
-    --font-weight-bold: 700;
-    --line-height-base: 1.5;
-    --letter-spacing: normal;
+    /* ... keep existing code */
   }
 }
 
@@ -66,13 +41,6 @@
 .letter-hover {
   display: inline-block;
   position: relative;
-  cursor: default;
-  pointer-events: auto;
-}
-
-/* Make sure parent elements don't interfere */
-h1, h2, h3, h4, h5, h6, p, a, span, div {
-  pointer-events: auto !important;
 }
 
 /* Neon pulse effects */
@@ -88,4 +56,59 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
     0 0 102px #41f0db,
     0 0 151px #41f0db;
   animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
+}
+
+.neon-text-pink {
+  color: #ff0abe;
+  text-shadow: 
+    0 0 7px #ff0abe,
+    0 0 10px #ff0abe,
+    0 0 21px #ff0abe,
+    0 0 42px #ff0abe,
+    0 0 82px #ff0abe,
+    0 0 92px #ff0abe,
+    0 0 102px #ff0abe,
+    0 0 151px #ff0abe;
+  animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse-cyan {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(100%) blur(0.5px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(150%) blur(1px);
+  }
+}
+
+@keyframes neon-pulse-pink {
+  0%, 100% {
+    opacity: 0.8;
+    filter: brightness(100%) blur(0.5px);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(150%) blur(1px);
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dashboard-bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dashboard-bg-accent);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--neon-purple);
 }

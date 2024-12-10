@@ -28,7 +28,6 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
   // Add mousemove handler
   wrapper.addEventListener('mousemove', (e) => {
-    console.log('Mouse move detected on text element');
     const rect = wrapper.getBoundingClientRect();
     const mouseX = e.clientX - rect.left;
     
@@ -38,7 +37,6 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       const distance = Math.abs(mouseX - spanCenter);
       
       if (distance < 100) {
-        console.log(`Activating letter ${index}`);
         span.classList.add('active');
         const intensity = 1 - (distance / 100);
         span.style.setProperty('--intensity', intensity.toString());
@@ -50,7 +48,6 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
   // Reset on mouse leave
   wrapper.addEventListener('mouseleave', () => {
-    console.log('Mouse left text element');
     letters.forEach(span => {
       span.classList.remove('active');
       span.style.removeProperty('--intensity');
