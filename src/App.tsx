@@ -7,9 +7,9 @@ import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary"
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { toast } from "sonner";
 
 const queryClient = new QueryClient({
@@ -25,21 +25,17 @@ const queryClient = new QueryClient({
 const App = () => {
   const { setSession, setUser, setLoading } = useAuthStore();
   
-  useEffect(() => {
-    // Get initial session and check role
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      console.log('Initial session check:', session);
-      
-      if (session?.user) {
-        // Get user profile with role
+  const handleAuthChange = useCallback(async (session) => {
+    console.log('Handling auth change:', session?.user?.id);
+    
+    if (session?.user) {
+      try {
         const { data: profile, error } = await supabase
           .from('profiles')
           .select('*')
           .eq('id', session.user.id)
           .single();
           
-        console.log('User profile:', profile);
-        
         if (error) {
           console.error('Error fetching profile:', error);
           toast.error('Error fetching user profile');
@@ -52,47 +48,37 @@ const App = () => {
           return;
         }
 
-        // Set session with enhanced user info including role
         setSession(session);
         setUser({ ...session.user, role: profile.role });
-        setLoading(false);
-
-        console.log('User role:', profile.role);
+        console.log('User role set:', profile.role);
+        
         if (profile.role !== 'admin' && profile.role !== 'super_admin') {
           toast.error('You need admin privileges to access the dashboard');
         }
-      } else {
-        setSession(null);
-        setUser(null);
-        setLoading(false);
+      } catch (error) {
+        console.error('Error in auth change handler:', error);
+        toast.error('Authentication error occurred');
       }
+    } else {
+      setSession(null);
+      setUser(null);
+    }
+    setLoading(false);
+  }, [setSession, setUser, setLoading]);
+
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Initial session check:', session);
+      handleAuthChange(session);
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       console.log('Auth state changed:', _event, session?.user?.id);
-      
-      if (session?.user) {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', session.user.id)
-          .single();
-
-        if (error || !profile) {
-          console.error('Error fetching profile:', error);
-          return;
-        }
-
-        setSession(session);
-        setUser({ ...session.user, role: profile.role });
-      } else {
-        setSession(null);
-        setUser(null);
-      }
-      setLoading(false);
+      handleAuthChange(session);
     });
 
     // Global mouse gradient effect
@@ -106,7 +92,7 @@ const App = () => {
       subscription.unsubscribe();
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, [setSession, setUser, setLoading]);
+  }, [handleAuthChange]);
   
   return (
     <ErrorBoundary>
