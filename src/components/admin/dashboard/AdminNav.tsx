@@ -43,7 +43,6 @@ export const AdminNav = () => {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed top-0 left-64 right-0 z-50 h-[3.7rem]",
-        "bg-gradient-to-r from-[#4d00b3]/80 via-[#72228c]/80 to-[#b0e653]/80",
         "backdrop-blur-md border-b border-white/10"
       )}
       onMouseMove={handleMouseMove}
@@ -53,10 +52,15 @@ export const AdminNav = () => {
       style={{
         clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
         background: `
+          linear-gradient(135deg, 
+            rgba(77, 0, 179, 0.8), 
+            rgba(114, 34, 140, 0.8), 
+            rgba(176, 230, 83, 0.8)
+          ),
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
             rgba(65, 240, 219, 0.2), 
-            rgba(77, 0, 179, 0.2),
-            rgba(176, 230, 83, 0.2)
+            rgba(255, 10, 190, 0.2), 
+            rgba(128, 0, 255, 0.2)
           )
         `
       }}

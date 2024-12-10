@@ -20,25 +20,27 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="admin-layout"
+      className="min-h-screen relative overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{
-        backgroundImage: `url('/lovable-uploads/293dada8-67ab-4da3-8f66-2f83623340b5.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        background: `
+          linear-gradient(135deg, 
+            rgba(77, 0, 179, 0.95), 
+            rgba(114, 34, 140, 0.95), 
+            rgba(176, 230, 83, 0.95)
+          ),
+          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+            rgba(65, 240, 219, 0.15), 
+            rgba(255, 10, 190, 0.15), 
+            rgba(128, 0, 255, 0.15)
+          )
+        `,
+        backgroundBlendMode: 'overlay',
+        backgroundSize: 'cover'
       }}
     >
       <AdminSidebar />
       <AdminNav />
-      
-      <div 
-        className="admin-gradient-bg" 
-        style={{
-          '--mouse-x': `${mousePosition.x}%`,
-          '--mouse-y': `${mousePosition.y}%`
-        } as React.CSSProperties} 
-      />
       
       <main className="pl-64 pt-[3.7rem]">
         <div className="p-8 space-y-8">

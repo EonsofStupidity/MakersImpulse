@@ -52,24 +52,25 @@ export const AdminSidebar = () => {
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed left-0 top-0 bottom-0 w-64 z-40",
-        "bg-gradient-to-br from-[#4d00b3]/90 via-[#72228c]/90 to-[#b0e653]/90",
-        "backdrop-blur-md border-r border-white/10",
         "overflow-hidden transition-all duration-300",
         isIconOnly ? "w-20" : "w-64"
       )}
       onMouseMove={handleMouseMove}
       style={{
-        clipPath: "path('M 0 0 L 240 0 Q 260 150, 240 300 L 0 300 Z')",
-        backgroundImage: `
-          url('/lovable-uploads/c7b8c00f-2fa0-444c-bd32-62f1d4a4cee7.png'),
+        clipPath: "path('M 0 0 L 240 0 Q 280 150, 240 300 L 0 300 Z')", // Increased curve
+        background: `
+          linear-gradient(135deg, 
+            rgba(77, 0, 179, 0.95), 
+            rgba(114, 34, 140, 0.95), 
+            rgba(176, 230, 83, 0.95)
+          ),
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
             rgba(65, 240, 219, 0.15), 
-            rgba(77, 0, 179, 0.15),
-            rgba(176, 230, 83, 0.15)
+            rgba(255, 10, 190, 0.15), 
+            rgba(128, 0, 255, 0.15)
           )
         `,
         backgroundBlendMode: 'overlay',
-        backgroundSize: 'cover'
       }}
     >
       <div className="flex justify-between items-center p-4 border-b border-white/10">
@@ -99,6 +100,10 @@ export const AdminSidebar = () => {
                 key={item.id}
                 to={item.path}
                 className="group flex items-center gap-3 p-2 rounded-lg transition-all duration-300 hover:bg-white/10"
+                draggable
+                onDragStart={(e) => {
+                  e.dataTransfer.setData('text/plain', item.id);
+                }}
               >
                 <motion.div
                   whileHover={{ scale: 1.1, rotate: 5 }}
