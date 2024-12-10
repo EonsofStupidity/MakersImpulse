@@ -21,6 +21,7 @@ export const AdminNavContainer: React.FC<AdminNavContainerProps> = ({ routes }) 
   const [isLoading, setIsLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [draggedItem, setDraggedItem] = useState<NavItemType | null>(null);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -68,6 +69,13 @@ export const AdminNavContainer: React.FC<AdminNavContainerProps> = ({ routes }) 
     checkAdminAccess();
   }, [session, navigate]);
 
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePosition({ x, y });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -89,13 +97,14 @@ export const AdminNavContainer: React.FC<AdminNavContainerProps> = ({ routes }) 
           duration: 0.5,
           ease: [0.22, 1, 0.36, 1]
         }}
+        onMouseMove={handleMouseMove}
       >
         <div className="absolute inset-0">
           <div 
             className="w-full h-full bg-glass backdrop-blur-xl"
             style={{
               clipPath: "polygon(0 0, 100% 0, 98% 100%, 2% 100%)",
-              background: "linear-gradient(135deg, rgba(65,240,219,0.1), rgba(255,10,190,0.1), rgba(128,0,255,0.1))",
+              background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65,240,219,0.1), rgba(255,10,190,0.1), rgba(128,0,255,0.1))`,
             }}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan/10 via-neon-pink/10 to-neon-purple/10 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
