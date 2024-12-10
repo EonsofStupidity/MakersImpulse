@@ -1,5 +1,6 @@
 import { lazy } from "react";
-import { NewDashboardOverview } from "@/pages/admin/core/NewDashboardOverview";
+import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
+import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 
 const Posts = lazy(() => import("@/pages/admin/posts"));
 const Users = lazy(() => import("@/pages/admin/users"));
@@ -10,10 +11,29 @@ const Categories = lazy(() => import("@/pages/admin/content-management/categorie
 const Templates = lazy(() => import("@/pages/admin/content-management/templates"));
 const Workflows = lazy(() => import("@/pages/admin/content-management/workflows"));
 
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light">
+      <AdminNav />
+      <AdminSidebar />
+      <main className="pl-64 pt-16">
+        {children}
+      </main>
+    </div>
+  );
+};
+
 export const adminRoutes = [
   {
     path: "dashboard",
-    element: <NewDashboardOverview />,
+    element: (
+      <DashboardLayout>
+        <div className="p-8">
+          <h1 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h1>
+          {/* Dashboard content will go here */}
+        </div>
+      </DashboardLayout>
+    ),
   },
   {
     path: "posts",
