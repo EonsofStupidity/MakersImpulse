@@ -1,0 +1,44 @@
+/* Admin Layout Base Styles */
+.admin-layout {
+  @apply min-h-screen relative overflow-hidden;
+  background: linear-gradient(135deg, 
+    rgba(21, 26, 36, 0.95),
+    rgba(32, 37, 47, 0.95)
+  );
+}
+
+.admin-content {
+  @apply relative z-10 space-y-8 px-6 py-8 min-h-screen;
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Navigation Components */
+.admin-nav {
+  @apply fixed top-0 left-0 right-0 z-50 h-[3.7rem];
+  background: linear-gradient(135deg, 
+    rgba(65, 240, 219, 0.1),
+    rgba(255, 10, 190, 0.1)
+  );
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(65, 240, 219, 0.2);
+}
+
+.admin-sidebar {
+  @apply fixed left-0 top-[3.7rem] bottom-0 w-64 z-40;
+  background: linear-gradient(135deg,
+    rgba(21, 26, 36, 0.95),
+    rgba(32, 37, 47, 0.95)
+  );
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(65, 240, 219, 0.2);
+}
+
+/* Background Effects */
+.admin-gradient-bg {
+  @apply absolute inset-0 z-0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(65, 240, 219, 0.15),
+    rgba(255, 10, 190, 0.15),
+    rgba(128, 0, 255, 0.15)
+  );
+}

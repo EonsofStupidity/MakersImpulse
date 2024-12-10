@@ -2,16 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
-@import './admin/dashboard.css';
+/* Import admin styles */
+@import './admin/layout.css';
+@import './admin/components.css';
 
 @layer base {
   :root {
-    /* Admin Dashboard Colors */
-    --admin-primary: #41f0db;
-    --admin-secondary: #ff0abe;
-    --admin-accent: #8000ff;
-    
-    /* Other theme variables */
+    /* Theme Variables */
     --primary: #7FFFD4;
     --secondary: #FFB6C1;
     --accent: #E6E6FA;
@@ -29,103 +26,29 @@
     --transition-duration: 0.3s;
     --shadow-color: #000000;
     --hover-scale: 1.05;
+  }
 
-    /* Typography */
-    --font-heading: 'Inter';
-    --font-size-base: 16px;
-    --font-weight-normal: 400;
-    --font-weight-bold: 700;
-    --line-height-base: 1.5;
-    --letter-spacing: normal;
+  /* Base styles */
+  body {
+    @apply bg-black text-white antialiased;
   }
 }
 
-/* Admin Dashboard Specific Styles */
-.admin-layout {
-  @apply min-h-screen relative overflow-hidden;
-  background: linear-gradient(135deg, 
-    rgba(65, 240, 219, 0.1),
-    rgba(255, 10, 190, 0.1),
-    rgba(128, 0, 255, 0.1)
-  );
-}
-
-.admin-nav {
-  @apply fixed top-0 left-0 right-0 z-50 h-[3rem]; /* Adjusted height to 3rem */
-  background: linear-gradient(135deg, 
-    rgba(65, 240, 219, 0.2),
-    rgba(255, 10, 190, 0.2)
-  );
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(65, 240, 219, 0.2);
-}
-
-.admin-sidebar {
-  @apply fixed left-0 top-16 bottom-0 w-64 z-40;
-  background: linear-gradient(135deg,
-    rgba(21, 26, 36, 0.95),
-    rgba(55, 56, 64, 0.95)
-  );
-  backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(65, 240, 219, 0.2);
-}
-
-.admin-nav-item {
-  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 relative;
-  color: rgba(255, 255, 255, 0.8);
-}
-
-.admin-nav-item:hover {
-  @apply text-[#41f0db] bg-white/5;
-  transform: translateY(-1px);
-}
-
-/* Neon text effects */
+/* Utility classes */
 .neon-text-cyan {
-  color: #41f0db;
+  color: var(--neon-cyan);
   text-shadow: 
-    0 0 7px #41f0db,
-    0 0 10px #41f0db,
-    0 0 21px #41f0db,
-    0 0 42px #41f0db,
+    0 0 7px var(--neon-cyan),
+    0 0 10px var(--neon-cyan),
+    0 0 21px var(--neon-cyan),
     0 2px 4px rgba(0, 0, 0, 0.5);
-  animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
 }
 
 .neon-text-pink {
-  color: #ff0abe;
+  color: var(--neon-pink);
   text-shadow: 
-    0 0 7px #ff0abe,
-    0 0 10px #ff0abe,
-    0 0 21px #ff0abe,
-    0 0 42px #ff0abe,
+    0 0 7px var(--neon-pink),
+    0 0 10px var(--neon-pink),
+    0 0 21px var(--neon-pink),
     0 2px 4px rgba(0, 0, 0, 0.5);
-  animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
 }
-
-@keyframes neon-pulse-cyan {
-  0%, 100% {
-    opacity: 1;
-    filter: brightness(100%) blur(0.5px);
-    transform: translateZ(0);
-  }
-  50% {
-    opacity: 0.8;
-    filter: brightness(150%) blur(1px);
-    transform: translateZ(10px);
-  }
-}
-
-@keyframes neon-pulse-pink {
-  0%, 100% {
-    opacity: 0.8;
-    filter: brightness(100%) blur(0.5px);
-    transform: translateZ(0);
-  }
-  50% {
-    opacity: 1;
-    filter: brightness(150%) blur(1px);
-    transform: translateZ(10px);
-  }
-}
-
