@@ -19,49 +19,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     console.log("AuthProvider: Initializing...");
     
-    const fetchUserProfile = async (userId: string) => {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching user profile:', error);
-        return null;
-      }
-
-      return profile;
-    };
-
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      console.log("Initial session:", initialSession?.user?.id);
-      
-      if (initialSession?.user) {
-        const profile = await fetchUserProfile(initialSession.user.id);
-        if (profile) {
-          // Merge profile data with session user
-          initialSession.user.role = profile.role;
-        }
-      }
-      
-      setSession(initialSession);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Initial session:", session?.user?.id);
+      setSession(session);
       setIsLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       console.log("Auth state changed:", _event, session?.user?.id);
-      
-      if (session?.user) {
-        const profile = await fetchUserProfile(session.user.id);
-        if (profile) {
-          // Merge profile data with session user
-          session.user.role = profile.role;
-        }
-      }
-      
       setSession(session);
       setIsLoading(false);
     });
