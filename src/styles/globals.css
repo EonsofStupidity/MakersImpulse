@@ -1,10 +1,9 @@
+@import './admin/layout.css';
+@import './admin/components.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Import admin styles */
-@import './admin/layout.css';
-@import './admin/components.css';
 
 @layer base {
   :root {
