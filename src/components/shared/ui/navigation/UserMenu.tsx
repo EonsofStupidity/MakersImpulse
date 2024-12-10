@@ -12,11 +12,14 @@ export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, user, isLoading } = useAuth();
 
-  console.log('UserMenu render:', { 
-    session, 
+  console.log('UserMenu render - Detailed state:', { 
+    session,
     user,
-    userId: user?.id,
-    isLoading 
+    userRole: user?.role,
+    isAdmin: user?.role === 'admin',
+    isLoading,
+    sessionUser: session?.user,
+    sessionRole: session?.user?.role
   });
 
   const handleLogout = async () => {
