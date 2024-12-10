@@ -46,7 +46,7 @@ export const AdminSidebar = () => {
       )}
     >
       <div className="relative h-full">
-        {/* Main background with dramatic curve */}
+        {/* Background with curved shape */}
         <div 
           className="absolute inset-0"
           style={{
@@ -57,7 +57,7 @@ export const AdminSidebar = () => {
           }}
         />
         
-        {/* Animated gradient overlay with matching curve */}
+        {/* Animated gradient overlay */}
         <div 
           className="absolute inset-0 transition-opacity duration-300"
           style={{
@@ -113,7 +113,7 @@ export const AdminSidebar = () => {
                 </span>
               )}
 
-              {/* Enhanced glow effect */}
+              {/* Hover effect overlay */}
               {(location.pathname === item.path || isHovered === item.path) && (
                 <motion.div
                   layoutId="sidebar-glow"
