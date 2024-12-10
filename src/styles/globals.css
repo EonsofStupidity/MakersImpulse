@@ -49,7 +49,7 @@
 }
 
 .admin-nav {
-  @apply fixed top-0 left-0 right-0 z-50 h-12;
+  @apply fixed top-0 left-0 right-0 z-50 h-[3rem]; /* Adjusted height to 3rem */
   background: linear-gradient(135deg, 
     rgba(65, 240, 219, 0.2),
     rgba(255, 10, 190, 0.2)

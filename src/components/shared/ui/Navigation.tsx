@@ -64,9 +64,9 @@ export const Navigation = () => {
   return (
     <nav 
       className={cn(
-        "fixed -top-2 left-0 right-0 z-50 h-12", // Reduced height and moved up
+        "fixed top-0 left-0 right-0 z-50 h-[3rem]", // Adjusted height to 3rem
         "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
-        "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
+        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
         isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
       )}
       onMouseMove={handleMouseMove}
