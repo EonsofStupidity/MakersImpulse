@@ -11,13 +11,21 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthSetup } from '@/hooks/useAuthSetup';
 
+// Create QueryClient with robust error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
-      throwOnError: true, // This replaces useErrorBoundary
+      throwOnError: true,
+      onError: (error: Error) => {
+        console.error('Query error:', error);
+        toast.error('Failed to fetch data', {
+          description: error.message,
+          duration: 5000,
+        });
+      },
     },
     mutations: {
       retry: 1,
@@ -53,7 +61,7 @@ const App = () => {
       handleAuthChange(session);
     });
 
-    // Global mouse gradient effect
+    // Global mouse gradient effect with performance optimization
     const handleMouseMove = (e: MouseEvent) => {
       requestAnimationFrame(() => {
         document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
@@ -63,6 +71,7 @@ const App = () => {
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     
+    // Cleanup subscriptions and event listeners
     return () => {
       subscription.unsubscribe();
       window.removeEventListener('mousemove', handleMouseMove);
