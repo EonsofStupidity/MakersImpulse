@@ -18,6 +18,9 @@ export default {
       },
     },
     extend: {
+      spacing: {
+        '33': '8.25rem', // Adding custom 33 spacing
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
