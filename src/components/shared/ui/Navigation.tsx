@@ -121,7 +121,10 @@ export const Navigation = () => {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="w-32 h-32 -mt-16 -mb-16 border-2 border-transparent group-hover:border-[#41f0db] transition-all duration-300">
+                  <Avatar className="w-32 h-32 -mt-12 -mb-16 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
+                    before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
+                    before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
+                  >
                     <AvatarImage 
                       src="/lovable-uploads/3cd0be61-00fd-4a26-a809-4ff83b66641c.png" 
                       alt="User avatar"
