@@ -59,9 +59,12 @@ export const Navigation = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={cn(
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
+        "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
         isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
-      }`}
+      )}
       onMouseMove={handleMouseMove}
       style={{
         background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.08), rgba(128, 0, 255, 0.08))`,
@@ -77,8 +80,8 @@ export const Navigation = () => {
             onClick={() => handleNavigation('/')}
           >
             <span className="text-2xl font-bold">
-              <span className="text-[#41f0db] animate-neon-pulse">Makers</span>
-              <span className="text-[#ff0abe] animate-neon-glow">Impulse</span>
+              <span className="text-[#41f0db] animate-cyber-pulse">Makers</span>
+              <span className="text-[#ff0abe] animate-neon-pulse">Impulse</span>
             </span>
           </Link>
 
