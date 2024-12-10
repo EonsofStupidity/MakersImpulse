@@ -20,27 +20,25 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden bg-[#151A24]"
+      className="min-h-screen relative overflow-hidden"
       onMouseMove={handleMouseMove}
-      style={{
-        background: `
-          linear-gradient(135deg, 
-            rgba(77, 0, 179, 0.1), 
-            rgba(114, 34, 140, 0.1), 
-            rgba(176, 230, 83, 0.1)
-          ),
-          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(65, 240, 219, 0.15), 
-            rgba(255, 10, 190, 0.15), 
-            rgba(128, 0, 255, 0.15)
-          )
-        `
-      }}
     >
+      {/* Background layers */}
+      <div className="fixed inset-0 bg-[#151A24] z-0" />
+      <div 
+        className="fixed inset-0 bg-gradient-to-b from-brand-purple/20 via-brand-magenta/20 to-transparent z-0"
+        style={{
+          backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`
+        }}
+      />
+      <div className="fixed inset-0 bg-cyber-grid opacity-30 z-0" />
+      <div className="fixed inset-0 bg-scratch-overlay z-0" />
+
+      {/* Content */}
       <AdminSidebar />
       <AdminNav />
       
-      <main className="pl-64 pt-[3.7rem]">
+      <main className="pl-64 pt-[3.7rem] relative z-10">
         <div className="p-8 space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
