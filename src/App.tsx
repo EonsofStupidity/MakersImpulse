@@ -7,7 +7,7 @@ import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary"
 import { ThemeProvider } from "@/components/theme/ThemeContext";
 import { AdminSidebarProvider } from "@/components/admin/dashboard/sidebar/AdminSidebarContext";
 import { Toaster } from "sonner";
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStore } from '@/lib/store/auth-store';
 import { toast } from "sonner";
@@ -24,6 +24,7 @@ const queryClient = new QueryClient({
 
 const App = () => {
   const { setSession, setUser, setLoading } = useAuthStore();
+  const initialSetupDone = useRef(false);
   
   const handleAuthChange = useCallback(async (session) => {
     console.log('Handling auth change:', session?.user?.id);
@@ -67,6 +68,9 @@ const App = () => {
   }, [setSession, setUser, setLoading]);
 
   useEffect(() => {
+    if (initialSetupDone.current) return;
+    initialSetupDone.current = true;
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log('Initial session check:', session);
@@ -83,11 +87,14 @@ const App = () => {
 
     // Global mouse gradient effect
     const handleMouseMove = (e: MouseEvent) => {
-      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+      requestAnimationFrame(() => {
+        document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+        document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+      });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    
     return () => {
       subscription.unsubscribe();
       window.removeEventListener('mousemove', handleMouseMove);
