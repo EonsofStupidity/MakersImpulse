@@ -116,12 +116,12 @@ export const Navigation = () => {
             </Button>
 
             {session?.user && (
-              <div className="hidden md:block relative">
+              <div className="hidden md:block relative z-[60]">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="w-16 h-16 border-2 border-transparent group-hover:border-[#41f0db] transition-all duration-300">
+                  <Avatar className="w-32 h-32 -mt-16 -mb-16 border-2 border-transparent group-hover:border-[#41f0db] transition-all duration-300">
                     <AvatarImage 
                       src="/lovable-uploads/3cd0be61-00fd-4a26-a809-4ff83b66641c.png" 
                       alt="User avatar"

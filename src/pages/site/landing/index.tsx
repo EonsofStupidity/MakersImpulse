@@ -20,6 +20,7 @@ const LandingPage = () => {
         className="absolute inset-0 z-0"
       >
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-purple via-brand-magenta to-brand-lime opacity-10" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#41f0db]/10 via-[#ff0abe]/10 to-[#8000ff]/10" />
       </motion.div>
 
