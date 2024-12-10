@@ -10,6 +10,12 @@ import { NavigationLinks } from "./navigation/NavigationLinks";
 import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const Navigation = () => {
   const location = useLocation();
@@ -17,6 +23,7 @@ export const Navigation = () => {
   const { session, isLoading } = useAuth();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
   const [hasLogged, setHasLogged] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     if (!hasLogged) {
@@ -77,26 +84,23 @@ export const Navigation = () => {
         <div className="flex items-center justify-between py-4">
           <Link 
             to="/"
-            className="flex items-center cursor-pointer"
+            className="flex items-center space-x-2 cursor-pointer group"
             onClick={() => handleNavigation('/')}
           >
-            <span className="text-2xl font-bold">
-              <span className="text-[#41f0db] animate-cyber-pulse">Makers</span>
-              <span className="text-[#ff0abe] animate-neon-pulse">Impulse</span>
+            <span className="text-2xl font-bold flex items-center">
+              <span className="text-[#41f0db] group-hover:animate-cyber-pulse relative">
+                Makers
+                <span className="absolute inset-0 blur-sm bg-[#41f0db] opacity-50 group-hover:animate-pulse"></span>
+              </span>
+              <span className="text-[#ff0abe] group-hover:animate-cyber-pulse relative">
+                Impulse
+                <span className="absolute inset-0 blur-sm bg-[#ff0abe] opacity-50 group-hover:animate-pulse"></span>
+              </span>
             </span>
           </Link>
 
           <div className="hidden md:flex items-center space-x-6">
             <NavigationLinks />
-            <Link 
-              to="/blog"
-              className="text-white hover:text-[#41f0db] transition-all duration-300 relative group cursor-pointer"
-              onClick={() => handleNavigation('/blog')}
-            >
-              <span className="relative z-10 text-white font-medium">Blog</span>
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-[#41f0db] to-[#8000ff] transition-all duration-300 group-hover:w-full" />
-            </Link>
             <MegaMenu />
           </div>
 
@@ -105,10 +109,10 @@ export const Navigation = () => {
               variant="ghost"
               size="icon"
               className="relative group hover:bg-transparent"
-              onClick={() => toast.info('Search feature coming soon!')}
+              onClick={() => setSearchOpen(true)}
             >
               <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10" />
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10 rounded-full" />
             </Button>
 
             <div className="hidden md:block">
@@ -119,6 +123,24 @@ export const Navigation = () => {
           </div>
         </div>
       </div>
+
+      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
+        <DialogContent className="bg-black/80 backdrop-blur-xl border border-white/10">
+          <DialogHeader>
+            <DialogTitle className="text-white">Search</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <input
+              type="text"
+              placeholder="Search builds, parts, or guides..."
+              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#41f0db]"
+            />
+            <div className="text-sm text-white/60">
+              Press <kbd className="px-2 py-1 bg-white/10 rounded">ESC</kbd> to close
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </nav>
   );
 };
