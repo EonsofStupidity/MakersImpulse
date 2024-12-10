@@ -1,8 +1,8 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Users, FileText, Activity } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
 const fetchStats = async () => {
   const [users, posts, activity] = await Promise.all([
