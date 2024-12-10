@@ -54,7 +54,7 @@ export const UserMenu = memo(() => {
         variant="ghost" 
         size="icon" 
         onClick={() => handleNavigation('/login')}
-        className="relative group hover:bg-transparent"
+        className="relative group hover:bg-transparent z-50"
       >
         <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
           <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
@@ -71,7 +71,11 @@ export const UserMenu = memo(() => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="relative group hover:bg-transparent z-50 cursor-pointer"
+        >
           <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
             <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
               {userInitial}
@@ -79,11 +83,14 @@ export const UserMenu = memo(() => {
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-black/95 backdrop-blur-xl border border-white/10">
+      <DropdownMenuContent 
+        align="end" 
+        className="w-56 bg-black/95 backdrop-blur-xl border border-white/10 mt-2"
+      >
         {user?.role === 'admin' && (
           <DropdownMenuItem 
             onClick={() => handleNavigation('/admin/dashboard')}
-            className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
+            className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
           >
             <LayoutDashboard className="mr-2 h-4 w-4" />
             Admin Dashboard
@@ -91,21 +98,21 @@ export const UserMenu = memo(() => {
         )}
         <DropdownMenuItem 
           onClick={() => handleNavigation('/profile')}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
+          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <UserRound className="mr-2 h-4 w-4" />
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => handleNavigation('/settings')}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
+          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={handleLogout}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
+          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Sign Out

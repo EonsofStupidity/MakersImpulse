@@ -58,12 +58,17 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
 // Initialize on DOM content loaded
 const initializeLetterEffects = () => {
+  console.log('Initializing letter effects...');
   const selectors = [
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    '.animate-text', '.hero-text', '.feature-text'
+    '.landing-title',
+    '.landing-heading',
+    '.landing-text',
+    '[data-landing-text]'
   ].join(',');
   
   const elements = document.querySelectorAll(selectors);
+  console.log('Found elements:', elements.length);
+  
   elements.forEach(element => {
     if (element instanceof HTMLElement) {
       splitTextIntoLetters(element);
@@ -73,11 +78,12 @@ const initializeLetterEffects = () => {
 
 // Set up observers for dynamic content
 const setupObservers = () => {
+  console.log('Setting up text animation observers...');
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         if (node instanceof HTMLElement) {
-          const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, .animate-text, .hero-text, .feature-text');
+          const elements = node.querySelectorAll('.landing-title, .landing-heading, .landing-text, [data-landing-text]');
           elements.forEach(element => {
             if (element instanceof HTMLElement) {
               splitTextIntoLetters(element);
@@ -98,6 +104,7 @@ const setupObservers = () => {
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM Content Loaded - Initializing text effects...');
   setTimeout(() => {
     initializeLetterEffects();
     setupObservers();

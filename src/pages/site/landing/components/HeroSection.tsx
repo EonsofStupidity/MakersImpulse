@@ -23,11 +23,11 @@ export const HeroSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center relative"
         >
-          <h1 className="text-[#41f0db] text-4xl md:text-6xl font-bold mb-6 animate-float">
-            <span className="letter-hover">Build your 3D Printer Dream</span>
+          <h1 className="landing-title text-[#41f0db] text-4xl md:text-6xl font-bold mb-6">
+            Build your 3D Printer Dream
           </h1>
           
-          <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto">
+          <p className="landing-text text-xl text-white/80 mb-12 max-w-2xl mx-auto">
             Your hub for 3D printing innovation. Discover builds, parts, and join our community of makers.
           </p>
 
