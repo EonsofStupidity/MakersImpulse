@@ -6,35 +6,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { memo } from "react";
-import { supabase } from "@/integrations/supabase/client";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
-  const { session, user, isLoading } = useAuth();
-
-  console.log('UserMenu render - Detailed state:', { 
-    session,
-    user,
-    userRole: user?.role,
-    isAdmin: user?.role === 'admin',
-    isLoading,
-    sessionUser: session?.user,
-    sessionRole: session?.user?.role
-  });
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      navigate('/');
-      toast.success('Logged out successfully');
-    } catch (error) {
-      console.error('Logout error:', error);
-      toast.error('Error signing out');
-    }
-  };
+  const { session, user, isLoading, signOut } = useAuth();
 
   const handleNavigation = (path: string) => {
-    console.log('UserMenu: Navigating to:', path);
     navigate(path);
     toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
@@ -68,7 +45,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  const userInitial = session.user.email?.[0]?.toUpperCase() || '?';
+  const userInitial = user?.email?.[0]?.toUpperCase() || '?';
 
   return (
     <DropdownMenu>
@@ -113,7 +90,7 @@ export const UserMenu = memo(() => {
           Settings
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={handleLogout}
+          onClick={signOut}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <LogOut className="mr-2 h-4 w-4" />
