@@ -41,6 +41,11 @@ export default {
           pink: "var(--neon-pink)",
           purple: "var(--neon-purple)",
         },
+        brand: {
+          purple: "#4d00b3",
+          magenta: "#72228c",
+          lime: "#b0e653",
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -49,7 +54,8 @@ export default {
         'glass-card': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
         'glass-hover': 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
         'cyber-grid': 'radial-gradient(circle at center, rgba(65, 240, 219, 0.1) 0%, transparent 70%)',
-        'scratch-overlay': 'linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02))'
+        'scratch-overlay': 'linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02))',
+        'brand-gradient': 'linear-gradient(135deg, #4d00b3, #72228c, #b0e653)',
       },
       keyframes: {
         "accordion-down": {

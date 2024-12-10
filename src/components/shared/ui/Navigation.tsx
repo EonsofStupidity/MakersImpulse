@@ -115,30 +115,32 @@ export const Navigation = () => {
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10 rounded-full" />
             </Button>
 
-            <div className="hidden md:block relative">
-              <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
-                className="relative group transition-transform duration-300 hover:scale-110"
-              >
-                <Avatar className="w-12 h-12 border-2 border-transparent group-hover:border-[#41f0db] transition-all duration-300">
-                  <AvatarImage 
-                    src="/lovable-uploads/0a7c2368-1cf3-46c7-b94f-c17f3f6c0f3b.png" 
-                    alt="User avatar"
-                    className="object-cover"
+            {session?.user && (
+              <div className="hidden md:block relative">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className="relative group transition-transform duration-300 hover:scale-110"
+                >
+                  <Avatar className="w-16 h-16 border-2 border-transparent group-hover:border-[#41f0db] transition-all duration-300">
+                    <AvatarImage 
+                      src="/lovable-uploads/3cd0be61-00fd-4a26-a809-4ff83b66641c.png" 
+                      alt="User avatar"
+                      className="object-cover transform scale-125"
+                    />
+                    <AvatarFallback>AI</AvatarFallback>
+                  </Avatar>
+                  <div 
+                    className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{
+                      background: `linear-gradient(135deg, #4d00b3, #72228c, #b0e653)`,
+                      filter: 'blur(8px)',
+                      zIndex: -1
+                    }}
                   />
-                  <AvatarFallback>AI</AvatarFallback>
-                </Avatar>
-                <div 
-                  className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{
-                    background: `linear-gradient(135deg, #4d00b3, #72228c, #b0e653)`,
-                    filter: 'blur(8px)',
-                    zIndex: -1
-                  }}
-                />
-              </button>
-              {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
-            </div>
+                </button>
+                {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
+              </div>
+            )}
 
             <MobileNav />
           </div>
