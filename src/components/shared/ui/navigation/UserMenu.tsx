@@ -8,13 +8,13 @@ import { memo } from "react";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
-  const { session, user, userRole, signOut, isLoading } = useAuth();
+  const { session, user, signOut, isLoading } = useAuth();
 
   console.log('UserMenu render - Detailed state:', {
     session,
     user,
-    userRole,
-    isAdmin: userRole === 'admin' || userRole === 'super_admin',
+    userRole: user?.role,
+    isAdmin: user?.role === 'admin' || user?.role === 'super_admin',
     isLoading
   });
 
@@ -51,7 +51,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  const isAdmin = userRole === 'admin' || userRole === 'super_admin';
+  const isAdmin = user.role === 'admin' || user.role === 'super_admin';
 
   return (
     <DropdownMenu>
@@ -62,7 +62,7 @@ export const UserMenu = memo(() => {
           className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
         >
           <User className="h-4 w-4" />
-          <span className="ml-2">{user.email}</span>
+          <span className="ml-2 hidden md:inline">{user.email}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
