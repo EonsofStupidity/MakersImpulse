@@ -40,20 +40,26 @@ const menuItems = {
 
 export const AdminSidebar = () => {
   const { isOpen, activeTab, setActiveTab } = useAdminSidebar();
+  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePosition({ x, y });
+  };
 
   return (
     <motion.div
       initial={{ x: -280 }}
       animate={{ x: isOpen ? 0 : -280 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className={cn(
-        "fixed left-0 top-16 bottom-0 w-70 z-40",
-        "bg-black/90 border-r border-white/10",
-        "before:absolute before:inset-0 before:bg-gradient-to-b",
-        "before:from-[#26c766]/5 before:via-[#c726b2]/5 before:to-transparent",
-        "after:absolute after:bottom-0 after:right-0 after:h-10 after:w-10",
-        "after:bg-white/5 after:rounded-tl-[40px]"
-      )}
+      className="admin-sidebar"
+      onMouseMove={handleMouseMove}
+      style={{
+        '--mouse-x': `${mousePosition.x}%`,
+        '--mouse-y': `${mousePosition.y}%`
+      } as React.CSSProperties}
     >
       <div className="flex border-b border-white/10">
         {tabs.map((tab) => (
@@ -88,7 +94,7 @@ export const AdminSidebar = () => {
               )}
             >
               <Icon className="w-5 h-5 text-[#26c766] group-hover:text-[#c726b2] transition-colors" />
-              <span>{item.label}</span>
+              <span className="text-glow">{item.label}</span>
               <div className="absolute inset-0 bg-gradient-to-r from-[#26c766]/10 to-[#c726b2]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           );

@@ -42,9 +42,12 @@ export default {
           purple: "var(--neon-purple)",
         },
         admin: {
+          dark: "#151A24",
+          medium: "#373840",
+          light: "#5C596C",
           green: "#26c766",
           pink: "#c726b2",
-          lime: "#98de2f",
+          purple: "#8000ff",
         }
       },
       backgroundImage: {
@@ -53,13 +56,9 @@ export default {
         'glass': 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
         'glass-card': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
         'glass-hover': 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
-        'neon-glow': 'linear-gradient(135deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple))',
-        'trapezoid': 'linear-gradient(135deg, rgba(38,199,102,0.1), rgba(199,38,178,0.1))',
+        'admin-gradient': 'linear-gradient(135deg, #151A24, #373840, #5C596C)',
         'admin-card': 'linear-gradient(135deg, rgba(38,199,102,0.05), rgba(199,38,178,0.05))',
         'admin-hover': 'linear-gradient(135deg, rgba(38,199,102,0.15), rgba(199,38,178,0.15))',
-      },
-      backdropBlur: {
-        xs: '2px',
       },
       keyframes: {
         "accordion-down": {
@@ -74,64 +73,26 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        float: {
-          "0%, 100%": { transform: "translateY(0)" },
-          "50%": { transform: "translateY(-10px)" },
-        },
-        "neon-pulse": {
-          "0%, 100%": {
-            "text-shadow": "0 0 5px #41f0db, 0 0 10px #41f0db, 0 0 15px #41f0db"
-          },
-          "50%": {
-            "text-shadow": "0 0 10px #41f0db, 0 0 20px #41f0db, 0 0 30px #41f0db"
-          }
-        },
-        "neon-glow": {
-          "0%, 100%": {
-            "text-shadow": "0 0 5px #ff0abe, 0 0 10px #ff0abe, 0 0 15px #ff0abe"
-          },
-          "50%": {
-            "text-shadow": "0 0 10px #ff0abe, 0 0 20px #ff0abe, 0 0 30px #ff0abe"
-          }
-        },
         "gradient-flow": {
           "0%": { backgroundPosition: "0% 50%" },
           "50%": { backgroundPosition: "100% 50%" },
           "100%": { backgroundPosition: "0% 50%" }
         },
-        "glitch": {
-          "0%": { transform: "translate(0)" },
-          "20%": { transform: "translate(-2px, 2px)" },
-          "40%": { transform: "translate(-2px, -2px)" },
-          "60%": { transform: "translate(2px, 2px)" },
-          "80%": { transform: "translate(2px, -2px)" },
-          "100%": { transform: "translate(0)" }
-        },
-        "admin-slide-in": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(0)" }
-        },
-        "admin-fade-in": {
-          "0%": { opacity: "0", transform: "translateY(-10px)" },
-          "100%": { opacity: "1", transform: "translateY(0)" }
-        },
-        "stat-pulse": {
-          "0%, 100%": { transform: "scale(1)" },
-          "50%": { transform: "scale(1.05)" }
+        "text-glow": {
+          "0%, 100%": {
+            textShadow: "0 0 10px currentColor"
+          },
+          "50%": {
+            textShadow: "0 0 20px currentColor"
+          }
         }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "fade-in": "fade-in 0.6s ease-out",
-        float: "float 3s ease-in-out infinite",
-        "neon-pulse": "neon-pulse 2s ease-in-out infinite",
-        "neon-glow": "neon-glow 2s ease-in-out infinite",
+        "fade-in": "fade-in 0.3s ease-out",
         "gradient-flow": "gradient-flow 15s ease infinite",
-        "glitch": "glitch 0.5s ease-in-out infinite",
-        "admin-slide": "admin-slide-in 0.6s ease-out",
-        "admin-fade": "admin-fade-in 0.4s ease-out",
-        "stat-pulse": "stat-pulse 2s ease-in-out infinite",
+        "text-glow": "text-glow 2s ease-in-out infinite"
       },
     },
   },
