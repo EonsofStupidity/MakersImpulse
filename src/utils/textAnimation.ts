@@ -35,7 +35,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       const spanCenter = spanRect.left + spanRect.width / 2 - rect.left;
       const distance = Math.abs(mouseX - spanCenter);
       
-      if (distance < 30) { // Reduced radius for more gradual effect
+      if (distance < 30) {
         span.classList.add('active');
         const intensity = 1 - (distance / 30);
         span.style.setProperty('--intensity', intensity.toString());
@@ -51,7 +51,7 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       setTimeout(() => {
         span.classList.remove('active');
         span.style.removeProperty('--intensity');
-      }, index * 50); // Staggered delay for receding effect
+      }, index * 50);
     });
   });
 };
@@ -98,7 +98,6 @@ const setupObservers = () => {
 
 // Initialize when document is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Delay initialization to ensure theme is loaded
   setTimeout(() => {
     initializeLetterEffects();
     setupObservers();

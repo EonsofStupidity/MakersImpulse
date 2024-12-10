@@ -65,7 +65,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  // Get the first letter of the email as fallback if no display name
+  // Get the first letter of the email as fallback
   const userInitial = session.user.email?.[0]?.toUpperCase() || '?';
 
   return (

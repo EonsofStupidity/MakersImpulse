@@ -25,7 +25,7 @@
   }
 }
 
-/* Letter hover effect */
+/* Landing page specific letter hover effect */
 .landing-letter-span {
   display: inline-block;
   transition: color 0.3s ease-out;
