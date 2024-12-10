@@ -3,12 +3,12 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { LogIn, LogOut, Settings, User, LayoutDashboard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { memo } from "react";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
-  const { session, user, signOut, isLoading } = useAuth();
+  const { session, user, signOut, isLoading } = useAuthStore();
 
   console.log('UserMenu render - Detailed state:', {
     session,

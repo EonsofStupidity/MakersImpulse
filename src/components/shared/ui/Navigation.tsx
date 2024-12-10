@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { NavigationLinks } from "./navigation/NavigationLinks";
 import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";
@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 export const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading } = useAuthStore();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
   const [hasLogged, setHasLogged] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);

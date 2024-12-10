@@ -5,7 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { PinLogin } from "@/components/auth/components/PinLogin";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { session, isLoading } = useAuth();
+  const { session, isLoading } = useAuthStore();
   const [usePinLogin, setUsePinLogin] = useState(false);
 
   useEffect(() => {

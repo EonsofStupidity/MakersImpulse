@@ -4,13 +4,13 @@ import { Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from "@/lib/store/auth-store";
 import { PinLoginForm } from "./pin/PinLoginForm";
 
 export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => void }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
-  const { session } = useAuth();
+  const { session } = useAuthStore();
 
   useEffect(() => {
     const checkSession = async () => {

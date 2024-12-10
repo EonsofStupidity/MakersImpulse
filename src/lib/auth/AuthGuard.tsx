@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuthStore } from '@/lib/store/auth-store';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -19,7 +19,7 @@ export const AuthGuard = ({
   fallbackPath = '/login'
 }: AuthGuardProps) => {
   const navigate = useNavigate();
-  const { session, user, isLoading } = useAuth();
+  const { session, user, isLoading } = useAuthStore();
 
   useEffect(() => {
     console.log('AuthGuard: Checking access', {

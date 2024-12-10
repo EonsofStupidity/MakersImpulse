@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/lib/auth/AuthContext';
+import { useAuthStore } from '@/lib/store/auth-store';
 import { AuthState, UserRole } from '../types';
 
 const roleHierarchy: { [key: string]: number } = {
@@ -13,7 +13,7 @@ export const useRoleCheck = (
   requireAuth: boolean,
   requiredRole?: UserRole | UserRole[]
 ): AuthState => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, isLoading: authLoading } = useAuthStore();
   const [state, setState] = useState<AuthState>({
     isLoading: true,
     hasAccess: false,

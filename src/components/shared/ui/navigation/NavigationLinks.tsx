@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "@/lib/auth/AuthContext";
+import { useAuthStore } from '@/lib/store/auth-store';
 import { memo } from "react";
 
 export const NavigationLinks = memo(() => {
-  const { session, user } = useAuth();
+  const { session, user } = useAuthStore();
 
   console.log('NavigationLinks render - Session:', {
     isAuthenticated: !!session,
