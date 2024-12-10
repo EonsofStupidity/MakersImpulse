@@ -2,7 +2,7 @@ import BuildTemplate from '../templates/BuildTemplate';
 import GuideTemplate from '../templates/GuideTemplate';
 import PartTemplate from '../templates/PartTemplate';
 import { TemplateType, TemplateConfig } from '../types/template';
-import { Layout, Book, Tool } from 'lucide-react';
+import { Layout, Book, Wrench } from 'lucide-react';
 
 export const templateRegistry: Record<TemplateType, TemplateConfig> = {
   build: {
@@ -47,7 +47,7 @@ export const templateRegistry: Record<TemplateType, TemplateConfig> = {
   part: {
     name: 'Part Template',
     description: 'Template for creating part documentation',
-    icon: Tool,
+    icon: Wrench,
     component: PartTemplate,
     defaultProps: {
       specifications: {},
