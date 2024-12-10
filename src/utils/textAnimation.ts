@@ -57,14 +57,16 @@ const splitTextIntoLetters = (element: HTMLElement) => {
 
 // Initialize on page load and route changes
 const initializeLetterEffects = () => {
+  console.log('Initializing letter effects');
   const selectors = [
-    'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'a', 'span', 'div',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'p', 'a', 'span', 'div',
     '.nav-text', '.menu-item', '.heading-text',
     '.animate-text', '.hero-text', '.feature-text'
   ].join(',');
   
   const elements = document.querySelectorAll(selectors);
+  console.log('Found elements:', elements.length);
   elements.forEach(element => {
     if (element instanceof HTMLElement) {
       splitTextIntoLetters(element);
@@ -74,12 +76,13 @@ const initializeLetterEffects = () => {
 
 // Set up observers for dynamic content
 const setupObservers = () => {
+  console.log('Setting up mutation observers');
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         if (node instanceof HTMLElement) {
           splitTextIntoLetters(node);
-          const elements = node.querySelectorAll('p, h1, h2, h3, h4, h5, h6, a, span, div');
+          const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span, div');
           elements.forEach(element => {
             if (element instanceof HTMLElement) {
               splitTextIntoLetters(element);
@@ -101,10 +104,12 @@ const setupObservers = () => {
 // Initialize when document is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - initializing effects');
     initializeLetterEffects();
     setupObservers();
   });
 } else {
+  console.log('Document already loaded - initializing effects');
   initializeLetterEffects();
   setupObservers();
 }

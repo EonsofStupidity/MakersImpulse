@@ -38,6 +38,11 @@
   transition: color 0.2s ease-out;
 }
 
+.letter-hover {
+  display: inline-block;
+  position: relative;
+}
+
 /* Neon pulse effects */
 .neon-text-cyan {
   color: #41f0db;
