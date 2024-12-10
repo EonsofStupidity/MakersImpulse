@@ -19,65 +19,67 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
-    console.log('AuthProvider: Starting initialization');
+    console.log('AuthProvider: Initializing...');
+    
+    const initializeAuth = async () => {
+      try {
+        setIsLoading(true);
+        const { data: { session: initialSession } } = await supabase.auth.getSession();
+        
+        if (mounted) {
+          if (initialSession?.user) {
+            console.log('Initial session found:', initialSession.user.id);
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', initialSession.user.id)
+              .single();
 
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      console.log('Initial session check:', initialSession ? 'Found session' : 'No session');
+            if (profile) {
+              initialSession.user.role = profile.role;
+              console.log('User role loaded:', profile.role);
+            }
+          }
+          setSession(initialSession);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error("Error initializing auth:", error);
+        if (mounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      console.log("Auth state changed:", event, currentSession?.user?.id);
       
-      if (mounted && initialSession?.user) {
+      if (currentSession?.user && mounted) {
         try {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
-            .eq('id', initialSession.user.id)
+            .eq('id', currentSession.user.id)
             .single();
 
           if (profile) {
-            initialSession.user.role = profile.role;
-            console.log('Loaded user role:', profile.role);
+            currentSession.user.role = profile.role;
+            console.log('Updated user role:', profile.role);
           }
-          
-          setSession(initialSession);
+          setSession(currentSession);
         } catch (error) {
-          console.error('Error loading user profile:', error);
+          console.error("Error handling auth state change:", error);
         }
+      } else if (mounted) {
+        setSession(null);
       }
+      
       if (mounted) setIsLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, currentSession) => {
-        console.log('Auth state changed:', event, currentSession?.user?.id);
-
-        if (currentSession?.user && mounted) {
-          try {
-            const { data: profile } = await supabase
-              .from('profiles')
-              .select('role')
-              .eq('id', currentSession.user.id)
-              .single();
-
-            if (profile) {
-              currentSession.user.role = profile.role;
-              console.log('Updated session with role:', profile.role);
-            }
-            
-            setSession(currentSession);
-          } catch (error) {
-            console.error('Error updating session:', error);
-          }
-        } else if (mounted) {
-          setSession(null);
-        }
-        
-        if (mounted) setIsLoading(false);
-      }
-    );
-
     return () => {
-      console.log('AuthProvider cleanup');
       mounted = false;
       subscription.unsubscribe();
     };
@@ -87,7 +89,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       setIsLoading(true);
       await supabase.auth.signOut();
-      setSession(null);
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error signing out:", error);
