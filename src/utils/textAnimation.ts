@@ -1,6 +1,6 @@
 const splitTextIntoLetters = (element: HTMLElement) => {
   // Skip if already processed
-  if (element.closest('.letter-hover') || element.classList.contains('letter-span')) {
+  if (element.closest('.landing-letter-hover') || element.classList.contains('landing-letter-span')) {
     return;
   }
   
@@ -9,13 +9,13 @@ const splitTextIntoLetters = (element: HTMLElement) => {
   
   // Create wrapper
   const wrapper = document.createElement('span');
-  wrapper.className = 'letter-hover';
+  wrapper.className = 'landing-letter-hover';
   
   // Create spans for each letter
   const letters = text.split('').map((char, index) => {
     const span = document.createElement('span');
     span.textContent = char === ' ' ? '\u00A0' : char;
-    span.className = 'letter-span';
+    span.className = 'landing-letter-span';
     span.style.setProperty('--letter-index', index.toString());
     return span;
   });

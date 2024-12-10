@@ -26,19 +26,19 @@
 }
 
 /* Letter hover effect */
-.letter-span {
+.landing-letter-span {
   display: inline-block;
   transition: color 0.3s ease-out;
   position: relative;
   color: inherit;
 }
 
-.letter-span.active {
+.landing-letter-span.active {
   color: #ff0abe;
   transition: color 0.2s ease-out;
 }
 
-.letter-hover {
+.landing-letter-hover {
   display: inline-block;
   position: relative;
 }
