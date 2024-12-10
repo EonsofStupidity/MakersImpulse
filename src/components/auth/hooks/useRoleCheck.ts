@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '@/lib/auth/AuthContext';
 import { AuthState, UserRole } from '../types';
 
 const roleHierarchy: { [key: string]: number } = {

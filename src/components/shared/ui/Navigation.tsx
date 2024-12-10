@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { MegaMenu } from "./navigation/MegaMenu";
 import { MobileNav } from "./navigation/mobile/MobileNav";
 import { toast } from "sonner";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { NavigationLinks } from "./navigation/NavigationLinks";
 import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";

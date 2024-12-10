@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { memo } from "react";
 
 export const NavigationLinks = memo(() => {

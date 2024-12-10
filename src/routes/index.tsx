@@ -46,13 +46,7 @@ export const AppRoutes = () => {
               key={route.path}
               path={route.path}
               element={
-                <AuthGuard 
-                  requireAuth={true}
-                  onError={(error) => {
-                    console.error('Auth error:', error);
-                    toast.error('Please sign in to access this content');
-                  }}
-                >
+                <AuthGuard requireAuth={true}>
                   {route.element}
                 </AuthGuard>
               }
@@ -69,10 +63,6 @@ export const AppRoutes = () => {
                   requireAuth={true}
                   requiredRole={["admin", "super_admin"]}
                   fallbackPath="/"
-                  onError={(error) => {
-                    console.error('Admin access error:', error);
-                    toast.error('Admin access required');
-                  }}
                 >
                   {route.element}
                 </AuthGuard>

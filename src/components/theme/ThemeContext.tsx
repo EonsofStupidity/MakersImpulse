@@ -5,7 +5,7 @@ import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 
 interface ThemeContextType {
   theme: Settings | null;

@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { memo } from "react";
+
 import { supabase } from "@/integrations/supabase/client";
 
 export const UserMenu = memo(() => {

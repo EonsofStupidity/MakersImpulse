@@ -4,7 +4,7 @@ import { Loader2, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { PinLoginForm } from "./pin/PinLoginForm";
 
 export const PinLogin = ({ onSwitchToPassword }: { onSwitchToPassword: () => void }) => {

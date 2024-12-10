@@ -5,7 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/components/auth/AuthProvider";
+import { useAuth } from "@/lib/auth/AuthContext";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { PinLogin } from "@/components/auth/components/PinLogin";
 import { toast } from "sonner";
