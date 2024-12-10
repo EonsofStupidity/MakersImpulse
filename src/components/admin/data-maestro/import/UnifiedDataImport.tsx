@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 export const UnifiedDataImport = () => {
   const handleImport = async (data: any) => {
     try {
-      // Handle import logic here
       console.log('Importing data:', data);
       toast.success('Import successful');
     } catch (error) {

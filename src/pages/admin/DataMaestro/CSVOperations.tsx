@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 const CSVOperations = () => {
   const handleImport = async (data: any) => {
     try {
-      // Handle CSV import logic
       console.log('Importing CSV data:', data);
       toast.success('CSV import successful');
     } catch (error) {

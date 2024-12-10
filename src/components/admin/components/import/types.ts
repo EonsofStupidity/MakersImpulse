@@ -14,5 +14,21 @@ export interface ImportSession {
 
 export interface ImportWizardProps {
   type: 'page' | 'theme' | 'template' | 'csv';
-  onImport: (data: any) => Promise<void>;
+  acceptedTypes?: string[];
+  onImport: (files: File[]) => void;
+}
+
+export interface ImportConfig {
+  type: string;
+  schema: {
+    type: string;
+    required: string[];
+    properties: Record<string, any>;
+  };
+  validator: (data: any) => boolean;
+}
+
+export interface ImportValidationResult {
+  isValid: boolean;
+  errors?: string[];
 }
