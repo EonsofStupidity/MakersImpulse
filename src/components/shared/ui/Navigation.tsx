@@ -9,6 +9,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { NavigationLinks } from "./navigation/NavigationLinks";
 import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";
+import { cn } from "@/lib/utils";
 
 export const Navigation = () => {
   const location = useLocation();
