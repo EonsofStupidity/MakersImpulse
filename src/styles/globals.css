@@ -49,7 +49,7 @@
 }
 
 .admin-nav {
-  @apply fixed top-0 left-0 right-0 z-50 h-16;
+  @apply fixed top-0 left-0 right-0 z-50 h-12;
   background: linear-gradient(135deg, 
     rgba(65, 240, 219, 0.2),
     rgba(255, 10, 190, 0.2)
@@ -78,7 +78,51 @@
   transform: translateY(-1px);
 }
 
-/* Avatar positioning fix */
-.avatar-container {
-  @apply relative -mt-[8.25rem];
+/* Neon text effects */
+.neon-text-cyan {
+  color: #41f0db;
+  text-shadow: 
+    0 0 7px #41f0db,
+    0 0 10px #41f0db,
+    0 0 21px #41f0db,
+    0 0 42px #41f0db,
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
+}
+
+.neon-text-pink {
+  color: #ff0abe;
+  text-shadow: 
+    0 0 7px #ff0abe,
+    0 0 10px #ff0abe,
+    0 0 21px #ff0abe,
+    0 0 42px #ff0abe,
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes neon-pulse-cyan {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(100%) blur(0.5px);
+    transform: translateZ(0);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(150%) blur(1px);
+    transform: translateZ(10px);
+  }
+}
+
+@keyframes neon-pulse-pink {
+  0%, 100% {
+    opacity: 0.8;
+    filter: brightness(100%) blur(0.5px);
+    transform: translateZ(0);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(150%) blur(1px);
+    transform: translateZ(10px);
+  }
 }

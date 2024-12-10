@@ -64,7 +64,7 @@ export const Navigation = () => {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed -top-2 left-0 right-0 z-50 h-12", // Reduced height and moved up
         "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
         "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
         isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
@@ -84,20 +84,22 @@ export const Navigation = () => {
       }}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-2">
           <Link 
             to="/"
-            className="flex items-center space-x-2 cursor-pointer group"
+            className="flex items-center space-x-2 cursor-pointer group -ml-6 scale-125"
             onClick={() => handleNavigation('/')}
           >
-            <span className="text-2xl font-bold flex items-center space-x-1">
-              <span className="neon-text-cyan relative">
+            <span className="text-3xl font-bold flex items-center space-x-1 relative">
+              <span className="neon-text-cyan relative transform -translate-y-1">
                 Makers
-                <span className="absolute inset-0 blur-sm bg-[#41f0db] opacity-50"></span>
+                <span className="absolute inset-0 blur-lg bg-[#41f0db] opacity-50"></span>
+                <span className="absolute inset-0 animate-pulse blur-xl bg-[#41f0db] opacity-30"></span>
               </span>
-              <span className="neon-text-pink relative">
+              <span className="neon-text-pink relative transform translate-y-1">
                 Impulse
-                <span className="absolute inset-0 blur-sm bg-[#ff0abe] opacity-50"></span>
+                <span className="absolute inset-0 blur-lg bg-[#ff0abe] opacity-50"></span>
+                <span className="absolute inset-0 animate-pulse blur-xl bg-[#ff0abe] opacity-30"></span>
               </span>
             </span>
           </Link>
@@ -122,7 +124,7 @@ export const Navigation = () => {
               <div className="hidden md:block relative z-[60]">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="relative group transition-transform duration-300 hover:scale-110"
+                  className="relative group transition-transform duration-300 hover:scale-110 transform translate-y-4"
                 >
                   <Avatar className="h-32 w-32 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
