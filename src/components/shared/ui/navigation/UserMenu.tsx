@@ -7,8 +7,6 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { memo } from "react";
 
-import { supabase } from "@/integrations/supabase/client";
-
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, user, isLoading, signOut } = useAuth();
@@ -38,6 +36,7 @@ export const UserMenu = memo(() => {
     );
   }
 
+  // Allow guest access without login
   if (!session || !user) {
     return (
       <Button 
@@ -99,13 +98,15 @@ export const UserMenu = memo(() => {
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={signOut}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
-        >
-          <LogOut className="mr-2 h-4 w-4" />
-          Sign Out
-        </DropdownMenuItem>
+        {session && (
+          <DropdownMenuItem 
+            onClick={signOut}
+            className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Sign Out
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   );

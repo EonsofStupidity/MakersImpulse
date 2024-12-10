@@ -14,7 +14,7 @@ interface AuthGuardProps {
 
 export const AuthGuard = ({ 
   children, 
-  requireAuth = true,
+  requireAuth = false,
   requiredRole,
   fallbackPath = '/login'
 }: AuthGuardProps) => {
