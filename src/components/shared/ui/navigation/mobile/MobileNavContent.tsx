@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/lib/auth/AuthContext';
 import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
@@ -11,64 +11,27 @@ interface MenuItem {
   icon: LucideIcon;
 }
 
-const menuVariants = {
-  open: {
-    transition: { staggerChildren: 0.07, delayChildren: 0.2 }
-  },
-  closed: {
-    transition: { staggerChildren: 0.05, staggerDirection: -1 }
-  }
-};
-
-const menuItemVariants = {
-  open: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      y: { stiffness: 1000, velocity: -100 }
-    }
-  },
-  closed: {
-    y: 50,
-    opacity: 0,
-    transition: {
-      y: { stiffness: 1000 }
-    }
-  }
-};
-
-interface MobileNavContentProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
+export const MobileNavContent = () => {
   const navigate = useNavigate();
-  const { session, user } = useAuth();
+  const { user, signOut } = useAuth();
 
-  console.log('MobileNavContent render:', { 
-    isAuthenticated: !!session,
-    userRole: user?.role,
-    isAdmin: user?.role === 'admin'
-  });
+  console.log('MobileNavContent: Rendering with user:', user?.email, 'role:', user?.role);
 
   const handleNavigation = (to: string) => {
-    console.log('Mobile nav: Navigating to:', to);
-    onClose();
     navigate(to);
     toast.success(`Navigating to ${to.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
-  // Base menu items
-  const menuItems: MenuItem[] = [
-    { to: "/maker-space", label: "Maker Space", icon: Home },
-    { to: "/maker-space/builds", label: "Builds", icon: Wrench },
-    { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/blog", label: "Blog", icon: Mail },
+  // Base menu items - always show these
+  const baseItems: MenuItem[] = [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/maker-space", label: "Maker Space", icon: Wrench },
+    { to: "/guides", label: "Guides", icon: BookOpen },
+    { to: "/contact", label: "Contact", icon: Mail }
   ];
 
-  // Auth-related items
-  const authItems: MenuItem[] = session ? [
+  // Auth menu items - show different items based on auth status
+  const authItems: MenuItem[] = user ? [
     { to: "/profile", label: "Profile", icon: UserCircle }
   ] : [
     { to: "/login", label: "Sign In", icon: LogIn },
@@ -82,58 +45,36 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   ] : [];
 
   // Combine all menu items based on user role
-  const allMenuItems = [
-    ...adminItems,
-    ...menuItems,
-    ...authItems
-  ];
+  const menuItems = [...baseItems, ...authItems, ...adminItems];
 
   return (
     <motion.div
-      initial={false}
-      animate={isOpen ? "open" : "closed"}
-      variants={{
-        open: { 
-          x: 0,
-          transition: { 
-            type: "spring", 
-            stiffness: 300, 
-            damping: 30,
-            duration: 0.3
-          }
-        },
-        closed: { 
-          x: "100%",
-          transition: { 
-            type: "spring", 
-            stiffness: 300, 
-            damping: 30,
-            duration: 0.3
-          }
-        }
-      }}
-      className="fixed inset-y-0 right-0 w-full max-w-sm bg-black/95 backdrop-blur-xl shadow-lg z-50 md:hidden"
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      className="fixed inset-x-0 top-[64px] p-4 bg-black/95 backdrop-blur-lg border-b border-white/10"
     >
-      <motion.nav
-        variants={menuVariants}
-        className="flex flex-col gap-2 p-6 pt-24"
-      >
-        {allMenuItems.map((item) => (
-          <motion.button
+      <nav className="grid gap-2">
+        {menuItems.map((item) => (
+          <button
             key={item.to}
-            variants={menuItemVariants}
             onClick={() => handleNavigation(item.to)}
-            className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group cursor-pointer"
+            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
           >
-            <item.icon className="w-5 h-5 mr-3" />
+            <item.icon className="h-5 w-5" />
             {item.label}
-            <motion.div
-              className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-              layoutId={`highlight-${item.to}`}
-            />
-          </motion.button>
+          </button>
         ))}
-      </motion.nav>
+        {user && (
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-4 border-t border-white/10 pt-4"
+          >
+            <LogIn className="h-5 w-5" />
+            Sign Out
+          </button>
+        )}
+      </nav>
     </motion.div>
   );
 };
