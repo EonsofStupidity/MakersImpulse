@@ -12,6 +12,13 @@ export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, user, isLoading } = useAuth();
 
+  console.log('UserMenu render:', { 
+    session, 
+    user,
+    userId: user?.id,
+    isLoading 
+  });
+
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
@@ -58,13 +65,16 @@ export const UserMenu = memo(() => {
     );
   }
 
+  // Get the first letter of the email as fallback if no display name
+  const userInitial = session.user.email?.[0]?.toUpperCase() || '?';
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
           <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
             <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-              {user?.displayName?.[0] || user?.email?.[0] || <UserRound className="h-4 w-4" />}
+              {userInitial}
             </AvatarFallback>
           </Avatar>
         </Button>
