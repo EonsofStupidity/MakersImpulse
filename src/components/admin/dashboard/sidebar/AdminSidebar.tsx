@@ -49,15 +49,13 @@ export const AdminSidebar = () => {
     setMousePosition({ x, y });
   };
 
-  console.log('AdminSidebar render - isOpen:', isOpen, 'activeTab:', activeTab);
-
   return (
     <motion.div
       initial={{ x: -280 }}
       animate={{ x: isOpen ? 0 : -280 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed left-0 top-16 bottom-0 w-64 z-30",
+        "fixed left-0 top-16 bottom-0 w-64 z-40",
         "bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light",
         "border-r border-white/10"
       )}
@@ -76,7 +74,7 @@ export const AdminSidebar = () => {
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={cn(
-              "flex-1 px-4 py-3 text-sm font-medium transition-colors",
+              "flex-1 px-4 py-3 text-sm font-medium transition-colors relative z-50",
               "hover:text-admin-green focus:outline-none",
               activeTab === tab.id 
                 ? "text-admin-pink bg-white/5" 
@@ -88,7 +86,7 @@ export const AdminSidebar = () => {
         ))}
       </div>
 
-      <div className="p-4 space-y-2">
+      <div className="p-4 space-y-2 relative z-50">
         {menuItems[activeTab as keyof typeof menuItems].map((item) => {
           const Icon = item.icon;
           return (

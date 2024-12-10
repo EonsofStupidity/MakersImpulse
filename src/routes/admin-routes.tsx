@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
+import { StatsCards } from "@/components/admin/dashboard/stats/StatsCards";
 
 const Posts = lazy(() => import("@/pages/admin/posts"));
 const Users = lazy(() => import("@/pages/admin/users"));
@@ -16,7 +17,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light">
       <AdminNav />
       <AdminSidebar />
-      <main className="pl-64 pt-16">
+      <main className="pl-64 pt-32">
         {children}
       </main>
     </div>
@@ -30,7 +31,7 @@ export const adminRoutes = [
       <DashboardLayout>
         <div className="p-8">
           <h1 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h1>
-          {/* Dashboard content will go here */}
+          <StatsCards />
         </div>
       </DashboardLayout>
     ),

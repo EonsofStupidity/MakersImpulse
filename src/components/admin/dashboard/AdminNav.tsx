@@ -23,7 +23,7 @@ export const AdminNav = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-16 left-0 right-0 z-40 h-16 bg-admin-dark",
+        "fixed top-16 left-0 right-0 z-50 h-16 bg-admin-dark",
         "border-b border-white/10"
       )}
       onMouseMove={handleMouseMove}
@@ -31,7 +31,7 @@ export const AdminNav = () => {
         background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(38,199,102,0.15), rgba(199,38,178,0.15))`,
       }}
     >
-      <div className="h-full flex items-center px-4 max-w-7xl mx-auto relative z-10">
+      <div className="h-full flex items-center px-4 max-w-7xl mx-auto relative z-50">
         <div className="flex-1 flex items-center gap-4">
           {shortcuts.map((shortcut) => (
             <motion.div
