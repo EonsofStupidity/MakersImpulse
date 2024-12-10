@@ -1,6 +1,6 @@
-import { BuildTemplate } from '../BuildTemplate';
-import { GuideTemplate } from '../GuideTemplate';
-import { PartTemplate } from '../PartTemplate';
+import BuildTemplate from '../BuildTemplate';
+import GuideTemplate from '../GuideTemplate';
+import PartTemplate from '../PartTemplate';
 
 export type TemplateType = 'build' | 'guide' | 'part';
 
