@@ -11,13 +11,13 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthSetup } from '@/hooks/useAuthSetup';
 
-// Create QueryClient with robust error handling
+// Create QueryClient with robust error handling and proper typing
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000,
+      staleTime: 5 * 60 * 1000, // 5 minutes
       throwOnError: true,
       meta: {
         errorMessage: 'Failed to fetch data'
@@ -26,6 +26,7 @@ const queryClient = new QueryClient({
     mutations: {
       retry: 1,
       meta: {
+        successMessage: 'Operation completed successfully',
         errorMessage: 'Operation failed'
       },
       onError: (error: Error) => {
