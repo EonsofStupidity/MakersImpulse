@@ -48,8 +48,8 @@ export default {
         'glass': 'linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01))',
         'glass-card': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
         'glass-hover': 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
-        'cyber-texture': "url('/textures/cyber-grid.png')",
-        'scratch-overlay': "url('/textures/scratches.png')"
+        'cyber-grid': 'radial-gradient(circle at center, rgba(65, 240, 219, 0.1) 0%, transparent 70%)',
+        'scratch-overlay': 'linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02))'
       },
       keyframes: {
         "accordion-down": {

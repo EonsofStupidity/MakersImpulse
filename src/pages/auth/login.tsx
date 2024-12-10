@@ -57,8 +57,11 @@ const Login = () => {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen bg-gradient-to-br from-[#0F1114] to-[#1A1F2C] flex flex-col"
+      className="min-h-screen bg-gradient-to-br from-[#0F1114] to-[#1A1F2C] flex flex-col relative overflow-hidden"
     >
+      <div className="absolute inset-0 bg-cyber-grid opacity-50 pointer-events-none" />
+      <div className="absolute inset-0 bg-scratch-overlay opacity-30 pointer-events-none" />
+      
       <div className="sticky top-0 z-50 flex items-center p-4 bg-black/40 backdrop-blur-xl border-b border-[#41f0db]/20">
         <Button 
           variant="ghost" 
@@ -76,7 +79,7 @@ const Login = () => {
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex-1 flex flex-col p-4 items-center justify-center"
+        className="flex-1 flex flex-col p-4 items-center justify-center relative z-10"
       >
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
