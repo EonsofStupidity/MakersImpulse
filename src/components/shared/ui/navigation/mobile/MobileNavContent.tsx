@@ -47,6 +47,12 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   const navigate = useNavigate();
   const { session, user } = useAuth();
 
+  console.log('MobileNavContent render:', { 
+    isAuthenticated: !!session,
+    userRole: user?.role,
+    isAdmin: user?.role === 'admin'
+  });
+
   const handleNavigation = (to: string) => {
     console.log('Mobile nav: Navigating to:', to);
     onClose();
@@ -121,7 +127,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
             variants={menuItemVariants}
             className="relative"
           >
-            <motion.div
+            <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => handleNavigation(item.to)}
@@ -133,7 +139,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
                 className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                 layoutId={`highlight-${item.to}`}
               />
-            </motion.div>
+            </motion.button>
           </motion.div>
         ))}
       </motion.nav>
