@@ -1,11 +1,11 @@
 .admin-topnav {
-  @apply fixed top-0 right-0 z-50 h-[3.7rem] backdrop-blur-md;
+  @apply fixed top-0 right-0 z-[51] h-[3.7rem] backdrop-blur-md;
   background: linear-gradient(135deg, 
     rgba(65, 240, 219, 0.05),
     rgba(255, 10, 190, 0.05)
   );
   left: var(--sidebar-width, 16rem);
-  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+  clip-path: polygon(0 0, 100% 0, 98% 100%, 2% 100%);
 }
 
 .admin-topnav::before {
