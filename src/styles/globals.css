@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import './admin/dashboard.css';
+
 @layer base {
   :root {
     /* Admin Dashboard Colors */
@@ -126,3 +128,4 @@
     transform: translateZ(10px);
   }
 }
+

@@ -1,8 +1,9 @@
 .admin-layout {
   @apply min-h-screen relative overflow-hidden;
   background: linear-gradient(135deg, 
-    rgba(21,26,36,0.95),
-    rgba(55,56,64,0.95)
+    #151A24,
+    #5C596C,
+    #373840
   );
 }
 
@@ -22,10 +23,10 @@
 }
 
 .admin-sidebar {
-  @apply fixed left-0 top-[3.7rem] bottom-0 w-64 z-40 transition-all duration-300;
+  @apply fixed left-0 top-[3.7rem] bottom-0 w-64 z-40 transition-all duration-300 rounded-tr-2xl rounded-br-2xl;
   background: linear-gradient(135deg,
     rgba(21,26,36,0.95),
-    rgba(55,56,64,0.95)
+    rgba(92,89,108,0.95)
   );
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(65, 240, 219, 0.2);
@@ -53,7 +54,7 @@
 }
 
 .admin-card {
-  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border border-[#41f0db]/10 rounded-xl p-6 hover:border-[#41f0db]/20 transition-all duration-300;
+  @apply relative overflow-hidden backdrop-blur-lg bg-[#151A24]/20 border border-[#41f0db]/10 rounded-xl p-6 hover:border-[#41f0db]/20 transition-all duration-300;
 }
 
 .admin-card::before {
@@ -83,4 +84,28 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.admin-avatar {
+  @apply h-[2.8rem] w-[2.8rem] border-2 border-[#41f0db] rounded-full overflow-hidden transition-all duration-300 shadow-xl transform scale-110 translate-y-2;
+}
+
+.admin-avatar::before {
+  content: '';
+  @apply absolute inset-0 rounded-full bg-black/20 backdrop-blur-md border border-[#41f0db]/30 shadow-inner;
+}
+
+.admin-shortcut-item {
+  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-[#41f0db] transition-all duration-300 relative cursor-move;
+  background: linear-gradient(135deg,
+    rgba(21,26,36,0.8),
+    rgba(92,89,108,0.8)
+  );
+}
+
+.admin-shortcut-item:hover {
+  background: linear-gradient(135deg,
+    rgba(65,240,219,0.1),
+    rgba(255,10,190,0.1)
+  );
 }
