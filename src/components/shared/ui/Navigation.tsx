@@ -126,16 +126,16 @@ export const Navigation = () => {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="h-10 w-10 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
+                  <Avatar className="h-[2.8rem] w-[2.8rem] border-2 border-[#4d00b3] rounded-full overflow-hidden transition-all duration-300 shadow-xl transform scale-110
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
                     before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
                   >
                     <AvatarImage 
                       src={session.user.user_metadata?.avatar_url || "/admin/placeholder-avatar.png"}
                       alt="User avatar"
-                      className="object-cover"
+                      className="object-cover w-full h-full"
                     />
-                    <AvatarFallback>
+                    <AvatarFallback className="bg-[#4d00b3] text-white">
                       {session.user.email?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
