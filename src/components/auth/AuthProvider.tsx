@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 interface AuthContextType {
   session: Session | null;
@@ -18,6 +19,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     let mounted = true;
+    console.log('AuthProvider: Initializing...');
     
     const initializeAuth = async () => {
       try {
@@ -26,6 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         
         if (mounted) {
           if (initialSession?.user) {
+            console.log('Initial session found:', initialSession.user.id);
             const { data: profile } = await supabase
               .from('profiles')
               .select('role')
@@ -34,6 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             if (profile) {
               initialSession.user.role = profile.role;
+              console.log('User role loaded:', profile.role);
             }
           }
           setSession(initialSession);
@@ -62,6 +66,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
           if (profile) {
             currentSession.user.role = profile.role;
+            console.log('Updated user role:', profile.role);
           }
           setSession(currentSession);
         } catch (error) {
@@ -102,7 +107,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
     </AuthContext.Provider>
   );
 };
