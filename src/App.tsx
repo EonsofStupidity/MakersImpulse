@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { toast } from "sonner";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,23 +23,75 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  console.log('App component mounting...');
   const { setSession, setUser, setLoading } = useAuthStore();
   
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
+    // Get initial session and check role
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      console.log('Initial session check:', session);
+      
+      if (session?.user) {
+        // Get user profile with role
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+          
+        console.log('User profile:', profile);
+        
+        if (error) {
+          console.error('Error fetching profile:', error);
+          toast.error('Error fetching user profile');
+          return;
+        }
+
+        if (!profile) {
+          console.error('No profile found');
+          toast.error('No user profile found');
+          return;
+        }
+
+        // Set session with enhanced user info including role
+        setSession(session);
+        setUser({ ...session.user, role: profile.role });
+        setLoading(false);
+
+        console.log('User role:', profile.role);
+        if (profile.role !== 'admin' && profile.role !== 'super_admin') {
+          toast.error('You need admin privileges to access the dashboard');
+        }
+      } else {
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+      }
     });
 
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      console.log('Auth state changed:', _event, session?.user?.id);
+      
+      if (session?.user) {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', session.user.id)
+          .single();
+
+        if (error || !profile) {
+          console.error('Error fetching profile:', error);
+          return;
+        }
+
+        setSession(session);
+        setUser({ ...session.user, role: profile.role });
+      } else {
+        setSession(null);
+        setUser(null);
+      }
       setLoading(false);
     });
 
