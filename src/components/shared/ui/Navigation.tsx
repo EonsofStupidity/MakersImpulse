@@ -124,16 +124,16 @@ export const Navigation = () => {
               <div className="hidden md:block relative z-[60]">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="relative group transition-transform duration-300 hover:scale-110 transform translate-y-4"
+                  className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="h-32 w-32 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
+                  <Avatar className="h-10 w-10 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
                     before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
                   >
                     <AvatarImage 
                       src={session.user.user_metadata?.avatar_url || "/admin/placeholder-avatar.png"}
                       alt="User avatar"
-                      className="object-cover transform scale-125"
+                      className="object-cover"
                     />
                     <AvatarFallback>
                       {session.user.email?.charAt(0).toUpperCase() || 'U'}
