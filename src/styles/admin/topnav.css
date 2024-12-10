@@ -1,0 +1,39 @@
+.admin-topnav {
+  @apply fixed top-0 right-0 z-50 h-[3.7rem] backdrop-blur-md;
+  background: linear-gradient(135deg, 
+    rgba(65, 240, 219, 0.1),
+    rgba(255, 10, 190, 0.1)
+  );
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+  left: var(--sidebar-width, 16rem);
+}
+
+.admin-topnav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(65, 240, 219, 0.15),
+    rgba(255, 10, 190, 0.15),
+    rgba(128, 0, 255, 0.15)
+  );
+  pointer-events: none;
+}
+
+.admin-topnav-item {
+  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 
+         hover:text-[#41f0db] transition-all duration-300 relative cursor-pointer;
+}
+
+.admin-topnav-item:hover {
+  @apply bg-[#41f0db]/5;
+  transform: translateY(-1px);
+}
+
+.shortcut-drop-zone {
+  @apply relative rounded-lg transition-all duration-300;
+}
+
+.shortcut-drop-zone.dragging-over {
+  @apply bg-[#41f0db]/5;
+}

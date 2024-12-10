@@ -25,9 +25,9 @@ const AdminDashboard = () => {
       style={{
         background: `
           linear-gradient(135deg, 
-            rgba(77, 0, 179, 0.95), 
-            rgba(114, 34, 140, 0.95), 
-            rgba(176, 230, 83, 0.95)
+            rgba(77, 0, 179, 0.1), 
+            rgba(114, 34, 140, 0.1), 
+            rgba(176, 230, 83, 0.1)
           ),
           radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
             rgba(65, 240, 219, 0.15), 
@@ -36,6 +36,7 @@ const AdminDashboard = () => {
           )
         `,
         backgroundBlendMode: 'overlay',
+        backgroundImage: 'url("/lovable-uploads/c7b8c00f-2fa0-444c-bd32-62f1d4a4cee7.png")',
         backgroundSize: 'cover'
       }}
     >

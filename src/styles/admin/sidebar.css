@@ -1,0 +1,49 @@
+.admin-sidebar {
+  @apply fixed left-0 top-0 bottom-0 z-40 overflow-hidden transition-all duration-300;
+  background: linear-gradient(135deg, 
+    rgba(77, 0, 179, 0.95), 
+    rgba(114, 34, 140, 0.95), 
+    rgba(176, 230, 83, 0.95)
+  );
+  clip-path: path('M 0 0 L 240 0 Q 280 65%, 240 100% L 0 100% Z');
+  width: var(--sidebar-width, 16rem);
+}
+
+.admin-sidebar-collapsed {
+  --sidebar-width: 5rem;
+}
+
+.admin-sidebar-expanded {
+  --sidebar-width: 16rem;
+}
+
+.admin-sidebar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(65, 240, 219, 0.15),
+    rgba(255, 10, 190, 0.15),
+    rgba(128, 0, 255, 0.15)
+  );
+  pointer-events: none;
+}
+
+.admin-sidebar-item {
+  @apply flex items-center gap-3 p-2 rounded-lg transition-all duration-300 relative group;
+}
+
+.admin-sidebar-item:hover {
+  @apply bg-white/10;
+  transform: translateX(4px) scale(1.02);
+}
+
+.admin-sidebar-item-icon {
+  @apply p-2 rounded-lg transition-colors duration-300;
+  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+}
+
+.admin-sidebar-item:hover .admin-sidebar-item-icon {
+  @apply bg-white/20;
+  transform: rotate(5deg);
+}
