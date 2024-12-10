@@ -9,7 +9,6 @@ import {
   Image, Activity, Settings, Zap, 
   Cpu, Radio
 } from 'lucide-react';
-import { toast } from 'sonner';
 
 const tabs = [
   { id: 'dashboard', label: 'Dashboard' },
@@ -98,7 +97,7 @@ export const AdminSidebar = () => {
                 {item.label}
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-[#41f0db] to-[#ff0abe] scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </span>
-              <div className="admin-nav-highlight animate-menu-wave" />
+              <div className="admin-nav-highlight" />
             </Link>
           );
         })}
