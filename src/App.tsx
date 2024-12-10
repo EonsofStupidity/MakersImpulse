@@ -19,16 +19,15 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
       throwOnError: true,
-      onError: (error: Error) => {
-        console.error('Query error:', error);
-        toast.error('Failed to fetch data', {
-          description: error.message,
-          duration: 5000,
-        });
-      },
+      meta: {
+        errorMessage: 'Failed to fetch data'
+      }
     },
     mutations: {
       retry: 1,
+      meta: {
+        errorMessage: 'Operation failed'
+      },
       onError: (error: Error) => {
         console.error('Mutation error:', error);
         toast.error('Operation failed', {
