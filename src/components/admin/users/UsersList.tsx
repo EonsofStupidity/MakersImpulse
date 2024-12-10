@@ -14,13 +14,14 @@ import { Badge } from "@/components/ui/badge";
 import { RoleSelector } from './RoleSelector';
 import { UserTableRowActions } from './UserTableRowActions';
 import { ErrorState } from '@/components/shared/error-handling/ErrorState';
+import { UserRole } from '@/components/auth/types';
 
 interface UsersListProps {
   searchQuery: string;
 }
 
 export const UsersList = ({ searchQuery }: UsersListProps) => {
-  const { users, isLoading, error, refetch } = useUserManagement();
+  const { users, isLoading, error, refetch, updateRole } = useUserManagement();
 
   const filteredProfiles = users?.filter((profile) => {
     const searchLower = searchQuery.toLowerCase();
@@ -30,6 +31,14 @@ export const UsersList = ({ searchQuery }: UsersListProps) => {
       profile.role?.toLowerCase().includes(searchLower)
     );
   });
+
+  const handleRoleChange = async (userId: string, role: UserRole) => {
+    try {
+      await updateRole.mutateAsync({ userId, newRole: role });
+    } catch (error) {
+      console.error('Error updating role:', error);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -112,7 +121,6 @@ export const UsersList = ({ searchQuery }: UsersListProps) => {
                   userId={profile.id}
                   currentRole={profile.role || 'subscriber'}
                   isBanned={profile.is_banned}
-                  onSuccess={() => refetch()}
                 />
               </TableCell>
             </TableRow>

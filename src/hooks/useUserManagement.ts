@@ -30,6 +30,28 @@ export const useUserManagement = () => {
     },
   });
 
+  const getUserActivity = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('user_activity')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  };
+
+  const getUserCMSActivity = async (userId: string) => {
+    const { data, error } = await supabase
+      .from('user_activity_cms')
+      .select('*, cms_content(*)')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  };
+
   const updateRole = useMutation({
     mutationFn: async ({ userId, newRole }: { userId: string; newRole: UserRole }) => {
       console.log('Updating user role:', { userId, newRole });
@@ -64,26 +86,13 @@ export const useUserManagement = () => {
 
   const banUser = useMutation({
     mutationFn: async ({ userId, reason }: { userId: string; reason: string }) => {
-      console.log('Banning user:', { userId, reason });
-
-      const { error: banError } = await supabase.rpc('ban_user', {
+      const { error } = await supabase.rpc('ban_user', {
         user_id: userId,
         reason: reason,
         admin_id: (await supabase.auth.getUser()).data.user?.id
       });
 
-      if (banError) throw banError;
-
-      const { error: activityError } = await supabase
-        .from('user_activity')
-        .insert({
-          user_id: userId,
-          activity_type: 'user_banned',
-          details: reason,
-          metadata: { banned_at: new Date().toISOString() }
-        });
-
-      if (activityError) throw activityError;
+      if (error) throw error;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
@@ -126,6 +135,8 @@ export const useUserManagement = () => {
     refetch,
     updateRole,
     banUser,
-    unbanUser
+    unbanUser,
+    getUserActivity,
+    getUserCMSActivity
   };
 };

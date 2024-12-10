@@ -11,7 +11,7 @@ export const UserBulkActions = () => {
     try {
       const exportData = users?.map(user => ({
         username: user.username,
-        email: user.email,
+        display_name: user.display_name,
         role: user.role,
         created_at: user.created_at,
         last_seen: user.last_seen,
