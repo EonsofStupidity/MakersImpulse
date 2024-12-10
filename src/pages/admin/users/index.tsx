@@ -21,6 +21,7 @@ import { RoleSelector } from "@/components/admin/users/RoleSelector";
 import { UserTableRowActions } from "@/components/admin/users/UserTableRowActions";
 import { toast } from "sonner";
 import { UserRole } from "@/components/auth/types";
+import { supabase } from "@/integrations/supabase/client";
 
 const UserManagement = () => {
   const { data: profiles, isLoading, error, refetch } = useProfiles();
@@ -87,15 +88,15 @@ const UserManagement = () => {
       >
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-white">User Management</h1>
-          <div className="w-64">
+          <div className="w-64 relative">
             <Input
               type="search"
               placeholder="Search users..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="bg-gray-800/50 border-white/10 text-white"
-              icon={<Search className="h-4 w-4 text-gray-400" />}
+              className="bg-gray-800/50 border-white/10 text-white pl-10"
             />
+            <Search className="h-4 w-4 text-gray-400 absolute left-3 top-3" />
           </div>
         </div>
 

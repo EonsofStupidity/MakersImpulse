@@ -14,6 +14,10 @@ export interface Profile {
   created_at: string;
   updated_at: string;
   last_seen: string | null;
+  is_banned: boolean;
+  ban_reason: string | null;
+  banned_at: string | null;
+  banned_by: string | null;
 }
 
 export const useProfiles = () => {
