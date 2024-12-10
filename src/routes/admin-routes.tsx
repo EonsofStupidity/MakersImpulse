@@ -1,6 +1,7 @@
 import { lazy } from "react";
+import Dashboard from "@/pages/admin/dashboard";
+import { NewDashboardOverview } from "@/pages/admin/core/NewDashboardOverview";
 
-const Dashboard = lazy(() => import("@/pages/admin/dashboard"));
 const Posts = lazy(() => import("@/pages/admin/posts"));
 const Settings = lazy(() => import("@/pages/admin/settings"));
 const Users = lazy(() => import("@/pages/admin/users"));

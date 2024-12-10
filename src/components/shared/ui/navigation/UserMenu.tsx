@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, UserCircle } from "lucide-react";
+import { User, LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -24,6 +24,7 @@ export const UserMenu = memo(() => {
   };
 
   const handleNavigation = (path: string) => {
+    console.log('UserMenu: Navigating to:', path);
     navigate(path);
     toast.success(`Navigating to ${path}`);
   };
@@ -74,7 +75,7 @@ export const UserMenu = memo(() => {
             onClick={() => handleNavigation('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
           >
-            <UserCircle className="mr-2 h-4 w-4" />
+            <LayoutDashboard className="mr-2 h-4 w-4" />
             Admin Dashboard
           </DropdownMenuItem>
         )}
