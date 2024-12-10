@@ -48,6 +48,13 @@ export default {
           green: "#26c766",
           pink: "#c726b2",
           purple: "#8000ff",
+        },
+        cyber: {
+          yellow: "#FFE29F",
+          green: "#7FFF00",
+          pink: "#FF1493",
+          purple: "#9932CC",
+          neon: "#41f0db"
         }
       },
       backgroundImage: {
@@ -59,6 +66,8 @@ export default {
         'admin-gradient': 'linear-gradient(135deg, #151A24, #373840, #5C596C)',
         'admin-card': 'linear-gradient(135deg, rgba(38,199,102,0.05), rgba(199,38,178,0.05))',
         'admin-hover': 'linear-gradient(135deg, rgba(38,199,102,0.15), rgba(199,38,178,0.15))',
+        'cyber-texture': "url('/textures/cyber-grid.png')",
+        'scratch-overlay': "url('/textures/scratches.png')"
       },
       keyframes: {
         "accordion-down": {
@@ -85,6 +94,21 @@ export default {
           "50%": {
             textShadow: "0 0 20px currentColor"
           }
+        },
+        "cyber-pulse": {
+          "0%, 100%": { 
+            textShadow: "0 0 10px var(--cyber-glow)",
+            transform: "scale(1)"
+          },
+          "50%": { 
+            textShadow: "0 0 20px var(--cyber-glow), 0 0 30px var(--cyber-glow)",
+            transform: "scale(1.05)"
+          }
+        },
+        "menu-wave": {
+          "0%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+          "100%": { backgroundPosition: "0% 50%" }
         }
       },
       animation: {
@@ -92,7 +116,9 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
         "gradient-flow": "gradient-flow 15s ease infinite",
-        "text-glow": "text-glow 2s ease-in-out infinite"
+        "text-glow": "text-glow 2s ease-in-out infinite",
+        "cyber-pulse": "cyber-pulse 2s ease-in-out infinite",
+        "menu-wave": "menu-wave 15s ease infinite"
       },
     },
   },
