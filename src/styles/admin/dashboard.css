@@ -20,7 +20,6 @@
   );
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0 0 1rem 1rem;
 }
 
 .admin-sidebar {
@@ -31,7 +30,6 @@
   );
   backdrop-filter: blur(10px);
   border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0 2rem 0 0;
 }
 
 .admin-nav-item {
@@ -67,7 +65,7 @@
 }
 
 .admin-card {
-  @apply relative overflow-hidden backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl;
+  @apply relative overflow-hidden backdrop-blur-lg bg-white/5 border border-white/10;
   transition: all 0.3s ease;
 }
 
