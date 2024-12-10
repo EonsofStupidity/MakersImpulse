@@ -11,13 +11,12 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthSetup } from '@/hooks/useAuthSetup';
 
-// Create QueryClient with robust error handling and proper typing
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 5 * 60 * 1000,
       throwOnError: true,
       meta: {
         errorMessage: 'Failed to fetch data'
@@ -47,34 +46,57 @@ const App = () => {
     if (initialSetupDone.current) return;
     initialSetupDone.current = true;
 
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log('Initial session check:', session);
-      handleAuthChange(session);
-    });
+    let retryCount = 0;
+    const maxRetries = 3;
+    const retryDelay = 1000; // 1 second
 
-    // Listen for auth changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log('Auth state changed:', _event, session?.user?.id);
-      handleAuthChange(session);
-    });
+    const setupAuth = async () => {
+      try {
+        // Get initial session
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Session retrieval error:', sessionError);
+          throw sessionError;
+        }
 
-    // Global mouse gradient effect with performance optimization
-    const handleMouseMove = (e: MouseEvent) => {
-      requestAnimationFrame(() => {
-        document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
-        document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
-      });
+        console.log('Initial session check:', session);
+        await handleAuthChange(session);
+
+      } catch (error) {
+        console.error('Auth setup error:', error);
+        if (retryCount < maxRetries) {
+          retryCount++;
+          console.log(`Retrying auth setup (${retryCount}/${maxRetries})...`);
+          setTimeout(setupAuth, retryDelay * retryCount);
+        } else {
+          toast.error('Failed to initialize authentication', {
+            description: 'Please refresh the page or try again later.',
+          });
+        }
+      }
     };
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    setupAuth();
+
+    // Listen for auth changes with error handling
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      try {
+        console.log('Auth state changed:', _event, session?.user?.id);
+        await handleAuthChange(session);
+      } catch (error) {
+        console.error('Auth state change error:', error);
+        toast.error('Authentication error', {
+          description: 'There was a problem with your session. Please try signing in again.',
+        });
+      }
+    });
     
-    // Cleanup subscriptions and event listeners
+    // Cleanup subscriptions
     return () => {
       subscription.unsubscribe();
-      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [handleAuthChange]);
   

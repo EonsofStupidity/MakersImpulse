@@ -14,27 +14,44 @@ interface AuthState {
     displayName?: string;
   } | null;
   isLoading: boolean;
+  error: Error | null;
   setSession: (session: Session | null) => void;
   setUser: (user: any | null) => void;
   setLoading: (isLoading: boolean) => void;
+  setError: (error: Error | null) => void;
   signOut: () => Promise<void>;
   reset: () => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       session: null,
       user: null,
       isLoading: true,
+      error: null,
       setSession: (session) => set({ session }),
       setUser: (user) => set({ user }),
       setLoading: (isLoading) => set({ isLoading }),
+      setError: (error) => set({ error }),
       signOut: async () => {
-        await supabase.auth.signOut();
-        set({ session: null, user: null });
+        try {
+          set({ isLoading: true, error: null });
+          await supabase.auth.signOut();
+          set({ session: null, user: null });
+        } catch (error) {
+          set({ error: error instanceof Error ? error : new Error('Sign out failed') });
+          throw error;
+        } finally {
+          set({ isLoading: false });
+        }
       },
-      reset: () => set({ session: null, user: null, isLoading: false }),
+      reset: () => set({ 
+        session: null, 
+        user: null, 
+        isLoading: false, 
+        error: null 
+      }),
     }),
     {
       name: 'auth-storage',
