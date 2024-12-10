@@ -42,7 +42,17 @@ const App = () => {
       setLoading(false);
     });
 
-    return () => subscription.unsubscribe();
+    // Global mouse gradient effect
+    const handleMouseMove = (e: MouseEvent) => {
+      document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.documentElement.style.setProperty('--mouse-y', `${e.clientY}px`);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      subscription.unsubscribe();
+      window.removeEventListener('mousemove', handleMouseMove);
+    };
   }, [setSession, setUser, setLoading]);
   
   return (
@@ -52,15 +62,17 @@ const App = () => {
           <AdminSidebarProvider>
             <ThemeProvider>
               <TooltipProvider>
-                <RootLayout>
-                  <AppRoutes />
-                </RootLayout>
-                <Toaster 
-                  position="top-right" 
-                  expand={false} 
-                  richColors 
-                  closeButton 
-                />
+                <div className="app-container">
+                  <RootLayout>
+                    <AppRoutes />
+                  </RootLayout>
+                  <Toaster 
+                    position="top-right" 
+                    expand={false} 
+                    richColors 
+                    closeButton 
+                  />
+                </div>
               </TooltipProvider>
             </ThemeProvider>
           </AdminSidebarProvider>

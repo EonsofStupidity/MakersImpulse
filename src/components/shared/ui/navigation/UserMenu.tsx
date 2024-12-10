@@ -51,7 +51,7 @@ export const UserMenu = memo(({ onClose }: UserMenuProps) => {
 
   return (
     <div className="absolute right-0 mt-2 w-56 rounded-xl overflow-hidden">
-      <div className="bg-black/90 border border-[#4d00b3]/30 backdrop-blur-xl p-2 space-y-1 cyber-gradient">
+      <div className="bg-black/90 border border-[#41f0db]/30 backdrop-blur-xl p-2 space-y-1">
         {isAdmin && (
           <button
             onClick={() => handleNavigation('/admin/dashboard', 'Admin Dashboard')}
