@@ -2,49 +2,58 @@
 .admin-layout {
   @apply min-h-screen relative overflow-hidden;
   background: linear-gradient(135deg, 
-    rgba(176, 230, 83, 0.1),  /* Greenish yellow */
-    rgba(77, 0, 179, 0.1)    /* Brand purple */
+    rgba(176, 230, 83, 0.1),
+    rgba(77, 0, 179, 0.1),
+    rgba(65, 240, 219, 0.1)
   );
 }
 
 .admin-content {
-  @apply relative z-10 space-y-8 px-6 py-8 min-h-screen;
+  @apply relative z-10 space-y-8 px-6 py-8 min-h-screen pl-64;
   animation: fadeIn 0.5s ease-out;
+  background-image: url('/lovable-uploads/c7b8c00f-2fa0-444c-bd32-62f1d4a4cee7.png');
+  background-size: cover;
+  background-blend-mode: overlay;
 }
 
-/* Navigation Components */
-.admin-nav {
-  @apply fixed top-0 left-0 right-0 z-50 h-[3.7rem];
-  background: linear-gradient(135deg, 
-    rgba(176, 230, 83, 0.1),
-    rgba(114, 34, 140, 0.1)
-  );
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(176, 230, 83, 0.2);
+/* Custom Scrollbar */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-.admin-sidebar {
-  @apply fixed left-0 top-0 bottom-0 w-64 z-40;
-  background: linear-gradient(135deg,
-    rgba(21, 26, 36, 0.95),
-    rgba(32, 37, 47, 0.95)
-  );
-  backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(176, 230, 83, 0.2);
-  clip-path: path('M 0 0 L 240 0 C 260 100, 260 200, 240 300 L 0 300 Z');
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Background Effects */
-.admin-gradient-bg {
-  @apply absolute inset-0 z-0;
-  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(176, 230, 83, 0.15),
-    rgba(77, 0, 179, 0.15)
-  );
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.section-transition {
+  @apply transition-all duration-500 ease-in-out;
+}
+
+.section-transition.entering {
+  @apply translate-y-0 opacity-100;
+}
+
+.section-transition.exiting {
+  @apply -translate-y-full opacity-0;
 }

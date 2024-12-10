@@ -19,7 +19,7 @@ export default {
     },
     extend: {
       spacing: {
-        '33': '8.25rem', // Adding custom 33 spacing
+        '33': '8.25rem',
       },
       colors: {
         border: "hsl(var(--border))",
@@ -48,6 +48,7 @@ export default {
           purple: "#4d00b3",
           magenta: "#72228c",
           lime: "#b0e653",
+          cyan: "#41f0db"
         }
       },
       backgroundImage: {
@@ -59,6 +60,7 @@ export default {
         'cyber-grid': 'radial-gradient(circle at center, rgba(65, 240, 219, 0.1) 0%, transparent 70%)',
         'scratch-overlay': 'linear-gradient(45deg, rgba(255,255,255,0.02) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.02) 75%, rgba(255,255,255,0.02))',
         'brand-gradient': 'linear-gradient(135deg, #4d00b3, #72228c, #b0e653)',
+        'admin-gradient': 'linear-gradient(135deg, #41f0db, #4d00b3, #b0e653)',
       },
       keyframes: {
         "accordion-down": {
@@ -73,53 +75,21 @@ export default {
           "0%": { opacity: "0", transform: "translateY(10px)" },
           "100%": { opacity: "1", transform: "translateY(0)" },
         },
-        "neon-pulse-cyan": {
-          "0%, 100%": {
-            textShadow: "0 0 7px #41f0db, 0 0 10px #41f0db, 0 0 21px #41f0db",
-            color: "#41f0db"
-          },
-          "50%": {
-            textShadow: "0 0 14px #41f0db, 0 0 20px #41f0db, 0 0 42px #41f0db",
-            color: "#41f0db"
-          }
+        "slide-in": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" },
         },
-        "neon-pulse-pink": {
-          "0%, 100%": {
-            textShadow: "0 0 7px #ff0abe, 0 0 10px #ff0abe, 0 0 21px #ff0abe",
-            color: "#ff0abe"
-          },
-          "50%": {
-            textShadow: "0 0 14px #ff0abe, 0 0 20px #ff0abe, 0 0 42px #ff0abe",
-            color: "#ff0abe"
-          }
+        "scale-in": {
+          "0%": { transform: "scale(0.95)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
         },
-        "text-glow": {
-          "0%, 100%": {
-            textShadow: "0 0 4px #ff0abe, 0 0 11px #ff0abe, 0 0 19px #ff0abe",
-          },
-          "50%": {
-            textShadow: "0 0 8px #ff0abe, 0 0 22px #ff0abe, 0 0 38px #ff0abe",
-          }
-        },
-        "letter-hover": {
-          "0%": {
-            color: "currentColor",
-            textShadow: "none"
-          },
-          "100%": {
-            color: "#ff0abe",
-            textShadow: "0 0 8px #ff0abe, 0 0 22px #ff0abe"
-          }
-        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fade-in 0.3s ease-out",
-        "neon-pulse-cyan": "neon-pulse-cyan 2.5s ease-in-out infinite alternate",
-        "neon-pulse-pink": "neon-pulse-pink 2.5s ease-in-out infinite alternate",
-        "text-glow": "text-glow 2s ease-in-out infinite",
-        "letter-hover": "letter-hover 0.3s ease-out forwards"
+        "slide-in": "slide-in 0.3s ease-out",
+        "scale-in": "scale-in 0.2s ease-out",
       },
     },
   },

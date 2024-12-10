@@ -41,13 +41,24 @@ export const AdminNav = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="admin-nav"
+      className={cn(
+        "fixed top-0 left-64 right-0 z-50 h-[3.7rem]",
+        "bg-gradient-to-r from-[#4d00b3]/80 via-[#72228c]/80 to-[#b0e653]/80",
+        "backdrop-blur-md border-b border-white/10"
+      )}
       onMouseMove={handleMouseMove}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.1), rgba(255, 10, 190, 0.1))`,
+        clipPath: "polygon(0 0, 100% 0, 95% 100%, 5% 100%)",
+        background: `
+          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
+            rgba(65, 240, 219, 0.2), 
+            rgba(77, 0, 179, 0.2),
+            rgba(176, 230, 83, 0.2)
+          )
+        `
       }}
     >
       <div className="h-full flex items-center px-4 max-w-7xl mx-auto relative z-50">
