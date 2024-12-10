@@ -6,6 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { memo } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
