@@ -6,7 +6,11 @@ import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
 import { memo } from "react";
 
-export const UserMenu = memo(() => {
+interface UserMenuProps {
+  onClose?: () => void;
+}
+
+export const UserMenu = memo(({ onClose }: UserMenuProps) => {
   const navigate = useNavigate();
   const { session, user, signOut, isLoading } = useAuthStore();
 
@@ -23,10 +27,17 @@ export const UserMenu = memo(() => {
       await signOut();
       toast.success('Signed out successfully');
       navigate('/');
+      onClose?.();
     } catch (error) {
       console.error('Sign out error:', error);
       toast.error('Failed to sign out');
     }
+  };
+
+  const handleNavigation = (path: string, label: string) => {
+    navigate(path);
+    toast.success(`Navigating to ${label}`);
+    onClose?.();
   };
 
   if (isLoading) {
@@ -42,7 +53,10 @@ export const UserMenu = memo(() => {
       <Button 
         variant="ghost" 
         size="sm"
-        onClick={() => navigate('/login')}
+        onClick={() => {
+          navigate('/login');
+          onClose?.();
+        }}
         className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
       >
         <LogIn className="mr-2 h-4 w-4" />
@@ -54,62 +68,40 @@ export const UserMenu = memo(() => {
   const isAdmin = user.role === 'admin' || user.role === 'super_admin';
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
-        >
-          <User className="h-4 w-4" />
-          <span className="ml-2 hidden md:inline">{user.email}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end"
-        className="w-56 bg-black/90 border border-white/10 backdrop-blur-xl"
-      >
+    <div className="absolute right-0 mt-2 w-56 rounded-xl overflow-hidden">
+      <div className="bg-black/90 border border-white/10 backdrop-blur-xl p-2 space-y-1">
         {isAdmin && (
-          <DropdownMenuItem 
-            onClick={() => {
-              navigate('/admin/dashboard');
-              toast.success('Navigating to Admin Dashboard');
-            }}
-            className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+          <button
+            onClick={() => handleNavigation('/admin/dashboard', 'Admin Dashboard')}
+            className="w-full flex items-center px-3 py-2 text-white hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-colors duration-300"
           >
             <LayoutDashboard className="mr-2 h-4 w-4" />
             Admin Dashboard
-          </DropdownMenuItem>
+          </button>
         )}
-        <DropdownMenuItem 
-          onClick={() => {
-            navigate('/maker-space');
-            toast.success('Navigating to Maker Space');
-          }}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+        <button
+          onClick={() => handleNavigation('/maker-space', 'Maker Space')}
+          className="w-full flex items-center px-3 py-2 text-white hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-colors duration-300"
         >
           <User className="mr-2 h-4 w-4" />
           Maker Space
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => {
-            navigate('/settings');
-            toast.success('Navigating to Settings');
-          }}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+        </button>
+        <button
+          onClick={() => handleNavigation('/settings', 'Settings')}
+          className="w-full flex items-center px-3 py-2 text-white hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-colors duration-300"
         >
           <Settings className="mr-2 h-4 w-4" />
           Settings
-        </DropdownMenuItem>
-        <DropdownMenuItem 
+        </button>
+        <button
           onClick={handleSignOut}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+          className="w-full flex items-center px-3 py-2 text-white hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-colors duration-300"
         >
           <LogOut className="mr-2 h-4 w-4" />
           Sign Out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </button>
+      </div>
+    </div>
   );
 });
 
