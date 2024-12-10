@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings, Users, Activity } from "lucide-react";
+import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -78,9 +78,7 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   // Admin menu items - only include if user has admin role
   const adminItems: MenuItem[] = user?.role === 'admin' ? [
     { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
-    { to: "/admin/users", label: "Users", icon: Users },
-    { to: "/admin/settings", label: "Settings", icon: Settings },
-    { to: "/admin/activity", label: "Activity", icon: Activity }
+    { to: "/admin/settings", label: "Settings", icon: Settings }
   ] : [];
 
   // Combine all menu items based on user role
