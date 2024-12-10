@@ -606,8 +606,10 @@ export type Database = {
           file_name: string | null
           file_size: number | null
           id: string
+          metadata: Json | null
           row_count: number | null
           status: string
+          type: string | null
           user_id: string | null
         }
         Insert: {
@@ -617,8 +619,10 @@ export type Database = {
           file_name?: string | null
           file_size?: number | null
           id?: string
+          metadata?: Json | null
           row_count?: number | null
           status?: string
+          type?: string | null
           user_id?: string | null
         }
         Update: {
@@ -628,8 +632,10 @@ export type Database = {
           file_name?: string | null
           file_size?: number | null
           id?: string
+          metadata?: Json | null
           row_count?: number | null
           status?: string
+          type?: string | null
           user_id?: string | null
         }
         Relationships: [
