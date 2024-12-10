@@ -23,8 +23,9 @@ export const AdminNav = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-16 left-0 right-0 z-50 h-16 bg-admin-dark",
-        "border-b border-white/10"
+        "fixed top-0 left-0 right-0 z-50 h-16",
+        "before:content-[''] before:absolute before:inset-0 before:bg-admin-dark before:skew-y-[-2deg] before:origin-top-left",
+        "after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-cyber-yellow/20 after:via-cyber-pink/20 after:to-cyber-purple/20 after:opacity-50"
       )}
       onMouseMove={handleMouseMove}
       style={{
@@ -45,7 +46,7 @@ export const AdminNav = () => {
                 to={`/admin/${shortcut.toLowerCase()}`}
                 className={cn(
                   "px-4 py-2 rounded-lg text-white/80",
-                  "hover:text-admin-pink transition-colors duration-300",
+                  "hover:text-cyber-pink transition-colors duration-300",
                   "bg-white/5 hover:bg-white/10",
                   "animate-fade-in"
                 )}

@@ -2,23 +2,28 @@ import { lazy } from "react";
 import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
 import { StatsCards } from "@/components/admin/dashboard/stats/StatsCards";
+import { cn } from "@/lib/utils";
 
 const Posts = lazy(() => import("@/pages/admin/posts"));
 const Users = lazy(() => import("@/pages/admin/users"));
 const Settings = lazy(() => import("@/pages/admin/settings"));
 const ContentManagement = lazy(() => import("@/pages/admin/content-management"));
-const ContentEditor = lazy(() => import("@/pages/admin/content-management/editor"));
 const Categories = lazy(() => import("@/pages/admin/content-management/categories"));
-const Templates = lazy(() => import("@/pages/admin/content-management/templates"));
-const Workflows = lazy(() => import("@/pages/admin/content-management/workflows"));
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light">
+    <div className={cn(
+      "min-h-screen relative overflow-hidden",
+      "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-10 before:z-0",
+      "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.03] after:z-0"
+    )}>
+      <div className="absolute inset-0 bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light z-[-1]" />
       <AdminNav />
       <AdminSidebar />
-      <main className="pl-64 pt-32">
-        {children}
+      <main className="pl-64 pt-32 relative z-10">
+        <div className="p-8 space-y-8">
+          {children}
+        </div>
       </main>
     </div>
   );
@@ -29,8 +34,13 @@ export const adminRoutes = [
     path: "dashboard",
     element: (
       <DashboardLayout>
-        <div className="p-8">
-          <h1 className="text-2xl font-bold text-white mb-6">Dashboard Overview</h1>
+        <div className="space-y-8">
+          <h1 className={cn(
+            "text-2xl font-bold bg-gradient-to-r from-cyber-yellow via-cyber-pink to-cyber-purple bg-clip-text text-transparent",
+            "animate-text-glow"
+          )}>
+            Dashboard Overview
+          </h1>
           <StatsCards />
         </div>
       </DashboardLayout>
@@ -38,38 +48,22 @@ export const adminRoutes = [
   },
   {
     path: "posts",
-    element: <Posts />,
+    element: <DashboardLayout><Posts /></DashboardLayout>,
   },
   {
     path: "users",
-    element: <Users />,
+    element: <DashboardLayout><Users /></DashboardLayout>,
   },
   {
     path: "settings",
-    element: <Settings />,
+    element: <DashboardLayout><Settings /></DashboardLayout>,
   },
   {
     path: "content-management",
-    element: <ContentManagement />,
-  },
-  {
-    path: "content-management/editor",
-    element: <ContentEditor />,
-  },
-  {
-    path: "content-management/editor/:id",
-    element: <ContentEditor />,
+    element: <DashboardLayout><ContentManagement /></DashboardLayout>,
   },
   {
     path: "content-management/categories",
-    element: <Categories />,
-  },
-  {
-    path: "content-management/templates",
-    element: <Templates />,
-  },
-  {
-    path: "content-management/workflows",
-    element: <Workflows />,
+    element: <DashboardLayout><Categories /></DashboardLayout>,
   },
 ];
