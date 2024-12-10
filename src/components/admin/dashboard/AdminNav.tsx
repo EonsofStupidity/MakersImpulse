@@ -41,7 +41,7 @@ export const AdminNav = () => {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed top-[3.7rem] left-0 right-0 h-16 z-40 backdrop-blur-xl border-b border-[#41f0db]/10"
+      className="admin-nav"
       onMouseMove={handleMouseMove}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -74,7 +74,7 @@ export const AdminNav = () => {
                 }}
                 className={cn(
                   "absolute -top-2 -right-2 p-1 rounded-full",
-                  "bg-black/20 hover:bg-black/40 backdrop-blur-sm",
+                  "bg-[#151A24]/20 hover:bg-[#151A24]/40 backdrop-blur-sm",
                   "opacity-0 group-hover:opacity-100",
                   "transition-all duration-300"
                 )}

@@ -50,6 +50,9 @@ export const AdminSidebar = () => {
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="admin-sidebar"
       onMouseMove={handleMouseMove}
+      style={{
+        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(65, 240, 219, 0.05), rgba(255, 10, 190, 0.05))`,
+      }}
     >
       <div className="flex border-b border-white/10">
         {Object.keys(tabs).map((tab) => (
@@ -77,6 +80,10 @@ export const AdminSidebar = () => {
                   key={item.id}
                   to={item.path}
                   className="admin-nav-item group"
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('text/plain', item.id);
+                  }}
                 >
                   <Icon className={cn(
                     "w-5 h-5 transition-colors",
