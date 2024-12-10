@@ -77,6 +77,38 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_toolbar_shortcuts: {
+        Row: {
+          created_at: string | null
+          id: string
+          item_id: string
+          position: number
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          item_id: string
+          position: number
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          item_id?: string
+          position?: number
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_toolbar_shortcuts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null
