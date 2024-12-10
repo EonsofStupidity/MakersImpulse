@@ -4,7 +4,6 @@ const splitTextIntoLetters = (element: HTMLElement) => {
     return;
   }
   
-  console.log('Processing text element:', element.textContent);
   const text = element.textContent || '';
   if (!text.trim()) return;
   
@@ -36,9 +35,9 @@ const splitTextIntoLetters = (element: HTMLElement) => {
       const spanCenter = spanRect.left + spanRect.width / 2 - rect.left;
       const distance = Math.abs(mouseX - spanCenter);
       
-      if (distance < 100) {
+      if (distance < 30) { // Reduced radius for more gradual effect
         span.classList.add('active');
-        const intensity = 1 - (distance / 100);
+        const intensity = 1 - (distance / 30);
         span.style.setProperty('--intensity', intensity.toString());
       } else {
         span.classList.remove('active');
@@ -46,27 +45,25 @@ const splitTextIntoLetters = (element: HTMLElement) => {
     });
   });
 
-  // Reset on mouse leave
+  // Reset on mouse leave with transition
   wrapper.addEventListener('mouseleave', () => {
-    letters.forEach(span => {
-      span.classList.remove('active');
-      span.style.removeProperty('--intensity');
+    letters.forEach((span, index) => {
+      setTimeout(() => {
+        span.classList.remove('active');
+        span.style.removeProperty('--intensity');
+      }, index * 50); // Staggered delay for receding effect
     });
   });
 };
 
-// Initialize on page load and route changes
+// Initialize on DOM content loaded
 const initializeLetterEffects = () => {
-  console.log('Initializing letter effects');
   const selectors = [
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-    'p', 'a', 'span', 'div',
-    '.nav-text', '.menu-item', '.heading-text',
     '.animate-text', '.hero-text', '.feature-text'
   ].join(',');
   
   const elements = document.querySelectorAll(selectors);
-  console.log('Found elements:', elements.length);
   elements.forEach(element => {
     if (element instanceof HTMLElement) {
       splitTextIntoLetters(element);
@@ -76,13 +73,11 @@ const initializeLetterEffects = () => {
 
 // Set up observers for dynamic content
 const setupObservers = () => {
-  console.log('Setting up mutation observers');
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
       mutation.addedNodes.forEach(node => {
         if (node instanceof HTMLElement) {
-          splitTextIntoLetters(node);
-          const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, p, a, span, div');
+          const elements = node.querySelectorAll('h1, h2, h3, h4, h5, h6, .animate-text, .hero-text, .feature-text');
           elements.forEach(element => {
             if (element instanceof HTMLElement) {
               splitTextIntoLetters(element);
@@ -102,16 +97,12 @@ const setupObservers = () => {
 };
 
 // Initialize when document is ready
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM Content Loaded - initializing effects');
+document.addEventListener('DOMContentLoaded', () => {
+  // Delay initialization to ensure theme is loaded
+  setTimeout(() => {
     initializeLetterEffects();
     setupObservers();
-  });
-} else {
-  console.log('Document already loaded - initializing effects');
-  initializeLetterEffects();
-  setupObservers();
-}
+  }, 500);
+});
 
 export {};
