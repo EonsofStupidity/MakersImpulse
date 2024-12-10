@@ -19,53 +19,51 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     let mounted = true;
     
-    const fetchUserProfile = async (userId: string) => {
-      try {
-        const { data: profile, error } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', userId)
-          .single();
-
-        if (error) throw error;
-        return profile;
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-        return null;
-      }
-    };
-
     const initializeAuth = async () => {
       try {
         setIsLoading(true);
         const { data: { session: initialSession } } = await supabase.auth.getSession();
         
-        if (initialSession?.user && mounted) {
-          const profile = await fetchUserProfile(initialSession.user.id);
-          if (profile) {
-            initialSession.user.role = profile.role;
+        if (mounted) {
+          if (initialSession?.user) {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', initialSession.user.id)
+              .single();
+
+            if (profile) {
+              initialSession.user.role = profile.role;
+            }
           }
           setSession(initialSession);
+          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error initializing auth:", error);
-      } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     initializeAuth();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state changed:", event, session?.user?.id);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, currentSession) => {
+      console.log("Auth state changed:", event, currentSession?.user?.id);
       
-      if (session?.user && mounted) {
+      if (currentSession?.user && mounted) {
         try {
-          const profile = await fetchUserProfile(session.user.id);
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', currentSession.user.id)
+            .single();
+
           if (profile) {
-            session.user.role = profile.role;
+            currentSession.user.role = profile.role;
           }
-          setSession(session);
+          setSession(currentSession);
         } catch (error) {
           console.error("Error handling auth state change:", error);
         }
