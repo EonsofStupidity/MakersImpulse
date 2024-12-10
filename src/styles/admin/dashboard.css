@@ -14,8 +14,8 @@
 .admin-nav {
   @apply fixed top-0 left-0 right-0 z-50 h-[3.7rem];
   background: linear-gradient(135deg, 
-    rgba(38,199,102,0.1),
-    rgba(199,38,178,0.1)
+    rgba(65,240,219,0.1),
+    rgba(255,10,190,0.1)
   );
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(65, 240, 219, 0.2);
@@ -36,15 +36,15 @@
 }
 
 .admin-nav-item:hover {
-  @apply bg-white/5;
+  @apply bg-[#41f0db]/5;
   transform: translateY(-1px);
 }
 
 .admin-nav-highlight {
   @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
   background: linear-gradient(45deg, 
-    rgba(38, 199, 102, 0.1), 
-    rgba(199, 38, 178, 0.1)
+    rgba(65,240,219,0.1), 
+    rgba(255,10,190,0.1)
   );
 }
 
@@ -53,7 +53,7 @@
 }
 
 .admin-card {
-  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300;
+  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border border-[#41f0db]/10 rounded-xl p-6 hover:border-[#41f0db]/20 transition-all duration-300;
 }
 
 .admin-card::before {
@@ -68,31 +68,19 @@
 .admin-gradient-bg {
   @apply absolute inset-0 z-0;
   background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(38,199,102,0.15),
-    rgba(199,38,178,0.15),
+    rgba(65,240,219,0.15),
+    rgba(255,10,190,0.15),
     rgba(128,0,255,0.15)
   );
 }
 
-.admin-text-glow {
-  text-shadow: 0 0 10px currentColor;
-  animation: textPulse 2s infinite;
-}
-
-.admin-neon-text-cyan {
-  color: #41f0db;
-  text-shadow: 
-    0 0 7px #41f0db,
-    0 0 10px #41f0db,
-    0 0 21px #41f0db;
-  animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
-}
-
-.admin-neon-text-pink {
-  color: #ff0abe;
-  text-shadow: 
-    0 0 7px #ff0abe,
-    0 0 10px #ff0abe,
-    0 0 21px #ff0abe;
-  animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

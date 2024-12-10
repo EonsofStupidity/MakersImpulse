@@ -9,40 +9,49 @@ import { FileText, GitBranch, History } from "lucide-react";
 
 const AdminDashboard = () => {
   return (
-    <div className="min-h-screen bg-[#1a1a1a] pt-[3.7rem]">
+    <div className="min-h-screen bg-gradient-to-b from-[#1a1a1a] to-[#0d0d0d] pt-[3.7rem]">
       <AdminNav />
       <div className="container mx-auto p-6 space-y-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <Card className="p-6 bg-black/40 border-white/10 backdrop-blur-md">
+          <Card className="overflow-hidden backdrop-blur-xl bg-black/40 border-[#41f0db]/10 shadow-lg shadow-[#41f0db]/5">
             <Tabs defaultValue="content" className="w-full">
-              <TabsList className="bg-white/5 border-white/10">
-                <TabsTrigger value="content" className="data-[state=active]:bg-white/10">
+              <TabsList className="w-full bg-black/50 border-b border-[#41f0db]/10 p-1">
+                <TabsTrigger 
+                  value="content" 
+                  className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db] transition-all duration-300"
+                >
                   <FileText className="w-4 h-4 mr-2" />
                   Content
                 </TabsTrigger>
-                <TabsTrigger value="workflows" className="data-[state=active]:bg-white/10">
+                <TabsTrigger 
+                  value="workflows" 
+                  className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db] transition-all duration-300"
+                >
                   <GitBranch className="w-4 h-4 mr-2" />
                   Workflows
                 </TabsTrigger>
-                <TabsTrigger value="history" className="data-[state=active]:bg-white/10">
+                <TabsTrigger 
+                  value="history" 
+                  className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db] transition-all duration-300"
+                >
                   <History className="w-4 h-4 mr-2" />
                   History
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="content" className="mt-6">
+              <TabsContent value="content" className="p-6">
                 <ContentManager />
               </TabsContent>
 
-              <TabsContent value="workflows" className="mt-6">
+              <TabsContent value="workflows" className="p-6">
                 <WorkflowManagement />
               </TabsContent>
 
-              <TabsContent value="history" className="mt-6">
+              <TabsContent value="history" className="p-6">
                 <div className="text-white/60 text-center py-8">
                   Revision history viewer will be implemented here
                 </div>
