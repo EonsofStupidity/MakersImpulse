@@ -66,8 +66,7 @@ export const Navigation = () => {
       className={cn(
         "fixed top-0 left-0 right-0 z-50 h-[3.7rem]",
         "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
-        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
-        isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
+        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]"
       )}
       onMouseMove={handleMouseMove}
       style={{
@@ -124,7 +123,7 @@ export const Navigation = () => {
               <div className="hidden md:block relative z-[60]">
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="relative group transition-transform duration-300 hover:scale-110"
+                  className="relative group transition-transform duration-300 hover:scale-110 transform translate-y-2"
                 >
                   <Avatar className="h-[2.8rem] w-[2.8rem] border-2 border-[#4d00b3] rounded-full overflow-hidden transition-all duration-300 shadow-xl transform scale-110
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md

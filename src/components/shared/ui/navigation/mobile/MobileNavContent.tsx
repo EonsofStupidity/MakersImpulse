@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from '@/lib/store/auth-store';
-import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings } from "lucide-react";
+import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings, FileText, Image, Activity } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -24,33 +24,32 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
 
   const handleNavigation = (to: string) => {
     navigate(to);
-    onClose(); // Close mobile menu after navigation
+    onClose();
     toast.success(`Navigating to ${to.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
-  // Base menu items - always show these
   const baseItems: MenuItem[] = [
     { to: "/", label: "Home", icon: Home },
     { to: "/maker-space", label: "Maker Space", icon: Wrench },
+    { to: "/blog", label: "Blog", icon: FileText },
     { to: "/guides", label: "Guides", icon: BookOpen },
     { to: "/contact", label: "Contact", icon: Mail }
   ];
 
-  // Auth menu items - show different items based on auth status
   const authItems: MenuItem[] = user ? [
-    { to: "/profile", label: "Profile", icon: UserCircle }
+    { to: "/profile", label: "Profile", icon: UserCircle },
+    { to: "/media", label: "Media", icon: Image },
+    { to: "/activity", label: "Activity", icon: Activity }
   ] : [
     { to: "/login", label: "Sign In", icon: LogIn },
     { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
-  // Admin menu items - only include if user has admin role
   const adminItems: MenuItem[] = user?.role === 'admin' ? [
     { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/admin/settings", label: "Settings", icon: Settings }
   ] : [];
 
-  // Combine all menu items based on user role
   const menuItems = [...baseItems, ...authItems, ...adminItems];
 
   if (!isOpen) return null;
@@ -67,10 +66,11 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
           <button
             key={item.to}
             onClick={() => handleNavigation(item.to)}
-            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-all duration-300 group relative overflow-hidden"
           >
-            <item.icon className="h-5 w-5" />
-            {item.label}
+            <item.icon className="h-5 w-5 transition-colors duration-300 group-hover:text-[#41f0db]" />
+            <span className="relative z-10">{item.label}</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/5 to-[#8000ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         ))}
         {user && (
@@ -78,11 +78,13 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
             onClick={() => {
               signOut();
               onClose();
+              toast.success('Signed out successfully');
             }}
-            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-4 border-t border-white/10 pt-4"
+            className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-all duration-300 group relative overflow-hidden mt-4 border-t border-white/10 pt-4"
           >
-            <LogIn className="h-5 w-5" />
-            Sign Out
+            <LogIn className="h-5 w-5 transition-colors duration-300 group-hover:text-[#41f0db]" />
+            <span className="relative z-10">Sign Out</span>
+            <div className="absolute inset-0 bg-gradient-to-r from-[#41f0db]/5 to-[#8000ff]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         )}
       </nav>
