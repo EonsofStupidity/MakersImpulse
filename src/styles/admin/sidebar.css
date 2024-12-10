@@ -1,11 +1,11 @@
 .admin-sidebar {
   @apply fixed left-0 top-0 bottom-0 z-40 overflow-hidden transition-all duration-300;
   background: linear-gradient(135deg, 
-    rgba(77, 0, 179, 0.75), 
-    rgba(114, 34, 140, 0.75), 
-    rgba(176, 230, 83, 0.75)
+    rgba(77, 0, 179, 0.5), 
+    rgba(114, 34, 140, 0.5), 
+    rgba(176, 230, 83, 0.5)
   );
-  clip-path: path('M 0 0 L 240 0 L 240 65% Q 280 85%, 240 100% L 0 100% Z');
+  clip-path: path('M 0 0 L 280 0 L 280 65% Q 320 85%, 280 100% L 0 100% Z');
   width: var(--sidebar-width, 16rem);
 }
 
@@ -22,9 +22,9 @@
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(65, 240, 219, 0.1),
-    rgba(255, 10, 190, 0.1),
-    rgba(128, 0, 255, 0.1)
+    rgba(65, 240, 219, 0.05),
+    rgba(255, 10, 190, 0.05),
+    rgba(128, 0, 255, 0.05)
   );
   pointer-events: none;
 }
