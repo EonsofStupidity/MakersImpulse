@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings, Users, Activity } from "lucide-react";
+import { Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings, Users, Activity } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -9,7 +9,6 @@ interface MenuItem {
   to: string;
   label: string;
   icon: LucideIcon;
-  adminOnly?: boolean;
 }
 
 const menuVariants = {
