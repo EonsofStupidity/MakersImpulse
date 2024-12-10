@@ -11,7 +11,12 @@ interface MenuItem {
   icon: LucideIcon;
 }
 
-export const MobileNavContent = () => {
+interface MobileNavContentProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
 
@@ -19,6 +24,7 @@ export const MobileNavContent = () => {
 
   const handleNavigation = (to: string) => {
     navigate(to);
+    onClose(); // Close mobile menu after navigation
     toast.success(`Navigating to ${to.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
@@ -47,6 +53,8 @@ export const MobileNavContent = () => {
   // Combine all menu items based on user role
   const menuItems = [...baseItems, ...authItems, ...adminItems];
 
+  if (!isOpen) return null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -20 }}
@@ -67,7 +75,10 @@ export const MobileNavContent = () => {
         ))}
         {user && (
           <button
-            onClick={() => signOut()}
+            onClick={() => {
+              signOut();
+              onClose();
+            }}
             className="flex items-center gap-2 w-full p-2 text-left text-white/80 hover:text-white hover:bg-white/5 rounded-lg transition-colors mt-4 border-t border-white/10 pt-4"
           >
             <LogIn className="h-5 w-5" />
