@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden bg-black"
+      className="min-h-screen relative overflow-hidden bg-[#151A24]"
       onMouseMove={handleMouseMove}
       style={{
         background: `
@@ -47,7 +47,7 @@ const AdminDashboard = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Card className="glass-card">
+            <Card className="bg-black/20 backdrop-blur-xl border-white/10">
               <Tabs defaultValue="content" className="w-full">
                 <TabsList className="w-full bg-black/50 border-b border-white/10 p-1">
                   <TabsTrigger 
