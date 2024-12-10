@@ -19,27 +19,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [localSession, setLocalSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    console.log('AuthProvider: Initializing');
     let mounted = true;
+    console.log('AuthProvider: Initializing');
 
     const initializeAuth = async () => {
       try {
-        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        const { data: { session }, error } = await supabase.auth.getSession();
         
         if (error) {
           console.error('Error getting initial session:', error);
           throw error;
         }
 
-        console.log('Initial session check:', initialSession ? 'Found session' : 'No session');
+        if (!mounted) return;
+
+        console.log('Initial session check:', session ? 'Found session' : 'No session');
         
-        if (mounted && initialSession?.user) {
+        if (session?.user) {
           try {
             const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
-              .eq('id', initialSession.user.id)
+              .eq('id', session.user.id)
               .single();
+
+            if (!mounted) return;
 
             if (profileError) {
               console.error('Error loading user profile:', profileError);
@@ -47,40 +51,47 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             if (profile) {
-              initialSession.user.role = profile.role;
+              session.user.role = profile.role;
               console.log('Loaded user role:', profile.role);
             }
             
-            setLocalSession(initialSession);
-            setSession(initialSession);
-            setUser(initialSession.user);
+            setLocalSession(session);
+            setSession(session);
+            setUser(session.user);
           } catch (error) {
             console.error('Error loading user profile:', error);
-            toast.error('Error loading user profile');
+            if (mounted) {
+              toast.error('Error loading user profile');
+            }
           }
         }
       } catch (error) {
         console.error('Auth initialization error:', error);
-        toast.error('Error initializing authentication');
+        if (mounted) {
+          toast.error('Error initializing authentication');
+        }
       } finally {
-        if (mounted) setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    initializeAuth();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+    const subscription = supabase.auth.onAuthStateChange(
       async (event, currentSession) => {
         console.log('Auth state changed:', event, currentSession?.user?.id);
+        
+        if (!mounted) return;
 
-        if (currentSession?.user && mounted) {
+        if (currentSession?.user) {
           try {
             const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
               .eq('id', currentSession.user.id)
               .single();
+
+            if (!mounted) return;
 
             if (profileError) {
               console.error('Error updating session:', profileError);
@@ -97,21 +108,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(currentSession.user);
           } catch (error) {
             console.error('Error updating session:', error);
-            toast.error('Error updating session');
+            if (mounted) {
+              toast.error('Error updating session');
+            }
           }
-        } else if (mounted) {
+        } else {
           setLocalSession(null);
           reset();
         }
         
-        if (mounted) setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     );
+
+    initializeAuth();
 
     return () => {
       console.log('AuthProvider cleanup');
       mounted = false;
-      subscription.unsubscribe();
+      subscription.data.subscription.unsubscribe();
     };
   }, [setSession, setUser, reset]);
 

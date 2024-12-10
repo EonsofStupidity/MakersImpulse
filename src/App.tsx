@@ -25,8 +25,8 @@ const App = () => {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <AuthProvider>
             <AdminSidebarProvider>
               <ThemeProvider>
                 <TooltipProvider>
@@ -42,8 +42,8 @@ const App = () => {
                 </TooltipProvider>
               </ThemeProvider>
             </AdminSidebarProvider>
-          </BrowserRouter>
-        </AuthProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>
   );
