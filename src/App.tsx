@@ -20,25 +20,30 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  console.log('App component mounted');
+  console.log('App component mounting...');
   
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <BrowserRouter>
+        <BrowserRouter>
+          <AuthProvider>
             <ThemeProvider>
               <AdminSidebarProvider>
                 <TooltipProvider>
                   <RootLayout>
                     <AppRoutes />
                   </RootLayout>
-                  <Toaster position="top-right" expand={false} richColors closeButton />
+                  <Toaster 
+                    position="top-right" 
+                    expand={false} 
+                    richColors 
+                    closeButton 
+                  />
                 </TooltipProvider>
               </AdminSidebarProvider>
             </ThemeProvider>
-          </BrowserRouter>
-        </AuthProvider>
+          </AuthProvider>
+        </BrowserRouter>
       </QueryClientProvider>
     </ErrorBoundary>
   );

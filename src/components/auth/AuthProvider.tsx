@@ -1,105 +1,69 @@
-import { createContext, useContext, useEffect } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { useAuthStore } from '@/lib/store/auth-store';
-import { useCacheStore } from '@/lib/store/cache-store';
+import { createContext, useContext, useEffect, useState } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface AuthContextType {
-  session: any | null;
-  user: any | null;
+  session: Session | null;
+  user: User | null;
   isLoading: boolean;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const queryClient = useQueryClient();
-  const { setSession, setUser, setLoading, reset } = useAuthStore();
-  const { clearCache } = useCacheStore();
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch user profile data when session exists
-  const { data: profile } = useQuery({
-    queryKey: ['profile'],
-    queryFn: async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) return null;
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('role, username, display_name')
-        .eq('id', session.user.id)
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!queryClient.getQueryData(['session']),
-    staleTime: 5 * 60 * 1000,
-  });
-
-  // Get and sync session
-  const { data: session, isLoading } = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
-      return session;
-    },
-    staleTime: 5 * 60 * 1000,
-  });
-
-  // Subscribe to auth changes
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth state changed:', event, session?.user?.id);
-      
-      if (event === 'SIGNED_IN') {
-        setSession(session);
-        queryClient.invalidateQueries({ queryKey: ['profile'] });
-      }
-      
-      if (event === 'SIGNED_OUT') {
-        reset();
-        clearCache();
-        queryClient.clear();
-        toast.info('Signed out');
-      }
+    console.log("AuthProvider: Initializing...");
+    
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session: initialSession } }) => {
+      console.log("Initial session:", initialSession?.user?.id);
+      setSession(initialSession);
+      setIsLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session?.user?.id);
+      setSession(session);
+      setIsLoading(false);
     });
 
     return () => {
+      console.log("AuthProvider: Cleaning up subscription");
       subscription.unsubscribe();
     };
-  }, [queryClient, setSession, reset, clearCache]);
+  }, []);
 
-  // Update loading state
-  useEffect(() => {
-    setLoading(isLoading);
-  }, [isLoading, setLoading]);
-
-  // Update user state when profile changes
-  useEffect(() => {
-    if (session && profile) {
-      setUser({
-        id: session.user.id,
-        email: session.user.email,
-        role: profile.role || 'subscriber',
-        username: profile.username,
-        displayName: profile.display_name,
-      });
-    } else if (!session) {
-      setUser(null);
+  const signOut = async () => {
+    try {
+      await supabase.auth.signOut();
+      toast.success("Successfully signed out");
+    } catch (error) {
+      console.error("Error signing out:", error);
+      toast.error("Error signing out");
     }
-  }, [session, profile, setUser]);
+  };
+
+  const value = {
+    session,
+    user: session?.user ?? null,
+    isLoading,
+    signOut,
+  };
+
+  console.log("AuthProvider render:", { 
+    hasSession: !!session,
+    userId: session?.user?.id,
+    isLoading 
+  });
 
   return (
-    <AuthContext.Provider value={{
-      session,
-      user: useAuthStore((state) => state.user),
-      isLoading: useAuthStore((state) => state.isLoading)
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );
@@ -108,7 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
