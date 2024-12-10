@@ -60,14 +60,6 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     toast.success(`Navigating to ${to.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
-  // Admin menu items
-  const adminMenuItems: MenuItem[] = [
-    { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, adminOnly: true },
-    { to: "/admin/users", label: "Users", icon: Users, adminOnly: true },
-    { to: "/admin/settings", label: "Settings", icon: Settings, adminOnly: true },
-    { to: "/admin/activity", label: "Activity", icon: Activity, adminOnly: true },
-  ];
-
   // Base menu items
   const menuItems: MenuItem[] = [
     { to: "/maker-space", label: "Maker Space", icon: Home },
@@ -84,9 +76,17 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
+  // Admin menu items - only include if user has admin role
+  const adminItems: MenuItem[] = user?.role === 'admin' ? [
+    { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { to: "/admin/users", label: "Users", icon: Users },
+    { to: "/admin/settings", label: "Settings", icon: Settings },
+    { to: "/admin/activity", label: "Activity", icon: Activity }
+  ] : [];
+
   // Combine all menu items based on user role
   const allMenuItems = [
-    ...(user?.role === 'admin' ? adminMenuItems : []),
+    ...adminItems,
     ...menuItems,
     ...authItems
   ];
@@ -122,25 +122,19 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
         className="flex flex-col gap-2 p-6 pt-24"
       >
         {allMenuItems.map((item) => (
-          <motion.div 
-            key={item.to} 
+          <motion.button
+            key={item.to}
             variants={menuItemVariants}
-            className="relative"
+            onClick={() => handleNavigation(item.to)}
+            className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group cursor-pointer"
           >
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleNavigation(item.to)}
-              className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group cursor-pointer"
-            >
-              <item.icon className="w-5 h-5 mr-3" />
-              {item.label}
-              <motion.div
-                className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
-                layoutId={`highlight-${item.to}`}
-              />
-            </motion.button>
-          </motion.div>
+            <item.icon className="w-5 h-5 mr-3" />
+            {item.label}
+            <motion.div
+              className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
+              layoutId={`highlight-${item.to}`}
+            />
+          </motion.button>
         ))}
       </motion.nav>
     </motion.div>
