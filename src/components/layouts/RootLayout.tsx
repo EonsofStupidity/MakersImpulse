@@ -1,9 +1,12 @@
 import React, { useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
 import { Navigation } from '../shared/ui/Navigation';
 import { Toaster } from '@/components/ui/sonner';
 
-export const RootLayout = () => {
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
+
+export const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       document.documentElement.style.setProperty('--mouse-x', `${e.clientX}px`);
@@ -18,7 +21,7 @@ export const RootLayout = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
       <main>
-        <Outlet />
+        {children}
       </main>
       <Toaster />
     </div>
