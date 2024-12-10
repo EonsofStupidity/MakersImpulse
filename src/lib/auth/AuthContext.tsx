@@ -22,32 +22,52 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     console.log('AuthProvider: Initializing');
     let mounted = true;
 
-    // Get initial session
-    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
-      console.log('Initial session check:', initialSession ? 'Found session' : 'No session');
-      
-      if (mounted && initialSession?.user) {
-        try {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('role')
-            .eq('id', initialSession.user.id)
-            .single();
-
-          if (profile) {
-            initialSession.user.role = profile.role;
-            console.log('Loaded user role:', profile.role);
-          }
-          
-          setLocalSession(initialSession);
-          setSession(initialSession);
-          setUser(initialSession.user);
-        } catch (error) {
-          console.error('Error loading user profile:', error);
+    const initializeAuth = async () => {
+      try {
+        const { data: { session: initialSession }, error } = await supabase.auth.getSession();
+        
+        if (error) {
+          console.error('Error getting initial session:', error);
+          throw error;
         }
+
+        console.log('Initial session check:', initialSession ? 'Found session' : 'No session');
+        
+        if (mounted && initialSession?.user) {
+          try {
+            const { data: profile, error: profileError } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', initialSession.user.id)
+              .single();
+
+            if (profileError) {
+              console.error('Error loading user profile:', profileError);
+              throw profileError;
+            }
+
+            if (profile) {
+              initialSession.user.role = profile.role;
+              console.log('Loaded user role:', profile.role);
+            }
+            
+            setLocalSession(initialSession);
+            setSession(initialSession);
+            setUser(initialSession.user);
+          } catch (error) {
+            console.error('Error loading user profile:', error);
+            toast.error('Error loading user profile');
+          }
+        }
+      } catch (error) {
+        console.error('Auth initialization error:', error);
+        toast.error('Error initializing authentication');
+      } finally {
+        if (mounted) setIsLoading(false);
       }
-      if (mounted) setIsLoading(false);
-    });
+    };
+
+    initializeAuth();
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -56,11 +76,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (currentSession?.user && mounted) {
           try {
-            const { data: profile } = await supabase
+            const { data: profile, error: profileError } = await supabase
               .from('profiles')
               .select('role')
               .eq('id', currentSession.user.id)
               .single();
+
+            if (profileError) {
+              console.error('Error updating session:', profileError);
+              throw profileError;
+            }
 
             if (profile) {
               currentSession.user.role = profile.role;
@@ -72,6 +97,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setUser(currentSession.user);
           } catch (error) {
             console.error('Error updating session:', error);
+            toast.error('Error updating session');
           }
         } else if (mounted) {
           setLocalSession(null);
@@ -92,7 +118,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     try {
       setIsLoading(true);
-      await supabase.auth.signOut();
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      
       setLocalSession(null);
       reset();
       toast.success("Successfully signed out");
