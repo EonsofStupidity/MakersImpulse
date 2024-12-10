@@ -10,32 +10,19 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
-  const { session, user, isLoading } = useAuth();
+  const { session, user, isLoading, signOut } = useAuth();
 
-  console.log('UserMenu render:', { 
+  console.log('UserMenu render - Detailed state:', {
     session,
     user,
     userRole: user?.role,
     isAdmin: user?.role === 'admin',
-    isLoading,
-    sessionUser: session?.user,
-    sessionRole: session?.user?.role
+    isLoading
   });
 
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      navigate('/');
-      toast.success('Logged out successfully');
-    } catch (error) {
-      console.error('Logout error:', error);
-      toast.error('Error signing out');
-    }
-  };
-
   const handleNavigation = (path: string) => {
-    console.log('UserMenu: Navigating to:', path);
     navigate(path);
+    toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
   if (isLoading) {
@@ -50,7 +37,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  if (!session) {
+  if (!session || !user) {
     return (
       <Button 
         variant="ghost" 
@@ -67,7 +54,7 @@ export const UserMenu = memo(() => {
     );
   }
 
-  const userInitial = session.user.email?.[0]?.toUpperCase() || '?';
+  const userInitial = user.email?.[0]?.toUpperCase() || '?';
 
   return (
     <DropdownMenu>
@@ -88,7 +75,7 @@ export const UserMenu = memo(() => {
         align="end" 
         className="w-56 bg-black/95 backdrop-blur-xl border border-white/10 mt-2"
       >
-        {user?.role === 'admin' && (
+        {user.role === 'admin' && (
           <DropdownMenuItem 
             onClick={() => handleNavigation('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
@@ -112,7 +99,7 @@ export const UserMenu = memo(() => {
           Settings
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={handleLogout}
+          onClick={signOut}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <LogOut className="mr-2 h-4 w-4" />

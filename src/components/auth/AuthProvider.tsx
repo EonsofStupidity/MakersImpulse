@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 interface AuthContextType {
   session: Session | null;
@@ -17,35 +18,82 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log("AuthProvider: Initializing...");
-    
+    let mounted = true;
+    console.log('AuthProvider: Starting initialization');
+
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      console.log("Initial session:", session?.user?.id);
-      setSession(session);
-      setIsLoading(false);
+    supabase.auth.getSession().then(async ({ data: { session: initialSession } }) => {
+      console.log('Initial session check:', initialSession ? 'Found session' : 'No session');
+      
+      if (mounted && initialSession?.user) {
+        try {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('role')
+            .eq('id', initialSession.user.id)
+            .single();
+
+          if (profile) {
+            initialSession.user.role = profile.role;
+            console.log('Loaded user role:', profile.role);
+          }
+          
+          setSession(initialSession);
+        } catch (error) {
+          console.error('Error loading user profile:', error);
+        }
+      }
+      if (mounted) setIsLoading(false);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      console.log("Auth state changed:", _event, session?.user?.id);
-      setSession(session);
-      setIsLoading(false);
-    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        console.log('Auth state changed:', event, currentSession?.user?.id);
+
+        if (currentSession?.user && mounted) {
+          try {
+            const { data: profile } = await supabase
+              .from('profiles')
+              .select('role')
+              .eq('id', currentSession.user.id)
+              .single();
+
+            if (profile) {
+              currentSession.user.role = profile.role;
+              console.log('Updated session with role:', profile.role);
+            }
+            
+            setSession(currentSession);
+          } catch (error) {
+            console.error('Error updating session:', error);
+          }
+        } else if (mounted) {
+          setSession(null);
+        }
+        
+        if (mounted) setIsLoading(false);
+      }
+    );
 
     return () => {
-      console.log("AuthProvider: Cleaning up subscription");
+      console.log('AuthProvider cleanup');
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);
 
   const signOut = async () => {
     try {
+      setIsLoading(true);
       await supabase.auth.signOut();
+      setSession(null);
       toast.success("Successfully signed out");
     } catch (error) {
       console.error("Error signing out:", error);
       toast.error("Error signing out");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,15 +104,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     signOut,
   };
 
-  console.log("AuthProvider render:", { 
-    hasSession: !!session,
-    userId: session?.user?.id,
-    isLoading 
-  });
-
   return (
     <AuthContext.Provider value={value}>
-      {children}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        {children}
+      </motion.div>
     </AuthContext.Provider>
   );
 };
