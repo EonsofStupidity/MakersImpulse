@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden"
+      className="min-h-screen relative overflow-hidden bg-black/90"
       onMouseMove={handleMouseMove}
       style={{
         background: `
