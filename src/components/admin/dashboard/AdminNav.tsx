@@ -7,7 +7,7 @@ import { X } from 'lucide-react';
 import { toast } from 'sonner';
 
 export const AdminNav = () => {
-  const { shortcuts, removeShortcut } = useAdminSidebar();
+  const { shortcuts, addShortcut, removeShortcut } = useAdminSidebar();
   const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -15,6 +15,25 @@ export const AdminNav = () => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setMousePosition({ x, y });
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.add('bg-admin-hover');
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.currentTarget.classList.remove('bg-admin-hover');
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.currentTarget.classList.remove('bg-admin-hover');
+    const itemId = e.dataTransfer.getData('text/plain');
+    if (!shortcuts.includes(itemId)) {
+      addShortcut(itemId);
+      toast.success(`Added ${itemId} to shortcuts`);
+    }
   };
 
   return (
@@ -28,6 +47,9 @@ export const AdminNav = () => {
         "after:content-[''] after:absolute after:inset-0 after:bg-gradient-to-r after:from-cyber-yellow/20 after:via-cyber-pink/20 after:to-cyber-purple/20 after:opacity-50"
       )}
       onMouseMove={handleMouseMove}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
       style={{
         background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(38,199,102,0.15), rgba(199,38,178,0.15))`,
       }}

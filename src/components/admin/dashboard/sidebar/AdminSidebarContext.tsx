@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 interface AdminSidebarContextType {
   isOpen: boolean;
@@ -17,13 +19,68 @@ export const AdminSidebarProvider = ({ children }: { children: React.ReactNode }
   const [activeTab, setActiveTab] = useState('dashboard');
   const [shortcuts, setShortcuts] = useState<string[]>([]);
 
-  const addShortcut = (id: string) => {
-    if (!shortcuts.includes(id)) {
-      setShortcuts([...shortcuts, id]);
+  // Load shortcuts from Supabase on mount
+  useEffect(() => {
+    const loadShortcuts = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('admin_toolbar_shortcuts')
+        .select('item_id')
+        .eq('user_id', user.id)
+        .order('position');
+
+      if (error) {
+        console.error('Error loading shortcuts:', error);
+        return;
+      }
+
+      setShortcuts(data.map(s => s.item_id));
+    };
+
+    loadShortcuts();
+  }, []);
+
+  const addShortcut = async (id: string) => {
+    if (shortcuts.includes(id)) return;
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('admin_toolbar_shortcuts')
+      .insert({
+        user_id: user.id,
+        item_id: id,
+        position: shortcuts.length
+      });
+
+    if (error) {
+      console.error('Error saving shortcut:', error);
+      toast.error('Failed to save shortcut');
+      return;
     }
+
+    setShortcuts([...shortcuts, id]);
   };
 
-  const removeShortcut = (id: string) => {
+  const removeShortcut = async (id: string) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { error } = await supabase
+      .from('admin_toolbar_shortcuts')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('item_id', id);
+
+    if (error) {
+      console.error('Error removing shortcut:', error);
+      toast.error('Failed to remove shortcut');
+      return;
+    }
+
     setShortcuts(shortcuts.filter(s => s !== id));
   };
 

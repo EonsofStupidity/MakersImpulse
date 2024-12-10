@@ -9,6 +9,7 @@ import {
   Image, Activity, Settings, Zap, 
   Cpu, Radio
 } from 'lucide-react';
+import { toast } from 'sonner';
 
 const tabs = [
   { id: 'dashboard', label: 'Dashboard' },
@@ -43,7 +44,7 @@ const menuItems = {
 };
 
 export const AdminSidebar = () => {
-  const { isOpen, activeTab, setActiveTab } = useAdminSidebar();
+  const { isOpen, activeTab, setActiveTab, addShortcut } = useAdminSidebar();
   const [mousePosition, setMousePosition] = React.useState({ x: 50, y: 50 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -51,6 +52,10 @@ export const AdminSidebar = () => {
     const x = ((e.clientX - rect.left) / rect.width) * 100;
     const y = ((e.clientY - rect.top) / rect.height) * 100;
     setMousePosition({ x, y });
+  };
+
+  const handleDragStart = (e: React.DragEvent, itemId: string) => {
+    e.dataTransfer.setData('text/plain', itemId);
   };
 
   return (
@@ -97,14 +102,15 @@ export const AdminSidebar = () => {
         {menuItems[activeTab as keyof typeof menuItems].map((item) => {
           const Icon = item.icon;
           return (
-            <Link
+            <div
               key={item.id}
-              to={item.path}
+              draggable
+              onDragStart={(e) => handleDragStart(e, item.label)}
               className={cn(
                 "flex items-center gap-3 px-4 py-2 rounded-lg",
                 "text-white/70 hover:text-white",
                 "hover:bg-white/5 transition-colors duration-200",
-                "group relative overflow-hidden"
+                "group relative overflow-hidden cursor-move"
               )}
             >
               <Icon className={cn(
@@ -116,7 +122,7 @@ export const AdminSidebar = () => {
                 <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-cyber-yellow to-cyber-pink scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-cyber-yellow/10 to-cyber-pink/10 opacity-0 group-hover:opacity-100 transition-opacity animate-menu-wave" />
-            </Link>
+            </div>
           );
         })}
       </div>
