@@ -20,7 +20,7 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden bg-black/90"
+      className="min-h-screen relative overflow-hidden bg-black"
       onMouseMove={handleMouseMove}
       style={{
         background: `
@@ -34,10 +34,7 @@ const AdminDashboard = () => {
             rgba(255, 10, 190, 0.15), 
             rgba(128, 0, 255, 0.15)
           )
-        `,
-        backgroundBlendMode: 'overlay',
-        backgroundImage: 'url("/lovable-uploads/c7b8c00f-2fa0-444c-bd32-62f1d4a4cee7.png")',
-        backgroundSize: 'cover'
+        `
       }}
     >
       <AdminSidebar />

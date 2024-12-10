@@ -1,12 +1,17 @@
 .admin-sidebar {
   @apply fixed left-0 top-0 bottom-0 z-50 overflow-hidden transition-all duration-300;
   background: linear-gradient(135deg, 
-    rgba(77, 0, 179, 0.5), 
-    rgba(114, 34, 140, 0.5), 
-    rgba(176, 230, 83, 0.5)
+    rgba(77, 0, 179, 0.95), 
+    rgba(114, 34, 140, 0.95)
   );
-  clip-path: polygon(0 0, 100% 0, 100% 65%, 95% 100%, 0 100%);
   width: var(--sidebar-width, 16rem);
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% 85%, 
+    85% 100%, 
+    0 100%
+  );
 }
 
 .admin-sidebar-collapsed {
@@ -33,7 +38,6 @@
   @apply flex items-center gap-3 px-4 py-2 text-white/70 hover:text-white 
          transition-all duration-300 relative cursor-pointer rounded-lg
          hover:bg-white/5;
-  transform-origin: left center;
 }
 
 .admin-sidebar-item:hover {
