@@ -24,14 +24,16 @@ export const AdminNav = () => {
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 h-16",
-        "backdrop-blur-md border-b border-white/10"
+        "before:absolute before:inset-0 before:bg-trapezoid before:transform before:skew-y-3",
+        "after:absolute after:inset-0 after:bg-black/20 after:backdrop-blur-md",
+        "border-b border-white/10"
       )}
       onMouseMove={handleMouseMove}
       style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(139,92,246,0.15), rgba(236,72,153,0.15), rgba(16,185,129,0.15))`,
+        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(38,199,102,0.15), rgba(199,38,178,0.15))`,
       }}
     >
-      <div className="h-full flex items-center px-4 max-w-7xl mx-auto">
+      <div className="h-full flex items-center px-4 max-w-7xl mx-auto relative z-10">
         <div className="flex-1 flex items-center gap-4">
           {shortcuts.map((shortcut) => (
             <motion.div
@@ -45,7 +47,7 @@ export const AdminNav = () => {
                 to={`/admin/${shortcut.toLowerCase()}`}
                 className={cn(
                   "px-4 py-2 rounded-lg text-white/80",
-                  "hover:text-neon-pink transition-colors duration-300",
+                  "hover:text-admin-pink transition-colors duration-300",
                   "bg-white/5 hover:bg-white/10",
                   "animate-fade-in"
                 )}

@@ -41,6 +41,11 @@ export default {
           pink: "var(--neon-pink)",
           purple: "var(--neon-purple)",
         },
+        admin: {
+          green: "#26c766",
+          pink: "#c726b2",
+          lime: "#98de2f",
+        }
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -49,6 +54,9 @@ export default {
         'glass-card': 'linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05))',
         'glass-hover': 'linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05))',
         'neon-glow': 'linear-gradient(135deg, var(--neon-cyan), var(--neon-pink), var(--neon-purple))',
+        'trapezoid': 'linear-gradient(135deg, rgba(38,199,102,0.1), rgba(199,38,178,0.1))',
+        'admin-card': 'linear-gradient(135deg, rgba(38,199,102,0.05), rgba(199,38,178,0.05))',
+        'admin-hover': 'linear-gradient(135deg, rgba(38,199,102,0.15), rgba(199,38,178,0.15))',
       },
       backdropBlur: {
         xs: '2px',
@@ -98,6 +106,18 @@ export default {
           "60%": { transform: "translate(2px, 2px)" },
           "80%": { transform: "translate(2px, -2px)" },
           "100%": { transform: "translate(0)" }
+        },
+        "admin-slide-in": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(0)" }
+        },
+        "admin-fade-in": {
+          "0%": { opacity: "0", transform: "translateY(-10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" }
+        },
+        "stat-pulse": {
+          "0%, 100%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.05)" }
         }
       },
       animation: {
@@ -108,7 +128,10 @@ export default {
         "neon-pulse": "neon-pulse 2s ease-in-out infinite",
         "neon-glow": "neon-glow 2s ease-in-out infinite",
         "gradient-flow": "gradient-flow 15s ease infinite",
-        "glitch": "glitch 0.5s ease-in-out infinite"
+        "glitch": "glitch 0.5s ease-in-out infinite",
+        "admin-slide": "admin-slide-in 0.6s ease-out",
+        "admin-fade": "admin-fade-in 0.4s ease-out",
+        "stat-pulse": "stat-pulse 2s ease-in-out infinite",
       },
     },
   },

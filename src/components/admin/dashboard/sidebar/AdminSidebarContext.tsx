@@ -2,8 +2,10 @@ import React, { createContext, useContext, useState } from 'react';
 
 interface AdminSidebarContextType {
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  activeTab: string;
   shortcuts: string[];
+  setIsOpen: (value: boolean) => void;
+  setActiveTab: (tab: string) => void;
   addShortcut: (id: string) => void;
   removeShortcut: (id: string) => void;
 }
@@ -12,6 +14,7 @@ const AdminSidebarContext = createContext<AdminSidebarContextType | undefined>(u
 
 export const AdminSidebarProvider = ({ children }: { children: React.ReactNode }) => {
   const [isOpen, setIsOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [shortcuts, setShortcuts] = useState<string[]>([]);
 
   const addShortcut = (id: string) => {
@@ -27,7 +30,9 @@ export const AdminSidebarProvider = ({ children }: { children: React.ReactNode }
   return (
     <AdminSidebarContext.Provider value={{ 
       isOpen, 
+      activeTab,
       setIsOpen, 
+      setActiveTab,
       shortcuts, 
       addShortcut, 
       removeShortcut 
