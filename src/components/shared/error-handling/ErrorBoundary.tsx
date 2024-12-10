@@ -3,6 +3,7 @@ import { AlertTriangle, RefreshCw } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { toast } from "sonner";
 
 interface Props {
   children: React.ReactNode;
@@ -25,6 +26,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
+    
+    // Show toast notification for critical errors
+    toast.error("An unexpected error occurred", {
+      description: error.message,
+      duration: 5000,
+    });
   }
 
   private handleReset = () => {
@@ -65,3 +72,5 @@ export class ErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
+
+export default ErrorBoundary;

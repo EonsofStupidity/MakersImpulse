@@ -18,6 +18,16 @@ const queryClient = new QueryClient({
       retry: 1,
       refetchOnWindowFocus: false,
       staleTime: 5 * 60 * 1000,
+      useErrorBoundary: true, // Enable error boundary for queries
+    },
+    mutations: {
+      onError: (error: Error) => {
+        console.error('Mutation error:', error);
+        toast.error('Operation failed', {
+          description: error.message,
+          duration: 5000,
+        });
+      },
     },
   },
 });
@@ -39,7 +49,9 @@ const App = () => {
           
         if (error) {
           console.error('Error fetching profile:', error);
-          toast.error('Error fetching user profile');
+          toast.error('Error fetching user profile', {
+            description: error.message,
+          });
           return;
         }
 
@@ -54,11 +66,15 @@ const App = () => {
         console.log('User role set:', profile.role);
         
         if (profile.role !== 'admin' && profile.role !== 'super_admin') {
-          toast.error('You need admin privileges to access the dashboard');
+          toast.error('Access denied', {
+            description: 'You need admin privileges to access the dashboard'
+          });
         }
       } catch (error) {
         console.error('Error in auth change handler:', error);
-        toast.error('Authentication error occurred');
+        toast.error('Authentication error', {
+          description: error.message
+        });
       }
     } else {
       setSession(null);
