@@ -12,7 +12,7 @@ export const UserMenu = memo(() => {
   const navigate = useNavigate();
   const { session, user, isLoading } = useAuth();
 
-  console.log('UserMenu render - Detailed state:', { 
+  console.log('UserMenu render:', { 
     session,
     user,
     userRole: user?.role,
@@ -36,7 +36,6 @@ export const UserMenu = memo(() => {
   const handleNavigation = (path: string) => {
     console.log('UserMenu: Navigating to:', path);
     navigate(path);
-    toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
   if (isLoading) {
