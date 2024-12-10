@@ -1,9 +1,9 @@
-import { AdminNavContainer } from "./nav/AdminNavContainer";
-import { AdminToolbar } from "./AdminToolbar";
-import { adminRoutes } from "@/config/navigation";
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { adminRoutes } from "@/config/navigation";
 import { cn } from "@/lib/utils";
+import { AdminToolbar } from "./AdminToolbar";
+import { toast } from "sonner";
 
 export const AdminNav = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -49,7 +49,6 @@ export const AdminNav = () => {
         />
         
         <div className="relative z-10">
-          <AdminNavContainer routes={adminRoutes} />
           <AdminToolbar />
         </div>
       </div>
