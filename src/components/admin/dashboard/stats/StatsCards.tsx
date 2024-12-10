@@ -33,37 +33,37 @@ export const StatsCards = () => {
       title: 'Total Users', 
       value: stats?.users || 0,
       icon: Users,
-      color: 'from-cyber-yellow/20 to-cyber-yellow/5'
+      gradient: 'from-[#41f0db]/20 to-[#41f0db]/5'
     },
     { 
       title: 'Total Posts', 
       value: stats?.posts || 0,
       icon: FileText,
-      color: 'from-cyber-pink/20 to-cyber-pink/5'
+      gradient: 'from-[#ff0abe]/20 to-[#ff0abe]/5'
     },
     { 
       title: 'User Activities', 
       value: stats?.activity || 0,
       icon: Activity,
-      color: 'from-cyber-green/20 to-cyber-green/5'
+      gradient: 'from-[#8000ff]/20 to-[#8000ff]/5'
     },
     { 
       title: 'Performance', 
       value: `${stats?.performance || 0}%`,
       icon: Zap,
-      color: 'from-cyber-purple/20 to-cyber-purple/5'
+      gradient: 'from-[#41f0db]/20 to-[#ff0abe]/5'
     },
     { 
       title: 'System Status', 
       value: stats?.system || 'Loading...',
       icon: Cpu,
-      color: 'from-cyber-neon/20 to-cyber-neon/5'
+      gradient: 'from-[#ff0abe]/20 to-[#8000ff]/5'
     },
     { 
       title: 'Monitoring', 
       value: stats?.monitoring || 'Loading...',
       icon: Radio,
-      color: 'from-cyber-yellow/20 to-cyber-pink/5'
+      gradient: 'from-[#8000ff]/20 to-[#41f0db]/5'
     }
   ];
 
@@ -78,38 +78,35 @@ export const StatsCards = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
             className={cn(
-              "relative p-6 rounded-xl overflow-hidden",
-              "bg-black/40 backdrop-blur-sm border border-white/10",
-              "group hover:border-white/20 transition-all duration-300",
-              "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
-              "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.02]"
+              "stat-card group",
+              "before:absolute before:inset-0 before:bg-gradient-to-br",
+              "before:opacity-10 before:transition-opacity before:duration-300",
+              "before:hover:opacity-20",
+              card.gradient
             )}
           >
             <div className="relative z-10">
               <div className="flex items-center gap-4">
                 <div className={cn(
                   "p-3 rounded-lg bg-gradient-to-br",
-                  card.color
+                  card.gradient
                 )}>
-                  <Icon className="w-6 h-6 text-white animate-cyber-pulse" />
+                  <Icon className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-medium text-white group-hover:text-cyber-neon transition-colors">
+                  <h3 className="text-lg font-medium text-white group-hover:text-[#41f0db] transition-colors">
                     {isLoading ? (
                       <div className="h-6 w-16 bg-white/10 rounded animate-pulse" />
                     ) : (
                       card.value.toLocaleString()
                     )}
                   </h3>
-                  <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors">{card.title}</p>
+                  <p className="text-sm text-white/60 group-hover:text-white/80 transition-colors">
+                    {card.title}
+                  </p>
                 </div>
               </div>
             </div>
-            <div className={cn(
-              "absolute inset-0 opacity-0 group-hover:opacity-100",
-              "transition-opacity duration-300 bg-gradient-to-r",
-              card.color
-            )} />
           </motion.div>
         );
       })}
