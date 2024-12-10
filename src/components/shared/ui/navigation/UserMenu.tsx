@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { User, LogOut, Settings, UserCircle, LayoutDashboard } from "lucide-react";
+import { UserRound, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -34,7 +34,7 @@ export const UserMenu = memo(() => {
       <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
         <Avatar className="h-8 w-8 border-2 border-white/20">
           <AvatarFallback className="bg-transparent">
-            <User className="h-4 w-4 animate-pulse" />
+            <UserRound className="h-4 w-4 animate-pulse" />
           </AvatarFallback>
         </Avatar>
       </Button>
@@ -51,7 +51,7 @@ export const UserMenu = memo(() => {
       >
         <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
           <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-            <User className="h-4 w-4" />
+            <UserRound className="h-4 w-4" />
           </AvatarFallback>
         </Avatar>
       </Button>
@@ -64,7 +64,7 @@ export const UserMenu = memo(() => {
         <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
           <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
             <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-              {user?.displayName?.[0] || user?.email?.[0] || <User className="h-4 w-4" />}
+              {user?.displayName?.[0] || user?.email?.[0] || <UserRound className="h-4 w-4" />}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -83,7 +83,7 @@ export const UserMenu = memo(() => {
           onClick={() => handleNavigation('/profile')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300"
         >
-          <UserCircle className="mr-2 h-4 w-4" />
+          <UserRound className="mr-2 h-4 w-4" />
           Profile
         </DropdownMenuItem>
         <DropdownMenuItem 
