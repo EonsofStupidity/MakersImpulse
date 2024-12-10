@@ -23,9 +23,7 @@ export const AdminNav = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 h-16",
-        "before:absolute before:inset-0 before:bg-trapezoid before:transform before:skew-y-3",
-        "after:absolute after:inset-0 after:bg-black/20 after:backdrop-blur-md",
+        "fixed top-16 left-0 right-0 z-40 h-16 bg-admin-dark",
         "border-b border-white/10"
       )}
       onMouseMove={handleMouseMove}

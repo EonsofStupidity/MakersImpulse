@@ -16,15 +16,15 @@ export const NewDashboardOverview = () => {
   
   return (
     <div 
-      className="relative min-h-screen"
+      className="min-h-screen pl-64 pt-32 bg-admin-dark"
       onMouseMove={handleMouseMove}
     >
       <div 
-        className="gradient-bg"
+        className="fixed inset-0 pointer-events-none"
         style={{
-          '--mouse-x': `${mousePosition.x}%`,
-          '--mouse-y': `${mousePosition.y}%`
-        } as React.CSSProperties}
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(38,199,102,0.1), rgba(199,38,178,0.1), rgba(128,0,255,0.1))`,
+          zIndex: 0
+        }}
       />
       
       <div className="relative z-10 space-y-6 p-6">
@@ -35,7 +35,7 @@ export const NewDashboardOverview = () => {
           className="flex justify-between items-center"
         >
           <div>
-            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#26c766] via-[#c726b2] to-[#8000ff] animate-gradient-flow">
+            <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-admin-green via-admin-pink to-admin-purple animate-gradient-flow">
               Dashboard Overview
             </h1>
             <p className="text-white/60 mt-2">

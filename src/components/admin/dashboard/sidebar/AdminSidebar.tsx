@@ -49,17 +49,26 @@ export const AdminSidebar = () => {
     setMousePosition({ x, y });
   };
 
+  console.log('AdminSidebar render - isOpen:', isOpen, 'activeTab:', activeTab);
+
   return (
     <motion.div
       initial={{ x: -280 }}
       animate={{ x: isOpen ? 0 : -280 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-      className="admin-sidebar"
+      className={cn(
+        "fixed left-0 top-16 bottom-0 w-64 z-30",
+        "bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light",
+        "border-r border-white/10"
+      )}
       onMouseMove={handleMouseMove}
       style={{
-        '--mouse-x': `${mousePosition.x}%`,
-        '--mouse-y': `${mousePosition.y}%`
-      } as React.CSSProperties}
+        background: `linear-gradient(135deg, 
+          rgba(21,26,36,0.95), 
+          rgba(55,56,64,0.95), 
+          rgba(92,89,108,0.95)
+        )`,
+      }}
     >
       <div className="flex border-b border-white/10">
         {tabs.map((tab) => (
@@ -68,9 +77,9 @@ export const AdminSidebar = () => {
             onClick={() => setActiveTab(tab.id)}
             className={cn(
               "flex-1 px-4 py-3 text-sm font-medium transition-colors",
-              "hover:text-[#26c766] focus:outline-none",
+              "hover:text-admin-green focus:outline-none",
               activeTab === tab.id 
-                ? "text-[#c726b2] bg-white/5" 
+                ? "text-admin-pink bg-white/5" 
                 : "text-white/60"
             )}
           >
@@ -93,9 +102,9 @@ export const AdminSidebar = () => {
                 "group relative overflow-hidden"
               )}
             >
-              <Icon className="w-5 h-5 text-[#26c766] group-hover:text-[#c726b2] transition-colors" />
-              <span className="text-glow">{item.label}</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-[#26c766]/10 to-[#c726b2]/10 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Icon className="w-5 h-5 text-admin-green group-hover:text-admin-pink transition-colors" />
+              <span>{item.label}</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-admin-green/10 to-admin-pink/10 opacity-0 group-hover:opacity-100 transition-opacity" />
             </Link>
           );
         })}
