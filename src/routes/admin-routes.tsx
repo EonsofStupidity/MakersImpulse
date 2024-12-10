@@ -2,11 +2,13 @@ import { lazy } from "react";
 import { NewDashboardOverview } from "@/pages/admin/core/NewDashboardOverview";
 
 const Posts = lazy(() => import("@/pages/admin/posts"));
-const Settings = lazy(() => import("@/pages/admin/settings"));
 const Users = lazy(() => import("@/pages/admin/users"));
-const ActivityLogs = lazy(() => import("@/pages/admin/settings/activity-logs"));
-const ContentTypes = lazy(() => import("@/pages/admin/settings/content-types"));
-const DataMaestro = lazy(() => import("@/pages/admin/DataMaestro/Settings"));
+const Settings = lazy(() => import("@/pages/admin/settings"));
+const ContentManagement = lazy(() => import("@/pages/admin/content-management"));
+const ContentEditor = lazy(() => import("@/pages/admin/content-management/editor"));
+const Categories = lazy(() => import("@/pages/admin/content-management/categories"));
+const Templates = lazy(() => import("@/pages/admin/content-management/templates"));
+const Workflows = lazy(() => import("@/pages/admin/content-management/workflows"));
 
 export const adminRoutes = [
   {
@@ -18,23 +20,35 @@ export const adminRoutes = [
     element: <Posts />,
   },
   {
-    path: "settings",
-    element: <Settings />,
-  },
-  {
     path: "users",
     element: <Users />,
   },
   {
-    path: "settings/activity-logs",
-    element: <ActivityLogs />,
+    path: "settings",
+    element: <Settings />,
   },
   {
-    path: "settings/content-types",
-    element: <ContentTypes />,
+    path: "content-management",
+    element: <ContentManagement />,
   },
   {
-    path: "data-maestro",
-    element: <DataMaestro />,
+    path: "content-management/editor",
+    element: <ContentEditor />,
+  },
+  {
+    path: "content-management/editor/:id",
+    element: <ContentEditor />,
+  },
+  {
+    path: "content-management/categories",
+    element: <Categories />,
+  },
+  {
+    path: "content-management/templates",
+    element: <Templates />,
+  },
+  {
+    path: "content-management/workflows",
+    element: <Workflows />,
   },
 ];
