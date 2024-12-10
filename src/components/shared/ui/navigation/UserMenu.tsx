@@ -1,83 +1,77 @@
-import { useNavigate } from "react-router-dom";
-import { UserRound, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { LogIn, LogOut, Settings, User, LayoutDashboard } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useAuth } from "@/lib/auth/AuthContext";
 import { memo } from "react";
 
 export const UserMenu = memo(() => {
   const navigate = useNavigate();
-  const { session, user, isLoading, signOut } = useAuth();
+  const { session, user, userRole, signOut, isLoading } = useAuth();
 
   console.log('UserMenu render - Detailed state:', {
     session,
     user,
-    userRole: user?.role,
-    isAdmin: user?.role === 'admin',
+    userRole,
+    isAdmin: userRole === 'admin' || userRole === 'super_admin',
     isLoading
   });
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success('Signed out successfully');
+      navigate('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      toast.error('Failed to sign out');
+    }
   };
 
   if (isLoading) {
     return (
-      <Button variant="ghost" size="icon" className="relative group hover:bg-transparent">
-        <Avatar className="h-8 w-8 border-2 border-white/20">
-          <AvatarFallback className="bg-transparent">
-            <UserRound className="h-4 w-4 animate-pulse" />
-          </AvatarFallback>
-        </Avatar>
+      <Button variant="ghost" size="sm" disabled className="relative">
+        <span className="animate-pulse">Loading...</span>
       </Button>
     );
   }
 
-  // Allow guest access without login
   if (!session || !user) {
     return (
       <Button 
         variant="ghost" 
-        size="icon" 
-        onClick={() => handleNavigation('/login')}
-        className="relative group hover:bg-transparent z-50"
+        size="sm"
+        onClick={() => navigate('/login')}
+        className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
       >
-        <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
-          <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-            <UserRound className="h-4 w-4" />
-          </AvatarFallback>
-        </Avatar>
+        <LogIn className="mr-2 h-4 w-4" />
+        Sign In
       </Button>
     );
   }
 
-  const userInitial = user.email?.[0]?.toUpperCase() || '?';
+  const isAdmin = userRole === 'admin' || userRole === 'super_admin';
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="relative group hover:bg-transparent z-50 cursor-pointer"
+          size="sm"
+          className="relative text-white hover:text-[#41f0db] transition-colors duration-300"
         >
-          <Avatar className="h-8 w-8 border-2 border-white/20 transition-all duration-300 group-hover:border-[#ff0abe]/50">
-            <AvatarFallback className="bg-transparent text-white group-hover:text-[#41f0db] transition-colors duration-300">
-              {userInitial}
-            </AvatarFallback>
-          </Avatar>
+          <User className="h-4 w-4" />
+          <span className="ml-2">{user.email}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent 
-        align="end" 
-        className="w-56 bg-black/95 backdrop-blur-xl border border-white/10 mt-2"
+        align="end"
+        className="w-56 bg-black/90 border border-white/10 backdrop-blur-xl"
       >
-        {user.role === 'admin' && (
+        {isAdmin && (
           <DropdownMenuItem 
-            onClick={() => handleNavigation('/admin/dashboard')}
+            onClick={() => navigate('/admin/dashboard')}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
           >
             <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -85,28 +79,19 @@ export const UserMenu = memo(() => {
           </DropdownMenuItem>
         )}
         <DropdownMenuItem 
-          onClick={() => handleNavigation('/profile')}
-          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
-        >
-          <UserRound className="mr-2 h-4 w-4" />
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => handleNavigation('/settings')}
+          onClick={() => navigate('/settings')}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <Settings className="mr-2 h-4 w-4" />
           Settings
         </DropdownMenuItem>
-        {session && (
-          <DropdownMenuItem 
-            onClick={signOut}
-            className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
-          >
-            <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
-          </DropdownMenuItem>
-        )}
+        <DropdownMenuItem 
+          onClick={handleSignOut}
+          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+        >
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign Out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
