@@ -71,7 +71,10 @@ export const UserMenu = memo(() => {
       >
         {isAdmin && (
           <DropdownMenuItem 
-            onClick={() => navigate('/admin/dashboard')}
+            onClick={() => {
+              navigate('/admin/dashboard');
+              toast.success('Navigating to Admin Dashboard');
+            }}
             className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
           >
             <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -79,7 +82,20 @@ export const UserMenu = memo(() => {
           </DropdownMenuItem>
         )}
         <DropdownMenuItem 
-          onClick={() => navigate('/settings')}
+          onClick={() => {
+            navigate('/maker-space');
+            toast.success('Navigating to Maker Space');
+          }}
+          className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
+        >
+          <User className="mr-2 h-4 w-4" />
+          Maker Space
+        </DropdownMenuItem>
+        <DropdownMenuItem 
+          onClick={() => {
+            navigate('/settings');
+            toast.success('Navigating to Settings');
+          }}
           className="cursor-pointer text-white hover:text-[#41f0db] transition-colors duration-300 focus:bg-white/10"
         >
           <Settings className="mr-2 h-4 w-4" />
