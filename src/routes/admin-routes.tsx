@@ -1,5 +1,4 @@
 import { lazy } from "react";
-import Dashboard from "@/pages/admin/dashboard";
 import { NewDashboardOverview } from "@/pages/admin/core/NewDashboardOverview";
 
 const Posts = lazy(() => import("@/pages/admin/posts"));
@@ -12,7 +11,7 @@ const DataMaestro = lazy(() => import("@/pages/admin/DataMaestro/Settings"));
 export const adminRoutes = [
   {
     path: "dashboard",
-    element: <Dashboard />,
+    element: <NewDashboardOverview />,
   },
   {
     path: "posts",
