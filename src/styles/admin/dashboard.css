@@ -1,9 +1,8 @@
 .admin-layout {
   @apply min-h-screen relative overflow-hidden;
   background: linear-gradient(135deg, 
-    #151A24 0%,
-    #373840 50%,
-    #5C596C 100%
+    rgba(21,26,36,0.95),
+    rgba(55,56,64,0.95)
   );
 }
 
@@ -13,34 +12,31 @@
 }
 
 .admin-nav {
-  @apply fixed top-0 left-0 right-0 z-50 h-16;
+  @apply fixed top-0 left-0 right-0 z-50 h-[3.7rem];
   background: linear-gradient(135deg, 
     rgba(38,199,102,0.1),
     rgba(199,38,178,0.1)
   );
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0 0 1rem 1rem;
+  border-bottom: 1px solid rgba(65, 240, 219, 0.2);
 }
 
 .admin-sidebar {
-  @apply fixed left-0 top-16 bottom-0 w-64 z-40 transition-all duration-300;
+  @apply fixed left-0 top-[3.7rem] bottom-0 w-64 z-40 transition-all duration-300;
   background: linear-gradient(135deg,
     rgba(21,26,36,0.95),
     rgba(55,56,64,0.95)
   );
   backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0 2rem 0 0;
+  border-right: 1px solid rgba(65, 240, 219, 0.2);
 }
 
 .admin-nav-item {
-  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 relative cursor-pointer;
-  color: rgba(255, 255, 255, 0.8);
+  @apply flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/80 hover:text-[#41f0db] transition-all duration-300 relative cursor-pointer;
 }
 
 .admin-nav-item:hover {
-  @apply text-[#41f0db] bg-white/5;
+  @apply bg-white/5;
   transform: translateY(-1px);
 }
 
@@ -56,6 +52,19 @@
   @apply opacity-100;
 }
 
+.admin-card {
+  @apply relative overflow-hidden backdrop-blur-lg bg-black/20 border border-white/10 rounded-xl p-6 hover:border-white/20 transition-all duration-300;
+}
+
+.admin-card::before {
+  content: '';
+  @apply absolute inset-0 opacity-10;
+  background: linear-gradient(135deg,
+    rgba(65,240,219,0.2),
+    rgba(255,10,190,0.2)
+  );
+}
+
 .admin-gradient-bg {
   @apply absolute inset-0 z-0;
   background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
@@ -63,26 +72,6 @@
     rgba(199,38,178,0.15),
     rgba(128,0,255,0.15)
   );
-  transition: background 0.3s ease;
-}
-
-.admin-card {
-  @apply relative overflow-hidden backdrop-blur-lg bg-white/5 border border-white/10 rounded-xl;
-  transition: all 0.3s ease;
-}
-
-.admin-card::before {
-  content: '';
-  @apply absolute inset-0 opacity-0;
-  background: linear-gradient(135deg,
-    rgba(38,199,102,0.1),
-    rgba(199,38,178,0.1)
-  );
-  transition: opacity 0.3s ease;
-}
-
-.admin-card:hover::before {
-  @apply opacity-100;
 }
 
 .admin-text-glow {
@@ -95,8 +84,7 @@
   text-shadow: 
     0 0 7px #41f0db,
     0 0 10px #41f0db,
-    0 0 21px #41f0db,
-    0 0 42px #41f0db;
+    0 0 21px #41f0db;
   animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
 }
 
@@ -105,34 +93,6 @@
   text-shadow: 
     0 0 7px #ff0abe,
     0 0 10px #ff0abe,
-    0 0 21px #ff0abe,
-    0 0 42px #ff0abe;
+    0 0 21px #ff0abe;
   animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
-}
-
-@keyframes textPulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
-}
-
-@keyframes neon-pulse-cyan {
-  0%, 100% {
-    opacity: 1;
-    filter: brightness(100%) blur(0.5px);
-  }
-  50% {
-    opacity: 0.8;
-    filter: brightness(150%) blur(1px);
-  }
-}
-
-@keyframes neon-pulse-pink {
-  0%, 100% {
-    opacity: 0.8;
-    filter: brightness(100%) blur(0.5px);
-  }
-  50% {
-    opacity: 1;
-    filter: brightness(150%) blur(1px);
-  }
 }

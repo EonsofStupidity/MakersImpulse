@@ -9,7 +9,7 @@ import { FileText, GitBranch, History } from "lucide-react";
 
 const AdminDashboard = () => {
   return (
-    <div className="min-h-screen bg-[#1a1a1a] pt-20">
+    <div className="min-h-screen bg-[#1a1a1a] pt-[3.7rem]">
       <AdminNav />
       <div className="container mx-auto p-6 space-y-6">
         <motion.div
@@ -17,7 +17,7 @@ const AdminDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="p-6 bg-black/40 border-white/10">
+          <Card className="p-6 bg-black/40 border-white/10 backdrop-blur-md">
             <Tabs defaultValue="content" className="w-full">
               <TabsList className="bg-white/5 border-white/10">
                 <TabsTrigger value="content" className="data-[state=active]:bg-white/10">

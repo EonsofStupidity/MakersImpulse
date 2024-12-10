@@ -64,7 +64,7 @@ export const Navigation = () => {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 h-[3rem]", // Adjusted height to 3rem
+        "fixed top-0 left-0 right-0 z-50 h-[3.7rem]",
         "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
         "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
         isScrolled ? "shadow-lg shadow-[#8000ff]/10" : ""
