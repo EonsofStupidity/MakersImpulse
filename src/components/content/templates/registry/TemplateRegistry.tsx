@@ -1,28 +1,20 @@
-import BuildTemplate from '../BuildTemplate';
-import GuideTemplate from '../GuideTemplate';
-import PartTemplate from '../PartTemplate';
-
-export type TemplateType = 'build' | 'guide' | 'part';
-
-export interface TemplateConfig {
-  name: string;
-  description: string;
-  component: React.ComponentType;
-  defaultProps?: Record<string, any>;
-  schema?: Record<string, any>;
-}
+import BuildTemplate from '../templates/BuildTemplate';
+import GuideTemplate from '../templates/GuideTemplate';
+import PartTemplate from '../templates/PartTemplate';
+import { TemplateType, TemplateConfig } from '../types/template';
+import { Layout, Book, Tool } from 'lucide-react';
 
 export const templateRegistry: Record<TemplateType, TemplateConfig> = {
   build: {
     name: 'Build Template',
     description: 'Template for creating build documentation',
+    icon: Layout,
     component: BuildTemplate,
     defaultProps: {
       sections: [],
       metadata: {}
     },
     schema: {
-      // Schema definition for build template
       type: 'object',
       properties: {
         title: { type: 'string' },
@@ -34,6 +26,7 @@ export const templateRegistry: Record<TemplateType, TemplateConfig> = {
   guide: {
     name: 'Guide Template',
     description: 'Template for creating step-by-step guides',
+    icon: Book,
     component: GuideTemplate,
     defaultProps: {
       steps: [],
@@ -54,6 +47,7 @@ export const templateRegistry: Record<TemplateType, TemplateConfig> = {
   part: {
     name: 'Part Template',
     description: 'Template for creating part documentation',
+    icon: Tool,
     component: PartTemplate,
     defaultProps: {
       specifications: {},
