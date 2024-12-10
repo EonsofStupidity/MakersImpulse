@@ -66,7 +66,7 @@
 .admin-menu-item {
   @apply flex items-center gap-2 px-4 py-3 text-white/70 
          hover:text-[#41f0db] rounded-lg transition-all duration-300 
-         relative cursor-pointer group;
+         relative cursor-pointer;
 }
 
 .admin-menu-item::before {
@@ -83,12 +83,16 @@
 }
 
 /* Mobile Optimizations */
-@media (max-width: 640px) {
-  .admin-menu-item {
-    @apply px-3 py-2;
+@media (max-width: 768px) {
+  .admin-nav {
+    left: 0;
   }
   
-  .admin-card {
-    @apply p-4;
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  
+  .admin-sidebar.open {
+    transform: translateX(0);
   }
 }

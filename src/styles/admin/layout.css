@@ -14,8 +14,7 @@
     rgba(77, 0, 179, 0.05),
     rgba(114, 34, 140, 0.05),
     rgba(176, 230, 83, 0.05)
-  ),
-  url('/lovable-uploads/c7b8c00f-2fa0-444c-bd32-62f1d4a4cee7.png');
+  );
   background-size: cover;
   background-blend-mode: overlay;
 }
@@ -54,10 +53,9 @@
   @apply transition-all duration-500 ease-in-out;
 }
 
-.section-transition.entering {
-  @apply translate-y-0 opacity-100;
-}
-
-.section-transition.exiting {
-  @apply -translate-y-full opacity-0;
+/* Responsive Layout */
+@media (max-width: 768px) {
+  .admin-content {
+    @apply pl-0;
+  }
 }
