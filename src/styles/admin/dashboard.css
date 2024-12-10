@@ -32,17 +32,17 @@
   border-right: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.nav-item {
+.admin-nav-item {
   @apply flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-300 relative cursor-pointer;
   color: rgba(255, 255, 255, 0.8);
 }
 
-.nav-item:hover {
+.admin-nav-item:hover {
   @apply text-[#41f0db] bg-white/5;
   transform: translateY(-1px);
 }
 
-.nav-item-highlight {
+.admin-nav-highlight {
   @apply absolute inset-0 rounded-lg opacity-0 transition-opacity duration-300;
   background: linear-gradient(45deg, 
     rgba(38, 199, 102, 0.1), 
@@ -50,11 +50,11 @@
   );
 }
 
-.nav-item:hover .nav-item-highlight {
+.admin-nav-item:hover .admin-nav-highlight {
   @apply opacity-100;
 }
 
-.gradient-bg {
+.admin-gradient-bg {
   @apply absolute inset-0 z-0;
   background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
     rgba(38,199,102,0.15),
@@ -64,12 +64,12 @@
   transition: background 0.3s ease;
 }
 
-.glass-card {
+.admin-card {
   @apply relative overflow-hidden backdrop-blur-lg bg-white/5 border border-white/10;
   transition: all 0.3s ease;
 }
 
-.glass-card::before {
+.admin-card::before {
   content: '';
   @apply absolute inset-0 opacity-0;
   background: linear-gradient(135deg,
@@ -79,16 +79,58 @@
   transition: opacity 0.3s ease;
 }
 
-.glass-card:hover::before {
+.admin-card:hover::before {
   @apply opacity-100;
 }
 
-.text-glow {
+.admin-text-glow {
   text-shadow: 0 0 10px currentColor;
   animation: textPulse 2s infinite;
+}
+
+.admin-neon-text-cyan {
+  color: #41f0db;
+  text-shadow: 
+    0 0 7px #41f0db,
+    0 0 10px #41f0db,
+    0 0 21px #41f0db,
+    0 0 42px #41f0db;
+  animation: neon-pulse-cyan 3s ease-in-out infinite alternate;
+}
+
+.admin-neon-text-pink {
+  color: #ff0abe;
+  text-shadow: 
+    0 0 7px #ff0abe,
+    0 0 10px #ff0abe,
+    0 0 21px #ff0abe,
+    0 0 42px #ff0abe;
+  animation: neon-pulse-pink 3.5s ease-in-out infinite alternate;
 }
 
 @keyframes textPulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.8; }
+}
+
+@keyframes neon-pulse-cyan {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(100%) blur(0.5px);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(150%) blur(1px);
+  }
+}
+
+@keyframes neon-pulse-pink {
+  0%, 100% {
+    opacity: 0.8;
+    filter: brightness(100%) blur(0.5px);
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(150%) blur(1px);
+  }
 }
