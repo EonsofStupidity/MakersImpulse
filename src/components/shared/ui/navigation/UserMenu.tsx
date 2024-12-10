@@ -3,7 +3,6 @@ import { UserRound, LogOut, Settings, LayoutDashboard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { memo } from "react";
@@ -36,7 +35,7 @@ export const UserMenu = memo(() => {
   const handleNavigation = (path: string) => {
     console.log('UserMenu: Navigating to:', path);
     navigate(path);
-    toast.success(`Navigating to ${path}`);
+    toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
   if (isLoading) {
