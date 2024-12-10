@@ -40,7 +40,7 @@ const menuItems = {
 
 export const AdminSidebar = () => {
   const { isOpen, activeTab, setActiveTab } = useAdminSidebar();
-  const [mousePosition, setMousePosition] = React.useState({ x: 0, y: 0 });
+  const [mousePosition, setMousePosition] = React.useState({ x: 50, y: 50 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
