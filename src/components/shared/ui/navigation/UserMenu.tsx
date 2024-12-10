@@ -87,7 +87,7 @@ export const UserMenu = memo(({ onClose }: UserMenuProps) => {
           Maker Space
         </button>
         <button
-          onClick={() => handleNavigation('/settings', 'Settings')}
+          onClick={() => handleNavigation('/user/settings', 'User Settings')}
           className="w-full flex items-center px-3 py-2 text-white hover:text-[#41f0db] hover:bg-white/5 rounded-lg transition-colors duration-300"
         >
           <Settings className="mr-2 h-4 w-4" />

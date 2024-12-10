@@ -26,7 +26,6 @@ export const Navigation = () => {
     if (!hasLogged) {
       console.log("Navigation render - Session state:", {
         userId: session?.user?.id,
-        role: session?.user?.role,
         isLoading
       });
       console.log("Current location:", location.pathname);
@@ -121,16 +120,18 @@ export const Navigation = () => {
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   className="relative group transition-transform duration-300 hover:scale-110"
                 >
-                  <Avatar className="w-32 h-32 -mt-12 -mb-16 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
+                  <Avatar className="w-32 h-32 -mt-20 -mb-16 border-2 border-[#4d00b3] rounded-full transition-all duration-300 shadow-xl
                     before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
                     before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
                   >
                     <AvatarImage 
-                      src="/lovable-uploads/3cd0be61-00fd-4a26-a809-4ff83b66641c.png" 
+                      src={session.user.user_metadata?.avatar_url || "/admin/placeholder-avatar.png"}
                       alt="User avatar"
                       className="object-cover transform scale-125"
                     />
-                    <AvatarFallback>AI</AvatarFallback>
+                    <AvatarFallback>
+                      {session.user.email?.charAt(0).toUpperCase() || 'U'}
+                    </AvatarFallback>
                   </Avatar>
                   <div 
                     className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
