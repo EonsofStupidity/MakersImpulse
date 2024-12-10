@@ -41,13 +41,44 @@
   @apply opacity-100;
 }
 
-.letter-hover .letter-span {
-  @apply inline-block transition-colors duration-300;
-  --letter-index: 0;
-  transition-delay: calc(var(--letter-index) * 50ms);
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  .admin-content {
+    @apply px-4 py-6;
+  }
+
+  .nav-item {
+    @apply px-4 py-3;
+  }
+
+  .mobile-nav-item {
+    @apply relative overflow-hidden;
+    transform-style: preserve-3d;
+  }
+
+  .mobile-nav-item::after {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 transition-opacity duration-300;
+    transform: translateZ(-1px);
+  }
+
+  .mobile-nav-item:active::after {
+    @apply opacity-100;
+  }
 }
 
-.letter-hover .letter-span.active {
-  @apply text-[#ff0abe];
-  transition-delay: calc(var(--letter-index) * 50ms);
+/* Smooth scrolling for mobile */
+@media (max-width: 768px) {
+  .smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+}
+
+/* Enhanced touch interactions */
+@media (hover: none) and (pointer: coarse) {
+  .nav-item {
+    @apply py-3;
+    min-height: 44px; /* iOS minimum touch target size */
+  }
 }

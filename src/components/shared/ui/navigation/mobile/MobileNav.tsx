@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { MobileNavTrigger } from "./MobileNavTrigger";
 import { MobileNavContent } from "./MobileNavContent";
+import { useLocation } from "react-router-dom";
 
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     if (isOpen) {
@@ -16,6 +18,11 @@ export const MobileNav = () => {
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  // Close mobile nav when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
 
   const handleClose = () => {
     console.log('Closing mobile menu');

@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus } from "lucide-react";
+import { Shield, Home, Wrench, BookOpen, Mail, UserCircle, LogIn, UserPlus, LayoutDashboard, Settings, Users, Activity } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -9,6 +9,7 @@ interface MenuItem {
   to: string;
   label: string;
   icon: LucideIcon;
+  adminOnly?: boolean;
 }
 
 const menuVariants = {
@@ -44,21 +45,28 @@ interface MobileNavContentProps {
 
 export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
 
   const handleNavigation = (to: string) => {
     console.log('Mobile nav: Navigating to:', to);
     onClose();
     navigate(to);
-    toast.success(`Navigating to ${to.replace('/', '').toUpperCase()}`);
+    toast.success(`Navigating to ${to.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
+
+  // Admin menu items
+  const adminMenuItems: MenuItem[] = [
+    { to: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard, adminOnly: true },
+    { to: "/admin/users", label: "Users", icon: Users, adminOnly: true },
+    { to: "/admin/settings", label: "Settings", icon: Settings, adminOnly: true },
+    { to: "/admin/activity", label: "Activity", icon: Activity, adminOnly: true },
+  ];
 
   // Base menu items
   const menuItems: MenuItem[] = [
     { to: "/maker-space", label: "Maker Space", icon: Home },
     { to: "/maker-space/builds", label: "Builds", icon: Wrench },
     { to: "/maker-space/guides", label: "Guides", icon: BookOpen },
-    { to: "/maker-space/parts", label: "Parts", icon: Wrench },
     { to: "/blog", label: "Blog", icon: Mail },
   ];
 
@@ -70,13 +78,12 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
     { to: "/register", label: "Sign Up", icon: UserPlus }
   ];
 
-  // Admin items if user has admin role
-  const adminItems: MenuItem[] = session?.user?.role === 'admin' ? [
-    { to: "/admin", label: "Admin Dashboard", icon: Shield }
-  ] : [];
-
-  // Combine all menu items
-  const allMenuItems = [...authItems, ...menuItems, ...adminItems];
+  // Combine all menu items based on user role
+  const allMenuItems = [
+    ...(user?.role === 'admin' ? adminMenuItems : []),
+    ...menuItems,
+    ...authItems
+  ];
 
   return (
     <motion.div
@@ -85,11 +92,21 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
       variants={{
         open: { 
           x: 0,
-          transition: { type: "spring", stiffness: 300, damping: 30 }
+          transition: { 
+            type: "spring", 
+            stiffness: 300, 
+            damping: 30,
+            duration: 0.3
+          }
         },
         closed: { 
           x: "100%",
-          transition: { type: "spring", stiffness: 300, damping: 30 }
+          transition: { 
+            type: "spring", 
+            stiffness: 300, 
+            damping: 30,
+            duration: 0.3
+          }
         }
       }}
       className="fixed inset-y-0 right-0 w-full max-w-sm bg-black/95 backdrop-blur-xl shadow-lg z-50 md:hidden"
@@ -99,18 +116,24 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
         className="flex flex-col gap-2 p-6 pt-24"
       >
         {allMenuItems.map((item) => (
-          <motion.div key={item.to} variants={menuItemVariants}>
-            <div
+          <motion.div 
+            key={item.to} 
+            variants={menuItemVariants}
+            className="relative"
+          >
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={() => handleNavigation(item.to)}
               className="flex items-center w-full px-4 py-3 text-lg font-medium text-white rounded-lg transition-colors duration-200 hover:bg-white/10 hover:text-[#41f0db] relative group cursor-pointer"
             >
-              <item.icon className="w-5 h-5 mr-2" />
+              <item.icon className="w-5 h-5 mr-3" />
               {item.label}
               <motion.div
                 className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"
                 layoutId={`highlight-${item.to}`}
               />
-            </div>
+            </motion.div>
           </motion.div>
         ))}
       </motion.nav>
