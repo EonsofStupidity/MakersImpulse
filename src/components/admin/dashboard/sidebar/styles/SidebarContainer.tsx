@@ -37,6 +37,7 @@ export const SidebarContainer = ({
           0 0, 
           100% 0, 
           100% calc(100% - 150px), 
+          calc(100% - 40px) 100%,
           0 100%, 
           0 0
         )`,

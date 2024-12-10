@@ -16,7 +16,7 @@ export const useUserManagement = () => {
         .select(`
           *,
           banned_by(username),
-          cms_content(count),
+          cms_content!cms_content_created_by_fkey(count),
           user_activity(count),
           user_activity_cms(count)
         `)
