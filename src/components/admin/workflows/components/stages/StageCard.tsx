@@ -26,10 +26,6 @@ export const StageCard = ({
 }: StageCardProps) => {
   const validation = validateStage(stage);
 
-  const handleUpdate = (updates: Partial<WorkflowStage>) => {
-    onUpdate(stage.id, updates);
-  };
-
   return (
     <Card className="p-4 bg-white/5 border-white/10 hover:border-neon-cyan/50 transition-all duration-300">
       <div className="flex items-start gap-4">
@@ -48,7 +44,7 @@ export const StageCard = ({
           <div>
             <Input
               value={stage.name}
-              onChange={(e) => handleUpdate({ name: e.target.value })}
+              onChange={(e) => onUpdate(stage.id, { name: e.target.value })}
               placeholder={`Stage ${index + 1} name`}
               className={`bg-white/5 border-white/10 text-white ${!stage.name.trim() ? 'border-red-500/50' : ''}`}
             />
@@ -64,13 +60,13 @@ export const StageCard = ({
             <label className="text-sm text-white/70">Stage Type</label>
             <StageTypeSelector
               value={stage.type}
-              onChange={(value) => handleUpdate({ type: value })}
+              onChange={(value) => onUpdate(stage.id, { type: value })}
             />
           </div>
 
           <Textarea
             value={stage.description}
-            onChange={(e) => handleUpdate({ description: e.target.value })}
+            onChange={(e) => onUpdate(stage.id, { description: e.target.value })}
             placeholder="Stage description (optional)"
             className="bg-white/5 border-white/10 text-white"
             rows={2}
@@ -78,7 +74,7 @@ export const StageCard = ({
 
           <StageConfigPanel 
             stage={stage}
-            onUpdate={handleUpdate}
+            onUpdate={(updates) => onUpdate(stage.id, updates)}
           />
 
           {!validation.isValid && (
