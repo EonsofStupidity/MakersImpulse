@@ -98,8 +98,8 @@ export interface DiffViewerOptions {
 export interface DiffViewerProps {
   oldContent: string;
   newContent: string;
-  oldMetadata?: Record<string, any>;
-  newMetadata?: Record<string, any>;
+  oldMetadata?: Record<string, unknown>;
+  newMetadata?: Record<string, unknown>;
   options?: DiffViewerOptions;
   onNavigate?: (index: number) => void;
   onSearch?: (query: string) => void;
@@ -127,7 +127,7 @@ export interface DiffSectionProps {
   metadata?: {
     startLine: number;
     endLine: number;
-    type: 'addition' | 'deletion' | 'modification' | 'context';
+    type: DiffChangeType;
   };
   searchQuery?: string;
   currentSearchIndex?: number;

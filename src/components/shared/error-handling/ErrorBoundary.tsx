@@ -25,7 +25,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+  public componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
     console.error("Uncaught error:", error, errorInfo);
     
     toast.error("An unexpected error occurred", {
@@ -34,12 +34,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
     });
   }
 
-  private handleReset = () => {
+  private handleReset = (): void => {
     this.setState({ hasError: false, error: null });
     window.location.reload();
   };
 
-  public render() {
+  public render(): React.ReactNode {
     if (this.state.hasError) {
       if (this.props.fallback) {
         const FallbackComponent = this.props.fallback;
