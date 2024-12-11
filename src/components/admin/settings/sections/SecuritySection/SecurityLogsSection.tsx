@@ -4,6 +4,18 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
 
+interface SecurityLog {
+  id: string;
+  event_type: string;
+  ip_address: string | null;
+  user_id: string | null;
+  created_at: string;
+  profiles?: {
+    username: string | null;
+    display_name: string | null;
+  } | null;
+}
+
 export const SecurityLogsSection = () => {
   const { data: logs, isLoading } = useQuery({
     queryKey: ['security-logs'],
@@ -21,7 +33,7 @@ export const SecurityLogsSection = () => {
         .limit(100);
 
       if (error) throw error;
-      return data;
+      return data as SecurityLog[];
     }
   });
 

@@ -2,11 +2,11 @@ import React from 'react';
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Plus, X } from 'lucide-react';
+import { SecuritySettings } from '../../types/security';
 
 export const IPSecuritySection = () => {
   const [newIP, setNewIP] = React.useState('');
@@ -21,12 +21,12 @@ export const IPSecuritySection = () => {
         .single();
 
       if (error) throw error;
-      return data.security_settings;
+      return data.security_settings as SecuritySettings;
     }
   });
 
   const updateSettings = useMutation({
-    mutationFn: async (newSettings: any) => {
+    mutationFn: async (newSettings: SecuritySettings) => {
       const { data, error } = await supabase
         .from('site_settings')
         .update({ security_settings: newSettings })
@@ -46,11 +46,11 @@ export const IPSecuritySection = () => {
   });
 
   const addToList = (list: 'ip_whitelist' | 'ip_blacklist') => {
-    if (!newIP) return;
+    if (!newIP || !settings) return;
     
     const updatedSettings = {
       ...settings,
-      [list]: [...(settings?.[list] || []), newIP]
+      [list]: [...(settings[list] || []), newIP]
     };
     
     updateSettings.mutate(updatedSettings);
@@ -58,9 +58,11 @@ export const IPSecuritySection = () => {
   };
 
   const removeFromList = (list: 'ip_whitelist' | 'ip_blacklist', ip: string) => {
+    if (!settings) return;
+
     const updatedSettings = {
       ...settings,
-      [list]: (settings?.[list] || []).filter((item: string) => item !== ip)
+      [list]: settings[list].filter((item: string) => item !== ip)
     };
     
     updateSettings.mutate(updatedSettings);
