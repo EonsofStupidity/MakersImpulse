@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from '@/lib/store/auth-store';
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User, Home, Book, Tool, Settings } from "lucide-react";
 import { toast } from "sonner";
 import type { LucideIcon } from "lucide-react";
 
@@ -31,11 +31,11 @@ export const MobileNavContent = ({ isOpen, onClose }: MobileNavContentProps) => 
   };
 
   const menuItems: MenuItem[] = [
-    { to: "/", label: "Home", icon: Menu },
-    { to: "/maker-space", label: "Maker Space", icon: Menu, requiresAuth: true },
-    { to: "/blog", label: "Blog", icon: Menu },
+    { to: "/", label: "Home", icon: Home },
+    { to: "/maker-space", label: "Maker Space", icon: Tool, requiresAuth: true },
+    { to: "/blog", label: "Blog", icon: Book },
     { to: "/profile", label: "Profile", icon: User, requiresAuth: true },
-    { to: "/admin/dashboard", label: "Admin Dashboard", icon: Menu, requiresAuth: true, adminOnly: true },
+    { to: "/admin/dashboard", label: "Admin Dashboard", icon: Settings, requiresAuth: true, adminOnly: true },
   ];
 
   const filteredItems = menuItems.filter(item => {

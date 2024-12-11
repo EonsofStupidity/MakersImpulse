@@ -2,18 +2,26 @@ import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { Menu, LogOut, User } from "lucide-react";
+import { Menu, LogOut, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { MobileNavContent } from "./MobileNavContent";
+import { supabase } from "@/integrations/supabase/client";
 
 export const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
   const { session, user, signOut } = useAuthStore();
 
   useEffect(() => {
+    console.log('MobileNav: Auth state changed', { 
+      hasSession: !!session,
+      userId: session?.user?.id,
+      userRole: user?.role 
+    });
+
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
@@ -22,22 +30,56 @@ export const MobileNav = () => {
     return () => {
       document.body.style.overflow = "unset";
     };
-  }, [isOpen]);
+  }, [isOpen, session, user]);
 
   useEffect(() => {
     setIsOpen(false);
   }, [location]);
 
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('MobileNav: Auth state change event:', event);
+      
+      if (event === 'SIGNED_OUT') {
+        setIsAuthenticating(false);
+        navigate('/login');
+      } else if (event === 'SIGNED_IN' && session) {
+        setIsAuthenticating(false);
+        navigate('/');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [navigate]);
+
   const handleSignOut = async () => {
     try {
+      setIsAuthenticating(true);
       await signOut();
       toast.success("Signed out successfully");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.error("Sign out error:", error);
       toast.error("Failed to sign out");
+    } finally {
+      setIsAuthenticating(false);
     }
   };
+
+  const handleSignIn = () => {
+    setIsOpen(false);
+    navigate("/login");
+  };
+
+  if (isAuthenticating) {
+    return (
+      <div className="md:hidden flex items-center justify-center">
+        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="md:hidden">
@@ -89,10 +131,7 @@ export const MobileNav = () => {
                 ) : (
                   <Button
                     className="w-full bg-gradient-to-r from-[#41f0db] to-[#8000ff] hover:opacity-90"
-                    onClick={() => {
-                      setIsOpen(false);
-                      navigate("/login");
-                    }}
+                    onClick={handleSignIn}
                   >
                     Sign In
                   </Button>
@@ -105,8 +144,13 @@ export const MobileNav = () => {
                     onClick={handleSignOut}
                     className="w-full mt-4 text-red-400 hover:text-red-300 hover:bg-red-500/10"
                     variant="ghost"
+                    disabled={isAuthenticating}
                   >
-                    <LogOut className="h-4 w-4 mr-2" />
+                    {isAuthenticating ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : (
+                      <LogOut className="h-4 w-4 mr-2" />
+                    )}
                     Sign Out
                   </Button>
                 )}
