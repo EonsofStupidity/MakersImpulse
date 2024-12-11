@@ -367,6 +367,7 @@ export type Database = {
           rollback_from: string | null
           rollback_metadata: Json | null
           rollback_type: string | null
+          scheduled_by: string | null
           scheduled_publish_at: string | null
           version_number: number | null
         }
@@ -384,6 +385,7 @@ export type Database = {
           rollback_from?: string | null
           rollback_metadata?: Json | null
           rollback_type?: string | null
+          scheduled_by?: string | null
           scheduled_publish_at?: string | null
           version_number?: number | null
         }
@@ -401,6 +403,7 @@ export type Database = {
           rollback_from?: string | null
           rollback_metadata?: Json | null
           rollback_type?: string | null
+          scheduled_by?: string | null
           scheduled_publish_at?: string | null
           version_number?: number | null
         }
@@ -431,6 +434,13 @@ export type Database = {
             columns: ["rollback_from"]
             isOneToOne: false
             referencedRelation: "cms_content_revisions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_revisions_scheduled_by_fkey"
+            columns: ["scheduled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -1003,6 +1013,64 @@ export type Database = {
             columns: ["banned_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      publishing_queue: {
+        Row: {
+          content_id: string | null
+          created_at: string | null
+          created_by: string | null
+          error_message: string | null
+          id: string
+          processed_at: string | null
+          revision_id: string | null
+          scheduled_for: string
+          status: string | null
+        }
+        Insert: {
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          revision_id?: string | null
+          scheduled_for: string
+          status?: string | null
+        }
+        Update: {
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          error_message?: string | null
+          id?: string
+          processed_at?: string | null
+          revision_id?: string | null
+          scheduled_for?: string
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "publishing_queue_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_queue_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "publishing_queue_revision_id_fkey"
+            columns: ["revision_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_revisions"
             referencedColumns: ["id"]
           },
         ]
