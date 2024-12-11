@@ -20,7 +20,7 @@ export const RevisionMetadata: React.FC<RevisionMetadataProps> = ({
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold flex items-center gap-2">
           <Info className="w-4 h-4 text-primary" />
-          Version {revision.versionNumber}
+          Version {revision.version_number}
         </h3>
         {showRollbackButton && onRollbackClick && (
           <button
@@ -41,19 +41,19 @@ export const RevisionMetadata: React.FC<RevisionMetadataProps> = ({
         
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
-          <span>{format(new Date(revision.createdAt), 'PPpp')}</span>
+          <span>{format(new Date(revision.created_at), 'PPpp')}</span>
         </div>
 
-        {revision.changeSummary && (
+        {revision.change_summary && (
           <div className="pt-2 border-t border-primary/10">
-            <p className="text-sm">{revision.changeSummary}</p>
+            <p className="text-sm">{revision.change_summary}</p>
           </div>
         )}
 
-        {revision.rollbackMetadata && (
+        {revision.rollback_metadata && (
           <div className="pt-2 border-t border-primary/10">
             <p className="text-sm text-warning">
-              Rollback from version {revision.rollbackMetadata.target_version}
+              Rollback from version {(revision.rollback_metadata as any).target_version}
             </p>
           </div>
         )}

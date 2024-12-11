@@ -21,16 +21,17 @@ export interface ContentRelationship {
 
 export interface ContentRevision {
   id: string;
-  contentId: string;
+  content_id: string;
   content: Json;
   metadata?: Json;
-  createdBy?: string;
-  createdAt: string;
-  versionNumber: number;
-  changeSummary?: string;
-  publishStatus?: string;
-  scheduledPublishAt?: string;
-  rollbackFrom?: string;
+  created_by?: string;
+  created_at: string;
+  version_number: number;
+  change_summary?: string;
+  publish_status?: string;
+  scheduled_publish_at?: string;
+  rollback_from?: string;
+  rollback_metadata?: Json;
   profiles?: {
     display_name: string;
   };

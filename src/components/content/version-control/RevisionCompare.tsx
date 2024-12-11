@@ -102,8 +102,8 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
   const getSelectedRevisions = () => {
     if (!revisions) return { left: null, right: null };
     
-    const left = revisions.find(r => r.versionNumber === selectedVersions.left);
-    const right = revisions.find(r => r.versionNumber === selectedVersions.right);
+    const left = revisions.find(r => r.version_number === selectedVersions.left);
+    const right = revisions.find(r => r.version_number === selectedVersions.right);
     
     return { left, right };
   };
@@ -130,7 +130,7 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
               revision={left}
               showRollbackButton
               onRollbackClick={() => {
-                setRollbackVersion(left.versionNumber);
+                setRollbackVersion(left.version_number);
                 setShowRollbackConfirm(true);
               }}
             />
@@ -154,7 +154,7 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
               revision={right}
               showRollbackButton
               onRollbackClick={() => {
-                setRollbackVersion(right.versionNumber);
+                setRollbackVersion(right.version_number);
                 setShowRollbackConfirm(true);
               }}
             />
