@@ -19,7 +19,7 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <div 
-      className="absolute right-0 mt-2 w-64 rounded-lg bg-[#7E69AB] backdrop-blur-xl border border-white/10 shadow-xl z-50 
+      className="fixed md:absolute right-0 mt-2 w-64 rounded-lg bg-[#7E69AB] backdrop-blur-xl border border-white/10 shadow-xl z-[100] 
                  overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-b 
                  before:from-[#41f0db]/5 before:to-[#8000ff]/5 before:pointer-events-none"
     >
