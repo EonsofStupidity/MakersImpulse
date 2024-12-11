@@ -1,5 +1,24 @@
 import { supabase } from "@/integrations/supabase/client";
 
+export const validateSession = async (session: any) => {
+  if (!session?.user?.id) {
+    throw new Error('Invalid session');
+  }
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('is_banned, banned_until')
+    .eq('id', session.user.id)
+    .single();
+
+  if (error) throw error;
+  if (profile?.is_banned) {
+    throw new Error('Account is banned');
+  }
+
+  return true;
+};
+
 export const handleSecurityEvent = async (
   userId: string,
   eventType: string,
