@@ -1,20 +1,10 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AuthState, AuthUser, AuthSession } from '@/lib/auth/types/auth';
+import type { AuthStore, AuthUser, AuthSession } from '@/lib/auth/types/auth';
 import { supabase } from "@/integrations/supabase/client";
 import { sessionManager } from '@/lib/auth/SessionManager';
 import { securityManager } from '@/lib/auth/SecurityManager';
 import { authLogger } from '@/lib/auth/AuthLogger';
-
-interface AuthStore extends AuthState {
-  setSession: (session: AuthSession | null) => void;
-  setUser: (user: AuthUser | null) => void;
-  setLoading: (isLoading: boolean) => void;
-  setError: (error: Error | null) => void;
-  setOffline: (isOffline: boolean) => void;
-  signOut: () => Promise<void>;
-  reset: () => void;
-}
 
 export const useAuthStore = create<AuthStore>()(
   persist(

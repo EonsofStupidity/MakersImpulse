@@ -1,11 +1,5 @@
 import { SessionConfig, SessionState, SessionEventType } from './types/auth';
 
-const DEFAULT_CONFIG: SessionConfig = {
-  refreshInterval: 5 * 60 * 1000, // 5 minutes
-  sessionTimeout: 30 * 60 * 1000, // 30 minutes
-  storageKey: 'auth_session_state'
-};
-
 export class SessionManager {
   private static instance: SessionManager;
   private refreshTimeout?: NodeJS.Timeout;
@@ -63,7 +57,6 @@ export class SessionManager {
   }
 
   private async syncSessionState(state: SessionState): Promise<void> {
-    // Implement session state synchronization logic
     console.log('Syncing session state:', state);
   }
 
@@ -83,9 +76,12 @@ export class SessionManager {
     this.destroy();
   }
 
+  public async handleSignOut(): Promise<void> {
+    this.destroy();
+  }
+
   private async refreshSession(): Promise<void> {
     try {
-      // Implement token refresh logic here
       this.scheduleNextRefresh();
     } catch (error) {
       if (error instanceof Error && this.config.onRefreshError) {
@@ -124,3 +120,11 @@ export class SessionManager {
     }
   }
 }
+
+const DEFAULT_CONFIG: SessionConfig = {
+  refreshInterval: 5 * 60 * 1000, // 5 minutes
+  sessionTimeout: 30 * 60 * 1000, // 30 minutes
+  storageKey: 'auth_session_state'
+};
+
+export const sessionManager = SessionManager.getInstance();

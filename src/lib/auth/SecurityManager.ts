@@ -11,12 +11,10 @@ export class SecurityManager {
   }
 
   private handleSessionExpired(): void {
-    // Implement session expiration logic
     console.log('Session expired');
   }
 
   private handleRefreshError(error: Error): void {
-    // Implement refresh error handling
     console.error('Session refresh error:', error);
   }
 
@@ -24,7 +22,14 @@ export class SecurityManager {
     this.sessionManager.startSession();
   }
 
+  public clearSecurityData(): void {
+    // Clear any security-related data
+    console.log('Clearing security data');
+  }
+
   public cleanup(): void {
     this.sessionManager.destroy();
   }
 }
+
+export const securityManager = new SecurityManager();
