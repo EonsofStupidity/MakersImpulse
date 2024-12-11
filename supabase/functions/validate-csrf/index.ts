@@ -18,18 +18,19 @@ serve(async (req) => {
       throw new Error('Invalid CSRF token')
     }
 
-    // Store token in security_events for audit
-    const supabaseClient = createClient(
+    // Create Supabase client with service role key to bypass RLS
+    const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    const { error } = await supabaseClient
+    // Store token in security_events for audit using admin client
+    const { error } = await supabaseAdmin
       .from('security_events')
       .insert({
         event_type: 'csrf_validation',
         severity: 'low',
-        details: { token },
+        details: { token }
       })
 
     if (error) throw error

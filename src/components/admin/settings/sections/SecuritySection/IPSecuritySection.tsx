@@ -27,10 +27,17 @@ export const IPSecuritySection = () => {
 
   const updateSettings = useMutation({
     mutationFn: async (newSettings: SecuritySettings) => {
+      const { data: settingsData } = await supabase
+        .from('site_settings')
+        .select('id')
+        .single();
+
+      if (!settingsData?.id) throw new Error('Settings not found');
+
       const { data, error } = await supabase
         .from('site_settings')
         .update({ security_settings: newSettings })
-        .eq('id', (await supabase.from('site_settings').select('id').single()).data.id);
+        .eq('id', settingsData.id);
 
       if (error) throw error;
       return data;

@@ -3,18 +3,7 @@ import { Card } from "@/components/ui/card";
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format } from 'date-fns';
-
-interface SecurityLog {
-  id: string;
-  event_type: string;
-  ip_address: string | null;
-  user_id: string | null;
-  created_at: string;
-  profiles?: {
-    username: string | null;
-    display_name: string | null;
-  } | null;
-}
+import { SecurityLog } from '../../types/security';
 
 export const SecurityLogsSection = () => {
   const { data: logs, isLoading } = useQuery({

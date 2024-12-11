@@ -1,3 +1,5 @@
+import { Json } from '@/integrations/supabase/types';
+
 export interface SecuritySettings {
   ip_whitelist: string[];
   ip_blacklist: string[];
@@ -11,4 +13,16 @@ export interface SecuritySettings {
 
 export interface SiteSecuritySettings {
   security_settings: SecuritySettings;
+}
+
+export interface SecurityLog {
+  id: string;
+  event_type: string;
+  ip_address: string | null;
+  user_id: string | null;
+  created_at: string;
+  profiles?: {
+    username: string | null;
+    display_name: string | null;
+  } | null;
 }
