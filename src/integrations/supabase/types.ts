@@ -1583,6 +1583,41 @@ export type Database = {
           },
         ]
       }
+      workflow_stage_validation_rules: {
+        Row: {
+          created_at: string | null
+          id: string
+          rules: Json | null
+          stage_id: string
+          template_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          rules?: Json | null
+          stage_id: string
+          template_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          rules?: Json | null
+          stage_id?: string
+          template_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_stage_validation_rules_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_templates"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workflow_templates: {
         Row: {
           created_at: string | null
@@ -1592,6 +1627,8 @@ export type Database = {
           is_active: boolean | null
           name: string
           notification_config: Json | null
+          stage_configs: Json | null
+          stage_types: Json | null
           stages: Json
           updated_at: string | null
         }
@@ -1603,6 +1640,8 @@ export type Database = {
           is_active?: boolean | null
           name: string
           notification_config?: Json | null
+          stage_configs?: Json | null
+          stage_types?: Json | null
           stages?: Json
           updated_at?: string | null
         }
@@ -1614,6 +1653,8 @@ export type Database = {
           is_active?: boolean | null
           name?: string
           notification_config?: Json | null
+          stage_configs?: Json | null
+          stage_types?: Json | null
           stages?: Json
           updated_at?: string | null
         }
@@ -1822,6 +1863,12 @@ export type Database = {
         | "3D Printer Hardware"
       theme_mode: "light" | "dark" | "system"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"
+      workflow_stage_type:
+        | "approval"
+        | "review"
+        | "task"
+        | "notification"
+        | "conditional"
     }
     CompositeTypes: {
       [_ in never]: never

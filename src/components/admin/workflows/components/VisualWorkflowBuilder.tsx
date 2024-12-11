@@ -14,7 +14,9 @@ export const VisualWorkflowBuilder = ({ stages, onChange }: VisualWorkflowBuilde
       id: crypto.randomUUID(),
       name: '',
       description: '',
-      order: stages.length
+      type: 'task',
+      order: stages.length,
+      config: {}
     };
     onChange([...stages, newStage]);
   };

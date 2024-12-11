@@ -1,10 +1,42 @@
 import { Json } from "@/integrations/supabase/types";
 
+export type WorkflowStageType = 'approval' | 'review' | 'task' | 'notification' | 'conditional';
+
+export interface StageValidationRule {
+  field: string;
+  type: 'required' | 'min' | 'max' | 'pattern' | 'custom';
+  value?: any;
+  message?: string;
+}
+
+export interface WorkflowStageConfig {
+  timeLimit?: number;
+  requiredApprovers?: number;
+  customFields?: {
+    name: string;
+    type: 'text' | 'number' | 'date' | 'select';
+    options?: string[];
+    required?: boolean;
+  }[];
+  autoAssignment?: {
+    type: 'user' | 'role' | 'group';
+    value: string;
+  };
+  notifications?: {
+    onStart?: boolean;
+    onComplete?: boolean;
+    reminderInterval?: number;
+  };
+}
+
 export interface WorkflowStage {
   id: string;
   name: string;
   description?: string;
+  type: WorkflowStageType;
   order: number;
+  config: WorkflowStageConfig;
+  validationRules?: StageValidationRule[];
   [key: string]: Json | undefined;
 }
 
@@ -36,6 +68,9 @@ export const parseStages = (stages: Json): WorkflowStage[] => {
     id: stage.id || crypto.randomUUID(),
     name: stage.name || '',
     description: stage.description || '',
-    order: stage.order || 0
+    type: stage.type || 'task',
+    order: stage.order || 0,
+    config: stage.config || {},
+    validationRules: stage.validationRules || []
   }));
 };

@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { GripVertical, X } from 'lucide-react';
+import { StageTypeSelector } from './StageTypeSelector';
 import type { WorkflowStage } from '../../types';
 
 interface StageCardProps {
@@ -42,6 +43,15 @@ export const StageCard = ({
             placeholder={`Stage ${index + 1} name`}
             className="bg-white/5 border-white/10 text-white"
           />
+          
+          <div className="space-y-2">
+            <label className="text-sm text-white/70">Stage Type</label>
+            <StageTypeSelector
+              value={stage.type}
+              onChange={(value) => onUpdate(stage.id, { type: value })}
+            />
+          </div>
+
           <Textarea
             value={stage.description}
             onChange={(e) => onUpdate(stage.id, { description: e.target.value })}
