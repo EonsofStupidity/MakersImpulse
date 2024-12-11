@@ -362,8 +362,11 @@ export type Database = {
           diff: Json | null
           id: string
           metadata: Json | null
+          previous_version_id: string | null
           publish_status: string | null
           rollback_from: string | null
+          rollback_metadata: Json | null
+          rollback_type: string | null
           scheduled_publish_at: string | null
           version_number: number | null
         }
@@ -376,8 +379,11 @@ export type Database = {
           diff?: Json | null
           id?: string
           metadata?: Json | null
+          previous_version_id?: string | null
           publish_status?: string | null
           rollback_from?: string | null
+          rollback_metadata?: Json | null
+          rollback_type?: string | null
           scheduled_publish_at?: string | null
           version_number?: number | null
         }
@@ -390,8 +396,11 @@ export type Database = {
           diff?: Json | null
           id?: string
           metadata?: Json | null
+          previous_version_id?: string | null
           publish_status?: string | null
           rollback_from?: string | null
+          rollback_metadata?: Json | null
+          rollback_type?: string | null
           scheduled_publish_at?: string | null
           version_number?: number | null
         }
@@ -408,6 +417,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_revisions_previous_version_id_fkey"
+            columns: ["previous_version_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content_revisions"
             referencedColumns: ["id"]
           },
           {
@@ -1802,6 +1818,15 @@ export type Database = {
           p_time_window: string
         }
         Returns: boolean
+      }
+      create_rollback_revision: {
+        Args: {
+          p_content_id: string
+          p_target_version_number: number
+          p_current_content: Json
+          p_user_id: string
+        }
+        Returns: string
       }
       initialize_user_gamification: {
         Args: {

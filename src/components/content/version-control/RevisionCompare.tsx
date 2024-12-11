@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ArrowLeft, ArrowRight, History } from 'lucide-react';
 import { toast } from 'sonner';
+import { VersionSelector } from './components/VersionSelector';
+import { RevisionContent } from './components/RevisionContent';
 import type { ContentRevision } from '@/integrations/supabase/types/content';
 
 interface RevisionCompareProps {
@@ -79,8 +77,6 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
     return { left, right };
   };
 
-  const { left, right } = getSelectedRevisions();
-
   const handleVersionChange = (direction: 'left' | 'right', increment: boolean) => {
     if (!revisions?.length) return;
 
@@ -111,94 +107,28 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
     );
   }
 
+  const { left, right } = getSelectedRevisions();
+
   return (
     <div className="grid grid-cols-2 gap-4">
       {/* Left Version */}
       <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Version {selectedVersions.left}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVersionChange('left', false)}
-              disabled={selectedVersions.left <= 1}
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVersionChange('left', true)}
-              disabled={selectedVersions.left >= (revisions?.length || 0)}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-        <ScrollArea className="h-[600px]">
-          {left && (
-            <div className="space-y-4">
-              <div className="text-sm text-muted-foreground">
-                <p>Created by: {left.profiles?.display_name || 'Unknown'}</p>
-                <p>Date: {format(new Date(left.createdAt), 'PPpp')}</p>
-                {left.changeSummary && (
-                  <p className="mt-2">Summary: {left.changeSummary}</p>
-                )}
-              </div>
-              <pre className="bg-background/50 p-4 rounded-lg overflow-x-auto text-sm">
-                {JSON.stringify(left.content, null, 2)}
-              </pre>
-            </div>
-          )}
-        </ScrollArea>
+        <VersionSelector
+          versionNumber={selectedVersions.left}
+          maxVersion={revisions.length}
+          onVersionChange={(increment) => handleVersionChange('left', increment)}
+        />
+        <RevisionContent revision={left} />
       </Card>
 
       {/* Right Version */}
       <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <History className="w-4 h-4 text-primary" />
-            <span className="text-sm font-medium">Version {selectedVersions.right}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVersionChange('right', false)}
-              disabled={selectedVersions.right <= 1}
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleVersionChange('right', true)}
-              disabled={selectedVersions.right >= (revisions?.length || 0)}
-            >
-              <ArrowRight className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-        <ScrollArea className="h-[600px]">
-          {right && (
-            <div className="space-y-4">
-              <div className="text-sm text-muted-foreground">
-                <p>Created by: {right.profiles?.display_name || 'Unknown'}</p>
-                <p>Date: {format(new Date(right.createdAt), 'PPpp')}</p>
-                {right.changeSummary && (
-                  <p className="mt-2">Summary: {right.changeSummary}</p>
-                )}
-              </div>
-              <pre className="bg-background/50 p-4 rounded-lg overflow-x-auto text-sm">
-                {JSON.stringify(right.content, null, 2)}
-              </pre>
-            </div>
-          )}
-        </ScrollArea>
+        <VersionSelector
+          versionNumber={selectedVersions.right}
+          maxVersion={revisions.length}
+          onVersionChange={(increment) => handleVersionChange('right', increment)}
+        />
+        <RevisionContent revision={right} />
       </Card>
     </div>
   );
