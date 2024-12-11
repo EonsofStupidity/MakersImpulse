@@ -41,7 +41,7 @@ export class SessionManager {
       });
 
       // Listen for storage events for cross-tab synchronization
-      window.addEventListener('storage', (event) => {
+      window.addEventListener('storage', (event: StorageEvent) => {
         if (event.key === 'auth_session_state') {
           this.handleCrossTabSync(event.newValue);
         }
