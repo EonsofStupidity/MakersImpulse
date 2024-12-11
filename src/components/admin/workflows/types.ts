@@ -73,3 +73,43 @@ export const parseStages = (stages: Json): WorkflowStage[] => {
     validationRules: stage.validationRules || []
   }));
 };
+
+export const validateStage = (stage: WorkflowStage): { isValid: boolean; errors: string[] } => {
+  const errors: string[] = [];
+
+  // Required field validation
+  if (!stage.name.trim()) {
+    errors.push('Stage name is required');
+  }
+
+  // Type-specific validation
+  switch (stage.type) {
+    case 'approval':
+      if (!stage.config.requiredApprovers || stage.config.requiredApprovers < 1) {
+        errors.push('At least one approver is required');
+      }
+      break;
+    case 'review':
+      if (!stage.config.autoAssignment?.value) {
+        errors.push('Reviewer assignment is required');
+      }
+      break;
+    case 'task':
+      if (stage.config.customFields?.some(field => field.required && !field.name)) {
+        errors.push('Required custom fields must have a name');
+      }
+      break;
+  }
+
+  // Custom validation rules
+  stage.validationRules?.forEach(rule => {
+    if (rule.type === 'required' && !stage.config[rule.field]) {
+      errors.push(rule.message || `${rule.field} is required`);
+    }
+  });
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
+};

@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { WorkflowFormHeader } from './components/WorkflowFormHeader';
 import { WorkflowBasicFields } from './components/WorkflowBasicFields';
 import { VisualWorkflowBuilder } from './components/VisualWorkflowBuilder';
-import { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
+import { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages, validateStage } from './types';
 
 export const WorkflowTemplateForm = () => {
   const { id } = useParams();
@@ -100,10 +100,22 @@ export const WorkflowTemplateForm = () => {
 
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
+    
+    // Validate template name
     if (!formData.name.trim()) {
       toast.error('Template name is required');
       return;
     }
+
+    // Validate all stages
+    const stageValidations = formData.stages.map(validateStage);
+    const invalidStages = stageValidations.filter(v => !v.isValid);
+
+    if (invalidStages.length > 0) {
+      toast.error(`Please fix validation errors in ${invalidStages.length} stage(s)`);
+      return;
+    }
+
     mutation.mutate(formData);
   };
 
