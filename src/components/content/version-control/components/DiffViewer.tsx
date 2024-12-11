@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import { diffChars, diffWords } from 'diff';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
 import type { DiffHighlightMode, DiffChange, DiffViewerProps } from '../types/diff';
+import { DiffSection } from './DiffSection';
 import { DiffMetadata } from './DiffMetadata';
 
 export const DiffViewer: React.FC<DiffViewerProps> = ({
@@ -14,7 +13,7 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   newMetadata
 }) => {
   const [diffType, setDiffType] = useState<DiffHighlightMode>('word');
-  const [currentDiffIndex, setCurrentDiffIndex] = useState(0);
+  const [expandedSections, setExpandedSections] = useState<Set<number>>(new Set());
 
   const diffs = useMemo(() => {
     try {
@@ -31,42 +30,56 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
     }
   }, [oldContent, newContent, diffType]);
 
-  const changes = useMemo(() => 
-    diffs.filter(d => d.added || d.removed), [diffs]
-  );
+  const sections = useMemo(() => {
+    let currentSection: DiffChange[] = [];
+    const allSections: DiffChange[][] = [];
+    let lineNumber = 1;
 
-  const navigateDiff = (direction: 'prev' | 'next') => {
-    setCurrentDiffIndex(prev => {
-      if (direction === 'prev') {
-        return prev > 0 ? prev - 1 : changes.length - 1;
+    diffs.forEach(diff => {
+      const lines = diff.value.split('\n');
+      lines.forEach((line, index) => {
+        const isLastLine = index === lines.length - 1;
+        const change: DiffChange = {
+          ...diff,
+          value: line + (isLastLine ? '' : '\n'),
+          lineNumber: lineNumber++
+        };
+
+        currentSection.push(change);
+
+        if (currentSection.length >= 50 || (!isLastLine && line === '')) {
+          allSections.push(currentSection);
+          currentSection = [];
+        }
+      });
+    });
+
+    if (currentSection.length > 0) {
+      allSections.push(currentSection);
+    }
+
+    return allSections;
+  }, [diffs]);
+
+  const toggleSection = (index: number) => {
+    setExpandedSections(prev => {
+      const next = new Set(prev);
+      if (next.has(index)) {
+        next.delete(index);
+      } else {
+        next.add(index);
       }
-      return prev < changes.length - 1 ? prev + 1 : 0;
+      return next;
     });
   };
 
-  const renderDiffContent = (content: DiffChange[]) => (
-    <div className="font-mono text-sm whitespace-pre-wrap">
-      {content.map((part, i) => {
-        const isCurrentDiff = (part.added || part.removed) && 
-          changes.indexOf(part) === currentDiffIndex;
-
-        return (
-          <span
-            key={i}
-            className={`
-              ${part.added ? 'bg-green-500/20 text-green-400' : ''}
-              ${part.removed ? 'bg-red-500/20 text-red-400 line-through' : ''}
-              ${isCurrentDiff ? 'ring-2 ring-primary/50 rounded' : ''}
-              ${!part.added && !part.removed ? 'text-zinc-400' : ''}
-              transition-all
-            `}
-          >
-            {part.value}
-          </span>
-        );
-      })}
-    </div>
-  );
+  const toggleAllSections = (expanded: boolean) => {
+    if (expanded) {
+      setExpandedSections(new Set(Array.from({ length: sections.length }, (_, i) => i)));
+    } else {
+      setExpandedSections(new Set());
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -90,28 +103,20 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           </Button>
         </div>
         
-        <div className="flex items-center gap-2">
+        <div className="flex gap-2">
           <Button
             variant="outline"
-            size="icon"
-            onClick={() => navigateDiff('prev')}
-            disabled={changes.length === 0}
+            size="sm"
+            onClick={() => toggleAllSections(true)}
           >
-            <ChevronLeft className="h-4 w-4" />
+            Expand All
           </Button>
-          <span className="text-sm">
-            {changes.length > 0 
-              ? `Change ${currentDiffIndex + 1} of ${changes.length}`
-              : 'No changes'
-            }
-          </span>
           <Button
             variant="outline"
-            size="icon"
-            onClick={() => navigateDiff('next')}
-            disabled={changes.length === 0}
+            size="sm"
+            onClick={() => toggleAllSections(false)}
           >
-            <ChevronRight className="h-4 w-4" />
+            Collapse All
           </Button>
         </div>
       </div>
@@ -120,22 +125,38 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
         <div className="space-y-4">
           <DiffMetadata metadata={oldMetadata || {}} label="Previous Version" />
           <Card className="relative">
-            <ScrollArea className="h-[400px]">
-              <div className="p-4">
-                {renderDiffContent(diffs.filter(d => !d.added))}
-              </div>
-            </ScrollArea>
+            {sections.map((section, index) => (
+              <DiffSection
+                key={index}
+                content={section.filter(d => !d.added)}
+                isExpanded={expandedSections.has(index)}
+                onToggle={() => toggleSection(index)}
+                metadata={{
+                  startLine: section[0]?.lineNumber || 0,
+                  endLine: section[section.length - 1]?.lineNumber || 0,
+                  type: section.some(d => d.removed) ? 'deletion' : 'context'
+                }}
+              />
+            ))}
           </Card>
         </div>
 
         <div className="space-y-4">
           <DiffMetadata metadata={newMetadata || {}} label="Current Version" />
           <Card className="relative">
-            <ScrollArea className="h-[400px]">
-              <div className="p-4">
-                {renderDiffContent(diffs.filter(d => !d.removed))}
-              </div>
-            </ScrollArea>
+            {sections.map((section, index) => (
+              <DiffSection
+                key={index}
+                content={section.filter(d => !d.removed)}
+                isExpanded={expandedSections.has(index)}
+                onToggle={() => toggleSection(index)}
+                metadata={{
+                  startLine: section[0]?.lineNumber || 0,
+                  endLine: section[section.length - 1]?.lineNumber || 0,
+                  type: section.some(d => d.added) ? 'addition' : 'context'
+                }}
+              />
+            ))}
           </Card>
         </div>
       </div>

@@ -119,23 +119,22 @@ export interface DiffControlsProps {
 }
 
 export interface DiffSectionProps {
-  section: DiffSection;
+  content: DiffChange[];
   isExpanded: boolean;
   onToggle: () => void;
-  metadata?: DiffMetadata;
+  contextLines?: number;
+  showLineNumbers?: boolean;
+  metadata?: {
+    startLine: number;
+    endLine: number;
+    type: 'addition' | 'deletion' | 'modification' | 'context';
+  };
 }
 
-export interface DiffMetadataProps {
-  metadata: DiffMetadata;
-  viewMode: DiffViewMode;
-  onViewModeChange: (mode: DiffViewMode) => void;
-}
-
-export interface DiffSearchProps {
-  searchState: DiffSearchState;
-  onSearch: (query: string) => void;
-  onCaseToggle: () => void;
-  onModeChange: (mode: DiffSearchMode) => void;
+export interface DiffSectionState {
+  isExpanded: boolean;
+  contextSize: number;
+  highlightedLines: Set<number>;
 }
 
 // Context and State Management
