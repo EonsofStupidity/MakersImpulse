@@ -29,13 +29,16 @@ export const TableView = () => {
     },
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    onError: (error) => {
-      console.error('Failed to fetch projects:', error);
-      toast.error('Failed to load projects', {
-        description: 'Please try again later'
-      });
+    meta: {
+      errorMessage: 'Failed to load projects'
     }
   });
+
+  if (error) {
+    toast.error('Failed to load projects', {
+      description: 'Please try again later'
+    });
+  }
 
   return (
     <motion.div
