@@ -27,7 +27,7 @@ export interface WorkflowFormData {
 
 // Helper functions to convert between DB and UI types
 export const serializeStages = (stages: WorkflowStage[]): Json => {
-  return stages as Json;
+  return stages as unknown as Json;
 };
 
 export const parseStages = (stages: Json): WorkflowStage[] => {

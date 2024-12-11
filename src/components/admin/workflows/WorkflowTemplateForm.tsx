@@ -11,7 +11,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { StagesManager } from './components/StagesManager';
-import type { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
+import { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
 
 export const WorkflowTemplateForm = () => {
   const { id } = useParams();
@@ -38,7 +38,14 @@ export const WorkflowTemplateForm = () => {
         .single();
 
       if (error) throw error;
-      return data as WorkflowTemplate;
+      
+      // Parse the data into the correct type
+      const parsedTemplate: WorkflowTemplate = {
+        ...data,
+        stages: parseStages(data.stages)
+      };
+      
+      return parsedTemplate;
     },
     enabled: !isNewTemplate
   });
@@ -48,7 +55,7 @@ export const WorkflowTemplateForm = () => {
       setFormData({
         name: template.name,
         description: template.description || '',
-        stages: parseStages(template.stages),
+        stages: template.stages,
         is_active: template.is_active
       });
     }
