@@ -11,7 +11,7 @@ const securityHeaders = {
   'X-Frame-Options': 'DENY',
   'X-Content-Type-Options': 'nosniff',
   'X-XSS-Protection': '1; mode=block',
-  'Content-Security-Policy': "default-src 'self'; img-src 'self' data: https:; font-src 'self' data: https:; style-src 'self' 'unsafe-inline' https:;",
+  'Content-Security-Policy': "default-src * 'unsafe-inline' 'unsafe-eval'; img-src * data: blob: 'unsafe-inline'; font-src * data: 'unsafe-inline';",
   'Referrer-Policy': 'strict-origin-when-cross-origin',
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
 }
@@ -19,24 +19,48 @@ const securityHeaders = {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { 
+      headers: {
+        ...corsHeaders,
+        'Access-Control-Max-Age': '86400',
+      }
+    });
   }
 
   try {
+    console.log('Applying security headers...');
+    
     // Add security headers to the response
-    const response = new Response('Security headers applied', {
-      headers: {
-        ...corsHeaders,
-        ...securityHeaders,
-        'Content-Type': 'application/json'
+    const response = new Response(
+      JSON.stringify({ 
+        message: 'Security headers applied',
+        success: true 
+      }), 
+      {
+        headers: {
+          ...corsHeaders,
+          ...securityHeaders,
+          'Content-Type': 'application/json'
+        }
       }
-    })
+    );
 
-    return response
+    return response;
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400
-    })
+    console.error('Error in security-headers function:', error);
+    
+    return new Response(
+      JSON.stringify({ 
+        error: error.message,
+        success: false 
+      }), 
+      {
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'application/json' 
+        },
+        status: 400
+      }
+    );
   }
-})
+});

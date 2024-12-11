@@ -10,7 +10,18 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     // Apply security headers
-    applySecurityHeaders();
+    const initSecurity = async () => {
+      try {
+        const success = await applySecurityHeaders();
+        if (!success) {
+          console.warn('Security headers could not be applied, continuing with default security settings');
+        }
+      } catch (error) {
+        console.error('Error initializing security headers:', error);
+      }
+    };
+
+    initSecurity();
 
     if (initialSetupDone.current) return;
     initialSetupDone.current = true;
