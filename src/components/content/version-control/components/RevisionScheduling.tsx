@@ -2,7 +2,8 @@ import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar } from 'lucide-react';
-import { SchedulingInterface } from './SchedulingInterface';
+import { SchedulingInterface } from './scheduling/SchedulingInterface';
+import { QueueProcessor } from './scheduling/QueueProcessor';
 
 interface RevisionSchedulingProps {
   contentId: string;
@@ -31,11 +32,14 @@ export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
           <DialogHeader>
             <DialogTitle className="text-white">Schedule Publication</DialogTitle>
           </DialogHeader>
-          <SchedulingInterface
-            contentId={contentId}
-            revisionId={revisionId}
-            onSchedule={() => setIsOpen(false)}
-          />
+          <div className="space-y-6">
+            <SchedulingInterface
+              contentId={contentId}
+              revisionId={revisionId}
+              onSchedule={() => setIsOpen(false)}
+            />
+            <QueueProcessor />
+          </div>
         </DialogContent>
       </Dialog>
     </>
