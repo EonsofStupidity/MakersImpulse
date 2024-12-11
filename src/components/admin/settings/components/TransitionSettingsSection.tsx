@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const TransitionSettingsSection = () => {
   const [settings, setSettings] = useState({
@@ -12,27 +13,22 @@ export const TransitionSettingsSection = () => {
     animationPreset: "fade"
   });
 
-  const handleSettingChange = (key: string, value: number | string) => {
+  const handleSettingChange = async (key: string, value: number | string) => {
     setSettings(prev => ({ ...prev, [key]: value }));
     
-    // Update site settings in Supabase
-    const updateSettings = async () => {
-      try {
-        const { data, error } = await supabase.rpc('update_site_settings', {
-          p_transition_duration: `${value}s`,
-          p_hover_scale: value.toString()
-        });
+    try {
+      const { data, error } = await supabase.rpc('update_site_settings', {
+        p_transition_duration: `${value}s`,
+        p_hover_scale: value.toString()
+      });
 
-        if (error) throw error;
-        
-        toast.success("Transition settings updated");
-      } catch (error) {
-        console.error("Failed to update settings:", error);
-        toast.error("Failed to update settings");
-      }
-    };
-
-    updateSettings();
+      if (error) throw error;
+      
+      toast.success("Transition settings updated");
+    } catch (error) {
+      console.error("Failed to update settings:", error);
+      toast.error("Failed to update settings");
+    }
   };
 
   return (
