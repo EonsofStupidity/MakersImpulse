@@ -97,7 +97,7 @@ export const QueueProcessor: React.FC = () => {
             </div>
             <Badge
               variant={
-                item.status === 'completed' ? 'success' :
+                item.status === 'completed' ? 'secondary' :
                 item.status === 'failed' ? 'destructive' :
                 'default'
               }
