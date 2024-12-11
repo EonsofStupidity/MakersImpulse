@@ -13,7 +13,7 @@ export const SecurityLogsSection = () => {
         .from('security_logs')
         .select(`
           *,
-          profiles:user_id (
+          profiles (
             username,
             display_name
           )

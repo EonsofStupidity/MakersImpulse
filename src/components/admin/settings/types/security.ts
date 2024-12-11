@@ -1,6 +1,6 @@
 import { Json } from '@/integrations/supabase/types';
 
-export interface SecuritySettings {
+export interface SecuritySettings extends Record<string, Json> {
   ip_whitelist: string[];
   ip_blacklist: string[];
   max_login_attempts: number;
@@ -21,6 +21,8 @@ export interface SecurityLog {
   ip_address: string | null;
   user_id: string | null;
   created_at: string;
+  metadata: Json;
+  user_agent: string | null;
   profiles?: {
     username: string | null;
     display_name: string | null;
