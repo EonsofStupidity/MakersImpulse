@@ -20,13 +20,13 @@ const AdminDashboard = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden"
+      className="min-h-screen relative overflow-hidden flex"
       onMouseMove={handleMouseMove}
     >
       {/* Background layers */}
       <div className="fixed inset-0 bg-[#151A24] z-0" />
       <div 
-        className="fixed inset-0 bg-gradient-to-b from-[var(--admin-purple)]/20 via-[var(--admin-pink)]/20 to-transparent z-0"
+        className="fixed inset-0 bg-gradient-to-b from-[#41f0db]/20 via-[#ff0abe]/20 to-transparent z-0"
         style={{
           backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`
         }}
@@ -34,37 +34,41 @@ const AdminDashboard = () => {
       <div className="fixed inset-0 bg-cyber-grid opacity-30 z-0" />
       <div className="fixed inset-0 bg-scratch-overlay opacity-[0.03] z-0" />
 
-      {/* Content */}
+      {/* Sidebar */}
       <AdminSidebar />
-      <AdminNav />
-      
-      <main className="pl-[var(--sidebar-width)] pt-[var(--topbar-height)] relative z-10">
-        <div className="p-8 space-y-8">
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-h-screen">
+        {/* Top Navigation */}
+        <AdminNav />
+        
+        {/* Main Content */}
+        <main className="flex-1 p-8 mt-[3.7rem] ml-[var(--sidebar-width)] relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Card className="bg-[#151A24]/50 backdrop-blur-xl border-[var(--admin-cyan)]/10">
+            <Card className="bg-[#151A24]/50 backdrop-blur-xl border-[#41f0db]/10">
               <Tabs defaultValue="content" className="w-full">
-                <TabsList className="w-full bg-[#151A24]/50 border-b border-[var(--admin-cyan)]/10 p-1">
+                <TabsList className="w-full bg-[#151A24]/50 border-b border-[#41f0db]/10 p-1">
                   <TabsTrigger 
                     value="content" 
-                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
+                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Content
                   </TabsTrigger>
                   <TabsTrigger 
                     value="workflows" 
-                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
+                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
                   >
                     <GitBranch className="w-4 h-4 mr-2" />
                     Workflows
                   </TabsTrigger>
                   <TabsTrigger 
                     value="history" 
-                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
+                    className="data-[state=active]:bg-[#41f0db]/10 data-[state=active]:text-[#41f0db]"
                   >
                     <History className="w-4 h-4 mr-2" />
                     History
@@ -87,8 +91,8 @@ const AdminDashboard = () => {
               </Tabs>
             </Card>
           </motion.div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 };
