@@ -10,12 +10,10 @@ import {
 
 const tabs = {
   main: [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard', color: 'text-[#41f0db]' },
-    { id: 'users', label: 'Users', icon: Users, path: '/admin/users', color: 'text-[#b0e653]' },
+    { id: 'dashboard', label: 'Dashboard Overview', icon: LayoutDashboard, path: '/admin/dashboard', color: 'text-[#41f0db]' },
+    { id: 'users', label: 'User Management', icon: Users, path: '/admin/users', color: 'text-[#b0e653]' },
     { id: 'data', label: 'Data Maestro', icon: Database, path: '/admin/data-maestro', color: 'text-[#4d00b3]' },
-    { id: 'performance', label: 'Performance', icon: Zap, path: '/admin/performance', color: 'text-[#41f0db]' },
-    { id: 'system', label: 'System Status', icon: Cpu, path: '/admin/system', color: 'text-[#b0e653]' },
-    { id: 'monitoring', label: 'Monitoring', icon: Radio, path: '/admin/monitoring', color: 'text-[#4d00b3]' },
+    { id: 'monitoring', label: 'System Monitor', icon: Radio, path: '/admin/monitoring', color: 'text-[#b0e653]' },
     { id: 'forum', label: 'Forum Management', icon: MessageSquare, path: '/admin/forum', color: 'text-[#41f0db]' }
   ]
 };
