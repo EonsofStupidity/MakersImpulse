@@ -20,11 +20,18 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   
   useThemeSubscription(setTheme);
 
+  useEffect(() => {
+    console.log('ThemeProvider mounted, current theme:', theme?.site_title);
+  }, [theme]);
+
   const updateTheme = async (newTheme: Settings) => {
+    console.log('Updating theme with new settings:', newTheme.site_title);
+    
     try {
       if (!session?.user) {
-        console.log('No active session, using default theme');
+        console.log('No active session, applying theme without persistence');
         applyThemeToDocument(newTheme);
+        setTheme(newTheme);
         return;
       }
 
@@ -59,10 +66,14 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       
       setTheme(newTheme);
       applyThemeToDocument(newTheme);
-      toast.success("Theme updated successfully");
+      toast.success("Theme updated successfully", {
+        description: "Your changes have been saved and applied"
+      });
     } catch (error) {
       console.error("Error updating theme:", error);
-      toast.error("Failed to update theme");
+      toast.error("Failed to update theme", {
+        description: "Please try again or contact support if the issue persists"
+      });
     }
   };
 
