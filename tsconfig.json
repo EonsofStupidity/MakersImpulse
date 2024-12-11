@@ -6,7 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "allowJs": true,  // Enable JavaScript file support
+    "allowJs": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -41,28 +41,25 @@
     "sourceMap": true,
     "outDir": "./dist",
 
-    /* Testing Support */
-    "types": ["jest", "node"],
+    /* Testing and Library Support */
+    "types": ["jest", "node", "@types/three"],
 
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    },
-
-    /* Support for 3D Files */
-    "resolveJsonModule": true
+    }
   },
   "include": [
     "src",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
-    "src/**/*.js",    // Include JavaScript files
-    "src/**/*.json",  // Include JSON files for metadata
-    "src/**/*.3ds",   // Include 3D Studio files
-    "src/**/*.obj",   // Include OBJ 3D model files
-    "src/**/*.stl",   // Include STL files
-    "src/**/*.gcode"  // Include G-code files for printers
+    "src/**/*.js",
+    "src/**/*.json",
+    "src/**/*.3ds",
+    "src/**/*.obj",
+    "src/**/*.stl",
+    "src/**/*.gcode"
   ],
   "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
