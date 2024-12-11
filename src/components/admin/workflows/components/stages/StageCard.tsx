@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { GripVertical, X, AlertCircle } from 'lucide-react';
 import { StageTypeSelector } from './StageTypeSelector';
 import { StageConfigPanel } from './StageConfigPanel';
-import { toast } from 'sonner';
 import type { WorkflowStage } from '../../types';
 import { validateStage } from '../../types';
 
