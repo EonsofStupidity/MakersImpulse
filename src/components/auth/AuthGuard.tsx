@@ -39,6 +39,8 @@ const AuthGuardContent = ({
           toast.error('Please sign in to continue', {
             description: 'You need to be authenticated to access this page'
           });
+          // Store the current path for deep linking after auth
+          sessionStorage.setItem('redirectAfterAuth', window.location.pathname);
           navigate(fallbackPath);
           return;
         }
