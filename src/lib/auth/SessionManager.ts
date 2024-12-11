@@ -20,10 +20,14 @@ export class SessionManager {
   private refreshTimeout?: NodeJS.Timeout;
   private config: SessionConfig;
   private lastActivity: Date;
+  private boundHandleActivity: () => void;
+  private boundHandleStorage: (event: StorageEvent) => void;
 
   private constructor(config: Partial<SessionConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.lastActivity = new Date();
+    this.boundHandleActivity = this.updateLastActivity.bind(this);
+    this.boundHandleStorage = this.handleStorageEvent.bind(this);
     this.setupActivityListeners();
   }
 
@@ -37,15 +41,16 @@ export class SessionManager {
   private setupActivityListeners(): void {
     if (typeof window !== 'undefined') {
       ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(event => {
-        window.addEventListener(event, () => this.updateLastActivity());
+        window.addEventListener(event, this.boundHandleActivity);
       });
 
-      // Listen for storage events for cross-tab synchronization
-      window.addEventListener('storage', (event: StorageEvent) => {
-        if (event.key === 'auth_session_state') {
-          this.handleCrossTabSync(event.newValue);
-        }
-      });
+      window.addEventListener('storage', this.boundHandleStorage);
+    }
+  }
+
+  private handleStorageEvent(event: StorageEvent): void {
+    if (event.key === 'auth_session_state') {
+      this.handleCrossTabSync(event.newValue);
     }
   }
 
@@ -174,9 +179,9 @@ export class SessionManager {
   public destroy(): void {
     if (typeof window !== 'undefined') {
       ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(event => {
-        window.removeEventListener(event, () => this.updateLastActivity());
+        window.removeEventListener(event, this.boundHandleActivity);
       });
-      window.removeEventListener('storage', this.handleCrossTabSync);
+      window.removeEventListener('storage', this.boundHandleStorage);
     }
 
     if (this.refreshTimeout) {
