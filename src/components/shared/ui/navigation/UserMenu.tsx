@@ -4,10 +4,11 @@ import { toast } from "sonner";
 import { 
   UserCircle, Settings, Activity, 
   LayoutDashboard, LogOut, Database,
-  Image, FileText
+  Image, FileText, Zap, Radio
 } from "lucide-react";
 import { UserMenuHeader } from "./menu/UserMenuHeader";
 import { UserMenuItem } from "./menu/UserMenuItem";
+import { motion } from "framer-motion";
 
 export const UserMenu = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
@@ -20,14 +21,20 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
   };
 
   return (
-    <div 
-      className="fixed md:absolute right-0 mt-2 w-64 rounded-lg bg-[#7E69AB] backdrop-blur-xl border border-white/10 shadow-xl z-[100] 
-                 overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-b 
-                 before:from-[#41f0db]/5 before:to-[#8000ff]/5 before:pointer-events-none"
+    <motion.div 
+      className="fixed md:absolute right-0 mt-2 w-72 rounded-xl bg-[#221a2b] backdrop-blur-xl border border-[#95bf0b]/20 shadow-xl z-[100] 
+                 overflow-hidden"
+      initial={{ opacity: 0, scale: 0.95, y: -20 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.95, y: -20 }}
+      transition={{ duration: 0.3 }}
+      style={{
+        background: `linear-gradient(135deg, #221a2b 0%, #1e0430 50%, #3281f0 100%)`,
+      }}
     >
       <UserMenuHeader />
       
-      <div className="p-2 space-y-1">
+      <div className="p-3 space-y-2">
         <UserMenuItem
           icon={UserCircle}
           label="Profile"
@@ -48,21 +55,35 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
 
         {user?.role === 'admin' && (
           <>
-            <div className="h-px bg-white/10 my-2" />
+            <div className="h-px bg-[#95bf0b]/20 my-2" />
+            
             <UserMenuItem
               icon={LayoutDashboard}
               label="Admin Dashboard"
               onClick={() => handleNavigation("/admin/dashboard")}
             />
+            
             <UserMenuItem
               icon={Database}
               label="Data Maestro"
               onClick={() => handleNavigation("/admin/data-maestro")}
             />
+
+            <UserMenuItem
+              icon={Zap}
+              label="Performance"
+              onClick={() => handleNavigation("/admin/performance")}
+            />
+
+            <UserMenuItem
+              icon={Radio}
+              label="Monitoring"
+              onClick={() => handleNavigation("/admin/monitoring")}
+            />
           </>
         )}
 
-        <div className="h-px bg-white/10 my-2" />
+        <div className="h-px bg-[#95bf0b]/20 my-2" />
         
         <UserMenuItem
           icon={Settings}
@@ -88,6 +109,6 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
           }}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
