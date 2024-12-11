@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { GripVertical, X, AlertCircle } from 'lucide-react';
 import { StageTypeSelector } from './StageTypeSelector';
 import { StageConfigPanel } from './StageConfigPanel';
-import type { WorkflowStage, StageUpdateFunction, createStageUpdate } from '../../types';
-import { validateStage, isValidStageUpdate } from '../../types';
+import type { WorkflowStage, StageUpdateFunction } from '../../types';
+import { validateStage, isValidStageUpdate, createStageUpdate } from '../../types';
 
 interface StageCardProps {
   stage: WorkflowStage;

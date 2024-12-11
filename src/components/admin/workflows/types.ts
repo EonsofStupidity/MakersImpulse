@@ -120,15 +120,15 @@ export interface StageConfigUpdateProps {
 }
 
 // Type guard to ensure stage updates are valid
-export function isValidStageUpdate(update: Partial<WorkflowStage>): boolean {
+export const isValidStageUpdate = (update: Partial<WorkflowStage>): boolean => {
   const requiredKeys: (keyof WorkflowStage)[] = ['id', 'type'];
   return !requiredKeys.some(key => key in update && !update[key]);
-}
+};
 
 // Utility function to safely update stage configuration
-export function createStageUpdate(stageId: string, updates: Partial<WorkflowStage>): { id: string } & Partial<WorkflowStage> {
+export const createStageUpdate = (stageId: string, updates: Partial<WorkflowStage>): { id: string } & Partial<WorkflowStage> => {
   return {
     id: stageId,
     ...updates
   };
-}
+};
