@@ -36,24 +36,6 @@ export const MobileNav = () => {
     setIsOpen(false);
   }, [location]);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('MobileNav: Auth state change event:', event);
-      
-      if (event === 'SIGNED_OUT') {
-        setIsAuthenticating(false);
-        navigate('/login');
-      } else if (event === 'SIGNED_IN' && session) {
-        setIsAuthenticating(false);
-        navigate('/');
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [navigate]);
-
   const handleSignOut = async () => {
     try {
       setIsAuthenticating(true);
@@ -92,9 +74,10 @@ export const MobileNav = () => {
         <motion.div
           animate={isOpen ? "open" : "closed"}
           variants={{
-            open: { rotate: 180 },
-            closed: { rotate: 0 }
+            open: { rotate: 180, scale: 1.1 },
+            closed: { rotate: 0, scale: 1 }
           }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
           <Menu className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
         </motion.div>
@@ -108,7 +91,7 @@ export const MobileNav = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.3 }}
               className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
               onClick={() => setIsOpen(false)}
             />
@@ -117,20 +100,24 @@ export const MobileNav = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 h-full w-64 bg-black/95 backdrop-blur-xl z-50 p-4"
+              className="fixed right-0 top-0 h-full w-72 bg-gradient-to-b from-[#151A24] to-[#1A1F2C] backdrop-blur-xl z-50 p-6 overflow-y-auto"
             >
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {session ? (
-                  <div className="flex items-center space-x-3 p-4 border-b border-white/10">
+                  <motion.div 
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center space-x-3 p-4 rounded-lg bg-white/5 border border-white/10"
+                  >
                     <User className="h-8 w-8 text-[#41f0db]" />
                     <div>
                       <p className="text-sm font-medium text-white">{user?.email}</p>
-                      <p className="text-xs text-white/60">{user?.role?.toUpperCase()}</p>
+                      <p className="text-xs text-[#41f0db]">{user?.role?.toUpperCase()}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ) : (
                   <Button
-                    className="w-full bg-gradient-to-r from-[#41f0db] to-[#8000ff] hover:opacity-90"
+                    className="w-full bg-gradient-to-r from-[#41f0db] to-[#8000ff] hover:opacity-90 text-white"
                     onClick={handleSignIn}
                   >
                     Sign In
@@ -140,19 +127,25 @@ export const MobileNav = () => {
                 <MobileNavContent isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
                 {session && (
-                  <Button
-                    onClick={handleSignOut}
-                    className="w-full mt-4 text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                    variant="ghost"
-                    disabled={isAuthenticating}
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
                   >
-                    {isAuthenticating ? (
-                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                    ) : (
-                      <LogOut className="h-4 w-4 mr-2" />
-                    )}
-                    Sign Out
-                  </Button>
+                    <Button
+                      onClick={handleSignOut}
+                      className="w-full mt-4 text-red-400 hover:text-red-300 hover:bg-red-500/10 border border-red-500/20"
+                      variant="ghost"
+                      disabled={isAuthenticating}
+                    >
+                      {isAuthenticating ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : (
+                        <LogOut className="h-4 w-4 mr-2" />
+                      )}
+                      Sign Out
+                    </Button>
+                  </motion.div>
                 )}
               </div>
             </motion.div>
