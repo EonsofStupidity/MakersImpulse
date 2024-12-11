@@ -69,7 +69,7 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
       const { data, error } = await supabase.rpc('create_rollback_revision', {
         p_content_id: contentId,
         p_target_version_number: version,
-        p_current_content: revisions?.find(r => r.versionNumber === version)?.content,
+        p_current_content: revisions?.find(r => r.version_number === version)?.content,
         p_user_id: (await supabase.auth.getUser()).data.user?.id
       });
 
