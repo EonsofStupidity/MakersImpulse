@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,25 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { ArrowLeft, Save, Plus, X } from 'lucide-react';
+import { ArrowLeft, Save } from 'lucide-react';
 import { toast } from 'sonner';
-import { motion } from 'framer-motion';
 import { LoadingSpinner } from '@/components/common/LoadingSpinner';
-
-interface WorkflowStage {
-  id: string;
-  name: string;
-  description?: string;
-  order: number;
-}
-
-interface WorkflowTemplate {
-  id?: string;
-  name: string;
-  description: string;
-  stages: WorkflowStage[];
-  is_active: boolean;
-}
+import { StagesManager } from './components/StagesManager';
+import type { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
 
 export const WorkflowTemplateForm = () => {
   const { id } = useParams();
@@ -33,7 +19,7 @@ export const WorkflowTemplateForm = () => {
   const queryClient = useQueryClient();
   const isNewTemplate = !id;
 
-  const [formData, setFormData] = useState<WorkflowTemplate>({
+  const [formData, setFormData] = useState<WorkflowFormData>({
     name: '',
     description: '',
     stages: [],
@@ -52,22 +38,35 @@ export const WorkflowTemplateForm = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as WorkflowTemplate;
     },
-    enabled: !isNewTemplate,
-    onSuccess: (data) => {
-      if (data) {
-        setFormData(data);
-      }
-    }
+    enabled: !isNewTemplate
   });
 
+  useEffect(() => {
+    if (template) {
+      setFormData({
+        name: template.name,
+        description: template.description || '',
+        stages: parseStages(template.stages),
+        is_active: template.is_active
+      });
+    }
+  }, [template]);
+
   const mutation = useMutation({
-    mutationFn: async (data: WorkflowTemplate) => {
+    mutationFn: async (data: WorkflowFormData) => {
+      const templateData = {
+        name: data.name,
+        description: data.description,
+        stages: serializeStages(data.stages),
+        is_active: data.is_active
+      };
+
       if (isNewTemplate) {
         const { data: newTemplate, error } = await supabase
           .from('workflow_templates')
-          .insert([data])
+          .insert([templateData])
           .select()
           .single();
 
@@ -76,7 +75,7 @@ export const WorkflowTemplateForm = () => {
       } else {
         const { data: updatedTemplate, error } = await supabase
           .from('workflow_templates')
-          .update(data)
+          .update(templateData)
           .eq('id', id)
           .select()
           .single();
@@ -103,34 +102,6 @@ export const WorkflowTemplateForm = () => {
       return;
     }
     mutation.mutate(formData);
-  };
-
-  const addStage = () => {
-    const newStage: WorkflowStage = {
-      id: crypto.randomUUID(),
-      name: '',
-      order: formData.stages.length
-    };
-    setFormData(prev => ({
-      ...prev,
-      stages: [...prev.stages, newStage]
-    }));
-  };
-
-  const removeStage = (stageId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      stages: prev.stages.filter(stage => stage.id !== stageId)
-    }));
-  };
-
-  const updateStage = (stageId: string, updates: Partial<WorkflowStage>) => {
-    setFormData(prev => ({
-      ...prev,
-      stages: prev.stages.map(stage => 
-        stage.id === stageId ? { ...stage, ...updates } : stage
-      )
-    }));
   };
 
   if (!isNewTemplate && isLoading) {
@@ -201,65 +172,10 @@ export const WorkflowTemplateForm = () => {
           </div>
 
           <div className="border-t border-white/10 pt-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-white">Workflow Stages</h3>
-              <Button
-                type="button"
-                onClick={addStage}
-                className="bg-neon-cyan/20 text-white border border-neon-cyan/50 hover:bg-neon-cyan/30"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Stage
-              </Button>
-            </div>
-
-            <div className="space-y-4">
-              {formData.stages.map((stage, index) => (
-                <motion.div
-                  key={stage.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  className="bg-white/5 border border-white/10 rounded-lg p-4"
-                >
-                  <div className="flex justify-between items-start gap-4">
-                    <div className="flex-1 space-y-4">
-                      <div>
-                        <Input
-                          value={stage.name}
-                          onChange={(e) => updateStage(stage.id, { name: e.target.value })}
-                          placeholder={`Stage ${index + 1} name`}
-                          className="bg-white/5 border-white/10 text-white"
-                        />
-                      </div>
-                      <div>
-                        <Textarea
-                          value={stage.description || ''}
-                          onChange={(e) => updateStage(stage.id, { description: e.target.value })}
-                          placeholder="Stage description (optional)"
-                          className="bg-white/5 border-white/10 text-white"
-                          rows={2}
-                        />
-                      </div>
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => removeStage(stage.id)}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </motion.div>
-              ))}
-
-              {formData.stages.length === 0 && (
-                <div className="text-center py-8 text-white/60">
-                  No stages added yet. Click "Add Stage" to create your first workflow stage.
-                </div>
-              )}
-            </div>
+            <StagesManager 
+              stages={formData.stages}
+              onChange={(stages) => setFormData(prev => ({ ...prev, stages }))}
+            />
           </div>
         </form>
       </Card>
