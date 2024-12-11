@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/lib/store/auth-store";
-import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { AvatarLoadingState } from "./components/AvatarLoadingState";
+import { AvatarFallbackContent } from "./components/AvatarFallbackContent";
 
 interface UserAvatarProps {
   className?: string;
@@ -46,7 +47,9 @@ export const UserAvatar = ({
 
     if (!session) {
       navigate("/login");
-      toast.info("Sign in to access your profile");
+      toast.info("Sign in to access your profile", {
+        description: "Create an account or sign in to access all features"
+      });
       return;
     }
 
@@ -54,7 +57,7 @@ export const UserAvatar = ({
   };
 
   if (isLoading) {
-    return <Skeleton className={cn(sizeClasses[size], "rounded-full", className)} />;
+    return <AvatarLoadingState size={size} className={className} />;
   }
 
   return (
@@ -77,11 +80,7 @@ export const UserAvatar = ({
           className="object-cover"
         />
       ) : showFallback ? (
-        <AvatarFallback 
-          className="bg-gradient-to-br from-[#41f0db]/20 to-[#8000ff]/20 text-white border border-white/10"
-        >
-          {user?.email?.[0]?.toUpperCase() || '?'}
-        </AvatarFallback>
+        <AvatarFallbackContent email={user?.email} />
       ) : null}
       
       {/* Hover effect */}
