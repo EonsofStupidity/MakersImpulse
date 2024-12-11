@@ -10,8 +10,11 @@ import { LoadingSpinner } from "@/components/common/LoadingSpinner";
 import { PinLogin } from "@/components/auth/components/PinLogin";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { sessionManager } from '@/lib/auth/SessionManager';
+import { securityManager } from '@/lib/auth/SecurityManager';
+import { ErrorBoundary } from "@/components/shared/error-handling/ErrorBoundary";
 
-const Login = () => {
+const LoginContent = () => {
   const navigate = useNavigate();
   const { session, isLoading } = useAuthStore();
   const [usePinLogin, setUsePinLogin] = useState(false);
@@ -25,13 +28,24 @@ const Login = () => {
       return;
     }
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
       console.log("Auth state changed in login:", event, session?.user?.id);
       
       if (event === 'SIGNED_IN' && session) {
-        console.log("User signed in, redirecting to home");
-        toast.success("Successfully signed in!");
-        navigate("/");
+        try {
+          await sessionManager.startSession();
+          securityManager.initialize();
+          
+          console.log("User signed in, redirecting to home");
+          toast.success("Successfully signed in!");
+          navigate("/");
+        } catch (error) {
+          console.error('Error initializing session:', error);
+          toast.error('Error signing in', {
+            description: 'There was a problem initializing your session'
+          });
+          await supabase.auth.signOut();
+        }
       }
     });
 
@@ -141,6 +155,14 @@ const Login = () => {
         </motion.div>
       </motion.div>
     </motion.div>
+  );
+};
+
+const Login = () => {
+  return (
+    <ErrorBoundary>
+      <LoginContent />
+    </ErrorBoundary>
   );
 };
 

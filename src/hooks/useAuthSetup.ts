@@ -6,6 +6,8 @@ import { useAuthValidation } from './auth/useAuthValidation';
 import { handleSecurityEvent, handleSessionTimeout } from '@/utils/auth/securityHandlers';
 import { supabase } from "@/integrations/supabase/client";
 import { attachCSRFToken, clearCSRFToken } from '@/utils/auth/csrfProtection';
+import { sessionManager } from '@/lib/auth/SessionManager';
+import { securityManager } from '@/lib/auth/SecurityManager';
 
 export const useAuthSetup = () => {
   const { setLoading, setError } = useAuthStore();
@@ -23,7 +25,6 @@ export const useAuthSetup = () => {
     setError(null);
     
     try {
-      // Clear any existing timeout
       if (sessionTimeoutRef.current) {
         clearTimeout(sessionTimeoutRef.current);
       }
@@ -32,25 +33,35 @@ export const useAuthSetup = () => {
         const loadingToast = toast.loading('Authenticating...');
 
         try {
-          // Attach CSRF token
           await attachCSRFToken();
-          
           await validateAuthAttempt(session);
+          
+          // Initialize security managers
+          await sessionManager.startSession();
+          securityManager.initialize();
+          
         } catch (validationError) {
           console.error('Auth validation failed:', validationError);
           clearCSRFToken();
+          sessionManager.cleanup();
+          securityManager.clearSecurityData();
           await supabase.auth.signOut();
           throw validationError;
         }
 
-        // Set up session timeout handler
         sessionTimeoutRef.current = handleSessionTimeout(async () => {
           console.log('Session timeout - attempting refresh');
-          const { data: refreshResult, error: refreshError } = await supabase.auth.refreshSession();
-          
-          if (refreshError || !refreshResult.session) {
+          try {
+            const { data: refreshResult, error: refreshError } = await supabase.auth.refreshSession();
+            
+            if (refreshError || !refreshResult.session) {
+              throw new Error(refreshError?.message || 'Session refresh failed');
+            }
+          } catch (refreshError) {
             console.error('Session refresh failed:', refreshError);
             clearCSRFToken();
+            sessionManager.cleanup();
+            securityManager.clearSecurityData();
             await supabase.auth.signOut();
             toast.error('Session expired. Please sign in again.');
           }
@@ -63,6 +74,8 @@ export const useAuthSetup = () => {
         retryAttempts.current = 0;
       } else {
         clearCSRFToken();
+        sessionManager.cleanup();
+        securityManager.clearSecurityData();
         await handleSessionUpdate(session);
         toast.success('Signed out successfully');
       }
