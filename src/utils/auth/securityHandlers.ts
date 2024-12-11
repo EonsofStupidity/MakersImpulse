@@ -37,6 +37,8 @@ export const handleSecurityEvent = async (
       });
 
     if (error) throw error;
+    
+    console.log('Security event logged:', { userId, eventType, severity, details });
   } catch (error) {
     console.error('Failed to log security event:', error);
   }
