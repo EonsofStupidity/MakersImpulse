@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { GripVertical, X } from 'lucide-react';
 import { StageTypeSelector } from './StageTypeSelector';
+import { StageConfigPanel } from './StageConfigPanel';
 import type { WorkflowStage } from '../../types';
 
 interface StageCardProps {
@@ -58,6 +59,11 @@ export const StageCard = ({
             placeholder="Stage description (optional)"
             className="bg-white/5 border-white/10 text-white"
             rows={2}
+          />
+
+          <StageConfigPanel 
+            stage={stage}
+            onUpdate={onUpdate}
           />
         </div>
 

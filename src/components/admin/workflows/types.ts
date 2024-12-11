@@ -37,7 +37,6 @@ export interface WorkflowStage {
   order: number;
   config: WorkflowStageConfig;
   validationRules?: StageValidationRule[];
-  [key: string]: Json | undefined;
 }
 
 export interface WorkflowTemplate {
