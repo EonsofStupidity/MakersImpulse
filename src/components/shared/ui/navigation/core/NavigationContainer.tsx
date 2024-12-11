@@ -1,15 +1,25 @@
 import { useEffect } from 'react';
 import { cn } from "@/lib/utils";
 import { useNavigationStore } from "../NavigationState";
+import { useTheme } from '@/components/theme/ThemeContext';
+import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
-export const NavigationContainer = ({ children }: { children: React.ReactNode }) => {
+interface NavigationContainerProps {
+  children: React.ReactNode;
+}
+
+export const NavigationContainer = ({ children }: NavigationContainerProps) => {
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
+  const { theme } = useTheme();
 
+  // Handle scroll effects
   useEffect(() => {
     const handleScroll = () => {
       const shouldBeScrolled = window.scrollY > 20;
       if (shouldBeScrolled !== isScrolled) {
         setIsScrolled(shouldBeScrolled);
+        console.log('Navigation scroll state changed:', shouldBeScrolled);
       }
     };
     
@@ -17,6 +27,7 @@ export const NavigationContainer = ({ children }: { children: React.ReactNode })
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isScrolled, setIsScrolled]);
 
+  // Handle mouse movement for dynamic effects
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -24,28 +35,47 @@ export const NavigationContainer = ({ children }: { children: React.ReactNode })
     
     if (Math.abs(x - mousePosition.x) > 1 || Math.abs(y - mousePosition.y) > 1) {
       setMousePosition({ x, y });
+      console.log('Mouse position updated:', { x, y });
     }
   };
 
+  // Error boundary handler
+  const handleError = () => {
+    toast.error("Navigation error occurred", {
+      description: "Please refresh the page if issues persist"
+    });
+  };
+
   return (
-    <nav 
+    <motion.nav 
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: parseFloat(theme?.transition_duration || '0.3') }}
       className={cn(
         "fixed top-0 left-0 right-0 z-50 h-[3.7rem]",
         "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
-        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]"
+        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
+        isScrolled && "shadow-lg backdrop-blur-lg"
       )}
       onMouseMove={handleMouseMove}
+      onError={handleError}
       style={{
         background: `
-          linear-gradient(135deg, rgba(77, 0, 179, 0.1), rgba(114, 34, 140, 0.1), rgba(176, 230, 83, 0.1)),
-          radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            rgba(65, 240, 219, 0.15), 
-            rgba(255, 10, 190, 0.15), 
-            rgba(128, 0, 255, 0.15)
+          linear-gradient(135deg, 
+            rgba(77, 0, 179, ${isScrolled ? '0.2' : '0.1'}), 
+            rgba(114, 34, 140, ${isScrolled ? '0.2' : '0.1'}), 
+            rgba(176, 230, 83, ${isScrolled ? '0.2' : '0.1'})
+          ),
+          radial-gradient(
+            circle at ${mousePosition.x}% ${mousePosition.y}%, 
+            ${theme?.neon_cyan || '#41f0db'}15, 
+            ${theme?.neon_pink || '#ff0abe'}15, 
+            ${theme?.neon_purple || '#8000ff'}15
           )
         `,
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid rgba(128, 0, 255, 0.3)",
+        backdropFilter: isScrolled ? 'blur(12px)' : 'blur(8px)',
+        borderBottom: `1px solid ${theme?.neon_purple || '#8000ff'}30`,
+        transition: `all ${theme?.transition_duration || '0.3s'} ease-in-out`,
       }}
     >
       <div className="container mx-auto px-4">
@@ -53,6 +83,18 @@ export const NavigationContainer = ({ children }: { children: React.ReactNode })
           {children}
         </div>
       </div>
-    </nav>
+
+      {/* Dynamic glow effect based on mouse position */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: `radial-gradient(
+            circle at ${mousePosition.x}% ${mousePosition.y}%,
+            ${theme?.neon_cyan || '#41f0db'}05,
+            transparent 15%
+          )`,
+        }}
+      />
+    </motion.nav>
   );
 };
