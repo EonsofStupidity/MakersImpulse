@@ -20,6 +20,8 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
     toast.success(`Navigating to ${path.split('/').pop()?.toUpperCase() || 'Home'}`);
   };
 
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin';
+
   return (
     <motion.div 
       className="fixed md:absolute right-0 mt-2 w-72 rounded-xl bg-[#221a2b] backdrop-blur-xl border border-[#95bf0b]/20 shadow-xl z-[100] 
@@ -27,7 +29,6 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
       initial={{ opacity: 0, scale: 0.95, y: -20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95, y: -20 }}
-      transition={{ duration: 0.3 }}
       style={{
         background: `linear-gradient(135deg, #221a2b 0%, #1e0430 50%, #3281f0 100%)`,
       }}
@@ -53,7 +54,7 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
           onClick={() => handleNavigation("/activity")}
         />
 
-        {user?.role === 'admin' && (
+        {isAdmin && (
           <>
             <div className="h-px bg-[#95bf0b]/20 my-2" />
             
