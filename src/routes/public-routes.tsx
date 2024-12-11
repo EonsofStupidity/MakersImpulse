@@ -1,36 +1,19 @@
 import { lazy } from "react";
-import { RouteObject } from "react-router-dom";
+const LandingPage = lazy(() => import("@/pages/site/landing"));
+const SchedulePage = lazy(() => import("@/pages/content/schedule"));
+const QueuePage = lazy(() => import("@/pages/content/queue"));
 
-const Landing = lazy(() => import("@/pages/site/landing"));
-const About = lazy(() => import("@/pages/site/about"));
-const Privacy = lazy(() => import("@/pages/site/privacy"));
-const Terms = lazy(() => import("@/pages/site/terms"));
-const Login = lazy(() => import("@/pages/auth/login"));
-const Register = lazy(() => import("@/pages/auth/register"));
-
-export const publicRoutes: RouteObject[] = [
+export const publicRoutes = [
   {
     path: "/",
-    element: <Landing />
+    element: <LandingPage />,
   },
   {
-    path: "/about",
-    element: <About />
+    path: "/content/schedule",
+    element: <SchedulePage />,
   },
   {
-    path: "/privacy",
-    element: <Privacy />
+    path: "/content/queue",
+    element: <QueuePage />,
   },
-  {
-    path: "/terms",
-    element: <Terms />
-  },
-  {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/register",
-    element: <Register />
-  }
 ];
