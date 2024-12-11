@@ -4,7 +4,6 @@ import { useAdminSidebar } from './sidebar/AdminSidebarContext';
 import { Link } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { toast } from 'sonner';
-import '@/styles/admin/topnav.css';
 
 export const AdminNav = () => {
   const { shortcuts, addShortcut, removeShortcut } = useAdminSidebar();

@@ -7,7 +7,6 @@ import {
   Zap, Cpu, Radio, MessageSquare,
   ChevronLeft, ChevronRight, Menu
 } from 'lucide-react';
-import '@/styles/admin/sidebar.css';
 
 const tabs = {
   main: [
@@ -24,7 +23,6 @@ const tabs = {
 export const AdminSidebar = () => {
   const { isOpen, setIsOpen } = useAdminSidebar();
   const [isIconOnly, setIsIconOnly] = useState(false);
-  const [mousePosition, setMousePosition] = React.useState({ x: 50, y: 50 });
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
