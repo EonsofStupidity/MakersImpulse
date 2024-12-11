@@ -5,31 +5,6 @@ export type DiffHighlightMode = 'char' | 'word' | 'line';
 export type DiffViewMode = 'unified' | 'split';
 export type DiffSearchMode = 'simple' | 'regex' | 'fuzzy';
 
-// Statistics and metadata
-export interface DiffStatistics {
-  additions: number;
-  deletions: number;
-  changes: number;
-  totalLines: number;
-  changedFiles?: number;
-}
-
-export interface DiffMetadata {
-  author?: {
-    name: string;
-    email?: string;
-    avatar?: string;
-  };
-  timestamp: string;
-  commitHash?: string;
-  branch?: string;
-  fileInfo?: {
-    path: string;
-    size: number;
-    mode: string;
-  };
-}
-
 // Search functionality
 export interface DiffSearchMatch {
   lineNumber: number;
@@ -54,37 +29,15 @@ export interface DiffNavigationState {
   type: DiffHighlightMode;
 }
 
-// Section management
-export interface DiffSection {
-  id: string;
-  startLine: number;
-  endLine: number;
-  type: 'addition' | 'deletion' | 'modification' | 'context';
-  isExpanded: boolean;
-  content: string[];
-}
-
 // Enhanced diff change type
 export interface DiffChange extends Omit<Change, 'added' | 'removed'> {
   value: string;
   added: boolean;
   removed: boolean;
   lineNumber?: number;
-  section?: DiffSection;
 }
 
 // Component Props
-export interface DiffViewerProps {
-  oldContent: string;
-  newContent: string;
-  oldMetadata?: DiffMetadata;
-  newMetadata?: DiffMetadata;
-  viewMode?: DiffViewMode;
-  highlightMode?: DiffHighlightMode;
-  onNavigate?: (index: number) => void;
-  className?: string;
-}
-
 export interface DiffControlsProps {
   navigation: DiffNavigationState;
   viewMode: DiffViewMode;
@@ -98,18 +51,14 @@ export interface DiffControlsProps {
   onToggleRegex: () => void;
 }
 
-export interface DiffSectionProps {
-  content: DiffChange[];
-  type: 'old' | 'new';
-  searchState?: DiffSearchState;
-  isExpanded?: boolean;
-  onToggleExpand?: () => void;
-}
-
-export interface DiffMetadataProps {
-  metadata: DiffMetadata;
-  statistics: DiffStatistics;
-  className?: string;
+// Section management
+export interface DiffSection {
+  id: string;
+  startLine: number;
+  endLine: number;
+  type: 'addition' | 'deletion' | 'modification' | 'context';
+  isExpanded: boolean;
+  content: string[];
 }
 
 // Context types
@@ -145,35 +94,4 @@ export interface DiffAccessibilityConfig {
     collapseAll: string[];
     closeSearch: string[];
   };
-}
-
-// Performance optimization types
-export interface DiffChunk {
-  id: string;
-  changes: DiffChange[];
-  isVisible: boolean;
-  height: number;
-}
-
-export interface VirtualizationConfig {
-  itemHeight: number;
-  overscan: number;
-  chunkSize: number;
-}
-
-// Test utility types
-export interface DiffTestCase {
-  name: string;
-  oldContent: string;
-  newContent: string;
-  expectedChanges: number;
-  expectedAdditions: number;
-  expectedDeletions: number;
-}
-
-export interface PerformanceMetrics {
-  computationTime: number;
-  renderTime: number;
-  memoryUsage: number;
-  chunkProcessingTime: number;
 }

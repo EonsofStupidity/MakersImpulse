@@ -4,7 +4,8 @@ import type {
   DiffNavigationState, 
   DiffSearchState, 
   DiffViewMode, 
-  DiffHighlightMode 
+  DiffHighlightMode,
+  DiffSection
 } from '../types/diff';
 
 const DiffContext = createContext<DiffContextValue | undefined>(undefined);
@@ -32,21 +33,49 @@ export const DiffProvider: React.FC<DiffProviderProps> = ({ children }) => {
     query: '',
     matches: [],
     currentMatchIndex: 0,
-    isSearching: false
+    isSearching: false,
+    mode: 'simple',
+    caseSensitive: false
   });
 
   const [viewMode, setViewMode] = useState<DiffViewMode>('split');
   const [highlightMode, setHighlightMode] = useState<DiffHighlightMode>('word');
+  const [sections, setSections] = useState<Map<string, DiffSection>>(new Map());
+
+  const toggleSection = (sectionId: string) => {
+    setSections(prev => {
+      const newSections = new Map(prev);
+      const section = newSections.get(sectionId);
+      if (section) {
+        newSections.set(sectionId, { ...section, isExpanded: !section.isExpanded });
+      }
+      return newSections;
+    });
+  };
+
+  const toggleAllSections = (expanded: boolean) => {
+    setSections(prev => {
+      const newSections = new Map(prev);
+      for (const [id, section] of newSections) {
+        newSections.set(id, { ...section, isExpanded: expanded });
+      }
+      return newSections;
+    });
+  };
 
   const value: DiffContextValue = {
     navigation,
     searchState,
     viewMode,
     highlightMode,
+    sections,
     setNavigation,
     setSearchState,
     setViewMode,
-    setHighlightMode
+    setHighlightMode,
+    setSections,
+    toggleSection,
+    toggleAllSections
   };
 
   return (
