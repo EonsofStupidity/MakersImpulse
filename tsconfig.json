@@ -5,7 +5,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "allowJs": false,
+    "skipDefaultLibCheck": true,
+    "allowJs": true,  // Enable JavaScript file support
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -13,6 +14,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./.tsbuildinfo",
     "jsx": "react-jsx",
 
     /* Linting */
@@ -25,6 +28,8 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "strictPropertyInitialization": true,
+    "useUnknownInCatchVariables": true,
     "forceConsistentCasingInFileNames": true,
     "verbatimModuleSyntax": true,
     "allowUnreachableCode": false,
@@ -32,12 +37,33 @@
     "noImplicitOverride": true,
     "preserveConstEnums": true,
 
+    /* Debugging and Output */
+    "sourceMap": true,
+    "outDir": "./dist",
+
+    /* Testing Support */
+    "types": ["jest", "node"],
+
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
-    }
+    },
+
+    /* Support for 3D Files */
+    "resolveJsonModule": true
   },
-  "include": ["src"],
+  "include": [
+    "src",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx",
+    "src/**/*.js",    // Include JavaScript files
+    "src/**/*.json",  // Include JSON files for metadata
+    "src/**/*.3ds",   // Include 3D Studio files
+    "src/**/*.obj",   // Include OBJ 3D model files
+    "src/**/*.stl",   // Include STL files
+    "src/**/*.gcode"  // Include G-code files for printers
+  ],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
