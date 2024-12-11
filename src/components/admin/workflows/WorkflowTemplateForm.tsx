@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner';
 import { WorkflowFormHeader } from './components/WorkflowFormHeader';
 import { WorkflowBasicFields } from './components/WorkflowBasicFields';
 import { VisualWorkflowBuilder } from './components/VisualWorkflowBuilder';
-import type { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
+import { WorkflowTemplate, WorkflowFormData, serializeStages, parseStages } from './types';
 
 export const WorkflowTemplateForm = () => {
   const { id } = useParams();
