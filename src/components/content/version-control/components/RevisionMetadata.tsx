@@ -1,7 +1,7 @@
 import React from 'react';
 import { format } from 'date-fns';
 import { Card } from '@/components/ui/card';
-import { Clock, User, Info, GitBranch } from 'lucide-react';
+import { Clock, User, Info, GitBranch, Calendar, FileText } from 'lucide-react';
 import type { ContentRevision } from '@/integrations/supabase/types/content';
 
 interface RevisionMetadataProps {
@@ -40,19 +40,28 @@ export const RevisionMetadata: React.FC<RevisionMetadataProps> = ({
         </div>
         
         <div className="flex items-center gap-2">
+          <Calendar className="w-4 h-4" />
+          <span>{format(new Date(revision.created_at), 'PPP')}</span>
+        </div>
+
+        <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
-          <span>{format(new Date(revision.created_at), 'PPpp')}</span>
+          <span>{format(new Date(revision.created_at), 'p')}</span>
         </div>
 
         {revision.change_summary && (
           <div className="pt-2 border-t border-primary/10">
-            <p className="text-sm">{revision.change_summary}</p>
+            <div className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              <p className="text-sm">{revision.change_summary}</p>
+            </div>
           </div>
         )}
 
         {revision.rollback_metadata && (
           <div className="pt-2 border-t border-primary/10">
-            <p className="text-sm text-warning">
+            <p className="text-sm text-warning flex items-center gap-2">
+              <GitBranch className="w-4 h-4" />
               Rollback from version {(revision.rollback_metadata as any).target_version}
             </p>
           </div>
