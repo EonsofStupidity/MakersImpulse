@@ -3,11 +3,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuthSetup } from '@/hooks/useAuthSetup';
 import { motion } from "framer-motion";
 import { toast } from "sonner";
+import { applySecurityHeaders } from "@/utils/auth/securityHeaders";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { handleAuthChange, initialSetupDone } = useAuthSetup();
 
   useEffect(() => {
+    // Apply security headers
+    applySecurityHeaders();
+
     if (initialSetupDone.current) return;
     initialSetupDone.current = true;
 
@@ -20,7 +24,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
-          console.error('Session retrieval error:', sessionError);
+          if (sessionError.message.includes('refresh_token_not_found')) {
+            console.log('Refresh token not found, signing out');
+            await supabase.auth.signOut();
+            return;
+          }
           throw sessionError;
         }
 
