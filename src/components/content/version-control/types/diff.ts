@@ -95,3 +95,11 @@ export interface DiffAccessibilityConfig {
     closeSearch: string[];
   };
 }
+
+// Main DiffViewer props
+export interface DiffViewerProps {
+  oldContent: string;
+  newContent: string;
+  oldMetadata?: Record<string, any>;
+  newMetadata?: Record<string, any>;
+}
