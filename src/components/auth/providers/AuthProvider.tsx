@@ -4,11 +4,15 @@ import { useAuthSetup } from '@/hooks/useAuthSetup';
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { applySecurityHeaders } from "@/utils/auth/securityHeaders";
+import { sessionManager } from "@/lib/auth/SessionManager";
+import { securityManager } from "@/lib/auth/SecurityManager";
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const { handleAuthChange, initialSetupDone } = useAuthSetup();
 
   useEffect(() => {
+    console.log('AuthProvider mounted - Starting initialization');
+    
     // Apply security headers
     const initSecurity = async () => {
       try {
@@ -23,15 +27,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     initSecurity();
 
-    if (initialSetupDone.current) return;
+    if (initialSetupDone.current) {
+      console.log('Initial setup already done, skipping');
+      return;
+    }
+    
     initialSetupDone.current = true;
-
     let retryCount = 0;
     const maxRetries = 3;
     const retryDelay = 1000;
 
     const setupAuth = async () => {
       try {
+        console.log('Starting auth setup');
+        
+        // Initialize security systems first
+        try {
+          sessionManager.startSession();
+          securityManager.initialize();
+          console.log('Security systems initialized');
+        } catch (securityError) {
+          console.error('Error initializing security systems:', securityError);
+          // Continue with auth setup even if security init fails
+        }
+
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
@@ -43,11 +62,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           throw sessionError;
         }
 
-        console.log('Initial session check:', session);
+        console.log('Initial session check:', session?.user?.id || 'No session');
         await handleAuthChange(session);
 
       } catch (error) {
-        console.error('Auth setup error:', error);
+        console.error("Auth setup error:", error);
         if (retryCount < maxRetries) {
           retryCount++;
           console.log(`Retrying auth setup (${retryCount}/${maxRetries})...`);
@@ -62,6 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     setupAuth();
 
+    console.log('Setting up auth state change subscription');
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -77,7 +97,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
     
     return () => {
+      console.log('Cleaning up AuthProvider');
       subscription.unsubscribe();
+      sessionManager.destroy();
+      securityManager.cleanup();
     };
   }, [handleAuthChange]);
 

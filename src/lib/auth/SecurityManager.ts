@@ -8,9 +8,10 @@ interface SecurityConfig {
   lockoutDuration?: number; // in minutes
 }
 
-export class SecurityManager {
+class SecurityManager {
   private sessionManager: SessionManager;
   private config: SecurityConfig;
+  private initialized: boolean = false;
 
   constructor(config: SecurityConfig = {}) {
     this.sessionManager = SessionManager.getInstance();
@@ -166,17 +167,33 @@ export class SecurityManager {
   }
 
   public initialize(): void {
-    this.sessionManager.startSession();
-    console.log('Security manager initialized');
+    if (this.initialized) {
+      console.log('Security manager already initialized');
+      return;
+    }
+
+    try {
+      console.log('Initializing security manager');
+      this.sessionManager.startSession();
+      this.initialized = true;
+      console.log('Security manager initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize security manager:', error);
+      throw error;
+    }
   }
 
   public clearSecurityData(): void {
     console.log('Clearing security data');
+    this.initialized = false;
   }
 
   public cleanup(): void {
+    console.log('Cleaning up security manager');
     this.sessionManager.destroy();
+    this.initialized = false;
   }
 }
 
+// Create and export a singleton instance
 export const securityManager = new SecurityManager();
