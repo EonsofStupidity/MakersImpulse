@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { MegaMenu } from "./navigation/MegaMenu";
-import { MobileNav } from "./navigation/mobile/MobileNav";
-import { toast } from "sonner";
+import { useLocation } from "react-router-dom";
 import { useAuthStore } from '@/lib/store/auth-store';
-import { NavigationLinks } from "./navigation/NavigationLinks";
-import { UserMenu } from "./navigation/UserMenu";
 import { useNavigationStore } from "./navigation/NavigationState";
 import { cn } from "@/lib/utils";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { UserAvatar } from "@/components/shared/ui/avatar/UserAvatar";
+import { NavigationLinks } from "./navigation/NavigationLinks";
+import { MegaMenu } from "./navigation/MegaMenu";
+import { MobileNav } from "./navigation/mobile/MobileNav";
+import { UserMenu } from "./navigation/UserMenu";
+import { UserAvatar } from "./avatar/UserAvatar";
+import { Logo } from "./navigation/Logo";
+import { SearchButton } from "./navigation/SearchButton";
+import { SearchDialog } from "./navigation/SearchDialog";
 
 export const Navigation = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { session, isLoading } = useAuthStore();
   const { isScrolled, mousePosition, setIsScrolled, setMousePosition } = useNavigationStore();
   const [hasLogged, setHasLogged] = useState(false);
@@ -55,12 +53,6 @@ export const Navigation = () => {
     }
   };
 
-  const handleNavigation = (path: string) => {
-    console.log('Navigating to:', path);
-    navigate(path);
-    toast.success(`Navigating to ${path}`);
-  };
-
   return (
     <nav 
       className={cn(
@@ -84,24 +76,7 @@ export const Navigation = () => {
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-2">
-          <Link 
-            to="/"
-            className="flex items-center space-x-2 cursor-pointer group -ml-6 scale-125"
-            onClick={() => handleNavigation('/')}
-          >
-            <span className="text-3xl font-bold flex items-center space-x-1 relative">
-              <span className="neon-text-cyan relative transform -translate-y-1">
-                Makers
-                <span className="absolute inset-0 blur-lg bg-[#41f0db] opacity-50"></span>
-                <span className="absolute inset-0 animate-pulse blur-xl bg-[#41f0db] opacity-30"></span>
-              </span>
-              <span className="neon-text-pink relative transform translate-y-1">
-                Impulse
-                <span className="absolute inset-0 blur-lg bg-[#ff0abe] opacity-50"></span>
-                <span className="absolute inset-0 animate-pulse blur-xl bg-[#ff0abe] opacity-30"></span>
-              </span>
-            </span>
-          </Link>
+          <Logo />
 
           <div className="hidden md:flex items-center space-x-6">
             <NavigationLinks />
@@ -109,15 +84,7 @@ export const Navigation = () => {
           </div>
 
           <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative group hover:bg-transparent"
-              onClick={() => setSearchOpen(true)}
-            >
-              <Search className="h-5 w-5 text-white transition-colors duration-300 group-hover:text-[#41f0db]" />
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10 rounded-full" />
-            </Button>
+            <SearchButton onClick={() => setSearchOpen(true)} />
       
             <div className="hidden md:block relative z-[60]">
               <UserAvatar
@@ -133,23 +100,7 @@ export const Navigation = () => {
         </div>
       </div>
 
-      <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-        <DialogContent className="bg-black/80 backdrop-blur-xl border border-white/10">
-          <DialogHeader>
-            <DialogTitle className="text-white">Search</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4">
-            <input
-              type="text"
-              placeholder="Search builds, parts, or guides..."
-              className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[#41f0db]"
-            />
-            <div className="text-sm text-white/60">
-              Press <kbd className="px-2 py-1 bg-white/10 rounded">ESC</kbd> to close
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <SearchDialog open={searchOpen} onOpenChange={setSearchOpen} />
     </nav>
   );
 };
