@@ -34,33 +34,40 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
     queryFn: async () => {
       console.log('Fetching revisions for comparison:', contentId);
       
-      const { data, error } = await supabase
-        .from('cms_content_revisions')
-        .select(`
-          id,
-          content_id,
-          content,
-          metadata,
-          created_at,
-          created_by,
-          version_number,
-          change_summary,
-          rollback_metadata,
-          profiles (
-            display_name
-          )
-        `)
-        .eq('content_id', contentId)
-        .order('version_number', { ascending: false });
+      try {
+        const { data, error } = await supabase
+          .from('cms_content_revisions')
+          .select(`
+            id,
+            content_id,
+            content,
+            metadata,
+            created_at,
+            created_by,
+            version_number,
+            change_summary,
+            rollback_metadata,
+            profiles (
+              display_name
+            )
+          `)
+          .eq('content_id', contentId)
+          .order('version_number', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching revisions:', error);
+        if (error) {
+          console.error('Error fetching revisions:', error);
+          throw error;
+        }
+
+        return data as ContentRevision[];
+      } catch (error) {
+        console.error('Failed to fetch revisions:', error);
         toast.error('Failed to load revisions');
         throw error;
       }
-
-      return data as ContentRevision[];
     },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
     enabled: !!contentId,
   });
 
