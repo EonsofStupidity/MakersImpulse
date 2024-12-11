@@ -1118,6 +1118,44 @@ export type Database = {
           },
         ]
       }
+      security_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       site_settings: {
         Row: {
           accent_color: string | null
@@ -1140,6 +1178,7 @@ export type Database = {
           neon_purple: string | null
           primary_color: string | null
           secondary_color: string | null
+          security_settings: Json | null
           shadow_color: string | null
           site_title: string
           spacing_unit: string | null
@@ -1175,6 +1214,7 @@ export type Database = {
           neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          security_settings?: Json | null
           shadow_color?: string | null
           site_title?: string
           spacing_unit?: string | null
@@ -1210,6 +1250,7 @@ export type Database = {
           neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
+          security_settings?: Json | null
           shadow_color?: string | null
           site_title?: string
           spacing_unit?: string | null
