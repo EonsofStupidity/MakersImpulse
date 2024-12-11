@@ -98,8 +98,9 @@ export interface DiffViewerOptions {
 export interface DiffViewerProps {
   oldContent: string;
   newContent: string;
+  oldMetadata?: Record<string, any>;
+  newMetadata?: Record<string, any>;
   options?: DiffViewerOptions;
-  metadata?: DiffMetadata;
   onNavigate?: (index: number) => void;
   onSearch?: (query: string) => void;
 }

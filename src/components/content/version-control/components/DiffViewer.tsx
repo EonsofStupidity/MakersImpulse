@@ -4,7 +4,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { DiffType, DiffChange, DiffViewerProps } from '../types/diff';
+import type { DiffHighlightMode, DiffChange, DiffViewerProps } from '../types/diff';
 import { DiffMetadata } from './DiffMetadata';
 
 export const DiffViewer: React.FC<DiffViewerProps> = ({
@@ -13,19 +13,23 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   oldMetadata,
   newMetadata
 }) => {
-  const [diffType, setDiffType] = useState<DiffType>('words');
+  const [diffType, setDiffType] = useState<DiffHighlightMode>('word');
   const [currentDiffIndex, setCurrentDiffIndex] = useState(0);
 
   const diffs = useMemo(() => {
     try {
-      return diffType === 'chars' 
-        ? diffChars(oldContent, newContent)
-        : diffWords(oldContent, newContent);
+      const diffFn = diffType === 'char' ? diffChars : diffWords;
+      const result = diffFn(oldContent, newContent);
+      return result.map(change => ({
+        ...change,
+        added: Boolean(change.added),
+        removed: Boolean(change.removed)
+      })) as DiffChange[];
     } catch (error) {
       console.error('Error computing diff:', error);
       return [];
     }
-  }, [oldContent, newContent, diffType]) as DiffChange[];
+  }, [oldContent, newContent, diffType]);
 
   const changes = useMemo(() => 
     diffs.filter(d => d.added || d.removed), [diffs]
@@ -71,16 +75,16 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setDiffType('words')}
-            className={diffType === 'words' ? 'bg-primary/20' : ''}
+            onClick={() => setDiffType('word')}
+            className={diffType === 'word' ? 'bg-primary/20' : ''}
           >
             Word Diff
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => setDiffType('chars')}
-            className={diffType === 'chars' ? 'bg-primary/20' : ''}
+            onClick={() => setDiffType('char')}
+            className={diffType === 'char' ? 'bg-primary/20' : ''}
           >
             Character Diff
           </Button>
