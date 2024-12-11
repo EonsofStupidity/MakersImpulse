@@ -119,37 +119,14 @@ export const Navigation = () => {
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-[#41f0db]/10 to-[#8000ff]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-lg -z-10 rounded-full" />
             </Button>
       
-            {session?.user && (
-              <div className="hidden md:block relative z-[60]">
-                <button
-                  onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="relative group transition-transform duration-300 hover:scale-110 transform translate-y-2"
-                >
-                  <Avatar className="h-[2.8rem] w-[2.8rem] border-2 border-[#4d00b3] rounded-full overflow-hidden transition-all duration-300 shadow-xl transform scale-110
-                    before:content-[''] before:absolute before:inset-0 before:rounded-full before:bg-black/20 before:backdrop-blur-md
-                    before:border before:border-[#4d00b3]/30 before:shadow-inner group-hover:border-[#41f0db]"
-                  >
-                    <AvatarImage 
-                      src={session.user.user_metadata?.avatar_url || "/admin/placeholder-avatar.png"}
-                      alt="User avatar"
-                      className="object-cover w-full h-full"
-                    />
-                    <AvatarFallback className="bg-[#4d00b3] text-white">
-                      {session.user.email?.charAt(0).toUpperCase() || 'U'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div 
-                    className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      background: `linear-gradient(135deg, #4d00b3, #72228c, #b0e653)`,
-                      filter: 'blur(8px)',
-                      zIndex: -1
-                    }}
-                  />
-                </button>
-                {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
-              </div>
-            )}
+            <div className="hidden md:block relative z-[60]">
+              <UserAvatar
+                size="lg"
+                className="transform translate-y-2"
+                onClick={() => setShowUserMenu(!showUserMenu)}
+              />
+              {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
+            </div>
       
             <MobileNav />
           </div>
