@@ -11,6 +11,8 @@ const ContentManagement = lazy(() => import("@/pages/admin/content-management"))
 const Categories = lazy(() => import("@/pages/admin/content-management/categories"));
 const ForumAdminPage = lazy(() => import("@/pages/admin/forum"));
 const WorkflowTemplates = lazy(() => import("@/pages/admin/workflows/templates"));
+const NewWorkflowTemplate = lazy(() => import("@/pages/admin/workflows/templates/new"));
+const WorkflowTemplateEditor = lazy(() => import("@/pages/admin/workflows/templates/[id]"));
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -75,5 +77,13 @@ export const adminRoutes = [
   {
     path: "workflows/templates",
     element: <DashboardLayout><WorkflowTemplates /></DashboardLayout>,
+  },
+  {
+    path: "workflows/templates/new",
+    element: <DashboardLayout><NewWorkflowTemplate /></DashboardLayout>,
+  },
+  {
+    path: "workflows/templates/:id",
+    element: <DashboardLayout><WorkflowTemplateEditor /></DashboardLayout>,
   },
 ];
