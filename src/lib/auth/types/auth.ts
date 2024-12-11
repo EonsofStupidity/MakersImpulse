@@ -27,6 +27,10 @@ export interface AuthUser {
   role?: string;
   username?: string;
   displayName?: string;
+  user_metadata?: {
+    avatar_url?: string;
+    [key: string]: any;
+  };
 }
 
 export interface AuthSession {
