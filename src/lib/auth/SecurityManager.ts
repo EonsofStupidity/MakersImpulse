@@ -113,7 +113,7 @@ export class SecurityManager {
 
   public async handleFailedLogin(userId: string): Promise<void> {
     try {
-      const { data: profile, error } = await supabase
+      const { data, error } = await supabase
         .from('profiles')
         .select('failed_login_attempts, lockout_until')
         .eq('id', userId)
@@ -121,7 +121,7 @@ export class SecurityManager {
 
       if (error) throw error;
 
-      const attempts = (profile?.failed_login_attempts || 0) + 1;
+      const attempts = (data?.failed_login_attempts || 0) + 1;
       const updates: any = { failed_login_attempts: attempts };
 
       if (attempts >= this.config.maxLoginAttempts!) {

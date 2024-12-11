@@ -877,6 +877,7 @@ export type Database = {
           bio: string | null
           created_at: string
           display_name: string | null
+          failed_login_attempts: number | null
           failed_pin_attempts: number | null
           gamification_enabled: boolean | null
           id: string
@@ -905,6 +906,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          failed_login_attempts?: number | null
           failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id: string
@@ -933,6 +935,7 @@ export type Database = {
           bio?: string | null
           created_at?: string
           display_name?: string | null
+          failed_login_attempts?: number | null
           failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id?: string
