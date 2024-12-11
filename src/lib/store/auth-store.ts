@@ -1,24 +1,14 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { Session } from '@supabase/supabase-js';
-import type { UserRole } from '@/components/auth/types';
+import { AuthState, AuthUser, AuthSession } from '@/lib/auth/types/auth';
 import { supabase } from "@/integrations/supabase/client";
-import { storeSessionLocally } from '@/utils/auth/offlineAuth';
+import { sessionManager } from '@/lib/auth/SessionManager';
+import { securityManager } from '@/lib/auth/SecurityManager';
+import { authLogger } from '@/lib/auth/AuthLogger';
 
-interface AuthState {
-  session: Session | null;
-  user: {
-    id: string;
-    email?: string | null;
-    role?: UserRole;
-    username?: string;
-    displayName?: string;
-  } | null;
-  isLoading: boolean;
-  error: Error | null;
-  isOffline: boolean;
-  setSession: (session: Session | null) => void;
-  setUser: (user: any | null) => void;
+interface AuthStore extends AuthState {
+  setSession: (session: AuthSession | null) => void;
+  setUser: (user: AuthUser | null) => void;
   setLoading: (isLoading: boolean) => void;
   setError: (error: Error | null) => void;
   setOffline: (isOffline: boolean) => void;
@@ -26,7 +16,7 @@ interface AuthState {
   reset: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
+export const useAuthStore = create<AuthStore>()(
   persist(
     (set, get) => ({
       session: null,
@@ -34,30 +24,49 @@ export const useAuthStore = create<AuthState>()(
       isLoading: true,
       error: null,
       isOffline: !navigator.onLine,
-      setSession: (session) => set({ session }),
-      setUser: (user) => set({ user }),
+      setSession: (session) => {
+        authLogger.info('Setting session', { userId: session?.user?.id });
+        set({ session });
+      },
+      setUser: (user) => {
+        authLogger.info('Setting user', { userId: user?.id });
+        set({ user });
+      },
       setLoading: (isLoading) => set({ isLoading }),
-      setError: (error) => set({ error }),
+      setError: (error) => {
+        if (error) {
+          authLogger.error('Auth error occurred', error);
+        }
+        set({ error });
+      },
       setOffline: (isOffline) => set({ isOffline }),
       signOut: async () => {
         try {
+          authLogger.info('Signing out user', { userId: get().user?.id });
           set({ isLoading: true, error: null });
-          await supabase.auth.signOut();
-          storeSessionLocally(null);
+          
+          await sessionManager.handleSignOut();
+          securityManager.clearSecurityData();
+          
           set({ session: null, user: null });
         } catch (error) {
-          set({ error: error instanceof Error ? error : new Error('Sign out failed') });
+          const authError = error instanceof Error ? error : new Error('Sign out failed');
+          authLogger.error('Sign out error', authError);
+          set({ error: authError });
           throw error;
         } finally {
           set({ isLoading: false });
         }
       },
-      reset: () => set({ 
-        session: null, 
-        user: null, 
-        isLoading: false, 
-        error: null 
-      }),
+      reset: () => {
+        authLogger.info('Resetting auth store');
+        set({ 
+          session: null, 
+          user: null, 
+          isLoading: false, 
+          error: null 
+        });
+      },
     }),
     {
       name: 'auth-storage',
@@ -73,9 +82,11 @@ export const useAuthStore = create<AuthState>()(
 if (typeof window !== 'undefined') {
   window.addEventListener('online', () => {
     useAuthStore.getState().setOffline(false);
+    authLogger.info('Application is online');
   });
   
   window.addEventListener('offline', () => {
     useAuthStore.getState().setOffline(true);
+    authLogger.warn('Application is offline');
   });
 }
