@@ -3,15 +3,13 @@ import { ApprovalConfig } from './config/ApprovalConfig';
 import { ReviewConfig } from './config/ReviewConfig';
 import { TaskConfig } from './config/TaskConfig';
 import { NotificationConfig } from './config/NotificationConfig';
-import type { WorkflowStage, WorkflowStageConfig } from '../../types';
+import type { WorkflowStage, StageConfigUpdateProps } from '../../types';
 
-interface StageConfigPanelProps {
-  stage: WorkflowStage;
-  onUpdate: (stageId: string, updates: Partial<WorkflowStage>) => void;
-}
-
-export const StageConfigPanel = ({ stage, onUpdate }: StageConfigPanelProps) => {
-  const handleConfigChange = (config: WorkflowStageConfig) => {
+export const StageConfigPanel: React.FC<StageConfigUpdateProps> = ({ 
+  stage,
+  onUpdate
+}) => {
+  const handleConfigChange = (config: WorkflowStage['config']) => {
     onUpdate(stage.id, { config });
   };
 
@@ -26,7 +24,6 @@ export const StageConfigPanel = ({ stage, onUpdate }: StageConfigPanelProps) => 
       case 'notification':
         return <NotificationConfig config={stage.config} onChange={handleConfigChange} />;
       case 'conditional':
-        // Conditional config will be implemented later
         return <div className="text-white/60">Conditional configuration coming soon</div>;
       default:
         return null;

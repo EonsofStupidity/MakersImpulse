@@ -6,13 +6,13 @@ import { Button } from '@/components/ui/button';
 import { GripVertical, X, AlertCircle } from 'lucide-react';
 import { StageTypeSelector } from './StageTypeSelector';
 import { StageConfigPanel } from './StageConfigPanel';
-import type { WorkflowStage } from '../../types';
+import type { WorkflowStage, StageUpdateFunction } from '../../types';
 import { validateStage } from '../../types';
 
 interface StageCardProps {
   stage: WorkflowStage;
   index: number;
-  onUpdate: (stageId: string, updates: Partial<WorkflowStage>) => void;
+  onUpdate: StageUpdateFunction;
   onDelete: (stageId: string) => void;
   dragHandleProps?: any;
 }
@@ -25,6 +25,27 @@ export const StageCard = ({
   dragHandleProps 
 }: StageCardProps) => {
   const validation = validateStage(stage);
+
+  // Type-safe event handlers
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onUpdate(stage.id, { name: e.target.value });
+  };
+
+  const handleTypeChange = (value: WorkflowStage['type']) => {
+    onUpdate(stage.id, { type: value });
+  };
+
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    onUpdate(stage.id, { description: e.target.value });
+  };
+
+  const handleConfigUpdate = (updates: Partial<WorkflowStage>) => {
+    onUpdate(stage.id, updates);
+  };
+
+  const handleDelete = () => {
+    onDelete(stage.id);
+  };
 
   return (
     <Card className="p-4 bg-white/5 border-white/10 hover:border-neon-cyan/50 transition-all duration-300">
@@ -44,7 +65,7 @@ export const StageCard = ({
           <div>
             <Input
               value={stage.name}
-              onChange={(e) => onUpdate(stage.id, { name: e.target.value })}
+              onChange={handleNameChange}
               placeholder={`Stage ${index + 1} name`}
               className={`bg-white/5 border-white/10 text-white ${!stage.name.trim() ? 'border-red-500/50' : ''}`}
             />
@@ -60,13 +81,13 @@ export const StageCard = ({
             <label className="text-sm text-white/70">Stage Type</label>
             <StageTypeSelector
               value={stage.type}
-              onChange={(value) => onUpdate(stage.id, { type: value })}
+              onChange={handleTypeChange}
             />
           </div>
 
           <Textarea
             value={stage.description}
-            onChange={(e) => onUpdate(stage.id, { description: e.target.value })}
+            onChange={handleDescriptionChange}
             placeholder="Stage description (optional)"
             className="bg-white/5 border-white/10 text-white"
             rows={2}
@@ -74,7 +95,7 @@ export const StageCard = ({
 
           <StageConfigPanel 
             stage={stage}
-            onUpdate={(updates) => onUpdate(stage.id, updates)}
+            onUpdate={handleConfigUpdate}
           />
 
           {!validation.isValid && (
@@ -97,7 +118,7 @@ export const StageCard = ({
         <Button
           type="button"
           variant="ghost"
-          onClick={() => onDelete(stage.id)}
+          onClick={handleDelete}
           className="text-red-400 hover:text-red-300 hover:bg-red-400/10"
         >
           <X className="w-4 h-4" />

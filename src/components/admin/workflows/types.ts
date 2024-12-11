@@ -113,3 +113,10 @@ export const validateStage = (stage: WorkflowStage): { isValid: boolean; errors:
     errors
   };
 };
+
+export type StageUpdateFunction = (stageId: string, updates: Partial<WorkflowStage>) => void;
+
+export interface StageConfigUpdateProps {
+  stage: WorkflowStage;
+  onUpdate: StageUpdateFunction;
+}
