@@ -1,19 +1,19 @@
-import { SessionConfig, SessionState, SessionEventType } from './types/auth';
+import { SessionConfig, SessionState } from './types/auth';
+import { initializeSessionSync } from '@/utils/auth/sessionSync';
 
 export class SessionManager {
   private static instance: SessionManager;
   private refreshTimeout?: NodeJS.Timeout;
   private config: SessionConfig;
   private lastActivity: Date;
-  private readonly activityEvents: SessionEventType[] = ['mousedown', 'keydown', 'touchstart', 'scroll'];
+  private readonly activityEvents: string[] = ['mousedown', 'keydown', 'touchstart', 'scroll'];
   private boundHandleActivity: () => void;
-  private boundHandleStorage: (event: StorageEvent) => void;
+  private cleanupSync: (() => void) | null = null;
 
   private constructor(config: Partial<SessionConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.lastActivity = new Date();
     this.boundHandleActivity = this.updateLastActivity.bind(this);
-    this.boundHandleStorage = this.handleStorageEvent.bind(this);
     this.setupEventListeners();
   }
 
@@ -30,34 +30,11 @@ export class SessionManager {
     this.activityEvents.forEach(event => {
       window.addEventListener(event, this.boundHandleActivity);
     });
-
-    window.addEventListener('storage', this.boundHandleStorage);
-  }
-
-  private handleStorageEvent(event: StorageEvent): void {
-    if (event.key === this.config.storageKey) {
-      this.handleCrossTabSync(event.newValue);
-    }
-  }
-
-  private async handleCrossTabSync(newState: string | null): Promise<void> {
-    if (!newState) return;
-
-    try {
-      const state: SessionState = JSON.parse(newState);
-      await this.syncSessionState(state);
-    } catch (error) {
-      console.error('Error syncing session state:', error);
-    }
   }
 
   private updateLastActivity(): void {
     this.lastActivity = new Date();
     this.checkSessionTimeout();
-  }
-
-  private async syncSessionState(state: SessionState): Promise<void> {
-    console.log('Syncing session state:', state);
   }
 
   private checkSessionTimeout(): void {
@@ -76,17 +53,13 @@ export class SessionManager {
     this.destroy();
   }
 
-  public async handleSignOut(): Promise<void> {
-    this.destroy();
-  }
-
-  private async refreshSession(): Promise<void> {
-    try {
-      this.scheduleNextRefresh();
-    } catch (error) {
-      if (error instanceof Error && this.config.onRefreshError) {
-        this.config.onRefreshError(error);
-      }
+  public startSession(): void {
+    this.updateLastActivity();
+    this.scheduleNextRefresh();
+    
+    // Initialize cross-tab sync
+    if (!this.cleanupSync) {
+      this.cleanupSync = initializeSessionSync();
     }
   }
 
@@ -101,9 +74,15 @@ export class SessionManager {
     );
   }
 
-  public startSession(): void {
-    this.updateLastActivity();
-    this.scheduleNextRefresh();
+  private async refreshSession(): Promise<void> {
+    try {
+      // Implement refresh logic
+      this.scheduleNextRefresh();
+    } catch (error) {
+      if (error instanceof Error && this.config.onRefreshError) {
+        this.config.onRefreshError(error);
+      }
+    }
   }
 
   public destroy(): void {
@@ -113,16 +92,14 @@ export class SessionManager {
       window.removeEventListener(event, this.boundHandleActivity);
     });
     
-    window.removeEventListener('storage', this.boundHandleStorage);
-
     if (this.refreshTimeout) {
       clearTimeout(this.refreshTimeout);
     }
-  }
 
-  // Add cleanup as an alias for destroy for backward compatibility
-  public cleanup(): void {
-    this.destroy();
+    if (this.cleanupSync) {
+      this.cleanupSync();
+      this.cleanupSync = null;
+    }
   }
 }
 
