@@ -16,7 +16,7 @@
     "noEmit": true,
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuildinfo",
-    "jsx": "react-jsx",
+    "jsx": "react-jsx", /* Enables JSX support */
 
     /* Linting */
     "strict": true,
@@ -42,16 +42,18 @@
     "outDir": "./dist",
 
     /* Testing and Library Support */
-    "types": ["jest", "node", "@types/three"],
+    "types": ["jest", "node", "@types/three"], /* Includes Three.js typings */
 
     /* Path Aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"] /* Simplifies imports with aliases */
     }
   },
   "include": [
     "src",
+    "src/**/*.tsx", /* Ensures .tsx files are included */
+    "src/**/*.ts",
     "src/**/*.test.ts",
     "src/**/*.test.tsx",
     "src/**/*.js",
