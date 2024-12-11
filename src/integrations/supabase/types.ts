@@ -1532,6 +1532,57 @@ export type Database = {
           },
         ]
       }
+      workflow_notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          message: string
+          metadata: Json | null
+          read: boolean | null
+          title: string
+          type: string
+          user_id: string | null
+          workflow_instance_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          message: string
+          metadata?: Json | null
+          read?: boolean | null
+          title: string
+          type: string
+          user_id?: string | null
+          workflow_instance_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          message?: string
+          metadata?: Json | null
+          read?: boolean | null
+          title?: string
+          type?: string
+          user_id?: string | null
+          workflow_instance_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "workflow_notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "workflow_notifications_workflow_instance_id_fkey"
+            columns: ["workflow_instance_id"]
+            isOneToOne: false
+            referencedRelation: "workflow_instances"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workflow_templates: {
         Row: {
           created_at: string | null
@@ -1540,6 +1591,7 @@ export type Database = {
           id: string
           is_active: boolean | null
           name: string
+          notification_config: Json | null
           stages: Json
           updated_at: string | null
         }
@@ -1550,6 +1602,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           name: string
+          notification_config?: Json | null
           stages?: Json
           updated_at?: string | null
         }
@@ -1560,6 +1613,7 @@ export type Database = {
           id?: string
           is_active?: boolean | null
           name?: string
+          notification_config?: Json | null
           stages?: Json
           updated_at?: string | null
         }
