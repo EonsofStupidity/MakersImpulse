@@ -1,0 +1,140 @@
+import React, { useMemo, useState } from 'react';
+import { diffChars, diffWords } from 'diff';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import type { DiffType, DiffChange, DiffViewerProps } from '../types/diff';
+import { DiffMetadata } from './DiffMetadata';
+
+export const DiffViewer: React.FC<DiffViewerProps> = ({
+  oldContent,
+  newContent,
+  oldMetadata,
+  newMetadata
+}) => {
+  const [diffType, setDiffType] = useState<DiffType>('words');
+  const [currentDiffIndex, setCurrentDiffIndex] = useState(0);
+
+  const diffs = useMemo(() => {
+    try {
+      return diffType === 'chars' 
+        ? diffChars(oldContent, newContent)
+        : diffWords(oldContent, newContent);
+    } catch (error) {
+      console.error('Error computing diff:', error);
+      return [];
+    }
+  }, [oldContent, newContent, diffType]) as DiffChange[];
+
+  const changes = useMemo(() => 
+    diffs.filter(d => d.added || d.removed), [diffs]
+  );
+
+  const navigateDiff = (direction: 'prev' | 'next') => {
+    setCurrentDiffIndex(prev => {
+      if (direction === 'prev') {
+        return prev > 0 ? prev - 1 : changes.length - 1;
+      }
+      return prev < changes.length - 1 ? prev + 1 : 0;
+    });
+  };
+
+  const renderDiffContent = (content: DiffChange[]) => (
+    <div className="font-mono text-sm whitespace-pre-wrap">
+      {content.map((part, i) => {
+        const isCurrentDiff = (part.added || part.removed) && 
+          changes.indexOf(part) === currentDiffIndex;
+
+        return (
+          <span
+            key={i}
+            className={`
+              ${part.added ? 'bg-green-500/20 text-green-400' : ''}
+              ${part.removed ? 'bg-red-500/20 text-red-400 line-through' : ''}
+              ${isCurrentDiff ? 'ring-2 ring-primary/50 rounded' : ''}
+              ${!part.added && !part.removed ? 'text-zinc-400' : ''}
+              transition-all
+            `}
+          >
+            {part.value}
+          </span>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setDiffType('words')}
+            className={diffType === 'words' ? 'bg-primary/20' : ''}
+          >
+            Word Diff
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setDiffType('chars')}
+            className={diffType === 'chars' ? 'bg-primary/20' : ''}
+          >
+            Character Diff
+          </Button>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigateDiff('prev')}
+            disabled={changes.length === 0}
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <span className="text-sm">
+            {changes.length > 0 
+              ? `Change ${currentDiffIndex + 1} of ${changes.length}`
+              : 'No changes'
+            }
+          </span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => navigateDiff('next')}
+            disabled={changes.length === 0}
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-4">
+          <DiffMetadata metadata={oldMetadata || {}} label="Previous Version" />
+          <Card className="relative">
+            <ScrollArea className="h-[400px]">
+              <div className="p-4">
+                {renderDiffContent(diffs.filter(d => !d.added))}
+              </div>
+            </ScrollArea>
+          </Card>
+        </div>
+
+        <div className="space-y-4">
+          <DiffMetadata metadata={newMetadata || {}} label="Current Version" />
+          <Card className="relative">
+            <ScrollArea className="h-[400px]">
+              <div className="p-4">
+                {renderDiffContent(diffs.filter(d => !d.removed))}
+              </div>
+            </ScrollArea>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+};
