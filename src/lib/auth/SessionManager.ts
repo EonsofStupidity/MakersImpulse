@@ -1,18 +1,9 @@
-import { supabase } from "@/integrations/supabase/client";
-import { useAuthStore } from '@/lib/store/auth-store';
-import { toast } from "sonner";
-import { handleSecurityEvent } from "@/utils/auth/securityHandlers";
-
-interface SessionConfig {
-  timeoutMinutes: number;
-  maxConcurrentSessions: number;
-  refreshThresholdMinutes: number;
-}
+import { SessionConfig, SessionState, SessionEventType } from './types/auth';
 
 const DEFAULT_CONFIG: SessionConfig = {
-  timeoutMinutes: 30,
-  maxConcurrentSessions: 3,
-  refreshThresholdMinutes: 5
+  refreshInterval: 5 * 60 * 1000, // 5 minutes
+  sessionTimeout: 30 * 60 * 1000, // 30 minutes
+  storageKey: 'auth_session_state'
 };
 
 export class SessionManager {
@@ -20,6 +11,7 @@ export class SessionManager {
   private refreshTimeout?: NodeJS.Timeout;
   private config: SessionConfig;
   private lastActivity: Date;
+  private readonly activityEvents: SessionEventType[] = ['mousedown', 'keydown', 'touchstart', 'scroll'];
   private boundHandleActivity: () => void;
   private boundHandleStorage: (event: StorageEvent) => void;
 
@@ -28,7 +20,7 @@ export class SessionManager {
     this.lastActivity = new Date();
     this.boundHandleActivity = this.updateLastActivity.bind(this);
     this.boundHandleStorage = this.handleStorageEvent.bind(this);
-    this.setupActivityListeners();
+    this.setupEventListeners();
   }
 
   public static getInstance(config?: Partial<SessionConfig>): SessionManager {
@@ -38,156 +30,97 @@ export class SessionManager {
     return SessionManager.instance;
   }
 
-  private setupActivityListeners(): void {
-    if (typeof window !== 'undefined') {
-      ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(event => {
-        window.addEventListener(event, this.boundHandleActivity);
-      });
+  private setupEventListeners(): void {
+    if (typeof window === 'undefined') return;
+    
+    this.activityEvents.forEach(event => {
+      window.addEventListener(event, this.boundHandleActivity);
+    });
 
-      window.addEventListener('storage', this.boundHandleStorage);
-    }
+    window.addEventListener('storage', this.boundHandleStorage);
   }
 
   private handleStorageEvent(event: StorageEvent): void {
-    if (event.key === 'auth_session_state') {
+    if (event.key === this.config.storageKey) {
       this.handleCrossTabSync(event.newValue);
     }
-  }
-
-  private updateLastActivity(): void {
-    this.lastActivity = new Date();
-    localStorage.setItem('last_activity', this.lastActivity.toISOString());
   }
 
   private async handleCrossTabSync(newState: string | null): Promise<void> {
     if (!newState) return;
 
     try {
-      const state = JSON.parse(newState);
-      if (state.event === 'SIGNED_OUT') {
-        await this.handleSignOut();
-      }
+      const state: SessionState = JSON.parse(newState);
+      await this.syncSessionState(state);
     } catch (error) {
-      console.error('Error handling cross-tab sync:', error);
+      console.error('Error syncing session state:', error);
     }
   }
 
-  public async initializeSession(): Promise<void> {
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) throw error;
-
-      if (session) {
-        await this.validateAndRefreshSession(session);
-        this.scheduleTokenRefresh(session.expires_in);
-        this.broadcastSessionState({ event: 'SIGNED_IN' });
-      }
-    } catch (error) {
-      console.error('Session initialization error:', error);
-      toast.error('Error initializing session');
-      await this.handleSignOut();
-    }
+  private updateLastActivity(): void {
+    this.lastActivity = new Date();
+    this.checkSessionTimeout();
   }
 
-  private async validateAndRefreshSession(session: any): Promise<void> {
-    if (!session?.expires_at) return;
+  private async syncSessionState(state: SessionState): Promise<void> {
+    // Implement session state synchronization logic
+    console.log('Syncing session state:', state);
+  }
 
-    const expiresAt = new Date(session.expires_at * 1000);
+  private checkSessionTimeout(): void {
     const now = new Date();
-    const minutesUntilExpiry = (expiresAt.getTime() - now.getTime()) / (1000 * 60);
+    const timeSinceLastActivity = now.getTime() - this.lastActivity.getTime();
 
-    if (minutesUntilExpiry <= this.config.refreshThresholdMinutes) {
-      await this.refreshToken();
+    if (timeSinceLastActivity > this.config.sessionTimeout) {
+      this.handleSessionTimeout();
     }
   }
 
-  private async refreshToken(): Promise<void> {
+  private handleSessionTimeout(): void {
+    if (this.config.onSessionExpired) {
+      this.config.onSessionExpired();
+    }
+    this.destroy();
+  }
+
+  private async refreshSession(): Promise<void> {
     try {
-      const { data: { session }, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
-
-      if (session) {
-        this.scheduleTokenRefresh(session.expires_in);
-        await handleSecurityEvent(session.user.id, 'token_refresh', 'low');
-      }
+      // Implement token refresh logic here
+      this.scheduleNextRefresh();
     } catch (error) {
-      console.error('Token refresh error:', error);
-      toast.error('Session refresh failed');
-      await this.handleSignOut();
+      if (error instanceof Error && this.config.onRefreshError) {
+        this.config.onRefreshError(error);
+      }
     }
   }
 
-  private scheduleTokenRefresh(expiresIn: number): void {
+  private scheduleNextRefresh(): void {
     if (this.refreshTimeout) {
       clearTimeout(this.refreshTimeout);
     }
 
-    const refreshTime = (expiresIn - (this.config.refreshThresholdMinutes * 60)) * 1000;
-    this.refreshTimeout = setTimeout(() => this.refreshToken(), refreshTime);
+    this.refreshTimeout = setTimeout(
+      () => this.refreshSession(),
+      this.config.refreshInterval
+    );
   }
 
-  public async handleSignOut(): Promise<void> {
-    try {
-      if (this.refreshTimeout) {
-        clearTimeout(this.refreshTimeout);
-      }
-
-      await supabase.auth.signOut();
-      this.broadcastSessionState({ event: 'SIGNED_OUT' });
-      useAuthStore.getState().reset();
-      
-      toast.success('Signed out successfully');
-    } catch (error) {
-      console.error('Sign out error:', error);
-      toast.error('Error signing out');
-    }
-  }
-
-  private broadcastSessionState(state: any): void {
-    localStorage.setItem('auth_session_state', JSON.stringify(state));
-  }
-
-  public checkSessionTimeout(): boolean {
-    const lastActivity = new Date(localStorage.getItem('last_activity') || this.lastActivity);
-    const now = new Date();
-    const minutesSinceLastActivity = (now.getTime() - lastActivity.getTime()) / (1000 * 60);
-
-    return minutesSinceLastActivity > this.config.timeoutMinutes;
-  }
-
-  public async validateSession(): Promise<boolean> {
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      if (error) throw error;
-
-      if (!session) return false;
-
-      if (this.checkSessionTimeout()) {
-        await this.handleSignOut();
-        toast.error('Session expired due to inactivity');
-        return false;
-      }
-
-      return true;
-    } catch (error) {
-      console.error('Session validation error:', error);
-      return false;
-    }
+  public startSession(): void {
+    this.updateLastActivity();
+    this.scheduleNextRefresh();
   }
 
   public destroy(): void {
-    if (typeof window !== 'undefined') {
-      ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(event => {
-        window.removeEventListener(event, this.boundHandleActivity);
-      });
-      window.removeEventListener('storage', this.boundHandleStorage);
-    }
+    if (typeof window === 'undefined') return;
+
+    this.activityEvents.forEach(event => {
+      window.removeEventListener(event, this.boundHandleActivity);
+    });
+    
+    window.removeEventListener('storage', this.boundHandleStorage);
 
     if (this.refreshTimeout) {
       clearTimeout(this.refreshTimeout);
     }
   }
 }
-
-export const sessionManager = SessionManager.getInstance();
