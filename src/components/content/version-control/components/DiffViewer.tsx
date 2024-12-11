@@ -82,14 +82,28 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2">
+    <div 
+      className="space-y-4"
+      role="main"
+      aria-label="Code difference viewer"
+    >
+      <div 
+        className="flex justify-between items-center"
+        role="toolbar"
+        aria-label="Diff viewer controls"
+      >
+        <div 
+          className="flex gap-2"
+          role="radiogroup"
+          aria-label="Diff type selection"
+        >
           <Button
             variant="outline"
             size="sm"
             onClick={() => setDiffType('word')}
             className={diffType === 'word' ? 'bg-primary/20' : ''}
+            role="radio"
+            aria-checked={diffType === 'word'}
           >
             Word Diff
           </Button>
@@ -98,16 +112,23 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             size="sm"
             onClick={() => setDiffType('char')}
             className={diffType === 'char' ? 'bg-primary/20' : ''}
+            role="radio"
+            aria-checked={diffType === 'char'}
           >
             Character Diff
           </Button>
         </div>
         
-        <div className="flex gap-2">
+        <div 
+          className="flex gap-2"
+          role="group"
+          aria-label="Section expansion controls"
+        >
           <Button
             variant="outline"
             size="sm"
             onClick={() => toggleAllSections(true)}
+            aria-label="Expand all sections"
           >
             Expand All
           </Button>
@@ -115,14 +136,22 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
             variant="outline"
             size="sm"
             onClick={() => toggleAllSections(false)}
+            aria-label="Collapse all sections"
           >
             Collapse All
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-4">
+      <div 
+        className="grid grid-cols-2 gap-4"
+        role="presentation"
+      >
+        <div 
+          className="space-y-4"
+          role="region"
+          aria-label="Previous version"
+        >
           <DiffMetadata metadata={oldMetadata || {}} label="Previous Version" />
           <Card className="relative">
             {sections.map((section, index) => (
@@ -141,7 +170,11 @@ export const DiffViewer: React.FC<DiffViewerProps> = ({
           </Card>
         </div>
 
-        <div className="space-y-4">
+        <div 
+          className="space-y-4"
+          role="region"
+          aria-label="Current version"
+        >
           <DiffMetadata metadata={newMetadata || {}} label="Current Version" />
           <Card className="relative">
             {sections.map((section, index) => (

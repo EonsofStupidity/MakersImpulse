@@ -30,7 +30,6 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
       return content;
     }
     
-    // Show only the first and last few lines when collapsed
     const start = content.slice(0, contextSize);
     const end = content.slice(-contextSize);
     
@@ -53,20 +52,39 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
       p-1 font-mono text-sm whitespace-pre-wrap
     `;
 
+    const changeType = line.added ? 'addition' : line.removed ? 'deletion' : 'unchanged';
+
     return (
-      <div key={index} className={lineClass}>
+      <div 
+        key={index} 
+        className={lineClass}
+        role="row"
+        aria-label={`Line ${line.lineNumber || index + 1}: ${changeType} - ${line.value}`}
+      >
         {showLineNumbers && (
-          <span className="inline-block w-12 text-right pr-4 text-zinc-500 select-none">
+          <span 
+            className="inline-block w-12 text-right pr-4 text-zinc-500 select-none"
+            role="rowheader"
+            aria-label={`Line ${line.lineNumber || index + 1}`}
+          >
             {line.lineNumber || index + 1}
           </span>
         )}
-        <span>{line.value}</span>
+        <span role="cell">{line.value}</span>
       </div>
     );
   };
 
+  const sectionType = metadata?.type || 'code section';
+  const lineRange = metadata ? `Lines ${metadata.startLine}-${metadata.endLine}` : '';
+
   return (
-    <Card className="relative">
+    <Card 
+      className="relative"
+      role="region"
+      aria-label={`${sectionType} ${lineRange}`}
+      aria-expanded={isExpanded}
+    >
       <div className="absolute right-2 top-2 flex gap-2">
         <Button
           variant="ghost"
@@ -74,34 +92,58 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
           onClick={toggleExpanded}
           className="h-8 w-8 p-0"
           aria-label={isExpanded ? 'Collapse section' : 'Expand section'}
+          aria-expanded={isExpanded}
+          aria-controls={`diff-content-${metadata?.startLine}`}
         >
           {isExpanded ? (
-            <ChevronUp className="h-4 w-4" />
+            <ChevronUp className="h-4 w-4" aria-hidden="true" />
           ) : (
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-4 w-4" aria-hidden="true" />
           )}
         </Button>
       </div>
       
       {metadata && (
-        <div className="px-4 py-2 border-b border-border/50 text-sm text-muted-foreground">
-          Lines {metadata.startLine}-{metadata.endLine} • {metadata.type}
+        <div 
+          className="px-4 py-2 border-b border-border/50 text-sm text-muted-foreground"
+          role="heading"
+          aria-level={2}
+        >
+          <span aria-label={`Section range: ${lineRange}`}>
+            Lines {metadata.startLine}-{metadata.endLine}
+          </span>
+          <span aria-label={`Change type: ${metadata.type}`}>
+            • {metadata.type}
+          </span>
         </div>
       )}
 
-      <ScrollArea className={`${isExpanded ? 'max-h-[400px]' : 'max-h-[200px]'}`}>
-        <div className="p-4">
+      <ScrollArea 
+        className={`${isExpanded ? 'max-h-[400px]' : 'max-h-[200px]'}`}
+        role="table"
+        aria-label="Code diff content"
+      >
+        <div 
+          className="p-4"
+          id={`diff-content-${metadata?.startLine}`}
+          role="rowgroup"
+        >
           {visibleContent.map((line, index) => renderLine(line, index))}
         </div>
       </ScrollArea>
 
       {!isExpanded && content.length > contextSize * 2 && (
-        <div className="p-2 text-center">
+        <div 
+          className="p-2 text-center"
+          role="complementary"
+          aria-live="polite"
+        >
           <Button
             variant="ghost"
             size="sm"
             onClick={expandContext}
             className="text-xs"
+            aria-label="Show more context lines"
           >
             Show more context
           </Button>
