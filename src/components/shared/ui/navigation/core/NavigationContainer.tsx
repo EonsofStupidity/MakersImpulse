@@ -46,35 +46,39 @@ export const NavigationContainer = ({ children }: NavigationContainerProps) => {
     });
   };
 
+  const neonCyan = theme?.neon_cyan || '#41f0db';
+  const neonPink = theme?.neon_pink || '#ff0abe';
+  const neonPurple = theme?.neon_purple || '#8000ff';
+
   return (
     <motion.nav 
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: parseFloat(theme?.transition_duration || '0.3') }}
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 h-[3.7rem]",
-        "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-5",
-        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.02]",
-        isScrolled && "shadow-lg backdrop-blur-lg"
+        "fixed top-0 left-0 right-0 z-[100] h-[3.7rem]",
+        "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-10",
+        "after:content-[''] after:absolute before:inset-0 after:bg-scratch-overlay after:opacity-[0.05]",
+        isScrolled && "shadow-lg shadow-black/20 backdrop-blur-xl"
       )}
       onMouseMove={handleMouseMove}
       onError={handleError}
       style={{
         background: `
           linear-gradient(135deg, 
-            rgba(77, 0, 179, ${isScrolled ? '0.2' : '0.1'}), 
-            rgba(114, 34, 140, ${isScrolled ? '0.2' : '0.1'}), 
-            rgba(176, 230, 83, ${isScrolled ? '0.2' : '0.1'})
+            rgba(77, 0, 179, ${isScrolled ? '0.3' : '0.2'}), 
+            rgba(114, 34, 140, ${isScrolled ? '0.3' : '0.2'}), 
+            rgba(176, 230, 83, ${isScrolled ? '0.3' : '0.2'})
           ),
           radial-gradient(
             circle at ${mousePosition.x}% ${mousePosition.y}%, 
-            ${theme?.neon_cyan || '#41f0db'}15, 
-            ${theme?.neon_pink || '#ff0abe'}15, 
-            ${theme?.neon_purple || '#8000ff'}15
+            ${neonCyan}25,
+            ${neonPink}25,
+            ${neonPurple}25
           )
         `,
-        backdropFilter: isScrolled ? 'blur(12px)' : 'blur(8px)',
-        borderBottom: `1px solid ${theme?.neon_purple || '#8000ff'}30`,
+        backdropFilter: isScrolled ? 'blur(16px)' : 'blur(12px)',
+        borderBottom: `1px solid ${neonPurple}50`,
         transition: `all ${theme?.transition_duration || '0.3s'} ease-in-out`,
       }}
     >
@@ -86,13 +90,27 @@ export const NavigationContainer = ({ children }: NavigationContainerProps) => {
 
       {/* Dynamic glow effect based on mouse position */}
       <div 
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none z-[-1]"
         style={{
           background: `radial-gradient(
             circle at ${mousePosition.x}% ${mousePosition.y}%,
-            ${theme?.neon_cyan || '#41f0db'}05,
-            transparent 15%
+            ${neonCyan}15,
+            transparent 25%
           )`,
+        }}
+      />
+
+      {/* Additional cyberpunk accent line */}
+      <div 
+        className="absolute bottom-0 left-0 right-0 h-[1px] opacity-50"
+        style={{
+          background: `linear-gradient(90deg, 
+            transparent,
+            ${neonCyan},
+            ${neonPink},
+            ${neonPurple},
+            transparent
+          )`
         }}
       />
     </motion.nav>
