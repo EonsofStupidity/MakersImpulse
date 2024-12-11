@@ -6,6 +6,8 @@ import {
   LayoutDashboard, LogOut, Database,
   Image, FileText
 } from "lucide-react";
+import { UserMenuHeader } from "./menu/UserMenuHeader";
+import { UserMenuItem } from "./menu/UserMenuItem";
 
 export const UserMenu = ({ onClose }: { onClose: () => void }) => {
   const navigate = useNavigate();
@@ -23,84 +25,55 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
                  overflow-hidden before:content-[''] before:absolute before:inset-0 before:bg-gradient-to-b 
                  before:from-[#41f0db]/5 before:to-[#8000ff]/5 before:pointer-events-none"
     >
-      <div className="p-4 border-b border-white/10">
-        <div className="flex items-center space-x-3">
-          <div className="flex-shrink-0">
-            <UserCircle className="w-10 h-10 text-[#41f0db]" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-white truncate">
-              {user?.email}
-            </p>
-            <p className="text-xs text-white/60">
-              {user?.role?.toUpperCase()}
-            </p>
-          </div>
-        </div>
-      </div>
+      <UserMenuHeader />
       
       <div className="p-2 space-y-1">
-        <button
+        <UserMenuItem
+          icon={UserCircle}
+          label="Profile"
           onClick={() => handleNavigation("/profile")}
-          className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                     hover:bg-white/5 rounded-lg transition-all duration-300 group relative overflow-hidden"
-        >
-          <UserCircle className="w-4 h-4" />
-          <span>Profile</span>
-        </button>
+        />
 
-        <button
+        <UserMenuItem
+          icon={Image}
+          label="Media"
           onClick={() => handleNavigation("/media")}
-          className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                     hover:bg-white/5 rounded-lg transition-all duration-300 group"
-        >
-          <Image className="w-4 h-4" />
-          <span>Media</span>
-        </button>
+        />
 
-        <button
+        <UserMenuItem
+          icon={Activity}
+          label="Activity"
           onClick={() => handleNavigation("/activity")}
-          className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                     hover:bg-white/5 rounded-lg transition-all duration-300 group"
-        >
-          <Activity className="w-4 h-4" />
-          <span>Activity</span>
-        </button>
+        />
 
         {user?.role === 'admin' && (
           <>
             <div className="h-px bg-white/10 my-2" />
-            <button
+            <UserMenuItem
+              icon={LayoutDashboard}
+              label="Admin Dashboard"
               onClick={() => handleNavigation("/admin/dashboard")}
-              className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                         hover:bg-white/5 rounded-lg transition-all duration-300 group"
-            >
-              <LayoutDashboard className="w-4 h-4" />
-              <span>Admin Dashboard</span>
-            </button>
-            <button
+            />
+            <UserMenuItem
+              icon={Database}
+              label="Data Maestro"
               onClick={() => handleNavigation("/admin/data-maestro")}
-              className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                         hover:bg-white/5 rounded-lg transition-all duration-300 group"
-            >
-              <Database className="w-4 h-4" />
-              <span>Data Maestro</span>
-            </button>
+            />
           </>
         )}
 
         <div className="h-px bg-white/10 my-2" />
         
-        <button
+        <UserMenuItem
+          icon={Settings}
+          label="Settings"
           onClick={() => handleNavigation("/settings")}
-          className="flex items-center space-x-2 w-full p-2 text-sm text-left text-white/80 hover:text-[#41f0db] 
-                     hover:bg-white/5 rounded-lg transition-all duration-300 group"
-        >
-          <Settings className="w-4 h-4" />
-          <span>Settings</span>
-        </button>
+        />
 
-        <button
+        <UserMenuItem
+          icon={LogOut}
+          label="Sign Out"
+          variant="danger"
           onClick={async () => {
             try {
               await signOut();
@@ -113,12 +86,7 @@ export const UserMenu = ({ onClose }: { onClose: () => void }) => {
               onClose();
             }
           }}
-          className="flex items-center space-x-2 w-full p-2 text-sm text-left text-red-400 hover:text-red-300 
-                     hover:bg-red-500/10 rounded-lg transition-all duration-300 group"
-        >
-          <LogOut className="w-4 h-4" />
-          <span>Sign Out</span>
-        </button>
+        />
       </div>
     </div>
   );
