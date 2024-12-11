@@ -31,6 +31,7 @@
   background: var(--admin-glass);
   border-bottom: 1px solid var(--admin-border);
   left: var(--sidebar-width, 16rem);
+  clip-path: polygon(0 0, 100% 0, 100% 70%, 95% 100%, 0 100%);
 }
 
 /* Admin Sidebar */
@@ -40,6 +41,13 @@
   background: linear-gradient(135deg, 
     rgba(77, 0, 179, 0.95), 
     rgba(114, 34, 140, 0.95)
+  );
+  clip-path: polygon(
+    0 0, 
+    100% 0, 
+    100% 85%, 
+    85% 100%, 
+    0 100%
   );
 }
 
