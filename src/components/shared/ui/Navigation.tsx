@@ -31,7 +31,7 @@ export const Navigation = () => {
         <div className="hidden md:block relative z-[60]">
           <UserAvatar
             size="lg"
-            className="transform translate-y-2"
+            className="transform translate-y-2 scale-115"
             onClick={() => setShowUserMenu(!showUserMenu)}
           />
           {showUserMenu && <UserMenu onClose={() => setShowUserMenu(false)} />}
