@@ -1186,6 +1186,10 @@ export type Database = {
           site_title: string
           spacing_unit: string | null
           tagline: string | null
+          text_animation_color: string | null
+          text_animation_duration: string | null
+          text_animation_enabled: boolean | null
+          text_animation_type: string | null
           text_heading_color: string | null
           text_link_color: string | null
           text_primary_color: string | null
@@ -1222,6 +1226,10 @@ export type Database = {
           site_title?: string
           spacing_unit?: string | null
           tagline?: string | null
+          text_animation_color?: string | null
+          text_animation_duration?: string | null
+          text_animation_enabled?: boolean | null
+          text_animation_type?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
@@ -1258,6 +1266,10 @@ export type Database = {
           site_title?: string
           spacing_unit?: string | null
           tagline?: string | null
+          text_animation_color?: string | null
+          text_animation_duration?: string | null
+          text_animation_enabled?: boolean | null
+          text_animation_type?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
@@ -1277,6 +1289,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      text_animation_presets: {
+        Row: {
+          color: string
+          created_at: string | null
+          description: string | null
+          duration: string
+          id: string
+          name: string
+          timing_function: string | null
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          color: string
+          created_at?: string | null
+          description?: string | null
+          duration: string
+          id?: string
+          name: string
+          timing_function?: string | null
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          color?: string
+          created_at?: string | null
+          description?: string | null
+          duration?: string
+          id?: string
+          name?: string
+          timing_function?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       trusted_devices: {
         Row: {
