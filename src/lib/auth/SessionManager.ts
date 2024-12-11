@@ -53,6 +53,36 @@ export class SessionManager {
     this.destroy();
   }
 
+  public async handleSignOut(): Promise<void> {
+    try {
+      // Clear any active timeouts
+      if (this.refreshTimeout) {
+        clearTimeout(this.refreshTimeout);
+      }
+
+      // Remove event listeners
+      if (typeof window !== 'undefined') {
+        this.activityEvents.forEach(event => {
+          window.removeEventListener(event, this.boundHandleActivity);
+        });
+      }
+
+      // Clean up sync mechanism
+      if (this.cleanupSync) {
+        this.cleanupSync();
+        this.cleanupSync = null;
+      }
+
+      // Clear session data
+      this.lastActivity = new Date();
+      
+      console.log('Session cleanup completed during sign out');
+    } catch (error) {
+      console.error('Error during session cleanup:', error);
+      throw error;
+    }
+  }
+
   public startSession(): void {
     this.updateLastActivity();
     this.scheduleNextRefresh();
