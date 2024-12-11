@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { useVirtualizer } from '@tanstack/react-virtual';
 import type { DiffSectionProps, DiffChange } from '../types/diff';
 
 export const DiffSection: React.FC<DiffSectionProps> = ({
@@ -15,6 +16,7 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
   const [contextSize, setContextSize] = useState(contextLines);
+  const parentRef = React.useRef<HTMLDivElement>(null);
 
   const toggleExpanded = useCallback(() => {
     setIsExpanded(!isExpanded);
@@ -44,6 +46,13 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
     ];
   }, [content, isExpanded, contextSize]);
 
+  const rowVirtualizer = useVirtualizer({
+    count: visibleContent.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 24, // Estimated height of each row
+    overscan: 5
+  });
+
   const renderLine = (line: DiffChange, index: number) => {
     const lineClass = `
       ${line.added ? 'bg-green-500/20 text-green-400' : ''}
@@ -56,7 +65,6 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
 
     return (
       <div 
-        key={index} 
         className={lineClass}
         role="row"
         aria-label={`Line ${line.lineNumber || index + 1}: ${changeType} - ${line.value}`}
@@ -118,19 +126,36 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
         </div>
       )}
 
-      <ScrollArea 
-        className={`${isExpanded ? 'max-h-[400px]' : 'max-h-[200px]'}`}
+      <div 
+        ref={parentRef}
+        className={`${isExpanded ? 'h-[400px]' : 'h-[200px]'} overflow-auto`}
         role="table"
         aria-label="Code diff content"
       >
-        <div 
-          className="p-4"
-          id={`diff-content-${metadata?.startLine}`}
-          role="rowgroup"
+        <div
+          style={{
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            width: '100%',
+            position: 'relative'
+          }}
         >
-          {visibleContent.map((line, index) => renderLine(line, index))}
+          {rowVirtualizer.getVirtualItems().map((virtualRow) => (
+            <div
+              key={virtualRow.index}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: `${virtualRow.size}px`,
+                transform: `translateY(${virtualRow.start}px)`
+              }}
+            >
+              {renderLine(visibleContent[virtualRow.index], virtualRow.index)}
+            </div>
+          ))}
         </div>
-      </ScrollArea>
+      </div>
 
       {!isExpanded && content.length > contextSize * 2 && (
         <div 
