@@ -1,16 +1,20 @@
 import type { Change } from 'diff';
 
-// Core types for diff functionality
+// Core types and enums
 export type DiffHighlightMode = 'char' | 'word' | 'line';
 export type DiffViewMode = 'unified' | 'split';
 export type DiffSearchMode = 'simple' | 'regex' | 'fuzzy';
+export type DiffChangeType = 'addition' | 'deletion' | 'modification' | 'context';
+export type DiffTheme = 'light' | 'dark' | 'high-contrast';
+export type DiffType = 'chars' | 'words';
 
-// Search functionality
+// Search and Navigation interfaces
 export interface DiffSearchMatch {
   lineNumber: number;
   matchStart: number;
   matchEnd: number;
   content: string;
+  type: DiffChangeType;
 }
 
 export interface DiffSearchState {
@@ -22,22 +26,84 @@ export interface DiffSearchState {
   caseSensitive: boolean;
 }
 
-// Navigation state
 export interface DiffNavigationState {
   currentIndex: number;
   totalChanges: number;
   type: DiffHighlightMode;
 }
 
-// Enhanced diff change type
+// Content and Metadata interfaces
 export interface DiffChange extends Omit<Change, 'added' | 'removed'> {
   value: string;
   added: boolean;
   removed: boolean;
   lineNumber?: number;
+  metadata?: DiffLineMetadata;
 }
 
-// Component Props
+export interface DiffLineMetadata {
+  author: string;
+  timestamp: Date;
+  commitId?: string;
+  lineHistory?: DiffLineHistory[];
+}
+
+export interface DiffLineHistory {
+  author: string;
+  timestamp: Date;
+  change: string;
+}
+
+export interface DiffSection {
+  id: string;
+  startLine: number;
+  endLine: number;
+  type: DiffChangeType;
+  isExpanded: boolean;
+  content: DiffChange[];
+}
+
+export interface DiffFileMetadata {
+  path: string;
+  size: number;
+  lastModified: Date;
+  mimeType?: string;
+}
+
+export interface DiffAuthorMetadata {
+  name: string;
+  email: string;
+  timestamp: Date;
+}
+
+export interface DiffMetadata {
+  totalAdditions: number;
+  totalDeletions: number;
+  totalModifications: number;
+  fileInfo: DiffFileMetadata;
+  authorInfo: DiffAuthorMetadata;
+}
+
+// Component Props interfaces
+export interface DiffViewerOptions {
+  highlightMode: DiffHighlightMode;
+  viewMode: DiffViewMode;
+  theme: DiffTheme;
+  showLineNumbers: boolean;
+  contextLines: number;
+  performance: DiffPerformanceOptions;
+  accessibility: DiffAccessibilityConfig;
+}
+
+export interface DiffViewerProps {
+  oldContent: string;
+  newContent: string;
+  options?: DiffViewerOptions;
+  metadata?: DiffMetadata;
+  onNavigate?: (index: number) => void;
+  onSearch?: (query: string) => void;
+}
+
 export interface DiffControlsProps {
   navigation: DiffNavigationState;
   viewMode: DiffViewMode;
@@ -51,17 +117,27 @@ export interface DiffControlsProps {
   onToggleRegex: () => void;
 }
 
-// Section management
-export interface DiffSection {
-  id: string;
-  startLine: number;
-  endLine: number;
-  type: 'addition' | 'deletion' | 'modification' | 'context';
+export interface DiffSectionProps {
+  section: DiffSection;
   isExpanded: boolean;
-  content: string[];
+  onToggle: () => void;
+  metadata?: DiffMetadata;
 }
 
-// Context types
+export interface DiffMetadataProps {
+  metadata: DiffMetadata;
+  viewMode: DiffViewMode;
+  onViewModeChange: (mode: DiffViewMode) => void;
+}
+
+export interface DiffSearchProps {
+  searchState: DiffSearchState;
+  onSearch: (query: string) => void;
+  onCaseToggle: () => void;
+  onModeChange: (mode: DiffSearchMode) => void;
+}
+
+// Context and State Management
 export interface DiffContextValue {
   navigation: DiffNavigationState;
   searchState: DiffSearchState;
@@ -77,7 +153,7 @@ export interface DiffContextValue {
   toggleAllSections: (expanded: boolean) => void;
 }
 
-// Accessibility types
+// Accessibility and Performance interfaces
 export interface DiffAccessibilityConfig {
   ariaLabels: {
     viewer: string;
@@ -96,10 +172,27 @@ export interface DiffAccessibilityConfig {
   };
 }
 
-// Main DiffViewer props
-export interface DiffViewerProps {
-  oldContent: string;
-  newContent: string;
-  oldMetadata?: Record<string, any>;
-  newMetadata?: Record<string, any>;
+export interface DiffPerformanceOptions {
+  chunkSize: number;
+  virtualizedOptions: {
+    overscanCount: number;
+    itemSize: number;
+  };
+  deferredLoading: boolean;
+  memoizationKey: string;
+}
+
+// Testing interfaces
+export interface DiffTestCase {
+  input: {
+    oldContent: string;
+    newContent: string;
+    options?: DiffViewerOptions;
+  };
+  expected: {
+    additions: number;
+    deletions: number;
+    modifications: number;
+    sections: DiffSection[];
+  };
 }
