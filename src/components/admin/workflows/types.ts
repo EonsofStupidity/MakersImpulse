@@ -77,12 +77,10 @@ export const parseStages = (stages: Json): WorkflowStage[] => {
 export const validateStage = (stage: WorkflowStage): { isValid: boolean; errors: string[] } => {
   const errors: string[] = [];
 
-  // Required field validation
   if (!stage.name.trim()) {
     errors.push('Stage name is required');
   }
 
-  // Type-specific validation
   switch (stage.type) {
     case 'approval':
       if (!stage.config.requiredApprovers || stage.config.requiredApprovers < 1) {
@@ -101,7 +99,6 @@ export const validateStage = (stage: WorkflowStage): { isValid: boolean; errors:
       break;
   }
 
-  // Custom validation rules
   stage.validationRules?.forEach(rule => {
     if (rule.type === 'required' && !stage.config[rule.field]) {
       errors.push(rule.message || `${rule.field} is required`);
@@ -114,9 +111,24 @@ export const validateStage = (stage: WorkflowStage): { isValid: boolean; errors:
   };
 };
 
+// Enterprise-level type definitions for stage updates
 export type StageUpdateFunction = (stageId: string, updates: Partial<WorkflowStage>) => void;
 
 export interface StageConfigUpdateProps {
   stage: WorkflowStage;
-  onUpdate: StageUpdateFunction;
+  onUpdate: (updates: Partial<WorkflowStage>) => void;
+}
+
+// Type guard to ensure stage updates are valid
+export function isValidStageUpdate(update: Partial<WorkflowStage>): boolean {
+  const requiredKeys: (keyof WorkflowStage)[] = ['id', 'type'];
+  return !requiredKeys.some(key => key in update && !update[key]);
+}
+
+// Utility function to safely update stage configuration
+export function createStageUpdate(stageId: string, updates: Partial<WorkflowStage>): { id: string } & Partial<WorkflowStage> {
+  return {
+    id: stageId,
+    ...updates
+  };
 }

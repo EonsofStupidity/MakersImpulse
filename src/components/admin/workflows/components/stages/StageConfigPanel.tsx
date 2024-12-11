@@ -3,14 +3,14 @@ import { ApprovalConfig } from './config/ApprovalConfig';
 import { ReviewConfig } from './config/ReviewConfig';
 import { TaskConfig } from './config/TaskConfig';
 import { NotificationConfig } from './config/NotificationConfig';
-import type { WorkflowStage, StageConfigUpdateProps } from '../../types';
+import type { WorkflowStage, StageConfigUpdateProps, createStageUpdate } from '../../types';
 
 export const StageConfigPanel: React.FC<StageConfigUpdateProps> = ({ 
   stage,
   onUpdate
 }) => {
   const handleConfigChange = (config: WorkflowStage['config']) => {
-    onUpdate(stage.id, { config });
+    onUpdate({ config });
   };
 
   const renderConfig = () => {

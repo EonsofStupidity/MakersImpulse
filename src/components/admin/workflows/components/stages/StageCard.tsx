@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import { GripVertical, X, AlertCircle } from 'lucide-react';
 import { StageTypeSelector } from './StageTypeSelector';
 import { StageConfigPanel } from './StageConfigPanel';
-import type { WorkflowStage, StageUpdateFunction } from '../../types';
-import { validateStage } from '../../types';
+import type { WorkflowStage, StageUpdateFunction, createStageUpdate } from '../../types';
+import { validateStage, isValidStageUpdate } from '../../types';
 
 interface StageCardProps {
   stage: WorkflowStage;
@@ -26,21 +26,33 @@ export const StageCard = ({
 }: StageCardProps) => {
   const validation = validateStage(stage);
 
-  // Type-safe event handlers
+  // Type-safe event handlers with validation
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onUpdate(stage.id, { name: e.target.value });
+    const update = createStageUpdate(stage.id, { name: e.target.value });
+    if (isValidStageUpdate(update)) {
+      onUpdate(stage.id, update);
+    }
   };
 
   const handleTypeChange = (value: WorkflowStage['type']) => {
-    onUpdate(stage.id, { type: value });
+    const update = createStageUpdate(stage.id, { type: value });
+    if (isValidStageUpdate(update)) {
+      onUpdate(stage.id, update);
+    }
   };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onUpdate(stage.id, { description: e.target.value });
+    const update = createStageUpdate(stage.id, { description: e.target.value });
+    if (isValidStageUpdate(update)) {
+      onUpdate(stage.id, update);
+    }
   };
 
   const handleConfigUpdate = (updates: Partial<WorkflowStage>) => {
-    onUpdate(stage.id, updates);
+    const update = createStageUpdate(stage.id, updates);
+    if (isValidStageUpdate(update)) {
+      onUpdate(stage.id, update);
+    }
   };
 
   const handleDelete = () => {
