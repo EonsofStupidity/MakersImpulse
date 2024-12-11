@@ -1196,6 +1196,7 @@ export type Database = {
           text_secondary_color: string | null
           theme_mode: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration: string | null
+          transition_settings: Json | null
           transition_type: string | null
           updated_at: string | null
           updated_by: string | null
@@ -1236,6 +1237,7 @@ export type Database = {
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
+          transition_settings?: Json | null
           transition_type?: string | null
           updated_at?: string | null
           updated_by?: string | null
@@ -1276,6 +1278,7 @@ export type Database = {
           text_secondary_color?: string | null
           theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
+          transition_settings?: Json | null
           transition_type?: string | null
           updated_at?: string | null
           updated_by?: string | null
@@ -1321,6 +1324,36 @@ export type Database = {
           id?: string
           name?: string
           timing_function?: string | null
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      transition_presets: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          settings: Json
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name: string
+          settings?: Json
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          settings?: Json
           type?: string
           updated_at?: string | null
         }
