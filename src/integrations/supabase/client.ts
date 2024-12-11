@@ -15,22 +15,60 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
     headers: {
       'Content-Type': 'application/json'
     }
+  },
+  db: {
+    schema: 'public'
+  },
+  // Add retries for failed requests
+  realtime: {
+    params: {
+      eventsPerSecond: 10
+    }
   }
 });
 
 // Export utility functions that use the single client instance
 export const uploadMedia = async (file: File) => {
-  const { data, error } = await supabase.storage
-    .from('media')
-    .upload(`uploads/${Date.now()}-${file.name}`, file);
+  try {
+    const { data, error } = await supabase.storage
+      .from('media')
+      .upload(`uploads/${Date.now()}-${file.name}`, file);
 
-  if (error) {
+    if (error) {
+      console.error('Media upload error:', error);
+      throw error;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('media')
+      .getPublicUrl(data.path);
+
+    return publicUrl;
+  } catch (error) {
+    console.error('Error in uploadMedia:', error);
     throw error;
   }
+};
 
-  const { data: { publicUrl } } = supabase.storage
-    .from('media')
-    .getPublicUrl(data.path);
-
-  return publicUrl;
+// Add a helper function to handle retries
+export const withRetry = async <T>(
+  operation: () => Promise<T>,
+  maxRetries = 3,
+  delay = 1000
+): Promise<T> => {
+  let lastError: Error | null = null;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Attempt ${i + 1} failed:`, error);
+      lastError = error as Error;
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
+  }
+  
+  throw lastError;
 };

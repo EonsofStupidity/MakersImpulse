@@ -1,23 +1,40 @@
 import { motion } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, withRetry } from "@/integrations/supabase/client";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Database, Filter, Search, SortAsc } from "lucide-react";
 import { TableRowSkeleton } from "@/components/shared/ui/loading/LoadingStates";
+import { toast } from "sonner";
 
 export const TableView = () => {
-  const { data: projects, isLoading } = useQuery({
+  const { data: projects, isLoading, error } = useQuery({
     queryKey: ['maker-projects'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('maker_projects')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(5);
-      
-      if (error) throw error;
-      return data;
+      return withRetry(async () => {
+        console.log('Fetching maker projects...');
+        const { data, error } = await supabase
+          .from('maker_projects')
+          .select('*')
+          .order('created_at', { ascending: false })
+          .limit(5);
+        
+        if (error) {
+          console.error('Error fetching projects:', error);
+          throw error;
+        }
+
+        console.log('Successfully fetched projects:', data);
+        return data;
+      });
     },
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    onError: (error) => {
+      console.error('Failed to fetch projects:', error);
+      toast.error('Failed to load projects', {
+        description: 'Please try again later'
+      });
+    }
   });
 
   return (

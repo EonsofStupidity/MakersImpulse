@@ -19,19 +19,13 @@ const securityHeaders = {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { 
-      headers: {
-        ...corsHeaders,
-        'Access-Control-Max-Age': '86400',
-      }
-    });
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     console.log('Applying security headers...');
     
-    // Add security headers to the response
-    const response = new Response(
+    return new Response(
       JSON.stringify({ 
         message: 'Security headers applied',
         success: true 
@@ -44,8 +38,6 @@ serve(async (req) => {
         }
       }
     );
-
-    return response;
   } catch (error) {
     console.error('Error in security-headers function:', error);
     
