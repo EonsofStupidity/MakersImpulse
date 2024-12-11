@@ -18,7 +18,9 @@ export const StagesManager = ({ stages, onChange }: StagesManagerProps) => {
       id: crypto.randomUUID(),
       name: '',
       description: '',
-      order: stages.length
+      type: 'task', // Set a default type
+      order: stages.length,
+      config: {} // Add empty config object
     };
     onChange([...stages, newStage]);
   };
