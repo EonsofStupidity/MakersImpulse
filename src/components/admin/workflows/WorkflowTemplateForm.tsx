@@ -31,21 +31,27 @@ export const WorkflowTemplateForm = () => {
     queryFn: async () => {
       if (isNewTemplate) return null;
       
-      const { data, error } = await supabase
-        .from('workflow_templates')
-        .select('*')
-        .eq('id', id)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('workflow_templates')
+          .select('*')
+          .eq('id', id)
+          .single();
 
-      if (error) throw error;
-      
-      // Parse the data into the correct type
-      const parsedTemplate: WorkflowTemplate = {
-        ...data,
-        stages: parseStages(data.stages)
-      };
-      
-      return parsedTemplate;
+        if (error) throw error;
+        
+        // Parse the data into the correct type
+        const parsedTemplate: WorkflowTemplate = {
+          ...data,
+          stages: parseStages(data.stages)
+        };
+        
+        return parsedTemplate;
+      } catch (error) {
+        console.error('Error fetching template:', error);
+        toast.error('Failed to fetch template');
+        throw error;
+      }
     },
     enabled: !isNewTemplate
   });
@@ -70,25 +76,30 @@ export const WorkflowTemplateForm = () => {
         is_active: data.is_active
       };
 
-      if (isNewTemplate) {
-        const { data: newTemplate, error } = await supabase
-          .from('workflow_templates')
-          .insert([templateData])
-          .select()
-          .single();
+      try {
+        if (isNewTemplate) {
+          const { data: newTemplate, error } = await supabase
+            .from('workflow_templates')
+            .insert([templateData])
+            .select()
+            .single();
 
-        if (error) throw error;
-        return newTemplate;
-      } else {
-        const { data: updatedTemplate, error } = await supabase
-          .from('workflow_templates')
-          .update(templateData)
-          .eq('id', id)
-          .select()
-          .single();
+          if (error) throw error;
+          return newTemplate;
+        } else {
+          const { data: updatedTemplate, error } = await supabase
+            .from('workflow_templates')
+            .update(templateData)
+            .eq('id', id)
+            .select()
+            .single();
 
-        if (error) throw error;
-        return updatedTemplate;
+          if (error) throw error;
+          return updatedTemplate;
+        }
+      } catch (error) {
+        console.error('Error saving template:', error);
+        throw error;
       }
     },
     onSuccess: () => {

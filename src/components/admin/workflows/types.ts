@@ -5,6 +5,7 @@ export interface WorkflowStage {
   name: string;
   description?: string;
   order: number;
+  [key: string]: Json | undefined; // Add index signature for Json compatibility
 }
 
 export interface WorkflowTemplate {
@@ -27,7 +28,7 @@ export interface WorkflowFormData {
 
 // Helper functions to convert between DB and UI types
 export const serializeStages = (stages: WorkflowStage[]): Json => {
-  return stages as unknown as Json;
+  return JSON.parse(JSON.stringify(stages)) as Json;
 };
 
 export const parseStages = (stages: Json): WorkflowStage[] => {
