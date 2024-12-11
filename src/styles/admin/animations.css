@@ -14,6 +14,11 @@
   to { transform: translateX(0); }
 }
 
+@keyframes adminGlow {
+  0%, 100% { filter: brightness(100%); }
+  50% { filter: brightness(120%); }
+}
+
 /* Animation Classes */
 .admin-fade-in {
   animation: adminFadeIn 0.3s ease-out;
@@ -27,13 +32,17 @@
   animation: adminSlideIn 0.3s ease-out;
 }
 
+.admin-glow {
+  animation: adminGlow 2s ease-in-out infinite;
+}
+
 /* Hover Effects */
 .admin-hover-glow {
   @apply transition-all duration-300;
 }
 
 .admin-hover-glow:hover {
-  filter: drop-shadow(0 0 8px rgba(65, 240, 219, 0.5));
+  filter: drop-shadow(0 0 8px var(--admin-cyan));
 }
 
 /* Loading States */
