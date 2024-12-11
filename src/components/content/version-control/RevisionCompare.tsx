@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { VersionSelector } from './components/VersionSelector';
 import { RevisionContent } from './components/RevisionContent';
+import { RevisionDiff } from './components/RevisionDiff';
+import { RevisionMetadata } from './components/RevisionMetadata';
+import { RollbackConfirmation } from './components/RollbackConfirmation';
 import type { ContentRevision } from '@/integrations/supabase/types/content';
 
 interface RevisionCompareProps {
@@ -24,6 +26,9 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
     right: currentVersion || 1
   });
 
+  const [showRollbackConfirm, setShowRollbackConfirm] = useState(false);
+  const [rollbackVersion, setRollbackVersion] = useState<number | null>(null);
+
   const { data: revisions, isLoading } = useQuery({
     queryKey: ['content-revisions', contentId],
     queryFn: async () => {
@@ -40,6 +45,7 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
           created_by,
           version_number,
           change_summary,
+          rollback_metadata,
           profiles (
             display_name
           )
@@ -53,41 +59,27 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
         throw error;
       }
 
-      return data.map(revision => ({
-        id: revision.id,
-        contentId: revision.content_id,
-        content: revision.content,
-        metadata: revision.metadata,
-        createdAt: revision.created_at,
-        createdBy: revision.created_by,
-        versionNumber: revision.version_number,
-        changeSummary: revision.change_summary,
-        profiles: revision.profiles
-      })) as ContentRevision[];
+      return data as ContentRevision[];
     },
     enabled: !!contentId,
   });
 
-  const getSelectedRevisions = () => {
-    if (!revisions) return { left: null, right: null };
-    
-    const left = revisions.find(r => r.versionNumber === selectedVersions.left);
-    const right = revisions.find(r => r.versionNumber === selectedVersions.right);
-    
-    return { left, right };
-  };
+  const handleRollback = async (version: number) => {
+    try {
+      const { data, error } = await supabase.rpc('create_rollback_revision', {
+        p_content_id: contentId,
+        p_target_version_number: version,
+        p_current_content: revisions?.find(r => r.versionNumber === version)?.content,
+        p_user_id: (await supabase.auth.getUser()).data.user?.id
+      });
 
-  const handleVersionChange = (direction: 'left' | 'right', increment: boolean) => {
-    if (!revisions?.length) return;
-
-    const currentValue = selectedVersions[direction];
-    const newValue = increment ? currentValue + 1 : currentValue - 1;
-    
-    if (newValue >= 1 && newValue <= revisions.length) {
-      setSelectedVersions(prev => ({
-        ...prev,
-        [direction]: newValue
-      }));
+      if (error) throw error;
+      
+      toast.success('Successfully rolled back to version ' + version);
+      setShowRollbackConfirm(false);
+    } catch (error) {
+      console.error('Rollback error:', error);
+      toast.error('Failed to rollback version');
     }
   };
 
@@ -107,29 +99,84 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
     );
   }
 
+  const getSelectedRevisions = () => {
+    if (!revisions) return { left: null, right: null };
+    
+    const left = revisions.find(r => r.versionNumber === selectedVersions.left);
+    const right = revisions.find(r => r.versionNumber === selectedVersions.right);
+    
+    return { left, right };
+  };
+
   const { left, right } = getSelectedRevisions();
 
   return (
-    <div className="grid grid-cols-2 gap-4">
-      {/* Left Version */}
-      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
-        <VersionSelector
-          versionNumber={selectedVersions.left}
-          maxVersion={revisions.length}
-          onVersionChange={(increment) => handleVersionChange('left', increment)}
-        />
-        <RevisionContent revision={left} />
-      </Card>
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        {/* Left Version */}
+        <div className="space-y-4">
+          <VersionSelector
+            versionNumber={selectedVersions.left}
+            maxVersion={revisions.length}
+            onVersionChange={(increment) => {
+              const newValue = increment ? selectedVersions.left + 1 : selectedVersions.left - 1;
+              if (newValue >= 1 && newValue <= revisions.length) {
+                setSelectedVersions(prev => ({ ...prev, left: newValue }));
+              }
+            }}
+          />
+          {left && (
+            <RevisionMetadata
+              revision={left}
+              showRollbackButton
+              onRollbackClick={() => {
+                setRollbackVersion(left.versionNumber);
+                setShowRollbackConfirm(true);
+              }}
+            />
+          )}
+        </div>
 
-      {/* Right Version */}
-      <Card className="p-4 bg-background/50 backdrop-blur-sm border-primary/20">
-        <VersionSelector
-          versionNumber={selectedVersions.right}
-          maxVersion={revisions.length}
-          onVersionChange={(increment) => handleVersionChange('right', increment)}
+        {/* Right Version */}
+        <div className="space-y-4">
+          <VersionSelector
+            versionNumber={selectedVersions.right}
+            maxVersion={revisions.length}
+            onVersionChange={(increment) => {
+              const newValue = increment ? selectedVersions.right + 1 : selectedVersions.right - 1;
+              if (newValue >= 1 && newValue <= revisions.length) {
+                setSelectedVersions(prev => ({ ...prev, right: newValue }));
+              }
+            }}
+          />
+          {right && (
+            <RevisionMetadata
+              revision={right}
+              showRollbackButton
+              onRollbackClick={() => {
+                setRollbackVersion(right.versionNumber);
+                setShowRollbackConfirm(true);
+              }}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Diff View */}
+      {left && right && (
+        <RevisionDiff
+          oldContent={JSON.stringify(left.content, null, 2)}
+          newContent={JSON.stringify(right.content, null, 2)}
         />
-        <RevisionContent revision={right} />
-      </Card>
+      )}
+
+      {/* Rollback Confirmation */}
+      <RollbackConfirmation
+        isOpen={showRollbackConfirm}
+        onClose={() => setShowRollbackConfirm(false)}
+        onConfirm={() => rollbackVersion && handleRollback(rollbackVersion)}
+        versionNumber={rollbackVersion || 0}
+      />
     </div>
   );
 };
