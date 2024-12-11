@@ -74,7 +74,7 @@ const AuthGuardContent = ({
 
     return () => {
       if (session?.user) {
-        sessionManager.cleanup();
+        sessionManager.destroy();
         securityManager.clearSecurityData();
       }
     };

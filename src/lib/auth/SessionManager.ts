@@ -119,6 +119,11 @@ export class SessionManager {
       clearTimeout(this.refreshTimeout);
     }
   }
+
+  // Add cleanup as an alias for destroy for backward compatibility
+  public cleanup(): void {
+    this.destroy();
+  }
 }
 
 const DEFAULT_CONFIG: SessionConfig = {

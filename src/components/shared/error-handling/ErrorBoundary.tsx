@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 interface Props {
   children: React.ReactNode;
+  fallback?: React.ComponentType<{ error: Error }>;
 }
 
 interface State {
@@ -27,7 +28,6 @@ export class ErrorBoundary extends React.Component<Props, State> {
   public componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error("Uncaught error:", error, errorInfo);
     
-    // Show toast notification for critical errors
     toast.error("An unexpected error occurred", {
       description: error.message,
       duration: 5000,
@@ -41,6 +41,11 @@ export class ErrorBoundary extends React.Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        const FallbackComponent = this.props.fallback;
+        return <FallbackComponent error={this.state.error!} />;
+      }
+
       return (
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -43,7 +43,7 @@ export const useAuthSetup = () => {
         } catch (validationError) {
           console.error('Auth validation failed:', validationError);
           clearCSRFToken();
-          sessionManager.cleanup();
+          sessionManager.destroy();
           securityManager.clearSecurityData();
           await supabase.auth.signOut();
           throw validationError;
@@ -60,7 +60,7 @@ export const useAuthSetup = () => {
           } catch (refreshError) {
             console.error('Session refresh failed:', refreshError);
             clearCSRFToken();
-            sessionManager.cleanup();
+            sessionManager.destroy();
             securityManager.clearSecurityData();
             await supabase.auth.signOut();
             toast.error('Session expired. Please sign in again.');
@@ -74,7 +74,7 @@ export const useAuthSetup = () => {
         retryAttempts.current = 0;
       } else {
         clearCSRFToken();
-        sessionManager.cleanup();
+        sessionManager.destroy();
         securityManager.clearSecurityData();
         await handleSessionUpdate(session);
         toast.success('Signed out successfully');
