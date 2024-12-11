@@ -3,7 +3,7 @@ import { useAuthStore } from '@/lib/store/auth-store';
 import { toast } from "sonner";
 import { useSessionManagement } from './auth/useSessionManagement';
 import { useAuthValidation } from './auth/useAuthValidation';
-import { handleSessionTimeout } from '@/utils/auth/securityHandlers';
+import { handleSecurityEvent, handleSessionTimeout } from '@/utils/auth/securityHandlers';
 import { supabase } from "@/integrations/supabase/client";
 
 export const useAuthSetup = () => {

@@ -7,7 +7,7 @@ export const validateSession = async (session: any) => {
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('is_banned, banned_until')
+    .select('is_banned')
     .eq('id', session.user.id)
     .single();
 
