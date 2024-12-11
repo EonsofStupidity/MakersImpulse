@@ -10,6 +10,7 @@ import { Toaster, toast } from "sonner";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuthSetup } from '@/hooks/useAuthSetup';
+import { motion, AnimatePresence } from "framer-motion";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,11 +49,10 @@ const App = () => {
 
     let retryCount = 0;
     const maxRetries = 3;
-    const retryDelay = 1000; // 1 second
+    const retryDelay = 1000;
 
     const setupAuth = async () => {
       try {
-        // Get initial session
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
@@ -79,7 +79,6 @@ const App = () => {
 
     setupAuth();
 
-    // Listen for auth changes with error handling
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
@@ -94,7 +93,6 @@ const App = () => {
       }
     });
     
-    // Cleanup subscriptions
     return () => {
       subscription.unsubscribe();
     };
@@ -107,17 +105,25 @@ const App = () => {
           <AdminSidebarProvider>
             <ThemeProvider>
               <TooltipProvider>
-                <div className="app-container">
-                  <RootLayout>
-                    <AppRoutes />
-                  </RootLayout>
-                  <Toaster 
-                    position="top-right" 
-                    expand={false} 
-                    richColors 
-                    closeButton 
-                  />
-                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div 
+                    className="app-container"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <RootLayout>
+                      <AppRoutes />
+                    </RootLayout>
+                    <Toaster 
+                      position="top-right" 
+                      expand={false} 
+                      richColors 
+                      closeButton 
+                    />
+                  </motion.div>
+                </AnimatePresence>
               </TooltipProvider>
             </ThemeProvider>
           </AdminSidebarProvider>

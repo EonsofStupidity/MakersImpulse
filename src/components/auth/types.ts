@@ -19,6 +19,7 @@ export interface AuthState {
   isLoading: boolean;
   hasAccess: boolean;
   error: Error | { message: string } | null;
+  isTransitioning?: boolean;
 }
 
 export interface AuthGuardProps {

@@ -7,6 +7,7 @@ import { checkRateLimit } from '@/utils/rateLimiting';
 import { validateSession, handleSecurityEvent, handleSessionTimeout } from '@/utils/auth/securityHandlers';
 import { refreshSession, registerUserSession, cleanupUserSessions } from '@/utils/auth/sessionManager';
 import { executeWithRetry, defaultRetryConfig } from '@/utils/auth/retryHandler';
+import { motion, AnimatePresence } from "framer-motion";
 
 const MAX_AUTH_ATTEMPTS = 3;
 const AUTH_WINDOW = '5 minutes';
@@ -25,6 +26,9 @@ export const useAuthSetup = () => {
       if (sessionTimeoutRef.current) clearTimeout(sessionTimeoutRef.current);
 
       if (session?.user) {
+        // Show loading toast for better UX
+        const loadingToast = toast.loading('Authenticating...');
+
         // Validate session and check rate limits
         const [isValid, withinLimit] = await Promise.all([
           validateSession(session),
@@ -67,6 +71,12 @@ export const useAuthSetup = () => {
         
         await handleSecurityEvent(session.user.id, 'successful_auth', 'low');
         
+        // Dismiss loading toast and show success
+        toast.dismiss(loadingToast);
+        toast.success('Successfully authenticated', {
+          description: `Welcome back${profile.display_name ? `, ${profile.display_name}` : ''}!`,
+        });
+        
       } else {
         // Cleanup on signout
         storeSessionLocally(null);
@@ -77,6 +87,8 @@ export const useAuthSetup = () => {
         if (currentUser.data.user) {
           await cleanupUserSessions(currentUser.data.user.id);
         }
+
+        toast.success('Signed out successfully');
       }
     } catch (error) {
       console.error('Error in auth change handler:', error);
