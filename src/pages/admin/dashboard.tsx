@@ -26,45 +26,45 @@ const AdminDashboard = () => {
       {/* Background layers */}
       <div className="fixed inset-0 bg-[#151A24] z-0" />
       <div 
-        className="fixed inset-0 bg-gradient-to-b from-brand-purple/20 via-brand-magenta/20 to-transparent z-0"
+        className="fixed inset-0 bg-gradient-to-b from-[var(--admin-purple)]/20 via-[var(--admin-pink)]/20 to-transparent z-0"
         style={{
           backgroundPosition: `${mousePosition.x}% ${mousePosition.y}%`
         }}
       />
       <div className="fixed inset-0 bg-cyber-grid opacity-30 z-0" />
-      <div className="fixed inset-0 bg-scratch-overlay z-0" />
+      <div className="fixed inset-0 bg-scratch-overlay opacity-[0.03] z-0" />
 
       {/* Content */}
       <AdminSidebar />
       <AdminNav />
       
-      <main className="pl-64 pt-[3.7rem] relative z-10">
+      <main className="pl-[var(--sidebar-width)] pt-[var(--topbar-height)] relative z-10">
         <div className="p-8 space-y-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           >
-            <Card className="bg-black/20 backdrop-blur-xl border-white/10">
+            <Card className="bg-[#151A24]/50 backdrop-blur-xl border-[var(--admin-cyan)]/10">
               <Tabs defaultValue="content" className="w-full">
-                <TabsList className="w-full bg-black/50 border-b border-white/10 p-1">
+                <TabsList className="w-full bg-[#151A24]/50 border-b border-[var(--admin-cyan)]/10 p-1">
                   <TabsTrigger 
                     value="content" 
-                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
+                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
                   >
                     <FileText className="w-4 h-4 mr-2" />
                     Content
                   </TabsTrigger>
                   <TabsTrigger 
                     value="workflows" 
-                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
+                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
                   >
                     <GitBranch className="w-4 h-4 mr-2" />
                     Workflows
                   </TabsTrigger>
                   <TabsTrigger 
                     value="history" 
-                    className="data-[state=active]:bg-[#b0e653]/10 data-[state=active]:text-[#b0e653]"
+                    className="data-[state=active]:bg-[var(--admin-cyan)]/10 data-[state=active]:text-[var(--admin-cyan)]"
                   >
                     <History className="w-4 h-4 mr-2" />
                     History

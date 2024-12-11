@@ -1,6 +1,6 @@
 import { lazy } from "react";
-import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
+import { AdminSidebar } from "@/components/admin/dashboard/sidebar/AdminSidebar";
 import { StatsCards } from "@/components/admin/dashboard/stats/StatsCards";
 import { cn } from "@/lib/utils";
 
@@ -13,77 +13,47 @@ const ForumAdminPage = lazy(() => import("@/pages/admin/forum"));
 const WorkflowTemplates = lazy(() => import("@/pages/admin/workflows/templates"));
 const NewWorkflowTemplate = lazy(() => import("@/pages/admin/workflows/templates/new"));
 const WorkflowTemplateEditor = lazy(() => import("@/pages/admin/workflows/templates/[id]"));
-
-const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className={cn(
-      "min-h-screen relative overflow-hidden",
-      "before:content-[''] before:absolute before:inset-0 before:bg-cyber-texture before:opacity-10 before:z-0",
-      "after:content-[''] after:absolute after:inset-0 after:bg-scratch-overlay after:opacity-[0.03] after:z-0"
-    )}>
-      <div className="absolute inset-0 bg-gradient-to-b from-admin-dark via-admin-medium to-admin-light z-[-1]" />
-      <AdminNav />
-      <AdminSidebar />
-      <main className="pl-64 pt-32 relative z-10">
-        <div className="p-8 space-y-8">
-          {children}
-        </div>
-      </main>
-    </div>
-  );
-};
+const Dashboard = lazy(() => import("@/pages/admin/dashboard"));
 
 export const adminRoutes = [
   {
     path: "dashboard",
-    element: (
-      <DashboardLayout>
-        <div className="space-y-8">
-          <h1 className={cn(
-            "text-2xl font-bold bg-gradient-to-r from-cyber-yellow via-cyber-pink to-cyber-purple bg-clip-text text-transparent",
-            "animate-text-glow"
-          )}>
-            Dashboard Overview
-          </h1>
-          <StatsCards />
-        </div>
-      </DashboardLayout>
-    ),
+    element: <Dashboard />
   },
   {
     path: "posts",
-    element: <DashboardLayout><Posts /></DashboardLayout>,
+    element: <Posts />
   },
   {
     path: "users",
-    element: <DashboardLayout><Users /></DashboardLayout>,
+    element: <Users />
   },
   {
     path: "settings",
-    element: <DashboardLayout><Settings /></DashboardLayout>,
+    element: <Settings />
   },
   {
     path: "content-management",
-    element: <DashboardLayout><ContentManagement /></DashboardLayout>,
+    element: <ContentManagement />
   },
   {
     path: "content-management/categories",
-    element: <DashboardLayout><Categories /></DashboardLayout>,
+    element: <Categories />
   },
   {
     path: "forum",
-    element: <DashboardLayout><ForumAdminPage /></DashboardLayout>,
+    element: <ForumAdminPage />
   },
   {
     path: "workflows/templates",
-    element: <DashboardLayout><WorkflowTemplates /></DashboardLayout>,
+    element: <WorkflowTemplates />
   },
   {
     path: "workflows/templates/new",
-    element: <DashboardLayout><NewWorkflowTemplate /></DashboardLayout>,
+    element: <NewWorkflowTemplate />
   },
   {
     path: "workflows/templates/:id",
-    element: <DashboardLayout><WorkflowTemplateEditor /></DashboardLayout>,
-  },
+    element: <WorkflowTemplateEditor />
+  }
 ];
