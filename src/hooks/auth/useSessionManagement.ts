@@ -4,6 +4,8 @@ import { useAuthStore } from '@/lib/store/auth-store';
 import { storeSessionLocally } from '@/utils/auth/offlineAuth';
 import { registerUserSession, cleanupUserSessions } from '@/utils/auth/sessionManager';
 import { handleSecurityEvent } from '@/utils/auth/securityHandlers';
+import { attachCSRFToken, clearCSRFToken } from '@/utils/auth/csrfProtection';
+import { toast } from 'sonner';
 
 export const useSessionManagement = () => {
   const { setSession, setUser } = useAuthStore();
@@ -11,6 +13,9 @@ export const useSessionManagement = () => {
   const handleSessionUpdate = useCallback(async (session: any) => {
     if (session?.user) {
       try {
+        // Generate and attach CSRF token
+        await attachCSRFToken();
+        
         // Store session locally for offline access
         storeSessionLocally(session);
         await registerUserSession(session.user.id);
@@ -48,10 +53,10 @@ export const useSessionManagement = () => {
           
           if (refreshError || !newSession) {
             console.error('Failed to refresh session:', refreshError);
-            // Handle refresh failure
             await supabase.auth.signOut();
             setSession(null);
             setUser(null);
+            clearCSRFToken();
           }
         }, refreshTimeout);
 
@@ -64,6 +69,7 @@ export const useSessionManagement = () => {
       storeSessionLocally(null);
       setSession(null);
       setUser(null);
+      clearCSRFToken();
       
       const currentUser = await supabase.auth.getUser();
       if (currentUser.data.user) {

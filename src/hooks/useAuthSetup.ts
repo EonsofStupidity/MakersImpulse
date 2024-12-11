@@ -5,6 +5,7 @@ import { useSessionManagement } from './auth/useSessionManagement';
 import { useAuthValidation } from './auth/useAuthValidation';
 import { handleSecurityEvent, handleSessionTimeout } from '@/utils/auth/securityHandlers';
 import { supabase } from "@/integrations/supabase/client";
+import { attachCSRFToken, clearCSRFToken } from '@/utils/auth/csrfProtection';
 
 export const useAuthSetup = () => {
   const { setLoading, setError } = useAuthStore();
@@ -31,10 +32,13 @@ export const useAuthSetup = () => {
         const loadingToast = toast.loading('Authenticating...');
 
         try {
+          // Attach CSRF token
+          await attachCSRFToken();
+          
           await validateAuthAttempt(session);
         } catch (validationError) {
           console.error('Auth validation failed:', validationError);
-          // Force sign out on validation failure
+          clearCSRFToken();
           await supabase.auth.signOut();
           throw validationError;
         }
@@ -46,6 +50,7 @@ export const useAuthSetup = () => {
           
           if (refreshError || !refreshResult.session) {
             console.error('Session refresh failed:', refreshError);
+            clearCSRFToken();
             await supabase.auth.signOut();
             toast.error('Session expired. Please sign in again.');
           }
@@ -55,8 +60,9 @@ export const useAuthSetup = () => {
         
         toast.dismiss(loadingToast);
         toast.success('Successfully authenticated');
-        retryAttempts.current = 0; // Reset retry counter on success
+        retryAttempts.current = 0;
       } else {
+        clearCSRFToken();
         await handleSessionUpdate(session);
         toast.success('Signed out successfully');
       }
@@ -72,11 +78,9 @@ export const useAuthSetup = () => {
           { error: error instanceof Error ? error.message : 'Unknown error' }
         );
 
-        // Implement retry logic for recoverable errors
         if (retryAttempts.current < MAX_RETRY_ATTEMPTS) {
           retryAttempts.current++;
           console.log(`Retrying auth setup (${retryAttempts.current}/${MAX_RETRY_ATTEMPTS})`);
-          // Retry after a delay
           setTimeout(() => handleAuthChange(session), 1000 * retryAttempts.current);
           return;
         }
