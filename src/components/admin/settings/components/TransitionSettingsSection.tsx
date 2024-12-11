@@ -1,60 +1,125 @@
-import React from "react";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CSSEffectsControl } from "./CSSEffectsControl";
+import { toast } from "sonner";
 
 export const TransitionSettingsSection = () => {
+  const [settings, setSettings] = useState({
+    pageTransition: 0.3,
+    transitionType: "ease-out",
+    hoverScale: 1.05,
+    animationPreset: "fade"
+  });
+
+  const handleSettingChange = (key: string, value: number | string) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+    
+    // Update site settings in Supabase
+    const updateSettings = async () => {
+      try {
+        const { data, error } = await supabase.rpc('update_site_settings', {
+          p_transition_duration: `${value}s`,
+          p_hover_scale: value.toString()
+        });
+
+        if (error) throw error;
+        
+        toast.success("Transition settings updated");
+      } catch (error) {
+        console.error("Failed to update settings:", error);
+        toast.error("Failed to update settings");
+      }
+    };
+
+    updateSettings();
+  };
+
   return (
     <AccordionItem value="transition-settings">
       <AccordionTrigger className="text-lg font-semibold text-white">
-        Transitions & Motion
+        <motion.div
+          initial={{ opacity: 0.8 }}
+          whileHover={{ opacity: 1, scale: 1.02 }}
+          className="flex items-center gap-2"
+        >
+          Transitions & Motion
+        </motion.div>
       </AccordionTrigger>
-      <AccordionContent className="space-y-4 pt-4">
-        <CSSEffectsControl
-          label="Page Transition Duration"
-          type="slider"
-          value={0.3}
-          min={0.1}
-          max={1}
-          step={0.1}
-          onChange={(value) => console.log("Page transition:", value)}
-          description="Duration of page transition animations"
-          previewClass="animate-fade-in"
-        />
-        <CSSEffectsControl
-          label="Element Transition Type"
-          type="select"
-          value="ease-out"
-          options={[
-            { label: "Ease Out", value: "ease-out" },
-            { label: "Ease In", value: "ease-in" },
-            { label: "Linear", value: "linear" }
-          ]}
-          onChange={(value) => console.log("Transition type:", value)}
-          description="Default transition timing function"
-        />
-        <CSSEffectsControl
-          label="Hover Scale Factor"
-          type="slider"
-          value={1.05}
-          min={1}
-          max={1.2}
-          step={0.01}
-          onChange={(value) => console.log("Hover scale:", value)}
-          description="Scale factor for hover animations"
-          previewClass="hover:scale-110"
-        />
-        <CSSEffectsControl
-          label="Animation Preset"
-          type="select"
-          value="fade"
-          options={[
-            { label: "Fade", value: "fade" },
-            { label: "Slide", value: "slide" },
-            { label: "Scale", value: "scale" }
-          ]}
-          onChange={(value) => console.log("Animation preset:", value)}
-          description="Default animation preset for elements"
-        />
+      <AccordionContent className="space-y-6 pt-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <CSSEffectsControl
+            label="Page Transition Duration"
+            type="slider"
+            value={settings.pageTransition}
+            min={0.1}
+            max={1}
+            step={0.1}
+            onChange={(value) => handleSettingChange('pageTransition', value)}
+            description="Duration of page transition animations"
+            previewClass="animate-fade-in"
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <CSSEffectsControl
+            label="Element Transition Type"
+            type="select"
+            value={settings.transitionType}
+            options={[
+              { label: "Ease Out", value: "ease-out" },
+              { label: "Ease In", value: "ease-in" },
+              { label: "Linear", value: "linear" }
+            ]}
+            onChange={(value) => handleSettingChange('transitionType', value)}
+            description="Default transition timing function"
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <CSSEffectsControl
+            label="Hover Scale Factor"
+            type="slider"
+            value={settings.hoverScale}
+            min={1}
+            max={1.2}
+            step={0.01}
+            onChange={(value) => handleSettingChange('hoverScale', value)}
+            description="Scale factor for hover animations"
+            previewClass="hover:scale-110"
+          />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+        >
+          <CSSEffectsControl
+            label="Animation Preset"
+            type="select"
+            value={settings.animationPreset}
+            options={[
+              { label: "Fade", value: "fade" },
+              { label: "Slide", value: "slide" },
+              { label: "Scale", value: "scale" }
+            ]}
+            onChange={(value) => handleSettingChange('animationPreset', value)}
+            description="Default animation preset for elements"
+          />
+        </motion.div>
       </AccordionContent>
     </AccordionItem>
   );
