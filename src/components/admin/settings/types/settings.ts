@@ -1,4 +1,3 @@
-// Define the base settings form data interface
 export interface SettingsFormData {
   site_title: string;
   tagline?: string;
@@ -30,6 +29,7 @@ export interface SettingsFormData {
   transition_type: 'fade' | 'slide' | 'scale';
   box_shadow?: string;
   backdrop_blur?: string;
+  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 
 // Extend SettingsFormData for the full Settings interface

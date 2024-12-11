@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { settingsSchema, type SettingsFormData, type Settings } from "./types";
+import { settingsSchema, type SettingsFormData } from "./types";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";
@@ -17,6 +17,8 @@ import { TextStylesSection } from "./sections/TextStylesSection";
 import { LayoutSection } from "./sections/LayoutSection";
 import { AnimationsSection } from "./sections/AnimationsSection";
 import { AdvancedEffectsSection } from "./sections/AdvancedEffectsSection";
+import { TransitionConfigSection } from "./sections/TransitionConfigSection";
+import { ThemeImportSection } from "./sections/ThemeImportSection";
 import { toast } from "sonner";
 
 export const SettingsForm = () => {
@@ -68,6 +70,7 @@ export const SettingsForm = () => {
       box_shadow: settings?.box_shadow || "none",
       backdrop_blur: settings?.backdrop_blur || "0",
       transition_type: settings?.transition_type || "fade",
+      menu_animation_type: settings?.menu_animation_type || "fade",
     },
   });
 
@@ -137,9 +140,11 @@ export const SettingsForm = () => {
           <form className="space-y-6">
             <SavingIndicator isSaving={isSaving} />
             <Accordion type="single" collapsible className="space-y-4">
+              <ThemeImportSection form={form} />
               <ColorSection form={form} />
               <TextStylesSection form={form} />
               <LayoutSection form={form} />
+              <TransitionConfigSection form={form} />
               <AnimationsSection form={form} />
               <AdvancedEffectsSection form={form} />
             </Accordion>
