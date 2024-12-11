@@ -2,17 +2,19 @@ import type { Change } from 'diff';
 
 export type DiffViewMode = 'unified' | 'split';
 export type DiffHighlightMode = 'char' | 'word' | 'line';
-export type DiffSearchMatch = {
+
+export interface DiffSearchMatch {
   lineNumber: number;
   matchStart: number;
   matchEnd: number;
   content: string;
-};
+}
 
-export interface DiffChange extends Change {
+// Extend Change interface properly with required properties
+export interface DiffChange extends Omit<Change, 'added' | 'removed'> {
   value: string;
-  added?: boolean;
-  removed?: boolean;
+  added: boolean;
+  removed: boolean;
   count?: number;
   lineNumber?: number;
 }
