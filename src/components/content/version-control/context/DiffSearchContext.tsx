@@ -47,7 +47,9 @@ export const DiffSearchProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       ...prev,
       query,
       currentIndex: 0,
-      history: query ? [...new Set([query, ...prev.history]).slice(0, 10)] : prev.history
+      history: query 
+        ? Array.from(new Set([query, ...prev.history])).slice(0, 10)
+        : prev.history
     }));
   }, []);
 
