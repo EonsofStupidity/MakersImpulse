@@ -354,28 +354,46 @@ export type Database = {
       }
       cms_content_revisions: {
         Row: {
+          change_summary: string | null
           content: Json
           content_id: string | null
           created_at: string | null
           created_by: string | null
+          diff: Json | null
           id: string
           metadata: Json | null
+          publish_status: string | null
+          rollback_from: string | null
+          scheduled_publish_at: string | null
+          version_number: number | null
         }
         Insert: {
+          change_summary?: string | null
           content: Json
           content_id?: string | null
           created_at?: string | null
           created_by?: string | null
+          diff?: Json | null
           id?: string
           metadata?: Json | null
+          publish_status?: string | null
+          rollback_from?: string | null
+          scheduled_publish_at?: string | null
+          version_number?: number | null
         }
         Update: {
+          change_summary?: string | null
           content?: Json
           content_id?: string | null
           created_at?: string | null
           created_by?: string | null
+          diff?: Json | null
           id?: string
           metadata?: Json | null
+          publish_status?: string | null
+          rollback_from?: string | null
+          scheduled_publish_at?: string | null
+          version_number?: number | null
         }
         Relationships: [
           {
@@ -390,6 +408,13 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_revisions_rollback_from_fkey"
+            columns: ["rollback_from"]
+            isOneToOne: false
+            referencedRelation: "cms_content_revisions"
             referencedColumns: ["id"]
           },
         ]
