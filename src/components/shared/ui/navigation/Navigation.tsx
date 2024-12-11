@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { NavigationContainer } from "./navigation/core/NavigationContainer";
-import { NavigationSection } from "./navigation/core/NavigationSection";
-import { Logo } from "./navigation/Logo";
-import { NavigationLinks } from "./navigation/NavigationLinks";
-import { MegaMenu } from "./navigation/MegaMenu";
-import { SearchButton } from "./navigation/SearchButton";
-import { SearchDialog } from "./navigation/SearchDialog";
-import { UserAvatar } from "./avatar/UserAvatar";
-import { UserMenu } from "./navigation/UserMenu";
-import { MobileNav } from "./navigation/mobile/MobileNav";
+import { NavigationContainer } from "./core/NavigationContainer";
+import { NavigationSection } from "./core/NavigationSection";
+import { Logo } from "./Logo";
+import { NavigationLinks } from "./NavigationLinks";
+import { MegaMenu } from "./MegaMenu";
+import { SearchButton } from "./SearchButton";
+import { SearchDialog } from "./SearchDialog";
+import { UserAvatar } from "../avatar/UserAvatar";
+import { UserMenu } from "./UserMenu";
+import { MobileNav } from "./mobile/MobileNav";
 
 export const Navigation = () => {
   const [searchOpen, setSearchOpen] = useState(false);
