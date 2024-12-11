@@ -35,6 +35,7 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
         .from('cms_content_revisions')
         .select(`
           id,
+          content_id,
           content,
           metadata,
           created_at,
@@ -54,7 +55,17 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
         throw error;
       }
 
-      return data as ContentRevision[];
+      return data.map(revision => ({
+        id: revision.id,
+        contentId: revision.content_id,
+        content: revision.content,
+        metadata: revision.metadata,
+        createdAt: revision.created_at,
+        createdBy: revision.created_by,
+        versionNumber: revision.version_number,
+        changeSummary: revision.change_summary,
+        profiles: revision.profiles
+      })) as ContentRevision[];
     },
     enabled: !!contentId,
   });
@@ -62,8 +73,8 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
   const getSelectedRevisions = () => {
     if (!revisions) return { left: null, right: null };
     
-    const left = revisions.find(r => r.version_number === selectedVersions.left);
-    const right = revisions.find(r => r.version_number === selectedVersions.right);
+    const left = revisions.find(r => r.versionNumber === selectedVersions.left);
+    const right = revisions.find(r => r.versionNumber === selectedVersions.right);
     
     return { left, right };
   };
@@ -133,9 +144,9 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground">
                 <p>Created by: {left.profiles?.display_name || 'Unknown'}</p>
-                <p>Date: {format(new Date(left.created_at), 'PPpp')}</p>
-                {left.change_summary && (
-                  <p className="mt-2">Summary: {left.change_summary}</p>
+                <p>Date: {format(new Date(left.createdAt), 'PPpp')}</p>
+                {left.changeSummary && (
+                  <p className="mt-2">Summary: {left.changeSummary}</p>
                 )}
               </div>
               <pre className="bg-background/50 p-4 rounded-lg overflow-x-auto text-sm">
@@ -177,9 +188,9 @@ export const RevisionCompare: React.FC<RevisionCompareProps> = ({
             <div className="space-y-4">
               <div className="text-sm text-muted-foreground">
                 <p>Created by: {right.profiles?.display_name || 'Unknown'}</p>
-                <p>Date: {format(new Date(right.created_at), 'PPpp')}</p>
-                {right.change_summary && (
-                  <p className="mt-2">Summary: {right.change_summary}</p>
+                <p>Date: {format(new Date(right.createdAt), 'PPpp')}</p>
+                {right.changeSummary && (
+                  <p className="mt-2">Summary: {right.changeSummary}</p>
                 )}
               </div>
               <pre className="bg-background/50 p-4 rounded-lg overflow-x-auto text-sm">
