@@ -120,8 +120,8 @@ export interface DiffControlsProps {
 
 export interface DiffSectionProps {
   content: DiffChange[];
-  isExpanded: boolean;
-  onToggle: () => void;
+  isExpanded?: boolean;
+  onToggle?: () => void;
   contextLines?: number;
   showLineNumbers?: boolean;
   metadata?: {
@@ -129,12 +129,13 @@ export interface DiffSectionProps {
     endLine: number;
     type: 'addition' | 'deletion' | 'modification' | 'context';
   };
-}
-
-export interface DiffSectionState {
-  isExpanded: boolean;
-  contextSize: number;
-  highlightedLines: Set<number>;
+  searchQuery?: string;
+  currentSearchIndex?: number;
+  searchResults?: Array<{
+    lineIndex: number;
+    matchIndex: number;
+    length: number;
+  }>;
 }
 
 // Context and State Management

@@ -2,7 +2,6 @@ import React, { useState, useCallback, useMemo } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import type { DiffSectionProps, DiffChange } from '../types/diff';
 
@@ -12,7 +11,10 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
   onToggle,
   contextLines = 3,
   showLineNumbers = true,
-  metadata
+  metadata,
+  searchQuery = '',
+  currentSearchIndex = 0,
+  searchResults = []
 }) => {
   const [isExpanded, setIsExpanded] = useState(initialIsExpanded);
   const [contextSize, setContextSize] = useState(contextLines);
@@ -49,9 +51,65 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
   const rowVirtualizer = useVirtualizer({
     count: visibleContent.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 24, // Estimated height of each row
+    estimateSize: () => 24,
     overscan: 5
   });
+
+  const renderHighlightedText = (text: string, lineIndex: number) => {
+    if (!searchQuery) return text;
+
+    const parts: { text: string; isHighlight: boolean; isCurrent: boolean }[] = [];
+    let lastIndex = 0;
+
+    const lineSearchResults = searchResults.filter(
+      result => result.lineIndex === lineIndex
+    );
+
+    lineSearchResults.forEach((result, idx) => {
+      // Add non-highlighted text before match
+      if (result.matchIndex > lastIndex) {
+        parts.push({
+          text: text.slice(lastIndex, result.matchIndex),
+          isHighlight: false,
+          isCurrent: false
+        });
+      }
+
+      // Add highlighted match
+      const isCurrent = idx === currentSearchIndex;
+      parts.push({
+        text: text.slice(result.matchIndex, result.matchIndex + result.length),
+        isHighlight: true,
+        isCurrent
+      });
+
+      lastIndex = result.matchIndex + result.length;
+    });
+
+    // Add remaining text
+    if (lastIndex < text.length) {
+      parts.push({
+        text: text.slice(lastIndex),
+        isHighlight: false,
+        isCurrent: false
+      });
+    }
+
+    return parts.map((part, idx) => (
+      <span
+        key={idx}
+        className={`${
+          part.isHighlight
+            ? part.isCurrent
+              ? 'bg-yellow-500/50 ring-2 ring-yellow-500'
+              : 'bg-yellow-500/30'
+            : ''
+        }`}
+      >
+        {part.text}
+      </span>
+    ));
+  };
 
   const renderLine = (line: DiffChange, index: number) => {
     const lineClass = `
@@ -78,19 +136,18 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
             {line.lineNumber || index + 1}
           </span>
         )}
-        <span role="cell">{line.value}</span>
+        <span role="cell">
+          {renderHighlightedText(line.value, index)}
+        </span>
       </div>
     );
   };
-
-  const sectionType = metadata?.type || 'code section';
-  const lineRange = metadata ? `Lines ${metadata.startLine}-${metadata.endLine}` : '';
 
   return (
     <Card 
       className="relative"
       role="region"
-      aria-label={`${sectionType} ${lineRange}`}
+      aria-label={`${metadata?.type || 'code section'} ${metadata ? `Lines ${metadata.startLine}-${metadata.endLine}` : ''}`}
       aria-expanded={isExpanded}
     >
       <div className="absolute right-2 top-2 flex gap-2">
@@ -117,7 +174,7 @@ export const DiffSection: React.FC<DiffSectionProps> = ({
           role="heading"
           aria-level={2}
         >
-          <span aria-label={`Section range: ${lineRange}`}>
+          <span aria-label={`Section range: Lines ${metadata.startLine}-${metadata.endLine}`}>
             Lines {metadata.startLine}-{metadata.endLine}
           </span>
           <span aria-label={`Change type: ${metadata.type}`}>
