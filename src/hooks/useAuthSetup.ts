@@ -10,6 +10,8 @@ export const useAuthSetup = () => {
   const { setLoading, setError } = useAuthStore();
   const initialSetupDone = useRef(false);
   const sessionTimeoutRef = useRef<NodeJS.Timeout>();
+  const retryAttempts = useRef(0);
+  const MAX_RETRY_ATTEMPTS = 3;
   
   const { handleSessionUpdate } = useSessionManagement();
   const { validateAuthAttempt } = useAuthValidation();
@@ -20,21 +22,40 @@ export const useAuthSetup = () => {
     setError(null);
     
     try {
-      if (sessionTimeoutRef.current) clearTimeout(sessionTimeoutRef.current);
+      // Clear any existing timeout
+      if (sessionTimeoutRef.current) {
+        clearTimeout(sessionTimeoutRef.current);
+      }
 
       if (session?.user) {
         const loadingToast = toast.loading('Authenticating...');
 
-        await validateAuthAttempt(session);
-
-        sessionTimeoutRef.current = handleSessionTimeout(async () => {
+        try {
+          await validateAuthAttempt(session);
+        } catch (validationError) {
+          console.error('Auth validation failed:', validationError);
+          // Force sign out on validation failure
           await supabase.auth.signOut();
+          throw validationError;
+        }
+
+        // Set up session timeout handler
+        sessionTimeoutRef.current = handleSessionTimeout(async () => {
+          console.log('Session timeout - attempting refresh');
+          const { data: refreshResult, error: refreshError } = await supabase.auth.refreshSession();
+          
+          if (refreshError || !refreshResult.session) {
+            console.error('Session refresh failed:', refreshError);
+            await supabase.auth.signOut();
+            toast.error('Session expired. Please sign in again.');
+          }
         });
 
         await handleSessionUpdate(session);
         
         toast.dismiss(loadingToast);
         toast.success('Successfully authenticated');
+        retryAttempts.current = 0; // Reset retry counter on success
       } else {
         await handleSessionUpdate(session);
         toast.success('Signed out successfully');
@@ -50,6 +71,15 @@ export const useAuthSetup = () => {
           'high',
           { error: error instanceof Error ? error.message : 'Unknown error' }
         );
+
+        // Implement retry logic for recoverable errors
+        if (retryAttempts.current < MAX_RETRY_ATTEMPTS) {
+          retryAttempts.current++;
+          console.log(`Retrying auth setup (${retryAttempts.current}/${MAX_RETRY_ATTEMPTS})`);
+          // Retry after a delay
+          setTimeout(() => handleAuthChange(session), 1000 * retryAttempts.current);
+          return;
+        }
       }
       
       toast.error('Authentication error', {
