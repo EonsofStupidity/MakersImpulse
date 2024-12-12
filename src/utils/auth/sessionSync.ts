@@ -1,15 +1,19 @@
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { useAuthStore } from '@/lib/store/auth-store';
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 const STORAGE_KEY = 'auth_session_state';
 const SYNC_CHANNEL = 'auth_sync_channel';
 
 export const initializeSessionSync = () => {
+  // Listen for storage events (cross-tab communication)
   window.addEventListener('storage', handleStorageChange);
+  
+  // Listen for online/offline events
   window.addEventListener('online', handleNetworkChange);
   window.addEventListener('offline', handleNetworkChange);
-
+  
+  // Initialize broadcast channel for more reliable cross-tab communication
   const channel = new BroadcastChannel(SYNC_CHANNEL);
   channel.addEventListener('message', handleBroadcastMessage);
 
@@ -24,7 +28,9 @@ export const initializeSessionSync = () => {
 const handleStorageChange = async (event: StorageEvent) => {
   if (event.key === STORAGE_KEY) {
     const newState = event.newValue ? JSON.parse(event.newValue) : null;
-    if (newState) await syncSessionState(newState);
+    if (newState) {
+      await syncSessionState(newState);
+    }
   }
 };
 
@@ -40,9 +46,10 @@ const handleNetworkChange = async () => {
 
   if (isOnline) {
     try {
+      // Attempt to refresh session when coming back online
       const { data: { session }, error } = await supabase.auth.getSession();
       if (error) throw error;
-
+      
       if (session) {
         await syncSessionState(session);
         toast.success('Reconnected successfully');
@@ -58,14 +65,17 @@ const handleNetworkChange = async () => {
 
 const syncSessionState = async (newState: any) => {
   try {
-    const { setSession } = useAuthStore.getState();
-
+    const { setSession, setError } = useAuthStore.getState();
+    
+    // Validate session state before applying
     if (newState && newState.access_token) {
       setSession(newState);
-
+      
+      // Broadcast the change to other tabs
       const channel = new BroadcastChannel(SYNC_CHANNEL);
       channel.postMessage({ type: 'SESSION_UPDATED', session: newState });
-
+      
+      // Update local storage
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
     } else {
       setSession(null);
