@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Settings } from "@/components/admin/settings/types";
+import { Theme, ThemeContextType } from "./types/theme";
 import { useThemeSetup } from "./hooks/useThemeSetup";
 import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
@@ -7,11 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
 import { convertToUpdateParams } from "@/components/admin/settings/types/settings";
-
-interface ThemeContextType {
-  theme: Settings | null;
-  updateTheme: (newTheme: Settings) => void;
-}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -25,7 +20,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     console.log('ThemeProvider mounted, current theme:', theme?.site_title);
   }, [theme]);
 
-  const updateTheme = async (newTheme: Settings) => {
+  const updateTheme = async (newTheme: Theme) => {
     console.log('Updating theme with new settings:', newTheme.site_title);
     
     try {
@@ -36,7 +31,8 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      const { error } = await supabase.rpc('update_site_settings', convertToUpdateParams(newTheme));
+      const params = convertToUpdateParams(newTheme);
+      const { error } = await supabase.rpc('update_site_settings', params);
 
       if (error) throw error;
       

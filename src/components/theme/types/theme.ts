@@ -1,12 +1,14 @@
 import { BaseThemeProperties } from "@/types/theme-base";
 
+export type ThemeMode = 'light' | 'dark' | 'system';
+
 export interface Theme extends BaseThemeProperties {
-  // Theme-specific properties (if any)
+  id?: string;
+  theme_mode?: ThemeMode;
 }
 
 export interface ThemeContextType {
   theme: Theme | null;
-  setTheme: (theme: Theme) => void;
   updateTheme: (newTheme: Theme) => void;
 }
 
@@ -19,7 +21,7 @@ export interface DatabaseSettingsRow {
   accent_color: string;
   logo_url?: string;
   favicon_url?: string;
-  theme_mode?: 'light' | 'dark' | 'system';
+  theme_mode?: ThemeMode;
   text_primary_color: string;
   text_secondary_color: string;
   text_link_color: string;
