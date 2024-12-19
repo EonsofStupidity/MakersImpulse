@@ -1,6 +1,8 @@
-import { Settings } from "@/components/admin/settings/types";
+import { BaseThemeProperties } from "@/types/theme-base";
 
-export interface Theme extends Settings {}
+export interface Theme extends BaseThemeProperties {
+  // Theme-specific properties (if any)
+}
 
 export interface ThemeContextType {
   theme: Theme | null;

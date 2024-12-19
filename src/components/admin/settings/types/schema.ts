@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { BaseThemeProperties } from "@/types/theme-base";
 
 export const settingsSchema = z.object({
   site_title: z.string().min(1, "Site title is required"),
@@ -32,3 +33,8 @@ export const settingsSchema = z.object({
 });
 
 export type SettingsFormData = z.infer<typeof settingsSchema>;
+
+export const convertFormToBaseProperties = (formData: SettingsFormData): BaseThemeProperties => ({
+  ...formData,
+  theme_mode: 'dark' // Default value
+});
