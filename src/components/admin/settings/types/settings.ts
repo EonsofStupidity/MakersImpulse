@@ -26,7 +26,7 @@ export interface SettingsResponse {
 
 export interface SettingsUpdateParams {
   p_site_title: string;
-  p_tagline?: string;
+  p_tagline: string;
   p_primary_color: string;
   p_secondary_color: string;
   p_accent_color: string;
@@ -79,3 +79,10 @@ export const convertToUpdateParams = (settings: DatabaseSettings): SettingsUpdat
   p_line_height_base: settings.line_height_base,
   p_letter_spacing: settings.letter_spacing
 });
+
+export enum UserRole {
+  SUBSCRIBER = 'subscriber',
+  MAKER = 'maker',
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin'
+}

@@ -13,8 +13,14 @@ export interface ContentWithAuthor {
   slug?: string;
   status: ContentStatus;
   version: number;
-  created_by: { display_name: string };
-  updated_by?: { display_name: string };
+  created_by: { 
+    id: string;
+    display_name: string;
+  };
+  updated_by?: { 
+    id: string;
+    display_name: string;
+  };
   created_at: string;
   updated_at?: string;
 }

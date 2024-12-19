@@ -1,7 +1,7 @@
 export interface BaseThemeProperties {
-  id?: string; // Make id optional since it's only needed for database
+  id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -33,6 +33,7 @@ export interface BaseThemeProperties {
 
 export const DEFAULT_BASE_PROPERTIES: BaseThemeProperties = {
   site_title: 'MakersImpulse',
+  tagline: 'Create, Share, Inspire',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
   accent_color: '#E6E6FA',
