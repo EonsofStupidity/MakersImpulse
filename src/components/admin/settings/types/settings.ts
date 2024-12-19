@@ -51,6 +51,8 @@ export interface SettingsUpdateParams {
   p_letter_spacing: string;
 }
 
+export type Settings = DatabaseSettings;
+
 export const convertToUpdateParams = (settings: DatabaseSettings): SettingsUpdateParams => ({
   p_site_title: settings.site_title,
   p_tagline: settings.tagline,
