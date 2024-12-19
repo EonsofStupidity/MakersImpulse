@@ -2,21 +2,24 @@ import React from 'react';
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Clock, CalendarIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { Clock } from 'lucide-react';
 
 interface DateTimeSelectorProps {
   selectedDate: Date | undefined;
   selectedTime: string;
   onDateChange: (date: Date | undefined) => void;
   onTimeChange: (time: string) => void;
+  minDate?: Date;
+  maxDate?: Date;
 }
 
 export const DateTimeSelector: React.FC<DateTimeSelectorProps> = ({
   selectedDate,
   selectedTime,
   onDateChange,
-  onTimeChange
+  onTimeChange,
+  minDate = new Date(),
+  maxDate,
 }) => {
   return (
     <div className="space-y-4">
@@ -27,7 +30,7 @@ export const DateTimeSelector: React.FC<DateTimeSelectorProps> = ({
             mode="single"
             selected={selectedDate}
             onSelect={onDateChange}
-            disabled={(date) => date < new Date()}
+            disabled={(date) => date < minDate || (maxDate ? date > maxDate : false)}
             className="bg-transparent"
           />
         </div>

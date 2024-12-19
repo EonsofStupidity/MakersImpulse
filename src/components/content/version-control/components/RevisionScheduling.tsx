@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Calendar } from 'lucide-react';
-import { SchedulingInterface } from './scheduling/SchedulingInterface';
+import { DateTimeSelector } from './scheduling/DateTimeSelector';
+import { SchedulePreview } from './scheduling/SchedulePreview';
 import { QueueProcessor } from './scheduling/QueueProcessor';
+import { useScheduling } from '@/hooks/scheduling/useScheduling';
+import { addMinutes, addDays } from 'date-fns';
 
 interface RevisionSchedulingProps {
   contentId: string;
@@ -14,7 +17,29 @@ export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
   contentId,
   revisionId
 }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedTime, setSelectedTime] = useState('');
+
+  const { schedulePublication, isScheduling } = useScheduling(contentId);
+
+  const handleSchedule = async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    const [hours, minutes] = selectedTime.split(':');
+    const scheduledFor = new Date(selectedDate);
+    scheduledFor.setHours(parseInt(hours), parseInt(minutes));
+
+    await schedulePublication.mutateAsync({
+      revisionId,
+      scheduledFor,
+    });
+
+    setIsOpen(false);
+  };
+
+  const minDate = addMinutes(new Date(), 5);
+  const maxDate = addDays(new Date(), 30);
 
   return (
     <>
@@ -33,12 +58,37 @@ export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
             <DialogTitle className="text-white">Schedule Publication</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
-            <SchedulingInterface
-              contentId={contentId}
-              revisionId={revisionId}
-              onSchedule={() => setIsOpen(false)}
+            <DateTimeSelector
+              selectedDate={selectedDate}
+              selectedTime={selectedTime}
+              onDateChange={setSelectedDate}
+              onTimeChange={setSelectedTime}
+              minDate={minDate}
+              maxDate={maxDate}
             />
-            <QueueProcessor />
+
+            {selectedDate && selectedTime && (
+              <SchedulePreview
+                selectedDate={selectedDate}
+                selectedTime={selectedTime}
+              />
+            )}
+
+            <Button
+              onClick={handleSchedule}
+              disabled={!selectedDate || !selectedTime || isScheduling}
+              className="w-full bg-neon-cyan/20 text-white border border-neon-cyan/50 hover:bg-neon-cyan/30"
+            >
+              {isScheduling ? (
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                  className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
+                />
+              ) : (
+                'Schedule Publication'
+              )}
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

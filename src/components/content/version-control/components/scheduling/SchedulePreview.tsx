@@ -1,7 +1,7 @@
 import React from 'react';
+import { format } from 'date-fns';
 import { motion } from 'framer-motion';
 import { CheckCircle } from 'lucide-react';
-import { format } from 'date-fns';
 
 interface SchedulePreviewProps {
   selectedDate: Date;
@@ -10,8 +10,15 @@ interface SchedulePreviewProps {
 
 export const SchedulePreview: React.FC<SchedulePreviewProps> = ({
   selectedDate,
-  selectedTime
+  selectedTime,
 }) => {
+  const getScheduledDateTime = () => {
+    const [hours, minutes] = selectedTime.split(':');
+    const date = new Date(selectedDate);
+    date.setHours(parseInt(hours), parseInt(minutes));
+    return date;
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -23,7 +30,7 @@ export const SchedulePreview: React.FC<SchedulePreviewProps> = ({
         <span>Will be published on:</span>
       </div>
       <p className="mt-1 text-neon-cyan">
-        {format(selectedDate, 'MMMM d, yyyy')} at {selectedTime}
+        {format(getScheduledDateTime(), 'MMMM d, yyyy')} at {selectedTime}
       </p>
     </motion.div>
   );
