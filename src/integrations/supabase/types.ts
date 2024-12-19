@@ -1458,6 +1458,9 @@ export type Database = {
           backdrop_blur: string | null
           border_radius: string | null
           box_shadow: string | null
+          component_type:
+            | Database["public"]["Enums"]["theme_component_type"]
+            | null
           favicon_url: string | null
           font_family_body: string
           font_family_heading: string
@@ -1496,6 +1499,9 @@ export type Database = {
           backdrop_blur?: string | null
           border_radius?: string | null
           box_shadow?: string | null
+          component_type?:
+            | Database["public"]["Enums"]["theme_component_type"]
+            | null
           favicon_url?: string | null
           font_family_body: string
           font_family_heading: string
@@ -1534,6 +1540,9 @@ export type Database = {
           backdrop_blur?: string | null
           border_radius?: string | null
           box_shadow?: string | null
+          component_type?:
+            | Database["public"]["Enums"]["theme_component_type"]
+            | null
           favicon_url?: string | null
           font_family_body?: string
           font_family_heading?: string
@@ -1848,6 +1857,9 @@ export type Database = {
           backdrop_blur: string | null
           border_radius: string | null
           box_shadow: string | null
+          component_type:
+            | Database["public"]["Enums"]["theme_component_type"]
+            | null
           favicon_url: string | null
           font_family_body: string
           font_family_heading: string
@@ -1919,6 +1931,12 @@ export type Database = {
         | "3D Printer"
         | "3D Printer Hardware"
       setting_value_type: "string" | "number" | "boolean" | "json"
+      theme_component_type:
+        | "color"
+        | "typography"
+        | "layout"
+        | "animation"
+        | "effect"
       theme_mode: "light" | "dark" | "system"
       transition_type: "fade" | "slide" | "scale" | "blur"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"

@@ -1,42 +1,40 @@
-import { BaseSettings } from '../settings/base';
-import { Theme } from '../theme/core';
+import { TableDefinition } from './core';
+import { ThemeMode, ThemeComponentType } from '../theme/types';
 
-export interface DatabaseSettings extends BaseSettings, Omit<Theme, 'mode'> {
+export interface SiteSettingsTable {
   id: string;
-  updated_at?: string;
-  updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
+  site_title: string;
+  tagline: string | null;
+  primary_color: string | null;
+  secondary_color: string | null;
+  accent_color: string | null;
+  text_primary_color: string | null;
+  text_secondary_color: string | null;
+  text_link_color: string | null;
+  text_heading_color: string | null;
+  font_family_heading: string;
+  font_family_body: string;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  border_radius: string | null;
+  spacing_unit: string | null;
+  shadow_color: string | null;
+  hover_scale: string | null;
+  transition_duration: string | null;
+  logo_url: string | null;
+  favicon_url: string | null;
+  updated_at: string | null;
+  updated_by: string | null;
+  neon_cyan: string | null;
+  neon_pink: string | null;
+  neon_purple: string | null;
+  theme_mode: ThemeMode | null;
+  component_type: ThemeComponentType | null;
 }
 
-export interface SettingsResponse {
-  success: boolean;
-  data: DatabaseSettings;
-}
-
-export interface SettingsUpdateParams {
-  p_site_title: string;
-  p_tagline?: string;
-  p_primary_color: string;
-  p_secondary_color: string;
-  p_accent_color: string;
-  p_text_primary_color: string;
-  p_text_secondary_color: string;
-  p_text_link_color: string;
-  p_text_heading_color: string;
-  p_neon_cyan: string;
-  p_neon_pink: string;
-  p_neon_purple: string;
-  p_border_radius: string;
-  p_spacing_unit: string;
-  p_transition_duration: string;
-  p_shadow_color: string;
-  p_hover_scale: string;
-  p_font_family_heading: string;
-  p_font_family_body: string;
-  p_font_size_base: string;
-  p_font_weight_normal: string;
-  p_font_weight_bold: string;
-  p_line_height_base: string;
-  p_letter_spacing: string;
-}
+export type SettingsTables = {
+  site_settings: TableDefinition<SiteSettingsTable>;
+};
