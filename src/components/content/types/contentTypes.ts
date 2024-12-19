@@ -10,6 +10,9 @@ export interface ContentBase {
   slug?: string;
   content?: {
     body?: string;
+    componentType?: string;
+    props?: Record<string, any>;
+    styles?: Record<string, any>;
     seo?: {
       title?: string;
       description?: string;
@@ -19,6 +22,8 @@ export interface ContentBase {
   metadata?: Record<string, any>;
   status?: "draft" | "published" | "archived";
   version?: number;
+  created_by?: string;
+  updated_by?: string;
 }
 
 export interface PageContent extends ContentBase {
@@ -33,6 +38,9 @@ export const pageContentSchema = z.object({
   title: z.string().min(1, "Title is required"),
   content: z.object({
     body: z.string().optional(),
+    componentType: z.string().optional(),
+    props: z.record(z.any()).optional(),
+    styles: z.record(z.any()).optional(),
     seo: z.object({
       title: z.string().optional(),
       description: z.string().optional(),
