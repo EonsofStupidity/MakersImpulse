@@ -5,8 +5,8 @@ export type ContentType = "page" | "component" | "template" | "workflow";
 
 export interface ContentBase {
   id?: string;
-  title: string;
   type: ContentType;
+  title: string;
   slug?: string;
   content?: {
     body?: string;
@@ -22,8 +22,10 @@ export interface ContentBase {
   metadata?: Record<string, any>;
   status?: "draft" | "published" | "archived";
   version?: number;
-  created_by?: string;
+  created_by: string;
   updated_by?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface PageContent extends ContentBase {
@@ -34,8 +36,16 @@ export interface ComponentContent extends ContentBase {
   type: "component";
 }
 
-export const pageContentSchema = z.object({
+export interface ContentWithAuthor extends ContentBase {
+  created_by: {
+    display_name: string;
+    avatar_url: string;
+  };
+}
+
+export const contentBaseSchema = z.object({
   title: z.string().min(1, "Title is required"),
+  type: z.enum(["page", "component", "template", "workflow"]),
   content: z.object({
     body: z.string().optional(),
     componentType: z.string().optional(),
@@ -44,15 +54,21 @@ export const pageContentSchema = z.object({
     seo: z.object({
       title: z.string().optional(),
       description: z.string().optional(),
-      keywords: z.array(z.string()).optional()
-    }).optional()
+      keywords: z.array(z.string()).optional(),
+    }).optional(),
   }).optional(),
   slug: z.string().optional(),
+  metadata: z.record(z.any()).optional(),
   status: z.enum(["draft", "published", "archived"]).optional(),
-  metadata: z.record(z.any()).optional()
 });
 
-export const componentContentSchema = pageContentSchema;
+export const pageContentSchema = contentBaseSchema.extend({
+  type: z.literal("page"),
+});
+
+export const componentContentSchema = contentBaseSchema.extend({
+  type: z.literal("component"),
+});
 
 export const getSchemaByType = (type: ContentType) => {
   switch (type) {
@@ -61,21 +77,6 @@ export const getSchemaByType = (type: ContentType) => {
     case "component":
       return componentContentSchema;
     default:
-      return pageContentSchema;
+      return contentBaseSchema;
   }
 };
-
-export interface ContentWithAuthor {
-  id: string;
-  title: string;
-  content: Json;
-  metadata: Json;
-  slug: string;
-  type: ContentType;
-  status: "draft" | "published" | "archived";
-  version: number;
-  created_at: string;
-  updated_at: string;
-  created_by: { display_name: string };
-  updated_by: { display_name: string };
-}
