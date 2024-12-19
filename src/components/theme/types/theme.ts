@@ -32,6 +32,12 @@ export interface DatabaseSettingsRow {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  transition_type: string;
   updated_at?: string;
   updated_by?: string;
 }
