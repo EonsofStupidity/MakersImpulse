@@ -27,4 +27,8 @@ export const settingsSchema = z.object({
   line_height_base: z.string(),
   letter_spacing: z.string(),
   menu_animation_type: z.enum(["fade", "slide-down", "scale", "blur"]).optional(),
+  box_shadow: z.string().optional(),
+  backdrop_blur: z.string().optional(),
 });
+
+export type SettingsFormData = z.infer<typeof settingsSchema>;
