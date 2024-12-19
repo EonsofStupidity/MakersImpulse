@@ -8,23 +8,14 @@ import { Button } from "@/components/ui/button";
 import { History, ArrowLeft, Eye } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
-
-interface Profile {
-  display_name: string;
-  avatar_url?: string;
-}
-
-interface Revision {
-  id: string;
-  content: any;
-  created_at: string;
-  created_by: Profile | null;
-}
+import { transformRevisionList } from "@/types/revisions/transformations";
+import type { RevisionRecord } from "@/types/revisions/base";
+import type { ContentRevision } from "@/types/revisions/queries";
 
 interface RevisionHistoryProps {
   contentId: string;
-  onRestore?: (revision: Revision) => void;
-  onPreview?: (revision: Revision) => void;
+  onRestore?: (revision: RevisionRecord) => void;
+  onPreview?: (revision: RevisionRecord) => void;
 }
 
 export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
@@ -35,13 +26,19 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
   const { data: revisions, isLoading } = useQuery({
     queryKey: ["content-revisions", contentId],
     queryFn: async () => {
+      console.log("Fetching revisions for content:", contentId);
+      
       const { data, error } = await supabase
         .from("cms_content_revisions")
         .select(`
           id,
           content,
+          metadata,
           created_at,
-          created_by:profiles!cms_content_revisions_created_by_fkey (
+          created_by,
+          version_number,
+          change_summary,
+          profiles (
             display_name,
             avatar_url
           )
@@ -50,28 +47,28 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
         .order("created_at", { ascending: false });
 
       if (error) {
+        console.error("Error fetching revisions:", error);
         toast.error("Failed to load revision history");
         throw error;
       }
 
-      return data.map((item) => ({
-        id: item.id,
-        content: item.content,
-        created_at: item.created_at,
-        created_by: item.created_by
-          ? {
-              display_name: item.created_by.display_name,
-              avatar_url: item.created_by.avatar_url,
-            }
-          : null,
-      })) as Revision[];
+      return transformRevisionList(data as ContentRevision[]);
     },
+    enabled: !!contentId,
   });
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-4">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
+
+  if (!revisions?.length) {
+    return (
+      <div className="text-center p-4 text-muted-foreground">
+        No revision history available
       </div>
     );
   }
@@ -86,7 +83,7 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
       </div>
       <ScrollArea className="h-[400px]">
         <div className="p-4 space-y-4">
-          {revisions?.map((revision, index) => (
+          {revisions.map((revision, index) => (
             <motion.div
               key={revision.id}
               initial={{ opacity: 0, y: 20 }}
@@ -97,10 +94,10 @@ export const RevisionHistory: React.FC<RevisionHistoryProps> = ({
               <div className="flex justify-between items-start mb-2">
                 <div>
                   <p className="text-sm text-muted-foreground">
-                    {format(new Date(revision.created_at), "PPpp")}
+                    {format(new Date(revision.timestamp), "PPpp")}
                   </p>
                   <p className="text-sm">
-                    By: {revision.created_by?.display_name || "Unknown"}
+                    By: {revision.author.displayName}
                   </p>
                 </div>
                 <div className="flex gap-2">

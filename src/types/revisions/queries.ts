@@ -12,6 +12,7 @@ export interface ContentRevision {
   rollback_metadata?: Json;
   profiles?: {
     display_name: string;
+    avatar_url?: string;
   };
 }
 
