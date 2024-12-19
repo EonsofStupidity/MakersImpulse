@@ -21,7 +21,7 @@ export const useUserManagement = () => {
   });
 
   const updateRole = useMutation({
-    mutationFn: async (userId: string, newRole: UserRole) => {
+    mutationFn: async ({ userId, newRole }: { userId: string; newRole: UserRole }) => {
       try {
         setIsLoading(true);
         const { error } = await supabase
@@ -29,14 +29,15 @@ export const useUserManagement = () => {
           .update({ role: newRole })
           .eq('id', userId);
 
-      if (error) throw error;
-      toast.success('User role updated successfully');
-      refetch();
-    } catch (error) {
-      console.error('Error updating user role:', error);
-      toast.error('Failed to update user role');
-    } finally {
-      setIsLoading(false);
+        if (error) throw error;
+        toast.success('User role updated successfully');
+        refetch();
+      } catch (error) {
+        console.error('Error updating user role:', error);
+        toast.error('Failed to update user role');
+      } finally {
+        setIsLoading(false);
+      }
     }
   });
 
@@ -98,7 +99,7 @@ export const useUserManagement = () => {
     error,
     isLoading,
     refetch,
-    updateRole: updateRole.mutateAsync,
+    updateRole,
     banUser,
     getUserActivity,
     getUserCMSActivity
