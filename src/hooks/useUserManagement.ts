@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { UserRole } from '@/components/admin/settings/types/settings';
 
 export const useUserManagement = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,6 +20,26 @@ export const useUserManagement = () => {
     }
   });
 
+  const updateRole = useMutation({
+    mutationFn: async (userId: string, newRole: UserRole) => {
+      try {
+        setIsLoading(true);
+        const { error } = await supabase
+          .from('profiles')
+          .update({ role: newRole })
+          .eq('id', userId);
+
+      if (error) throw error;
+      toast.success('User role updated successfully');
+      refetch();
+    } catch (error) {
+      console.error('Error updating user role:', error);
+      toast.error('Failed to update user role');
+    } finally {
+      setIsLoading(false);
+    }
+  });
+
   const banUser = async (userId: string, reason: string) => {
     try {
       setIsLoading(true);
@@ -33,25 +54,6 @@ export const useUserManagement = () => {
     } catch (error) {
       console.error('Error banning user:', error);
       toast.error('Failed to ban user');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const updateRole = async (userId: string, newRole: string) => {
-    try {
-      setIsLoading(true);
-      const { error } = await supabase
-        .from('profiles')
-        .update({ role: newRole })
-        .eq('id', userId);
-
-      if (error) throw error;
-      toast.success('User role updated successfully');
-      refetch();
-    } catch (error) {
-      console.error('Error updating user role:', error);
-      toast.error('Failed to update user role');
     } finally {
       setIsLoading(false);
     }
@@ -96,8 +98,8 @@ export const useUserManagement = () => {
     error,
     isLoading,
     refetch,
+    updateRole: updateRole.mutateAsync,
     banUser,
-    updateRole,
     getUserActivity,
     getUserCMSActivity
   };

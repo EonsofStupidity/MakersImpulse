@@ -4,6 +4,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { DEFAULT_SETTINGS } from "../hooks/useSettingsDefaults";
 
 export const TransitionSettingsSection = () => {
   const [settings, setSettings] = useState({
@@ -18,6 +19,7 @@ export const TransitionSettingsSection = () => {
     
     try {
       const { data, error } = await supabase.rpc('update_site_settings', {
+        ...DEFAULT_SETTINGS,
         p_transition_duration: `${value}s`,
         p_hover_scale: value.toString()
       });
