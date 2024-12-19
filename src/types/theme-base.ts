@@ -1,4 +1,5 @@
 export interface BaseThemeProperties {
+  id?: string; // Make id optional since it's only needed for database
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -26,6 +27,7 @@ export interface BaseThemeProperties {
   box_shadow?: string;
   backdrop_blur?: string;
   transition_type?: 'fade' | 'slide' | 'scale' | 'blur';
+  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
   theme_mode?: 'light' | 'dark' | 'system';
 }
 

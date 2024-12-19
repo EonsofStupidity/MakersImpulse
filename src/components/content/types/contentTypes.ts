@@ -2,6 +2,8 @@ import { z } from "zod";
 
 export type ContentType = "template" | "page" | "component" | "workflow";
 
+export type ContentStatus = "draft" | "published" | "archived";
+
 export interface ContentWithAuthor {
   id: string;
   title: string;
@@ -9,7 +11,7 @@ export interface ContentWithAuthor {
   content: any;
   metadata?: any;
   slug?: string;
-  status: "draft" | "published" | "archived";
+  status: ContentStatus;
   version: number;
   created_by: { display_name: string };
   updated_by?: { display_name: string };
@@ -18,80 +20,61 @@ export interface ContentWithAuthor {
 }
 
 export const componentContentSchema = z.object({
-  name: z.string(),
-  description: z.string().optional(),
-  props: z.array(z.object({
-    name: z.string(),
-    type: z.string(),
-    required: z.boolean(),
-    default: z.any().optional(),
-    description: z.string().optional()
-  })).optional(),
-  styles: z.record(z.string(), z.any()).optional(),
-  template: z.string(),
-  dependencies: z.array(z.string()).optional(),
-  tags: z.array(z.string()).optional(),
-  category: z.string().optional(),
-  isPublic: z.boolean().optional(),
-  version: z.string().optional()
+  title: z.string(),
+  type: z.literal("component"),
+  content: z.object({
+    componentType: z.string(),
+    props: z.record(z.any()).optional(),
+    styles: z.record(z.any()).optional()
+  }),
+  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  metadata: z.record(z.any()).optional()
 });
 
 export const pageContentSchema = z.object({
   title: z.string(),
-  description: z.string().optional(),
-  layout: z.string().optional(),
-  components: z.array(z.object({
-    id: z.string(),
-    type: z.string(),
-    props: z.record(z.string(), z.any()).optional(),
-    children: z.array(z.any()).optional(),
-    styles: z.record(z.string(), z.any()).optional()
-  })),
-  metadata: z.object({
+  type: z.literal("page"),
+  content: z.object({
+    body: z.string(),
     seo: z.object({
       title: z.string().optional(),
       description: z.string().optional(),
       keywords: z.array(z.string()).optional(),
       ogImage: z.string().optional()
-    }).optional(),
-    scripts: z.array(z.string()).optional(),
-    styles: z.array(z.string()).optional()
-  }).optional(),
-  settings: z.object({
-    isPublic: z.boolean().optional(),
-    requiresAuth: z.boolean().optional(),
-    cacheStrategy: z.string().optional(),
-    customDomain: z.string().optional()
-  }).optional()
+    }).optional()
+  }),
+  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  metadata: z.record(z.any()).optional()
 });
+
+export interface ComponentContent {
+  title: string;
+  type: "component";
+  content: {
+    componentType: string;
+    props?: Record<string, any>;
+    styles?: Record<string, any>;
+  };
+  status?: ContentStatus;
+  metadata?: Record<string, any>;
+}
 
 export interface PageContent {
   title: string;
-  description?: string;
-  layout?: string;
-  components: Array<{
-    id: string;
-    type: string;
-    props?: Record<string, any>;
-    children?: any[];
-    styles?: Record<string, any>;
-  }>;
-  metadata?: {
+  type: "page";
+  content: {
+    body: string;
     seo?: {
       title?: string;
       description?: string;
       keywords?: string[];
       ogImage?: string;
     };
-    scripts?: string[];
-    styles?: string[];
   };
-  settings?: {
-    isPublic?: boolean;
-    requiresAuth?: boolean;
-    cacheStrategy?: string;
-    customDomain?: string;
-  };
+  status?: ContentStatus;
+  metadata?: Record<string, any>;
+  id?: string;
+  version?: number;
 }
 
 export const getSchemaByType = (type: ContentType) => {
@@ -104,22 +87,3 @@ export const getSchemaByType = (type: ContentType) => {
       return z.any();
   }
 };
-
-export interface ComponentContent {
-  name: string;
-  description?: string;
-  props?: Array<{
-    name: string;
-    type: string;
-    required: boolean;
-    default?: any;
-    description?: string;
-  }>;
-  styles?: Record<string, any>;
-  template: string;
-  dependencies?: string[];
-  tags?: string[];
-  category?: string;
-  isPublic?: boolean;
-  version?: string;
-}
