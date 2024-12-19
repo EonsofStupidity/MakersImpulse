@@ -2,8 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import type { Settings } from "../../types";
-import { DatabaseSettingsRow } from "../../../theme/types/theme";
-import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../../../theme/utils/themeUtils";
+import { Theme } from "../../types/theme";
+import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../../utils/themeUtils";
 
 export const useSettingsFetch = () => {
   return useQuery({
@@ -14,7 +14,7 @@ export const useSettingsFetch = () => {
       const { data, error } = await supabase
         .from("site_settings")
         .select("*")
-        .single();
+        .maybeSingle();
 
       if (error) {
         console.error("Error fetching settings:", error);
@@ -22,8 +22,7 @@ export const useSettingsFetch = () => {
         throw error;
       }
 
-      const dbSettings = data as DatabaseSettingsRow;
-      const themeData = convertDbSettingsToTheme(dbSettings);
+      const themeData = convertDbSettingsToTheme(data);
       
       console.log("Settings fetched successfully:", themeData);
       toast.success("Theme settings loaded");

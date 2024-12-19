@@ -1,7 +1,6 @@
-import { Theme, DatabaseSettingsRow } from '../types/theme';
+import { Theme } from '../types/theme';
 
 export const DEFAULT_THEME_SETTINGS: Theme = {
-  id: '',
   site_title: 'MakersImpulse',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
@@ -28,7 +27,7 @@ export const DEFAULT_THEME_SETTINGS: Theme = {
   theme_mode: 'dark'
 };
 
-export const convertDbSettingsToTheme = (settings: DatabaseSettingsRow | null): Theme => {
+export const convertDbSettingsToTheme = (settings: any | null): Theme => {
   if (!settings) {
     console.log("Using default theme settings");
     return DEFAULT_THEME_SETTINGS;

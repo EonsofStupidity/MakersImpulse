@@ -1,7 +1,6 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 
-export interface DatabaseSettingsRow {
-  id: string;
+export interface Theme {
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -27,8 +26,4 @@ export interface DatabaseSettingsRow {
   shadow_color: string;
   hover_scale: string;
   theme_mode?: ThemeMode;
-  updated_at?: string;
-  updated_by?: string;
 }
-
-export interface Theme extends DatabaseSettingsRow {}
