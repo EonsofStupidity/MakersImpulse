@@ -40,12 +40,10 @@ export const useSettingsUpdateHandlers = () => {
 
       const { data, error } = await supabase.rpc('update_site_settings', {
         p_site_title: formData.site_title,
-        p_tagline: formData.tagline,
+        p_tagline: formData.tagline || '',
         p_primary_color: formData.primary_color,
         p_secondary_color: formData.secondary_color,
         p_accent_color: formData.accent_color,
-        p_logo_url: logo_url,
-        p_favicon_url: favicon_url,
         p_text_primary_color: formData.text_primary_color,
         p_text_secondary_color: formData.text_secondary_color,
         p_text_link_color: formData.text_link_color,
@@ -64,7 +62,7 @@ export const useSettingsUpdateHandlers = () => {
         p_font_weight_normal: formData.font_weight_normal,
         p_font_weight_bold: formData.font_weight_bold,
         p_line_height_base: formData.line_height_base,
-        p_letter_spacing: formData.letter_spacing,
+        p_letter_spacing: formData.letter_spacing
       });
 
       if (error) throw error;

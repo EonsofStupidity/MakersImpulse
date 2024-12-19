@@ -5,7 +5,57 @@ import type { Database } from './types';
 const SUPABASE_URL = "https://vvtfumqyznrtzhhqzvgu.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ2dGZ1bXF5em5ydHpoaHF6dmd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQwNDA0NTcsImV4cCI6MjA0OTYxNjQ1N30.M1CxmjKZZAusFRQqy7qT2NIKxOmOdrsuGvZd5CaWhc8";
 
-// Import the supabase client like this:
-// import { supabase } from "@/integrations/supabase/client";
+// Create Supabase client with configuration
+export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
-export const supabase = createClient<Database>(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+// Utility function for media uploads
+export const uploadMedia = async (file: File): Promise<string> => {
+  try {
+    const { data, error } = await supabase.storage
+      .from('media')
+      .upload(`uploads/${Date.now()}-${file.name}`, file);
+
+    if (error) {
+      console.error('Media upload error:', error);
+      throw error;
+    }
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('media')
+      .getPublicUrl(data.path);
+
+    return publicUrl;
+  } catch (error) {
+    console.error('Error in uploadMedia:', error);
+    throw error;
+  }
+};
+
+// Utility function for retrying operations
+export const withRetry = async <T>(
+  operation: () => Promise<T>,
+  maxRetries = 3,
+  delay = 1000
+): Promise<T> => {
+  let lastError: Error | null = null;
+  
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await operation();
+    } catch (error) {
+      console.error(`Attempt ${i + 1} failed:`, error);
+      lastError = error as Error;
+      if (i < maxRetries - 1) {
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+      }
+    }
+  }
+  
+  throw lastError;
+};
