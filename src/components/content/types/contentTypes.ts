@@ -36,7 +36,7 @@ export interface ComponentContent extends ContentBase {
   type: "component";
 }
 
-export interface ContentWithAuthor extends ContentBase {
+export interface ContentWithAuthor extends Omit<ContentBase, 'created_by'> {
   created_by: {
     display_name: string;
     avatar_url: string;
