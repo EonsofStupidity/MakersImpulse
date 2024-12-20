@@ -17,7 +17,6 @@ export interface SecuritySettings {
   rate_limit_window_minutes: number;
 }
 
-// Base theme interface with required fields for the actual theme
 export interface ThemeBase {
   id?: string;
   site_title: string;
