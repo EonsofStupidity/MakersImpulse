@@ -27,25 +27,39 @@ const BuildFormContainer = () => {
         units: "mm"
       },
       parts: [],
+      images: []
     }
   });
 
-  const onSubmit = async (data: BuildFormData) => {
+  const onSubmit = async (formData: BuildFormData) => {
     try {
       setIsSubmitting(true);
-      console.log("Submitting build data:", data);
       
+      // Get current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
-      
-      const { error } = await supabase
-        .from('mi3dp_builds')
-        .insert({
-          ...data,
-          user_id: user?.id,
-        });
+      if (!user) throw new Error('No authenticated user');
 
-      if (error) throw error;
+      // Prepare the data for insertion
+      const buildData = {
+        ...formData,
+        user_id: user.id,
+        // Ensure proper JSON serialization for complex objects
+        build_volume: formData.build_volume ? JSON.parse(JSON.stringify(formData.build_volume)) : null,
+        parts: formData.parts ? JSON.parse(JSON.stringify(formData.parts)) : null,
+        images: formData.images ? JSON.parse(JSON.stringify(formData.images)) : null
+      };
+
+      console.log('Submitting build data:', buildData);
+
+      const { error: insertError } = await supabase
+        .from('mi3dp_builds')
+        .insert(buildData);
+
+      if (insertError) {
+        console.error('Insert error:', insertError);
+        throw insertError;
+      }
 
       toast.success("Build created successfully!");
       navigate("/maker-space/builds");
