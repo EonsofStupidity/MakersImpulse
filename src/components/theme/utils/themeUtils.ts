@@ -1,5 +1,6 @@
-import { Theme, DatabaseSettingsRow } from "@/types/theme/types";
-import { DEFAULT_BASE_PROPERTIES } from "@/types/theme/base";
+import { Theme, DatabaseSettingsRow } from "@/types/theme";
+import { DEFAULT_BASE_PROPERTIES } from "@/types/theme";
+
 export const DEFAULT_THEME_SETTINGS: Theme = DEFAULT_BASE_PROPERTIES;
 
 export const convertDbSettingsToTheme = (settings: DatabaseSettingsRow | null): Theme => {
