@@ -8,7 +8,7 @@ export type ThemeComponentType =
   | 'effect';
 
 export interface ThemeBase {
-  id: string;
+  id?: string;
   site_title: string;
   tagline?: string;
   primary_color: string;

@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { settingsSchema, type SettingsFormData, type Settings } from "@/types/theme";
+import { settingsSchema, type SettingsFormData } from "@/types/theme";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { ResetDialog } from "./components/ResetDialog";
@@ -20,6 +20,7 @@ import { TransitionConfigSection } from "./sections/TransitionConfigSection";
 import { ThemeImportSection } from "./sections/ThemeImportSection";
 import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
+import type { Settings } from "@/types/theme";
 
 const settingsSchema = z.object({
   site_title: z.string().min(1, "Site title is required"),
@@ -217,3 +218,4 @@ export const SettingsForm = () => {
     </div>
   );
 };
+

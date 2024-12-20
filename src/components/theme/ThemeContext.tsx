@@ -1,12 +1,16 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { Theme, ThemeContextType } from "./types/theme";
+import type { ThemeBase } from "@/types/theme";
 import { useThemeSetup } from "./hooks/useThemeSetup";
 import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
-import { convertToUpdateParams } from "@/components/admin/settings/types/settings";
+
+interface ThemeContextType {
+  theme: ThemeBase | null;
+  updateTheme: (newTheme: ThemeBase) => Promise<void>;
+}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -20,7 +24,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     console.log('ThemeProvider mounted, current theme:', theme?.site_title);
   }, [theme]);
 
-  const updateTheme = async (newTheme: Theme) => {
+  const updateTheme = async (newTheme: ThemeBase) => {
     console.log('Updating theme with new settings:', newTheme.site_title);
     
     try {
