@@ -14,13 +14,16 @@ export const useScheduling = (contentId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("publishing_queue")
-        .select("*")
+        .select("*, profiles(display_name)")
         .eq("content_id", contentId)
         .order("scheduled_for", { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching scheduled publications:", error);
+        throw error;
+      }
 
-      return data.map(item => ({
+      return data?.map(item => ({
         id: item.id,
         contentId: item.content_id,
         revisionId: item.revision_id,
@@ -31,6 +34,8 @@ export const useScheduling = (contentId: string) => {
         processedAt: item.processed_at ? new Date(item.processed_at) : undefined,
       })) as ScheduledPublication[];
     },
+    staleTime: 1000 * 60, // 1 minute
+    retry: 2
   });
 
   const schedulePublication = useMutation({
