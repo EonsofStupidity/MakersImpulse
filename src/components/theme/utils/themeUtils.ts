@@ -19,7 +19,10 @@ export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   font_weight_bold: '700',
   line_height_base: '1.5',
   letter_spacing: 'normal',
-  theme_mode: 'dark'
+  theme_mode: 'dark',
+  real_time_toggle: true,
+  animations_enabled: true,
+  default_animation_duration: 300
 };
 
 export const convertDbSettingsToTheme = (settings: any | null): ThemeBase => {
@@ -61,7 +64,8 @@ export const applyThemeToDocument = (theme: ThemeBase) => {
     '--shadow-color': theme.shadow_color,
     '--hover-scale': theme.hover_scale,
     '--box-shadow': theme.box_shadow,
-    '--backdrop-blur': theme.backdrop_blur
+    '--backdrop-blur': theme.backdrop_blur,
+    '--animation-duration': `${theme.default_animation_duration}ms`
   };
 
   Object.entries(cssVars).forEach(([key, value]) => {

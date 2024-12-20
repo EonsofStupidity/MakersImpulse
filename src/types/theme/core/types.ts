@@ -9,8 +9,6 @@ export type ThemeComponentType =
 
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 
-export type Settings = ThemeBase;
-
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -42,6 +40,9 @@ export interface ThemeBase {
   transition_type?: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
+  real_time_toggle?: boolean;
+  animations_enabled?: boolean;
+  default_animation_duration?: number;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -49,3 +50,6 @@ export interface ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
+
+export type Settings = ThemeBase;
+export type SettingsResponse = ThemeBase;
