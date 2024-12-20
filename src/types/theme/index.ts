@@ -1,11 +1,10 @@
-// Export base types and interfaces
-export * from './types';
+// Core exports
+export * from './core/base';
+export * from './core/types';
+export * from './core/colors';
+export * from './core/typography';
+export * from './core/effects';
 
-// Export theme-specific types
-export * from './base';
-export * from './colors';
-export * from './typography';
-export * from './effects';
-
-// Export schema validation
-export * from './schema';
+// Settings exports
+export * from './settings/database';
+export * from './settings/context';
