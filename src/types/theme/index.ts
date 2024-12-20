@@ -8,3 +8,4 @@ export * from './core/effects';
 // Settings exports
 export * from './settings/database';
 export * from './settings/context';
+export * from './schema';
