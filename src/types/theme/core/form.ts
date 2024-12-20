@@ -2,7 +2,6 @@ import { ThemeBase } from './base';
 import { TransitionType } from './types';
 
 export interface ThemeFormData extends ThemeBase {
-  // Make optional fields required for the form
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
