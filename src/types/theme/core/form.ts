@@ -1,6 +1,8 @@
-import { ThemeBase } from './types';
+import { ThemeBase } from './base';
 
-export type SettingsFormData = ThemeBase;
+export interface ThemeFormData extends ThemeBase {
+  // Additional form-specific fields can be added here
+}
 
 export interface ThemeFormState {
   isDirty: boolean;
