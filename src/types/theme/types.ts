@@ -1,3 +1,5 @@
+import { Json } from '@/integrations/supabase/types';
+
 export type ThemeMode = 'light' | 'dark' | 'system';
 
 export type ThemeComponentType = 
@@ -58,13 +60,9 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-// Form data type - all fields are optional during form entry
 export type SettingsFormData = Partial<ThemeBase>;
-
-// Settings type for database operations - same as ThemeBase
 export type Settings = ThemeBase;
 
-// Type for database rows - matches the database schema
 export interface DatabaseSettingsRow extends ThemeBase {
   id: string;
   updated_at?: string;
