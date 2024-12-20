@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useCallback, useMemo } from 'react';
 import { ThemeContextType } from '@/types/theme/core/context';
 import { ThemeBase } from '@/types/theme/core/base';
 import { useThemeSetup } from './hooks/useThemeSetup';
@@ -8,6 +8,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { convertToUpdateParams } from '@/utils/transforms/settings';
+import { useDebouncedCallback } from './hooks/useDebouncedCallback';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
@@ -17,20 +18,31 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   
   useThemeSubscription(setTheme);
 
+  // Debounced theme application
+  const debouncedApplyTheme = useDebouncedCallback((newTheme: ThemeBase) => {
+    console.log('Applying debounced theme:', newTheme);
+    applyThemeToDocument(newTheme);
+  }, theme?.preview_preferences?.update_debounce_ms || 100);
+
   // Apply theme when it changes
   useEffect(() => {
     if (theme) {
-      console.log('Applying theme:', theme);
-      applyThemeToDocument(theme);
+      const isRealTimeUpdates = theme.preview_preferences?.real_time_updates ?? true;
+      if (isRealTimeUpdates) {
+        debouncedApplyTheme(theme);
+      } else {
+        applyThemeToDocument(theme);
+      }
     }
-  }, [theme]);
+  }, [theme, debouncedApplyTheme]);
 
-  const updateTheme = async (newTheme: Partial<ThemeBase>) => {
+  const updateTheme = useCallback(async (newTheme: Partial<ThemeBase>) => {
     try {
       if (!session?.user) {
         console.log('No session, applying theme locally:', newTheme);
-        applyThemeToDocument({ ...theme, ...newTheme });
-        setTheme({ ...theme, ...newTheme });
+        const updatedTheme = { ...theme, ...newTheme };
+        applyThemeToDocument(updatedTheme);
+        setTheme(updatedTheme);
         return;
       }
 
@@ -41,13 +53,29 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       setTheme({ ...theme, ...newTheme });
-      applyThemeToDocument({ ...theme, ...newTheme });
+      
+      const isRealTimeUpdates = theme?.preview_preferences?.real_time_updates ?? true;
+      if (isRealTimeUpdates) {
+        debouncedApplyTheme({ ...theme, ...newTheme });
+      }
+      
       toast.success("Theme updated successfully");
     } catch (error) {
       console.error("Error updating theme:", error);
       toast.error("Failed to update theme");
     }
-  };
+  }, [theme, setTheme, session, debouncedApplyTheme]);
+
+  const contextValue = useMemo(() => ({
+    theme,
+    updateTheme,
+    previewPreferences: theme?.preview_preferences || {
+      real_time_updates: true,
+      animation_enabled: true,
+      glass_effect_level: 'medium',
+      update_debounce_ms: 100
+    }
+  }), [theme, updateTheme]);
 
   if (isLoading) {
     return null;
@@ -59,7 +87,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, updateTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );

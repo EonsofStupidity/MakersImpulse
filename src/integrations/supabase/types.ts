@@ -1577,6 +1577,7 @@ export type Database = {
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
+          preview_preferences: Json | null
           primary_color: string | null
           secondary_color: string | null
           shadow_color: string | null
@@ -1617,6 +1618,7 @@ export type Database = {
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
+          preview_preferences?: Json | null
           primary_color?: string | null
           secondary_color?: string | null
           shadow_color?: string | null
@@ -1657,6 +1659,7 @@ export type Database = {
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
+          preview_preferences?: Json | null
           primary_color?: string | null
           secondary_color?: string | null
           shadow_color?: string | null
@@ -2005,6 +2008,7 @@ export type Database = {
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
+          preview_preferences: Json | null
           primary_color: string | null
           secondary_color: string | null
           shadow_color: string | null
