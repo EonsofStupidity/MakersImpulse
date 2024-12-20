@@ -1,6 +1,6 @@
-import { ThemeMode, ThemeComponentType } from './types';
+import { ThemeMode, ThemeComponentType, TransitionType } from './types';
 
-export interface ThemeFormData {
+export interface SettingsFormData {
   // Basic Settings
   site_title: string;
   tagline?: string;
@@ -42,7 +42,7 @@ export interface ThemeFormData {
   // Theme Configuration
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
-  transition_type?: 'fade' | 'slide' | 'scale' | 'blur';
+  transition_type?: TransitionType;
 }
 
 export interface ThemeFormState {
