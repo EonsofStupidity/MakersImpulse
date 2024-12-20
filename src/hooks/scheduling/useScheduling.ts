@@ -12,7 +12,6 @@ export const useScheduling = (contentId: string | undefined) => {
   const { data: scheduledPublications, isLoading } = useQuery({
     queryKey: ["scheduled-publications", contentId],
     queryFn: async () => {
-      // Don't fetch if no contentId is provided
       if (!contentId) {
         return [];
       }
@@ -28,7 +27,7 @@ export const useScheduling = (contentId: string | undefined) => {
         throw error;
       }
 
-      return data?.map(item => ({
+      return (data || []).map(item => ({
         id: item.id,
         contentId: item.content_id,
         revisionId: item.revision_id,
@@ -39,9 +38,7 @@ export const useScheduling = (contentId: string | undefined) => {
         processedAt: item.processed_at ? new Date(item.processed_at) : undefined,
       })) as ScheduledPublication[];
     },
-    staleTime: 1000 * 60, // 1 minute
-    retry: 2,
-    enabled: !!contentId, // Only run query if contentId exists
+    enabled: Boolean(contentId),
   });
 
   const schedulePublication = useMutation({
@@ -77,6 +74,7 @@ export const useScheduling = (contentId: string | undefined) => {
             revision_id: revisionId,
             scheduled_for: scheduledFor.toISOString(),
             status: "pending",
+            created_by: (await supabase.auth.getUser()).data.user?.id
           })
           .select()
           .single();

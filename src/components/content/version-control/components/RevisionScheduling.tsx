@@ -8,6 +8,7 @@ import { QueueProcessor } from './scheduling/QueueProcessor';
 import { useScheduling } from '@/hooks/scheduling/useScheduling';
 import { addMinutes, addDays } from 'date-fns';
 import { motion } from 'framer-motion';
+import { toast } from 'sonner';
 
 interface RevisionSchedulingProps {
   contentId?: string;
