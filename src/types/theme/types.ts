@@ -1,4 +1,5 @@
-import { Json } from '@/integrations/supabase/types';
+// The only import we actually need is for the Json type
+import type { Json } from '@/integrations/supabase/types';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 
@@ -48,7 +49,6 @@ export interface ThemeBase {
   box_shadow?: string;
   backdrop_blur?: string;
   transition_type?: 'fade' | 'slide' | 'scale' | 'blur';
-  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
   logo_url?: string;
@@ -60,16 +60,11 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-export interface SettingsResponse {
-  success: boolean;
-  data: ThemeBase;
-}
-
 export type SettingsFormData = Partial<ThemeBase>;
 export type Settings = ThemeBase;
 
 export interface ThemeContextType {
-  theme: ThemeBase | null;
+  theme: ThemeBase;
   updateTheme: (newTheme: ThemeBase) => Promise<void>;
 }
 
