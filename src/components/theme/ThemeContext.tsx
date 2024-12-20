@@ -7,7 +7,6 @@ import { applyThemeToDocument } from './utils/themeUtils';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/store/auth-store';
-import { convertToUpdateParams } from '@/utils/transforms/settings';
 import { useDebouncedCallback } from './hooks/useDebouncedCallback';
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -45,8 +44,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
       }
 
       console.log('Updating theme in database:', newTheme);
-      const params = convertToUpdateParams(newTheme);
-      const { error } = await supabase.rpc('update_site_settings', params);
+      const { error } = await supabase
+        .from('theme_configuration')
+        .update(newTheme)
+        .eq('id', theme?.id);
 
       if (error) throw error;
       
