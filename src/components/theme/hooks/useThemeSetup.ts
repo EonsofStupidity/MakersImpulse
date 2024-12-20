@@ -6,6 +6,7 @@ import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument 
 
 export const useThemeSetup = () => {
   const [theme, setTheme] = useState<Settings>(DEFAULT_THEME_SETTINGS);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchInitialTheme = async () => {
@@ -13,7 +14,7 @@ export const useThemeSetup = () => {
         console.log("Fetching initial theme settings...");
         
         const { data: rawData, error } = await supabase
-          .from("site_settings")
+          .from("theme_configuration")
           .select("*")
           .limit(1)
           .maybeSingle();
@@ -22,6 +23,7 @@ export const useThemeSetup = () => {
           console.error("Error fetching theme:", error);
           setTheme(DEFAULT_THEME_SETTINGS);
           applyThemeToDocument(DEFAULT_THEME_SETTINGS);
+          setIsLoading(false);
           return;
         }
 
@@ -29,6 +31,7 @@ export const useThemeSetup = () => {
           console.log("No settings found, using defaults");
           setTheme(DEFAULT_THEME_SETTINGS);
           applyThemeToDocument(DEFAULT_THEME_SETTINGS);
+          setIsLoading(false);
           return;
         }
 
@@ -43,11 +46,13 @@ export const useThemeSetup = () => {
         console.error("Error in theme setup:", error);
         setTheme(DEFAULT_THEME_SETTINGS);
         applyThemeToDocument(DEFAULT_THEME_SETTINGS);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchInitialTheme();
   }, []);
 
-  return { theme, setTheme };
+  return { theme, setTheme, isLoading };
 };

@@ -7,14 +7,16 @@ import { toast } from "sonner";
 
 export const useThemeSubscription = (setTheme: (theme: Settings) => void) => {
   useEffect(() => {
+    console.log("Setting up theme subscription");
+    
     const channel = supabase
-      .channel('site_settings_changes')
+      .channel('theme_changes')
       .on(
         'postgres_changes',
         {
           event: 'UPDATE',
           schema: 'public',
-          table: 'site_settings'
+          table: 'theme_configuration'
         },
         (payload) => {
           console.log("Received real-time theme update:", payload.new);
@@ -24,9 +26,12 @@ export const useThemeSubscription = (setTheme: (theme: Settings) => void) => {
           toast.success("Theme updated in real-time");
         }
       )
-      .subscribe();
+      .subscribe((status) => {
+        console.log("Theme subscription status:", status);
+      });
 
     return () => {
+      console.log("Cleaning up theme subscription");
       channel.unsubscribe();
     };
   }, [setTheme]);

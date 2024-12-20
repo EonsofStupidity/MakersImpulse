@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { ThemeContextType, ThemeBase } from '@/types/theme';
 import { useThemeSetup } from './hooks/useThemeSetup';
 import { useThemeSubscription } from './hooks/useThemeSubscription';
@@ -11,26 +11,36 @@ import { convertToUpdateParams } from '@/utils/transforms/settings';
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const { theme, setTheme } = useThemeSetup();
+  const { theme, setTheme, isLoading } = useThemeSetup();
   const { session } = useAuthStore();
   
   useThemeSubscription(setTheme);
 
-  const updateTheme = async (newTheme: ThemeBase) => {
+  // Apply theme when it changes
+  useEffect(() => {
+    if (theme) {
+      console.log('Applying theme:', theme);
+      applyThemeToDocument(theme);
+    }
+  }, [theme]);
+
+  const updateTheme = async (newTheme: Partial<ThemeBase>) => {
     try {
       if (!session?.user) {
-        applyThemeToDocument(newTheme);
-        setTheme(newTheme);
+        console.log('No session, applying theme locally:', newTheme);
+        applyThemeToDocument({ ...theme, ...newTheme });
+        setTheme({ ...theme, ...newTheme });
         return;
       }
 
+      console.log('Updating theme in database:', newTheme);
       const params = convertToUpdateParams(newTheme);
       const { error } = await supabase.rpc('update_site_settings', params);
 
       if (error) throw error;
       
-      setTheme(newTheme);
-      applyThemeToDocument(newTheme);
+      setTheme({ ...theme, ...newTheme });
+      applyThemeToDocument({ ...theme, ...newTheme });
       toast.success("Theme updated successfully");
     } catch (error) {
       console.error("Error updating theme:", error);
@@ -38,7 +48,12 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+  if (isLoading) {
+    return null;
+  }
+
   if (!theme) {
+    console.error("No theme data available");
     return null;
   }
 
