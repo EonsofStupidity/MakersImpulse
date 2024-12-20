@@ -39,7 +39,47 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-export const DEFAULT_BASE_PROPERTIES: ThemeBase = {
+export const cssVarMapping: Record<keyof ThemeBase, string> = {
+  primary_color: '--primary',
+  secondary_color: '--secondary',
+  accent_color: '--accent',
+  text_primary_color: '--foreground',
+  text_secondary_color: '--muted-foreground',
+  text_link_color: '--link',
+  text_heading_color: '--heading',
+  neon_cyan: '--neon-cyan',
+  neon_pink: '--neon-pink',
+  neon_purple: '--neon-purple',
+  font_family_heading: '--font-family-heading',
+  font_family_body: '--font-family-body',
+  font_size_base: '--font-size-base',
+  font_weight_normal: '--font-weight-normal',
+  font_weight_bold: '--font-weight-bold',
+  line_height_base: '--line-height-base',
+  letter_spacing: '--letter-spacing',
+  border_radius: '--border-radius',
+  spacing_unit: '--spacing-unit',
+  transition_duration: '--transition-duration',
+  shadow_color: '--shadow-color',
+  hover_scale: '--hover-scale',
+  box_shadow: '--box-shadow',
+  backdrop_blur: '--backdrop-blur',
+  // These don't map to CSS variables
+  id: '',
+  site_title: '',
+  tagline: '',
+  theme_mode: '',
+  component_type: '',
+  transition_type: '',
+  logo_url: '',
+  favicon_url: '',
+  updated_at: '',
+  updated_by: '',
+  state_version: '',
+  last_sync: ''
+};
+
+export const DEFAULT_THEME: ThemeBase = {
   site_title: 'MakersImpulse',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
