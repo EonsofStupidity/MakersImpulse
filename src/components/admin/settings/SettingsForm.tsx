@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { settingsSchema } from "@/types/theme";
+import { settingsSchema, SettingsFormData } from "@/types/theme";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { ResetDialog } from "./components/ResetDialog";
 import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { SettingsFormContainer } from "./components/SettingsFormContainer";
 import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
-import { SettingsFormData } from "@/types/theme/types";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);

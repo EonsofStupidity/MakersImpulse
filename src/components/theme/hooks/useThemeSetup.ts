@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings } from "@/components/admin/settings/types";
+import { Settings, DatabaseSettingsRow } from "@/types/theme";
 import { toast } from "sonner";
-import { DatabaseSettingsRow } from "../types/theme";
 import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../utils/themeUtils";
 
 export const useThemeSetup = () => {

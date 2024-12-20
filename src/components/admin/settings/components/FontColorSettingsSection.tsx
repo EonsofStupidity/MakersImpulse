@@ -2,8 +2,10 @@ import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ColorPicker } from "./ColorPicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UseFormReturn } from "react-hook-form";
+import { SettingsFormData } from "@/types/theme";
 
-export const FontColorSettingsSection = ({ form }: { form: any }) => {
+export const FontColorSettingsSection = ({ form }: { form: UseFormReturn<SettingsFormData> }) => {
   return (
     <AccordionItem value="font-colors">
       <AccordionTrigger className="text-lg font-semibold text-white">

@@ -1,7 +1,7 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "../../types";
+import { SettingsFormData } from "@/types/theme";
 import { ColorPicker } from "../../components/ColorPicker";
 
 interface ColorSectionProps {

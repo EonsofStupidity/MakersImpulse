@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Theme, DatabaseSettingsRow } from "../types/theme";
+import { Theme, DatabaseSettingsRow } from "@/types/theme";
 import { convertDbSettingsToTheme, applyThemeToDocument } from "../utils/themeUtils";
 
 export const useThemeSettings = () => {

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect } from "react";
-import type { ThemeBase, ThemeContextType } from "@/types/theme";
+import { ThemeBase, ThemeContextType } from "@/types/theme";
 import { useThemeSetup } from "./hooks/useThemeSetup";
 import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
