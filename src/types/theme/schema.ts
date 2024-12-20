@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export const settingsSchema = z.object({
   site_title: z.string().min(1, "Site title is required"),

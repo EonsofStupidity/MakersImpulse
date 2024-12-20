@@ -55,3 +55,12 @@ export interface ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
+
+export interface Settings extends ThemeBase {
+  id?: string;
+}
+
+export interface ThemeContextType {
+  theme: ThemeBase | null;
+  updateTheme: (newTheme: ThemeBase) => Promise<void>;
+}
