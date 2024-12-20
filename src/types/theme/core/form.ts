@@ -1,4 +1,5 @@
 import { ThemeBase } from './base';
+import { TransitionType } from './types';
 
 export interface ThemeFormData extends ThemeBase {
   // Make optional fields required for the form
@@ -9,7 +10,7 @@ export interface ThemeFormData extends ThemeBase {
   hover_scale: string;
   box_shadow: string;
   backdrop_blur: string;
-  transition_type: string;
+  transition_type: TransitionType;
 }
 
 export interface ThemeFormState {
