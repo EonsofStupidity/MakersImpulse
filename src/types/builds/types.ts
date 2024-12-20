@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import { z } from "zod";
 import type { buildSchema, buildVolumeSchema, buildPartSchema, buildImageSchema } from "./schemas";
 
 // Core types derived from schemas
