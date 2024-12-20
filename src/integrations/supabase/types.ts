@@ -1588,7 +1588,7 @@ export type Database = {
           text_link_color: string | null
           text_primary_color: string | null
           text_secondary_color: string | null
-          theme_mode: string | null
+          theme_mode: Database["public"]["Enums"]["theme_mode_type"] | null
           transition_duration: string | null
           transition_type: string | null
           updated_at: string | null
@@ -1628,7 +1628,7 @@ export type Database = {
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
-          theme_mode?: string | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
           transition_duration?: string | null
           transition_type?: string | null
           updated_at?: string | null
@@ -1668,7 +1668,7 @@ export type Database = {
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
-          theme_mode?: string | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
           transition_duration?: string | null
           transition_type?: string | null
           updated_at?: string | null
@@ -1984,7 +1984,7 @@ export type Database = {
           text_link_color: string | null
           text_primary_color: string | null
           text_secondary_color: string | null
-          theme_mode: string | null
+          theme_mode: Database["public"]["Enums"]["theme_mode_type"] | null
           transition_duration: string | null
           transition_type: string | null
           updated_at: string | null
@@ -2035,6 +2035,7 @@ export type Database = {
         | "animation"
         | "effect"
       theme_mode: "light" | "dark" | "system"
+      theme_mode_type: "light" | "dark" | "system"
       transition_type: "fade" | "slide" | "scale" | "blur"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"
       workflow_stage_type:
