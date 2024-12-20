@@ -1,8 +1,11 @@
+// Export base types and interfaces
 export * from './types';
+
+// Export theme-specific types
 export * from './base';
 export * from './colors';
 export * from './typography';
-export * from './schema';
+export * from './effects';
 
-// Remove duplicate exports of Settings and SettingsResponse
-// These are now exported from ./types
+// Export schema validation
+export * from './schema';
