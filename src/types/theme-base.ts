@@ -1,7 +1,7 @@
 export interface BaseThemeProperties {
   id?: string;
   site_title: string;
-  tagline: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -29,6 +29,22 @@ export interface BaseThemeProperties {
   transition_type?: 'fade' | 'slide' | 'scale' | 'blur';
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
   theme_mode?: 'light' | 'dark' | 'system';
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
+  security_settings?: {
+    ip_blacklist: string[];
+    ip_whitelist: string[];
+    max_login_attempts: number;
+    rate_limit_requests: number;
+    session_timeout_minutes: number;
+    lockout_duration_minutes: number;
+    rate_limit_window_minutes: number;
+  };
+  state_version?: number;
+  last_sync?: string;
+  component_type?: 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 }
 
 export const DEFAULT_BASE_PROPERTIES: BaseThemeProperties = {

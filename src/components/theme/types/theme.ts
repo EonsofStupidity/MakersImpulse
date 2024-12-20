@@ -44,4 +44,18 @@ export interface DatabaseSettingsRow {
   transition_type: string;
   updated_at?: string;
   updated_by?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  security_settings?: {
+    ip_blacklist: string[];
+    ip_whitelist: string[];
+    max_login_attempts: number;
+    rate_limit_requests: number;
+    session_timeout_minutes: number;
+    lockout_duration_minutes: number;
+    rate_limit_window_minutes: number;
+  };
+  state_version?: number;
+  last_sync?: string;
+  component_type?: 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 }

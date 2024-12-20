@@ -55,7 +55,7 @@ export type Settings = DatabaseSettings;
 
 export const convertToUpdateParams = (settings: DatabaseSettings): SettingsUpdateParams => ({
   p_site_title: settings.site_title,
-  p_tagline: settings.tagline,
+  p_tagline: settings.tagline || '',
   p_primary_color: settings.primary_color,
   p_secondary_color: settings.secondary_color,
   p_accent_color: settings.accent_color,
@@ -79,10 +79,3 @@ export const convertToUpdateParams = (settings: DatabaseSettings): SettingsUpdat
   p_line_height_base: settings.line_height_base,
   p_letter_spacing: settings.letter_spacing
 });
-
-export enum UserRole {
-  SUBSCRIBER = 'subscriber',
-  MAKER = 'maker',
-  ADMIN = 'admin',
-  SUPER_ADMIN = 'super_admin'
-}
