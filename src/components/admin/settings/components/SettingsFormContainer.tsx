@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { SettingsFormHeader } from "./SettingsFormHeader";
 import { SettingsFormContent } from "./SettingsFormContent";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { SettingsFormData } from "@/types/theme/core/form";
 
 interface SettingsFormContainerProps {
   form: UseFormReturn<SettingsFormData>;

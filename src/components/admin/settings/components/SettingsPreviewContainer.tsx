@@ -2,10 +2,10 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { SettingsPreview } from "./SettingsPreview";
-import { Settings } from "@/types/theme";
+import { ThemeBase } from "@/types/theme/core/base";
 
 interface SettingsPreviewContainerProps {
-  settings: Settings;
+  settings: ThemeBase;
   logoFile: File | null;
   faviconFile: File | null;
 }

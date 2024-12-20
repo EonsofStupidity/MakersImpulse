@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSettingsFetch } from "./handlers/useSettingsFetch";
 import { useSettingsUpdateHandlers } from "./handlers/useSettingsUpdateHandlers";
 import { useSettingsReset } from "./handlers/useSettingsReset";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types/theme/core/base";
 
 export const useSettingsForm = () => {
   const { data: settings, isLoading } = useSettingsFetch();
