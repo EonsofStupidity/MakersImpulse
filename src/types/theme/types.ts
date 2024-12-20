@@ -22,7 +22,7 @@ export interface SecuritySettings {
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -40,11 +40,11 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
   box_shadow?: string;
   backdrop_blur?: string;
   transition_type?: TransitionType;
@@ -54,7 +54,6 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  security_settings?: SecuritySettings;
   state_version?: number;
   last_sync?: string;
 }
