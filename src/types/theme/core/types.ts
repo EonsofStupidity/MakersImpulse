@@ -49,6 +49,12 @@ export interface ThemeBase {
   updated_by?: string;
   state_version?: number;
   last_sync?: string;
+  preview_preferences?: {
+    real_time_updates: boolean;
+    animation_enabled: boolean;
+    glass_effect_level: 'low' | 'medium' | 'high';
+    update_debounce_ms: number;
+  };
 }
 
 export type Settings = ThemeBase;

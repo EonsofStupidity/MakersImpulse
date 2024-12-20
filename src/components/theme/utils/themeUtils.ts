@@ -22,7 +22,14 @@ export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   theme_mode: 'dark',
   real_time_toggle: true,
   animations_enabled: true,
-  default_animation_duration: 300
+  default_animation_duration: 300,
+  transition_type: 'fade',
+  preview_preferences: {
+    real_time_updates: true,
+    animation_enabled: true,
+    glass_effect_level: 'medium',
+    update_debounce_ms: 100
+  }
 };
 
 export const convertDbSettingsToTheme = (settings: any | null): ThemeBase => {

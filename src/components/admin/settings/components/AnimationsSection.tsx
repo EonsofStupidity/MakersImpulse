@@ -1,17 +1,23 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types/theme/core/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { toast } from "sonner";
 
 interface AnimationsSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) => {
+  const handleToggleChange = (field: "real_time_toggle" | "animations_enabled", value: boolean) => {
+    form.setValue(field, value);
+    toast.success(`${field === "real_time_toggle" ? "Real-time updates" : "Animations"} ${value ? "enabled" : "disabled"}`);
+  };
+
   return (
     <AccordionItem value="animations">
       <AccordionTrigger className="text-lg font-semibold text-white">
@@ -26,8 +32,8 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
               </Label>
               <Switch
                 id="real-time-toggle"
-                checked={form.watch("real_time_toggle")}
-                onCheckedChange={(checked) => form.setValue("real_time_toggle", checked)}
+                checked={form.watch("real_time_toggle") ?? true}
+                onCheckedChange={(checked) => handleToggleChange("real_time_toggle", checked)}
               />
             </div>
             <div className="flex items-center justify-between">
@@ -36,8 +42,8 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
               </Label>
               <Switch
                 id="animations-enabled"
-                checked={form.watch("animations_enabled")}
-                onCheckedChange={(checked) => form.setValue("animations_enabled", checked)}
+                checked={form.watch("animations_enabled") ?? true}
+                onCheckedChange={(checked) => handleToggleChange("animations_enabled", checked)}
               />
             </div>
           </div>
@@ -64,15 +70,15 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
                 { label: "Scale", value: "scale" },
                 { label: "Blur", value: "blur" }
               ]}
-              onChange={(value) => form.setValue("transition_type", value)}
+              onChange={(value) => form.setValue("transition_type", value as TransitionType)}
               description="Select the type of transition between elements"
             />
           </div>
 
-          <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
-            <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
-            <div className="space-y-4">
-              {form.watch("animations_enabled") && (
+          {form.watch("animations_enabled") && (
+            <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
+              <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
+              <div className="space-y-4">
                 <div
                   className="p-4 bg-primary/10 rounded-lg transition-all"
                   style={{
@@ -81,9 +87,9 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
                 >
                   <p className="text-primary text-sm">Animation Preview</p>
                 </div>
-              )}
+              </div>
             </div>
-          </div>
+          )}
         </Card>
       </AccordionContent>
     </AccordionItem>
