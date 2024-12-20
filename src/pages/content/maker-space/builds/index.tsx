@@ -1,4 +1,6 @@
 import { motion } from "framer-motion";
+import { BuildsList } from "@/components/maker-space/builds/BuildsList";
+import { CreateBuildButton } from "@/components/maker-space/builds/CreateBuildButton";
 
 const Builds = () => {
   return (
@@ -7,8 +9,11 @@ const Builds = () => {
       animate={{ opacity: 1 }}
       className="container mx-auto p-6"
     >
-      <h1 className="text-3xl font-bold mb-6">Builds</h1>
-      {/* Build content will go here */}
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">3D Printer Builds</h1>
+        <CreateBuildButton />
+      </div>
+      <BuildsList />
     </motion.div>
   );
 };
