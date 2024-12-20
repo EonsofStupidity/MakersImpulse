@@ -60,8 +60,18 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
+export interface SettingsResponse {
+  success: boolean;
+  data: ThemeBase;
+}
+
 export type SettingsFormData = Partial<ThemeBase>;
 export type Settings = ThemeBase;
+
+export interface ThemeContextType {
+  theme: ThemeBase | null;
+  updateTheme: (newTheme: ThemeBase) => Promise<void>;
+}
 
 export interface DatabaseSettingsRow extends ThemeBase {
   id: string;

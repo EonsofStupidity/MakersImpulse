@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import type { ThemeBase } from "@/types/theme";
+import React, { createContext, useContext, useEffect } from "react";
+import type { ThemeBase, ThemeContextType } from "@/types/theme";
 import { useThemeSetup } from "./hooks/useThemeSetup";
 import { useThemeSubscription } from "./hooks/useThemeSubscription";
 import { applyThemeToDocument } from "./utils/themeUtils";
@@ -7,11 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
 import { convertToUpdateParams } from "@/utils/transforms/settings";
-
-interface ThemeContextType {
-  theme: ThemeBase | null;
-  updateTheme: (newTheme: ThemeBase) => Promise<void>;
-}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
