@@ -11,25 +11,25 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 
 export interface ThemeBase {
   id?: string;
-  site_title: string;
+  site_title: string;  // Required
   tagline?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
+  primary_color: string;  // Has default
+  secondary_color: string;  // Has default
+  accent_color: string;  // Has default
+  text_primary_color: string;  // Has default
+  text_secondary_color: string;  // Has default
+  text_link_color: string;  // Has default
+  text_heading_color: string;  // Has default
+  neon_cyan: string;  // Has default
+  neon_pink: string;  // Has default
+  neon_purple: string;  // Has default
+  font_family_heading: string;  // Required
+  font_family_body: string;  // Required
+  font_size_base: string;  // Required
+  font_weight_normal: string;  // Required
+  font_weight_bold: string;  // Required
+  line_height_base: string;  // Required
+  letter_spacing: string;  // Required
   border_radius?: string;
   spacing_unit?: string;
   transition_duration?: string;
@@ -44,6 +44,6 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
+  state_version?: number;  // Added to match DB
+  last_sync?: string;  // Added to match DB
 }
