@@ -43,6 +43,13 @@ export interface SettingsFormData {
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
   transition_type?: TransitionType;
+
+  // System Fields
+  id?: string;
+  updated_at?: string;
+  updated_by?: string;
+  state_version?: number;
+  last_sync?: string;
 }
 
 export interface ThemeFormState {

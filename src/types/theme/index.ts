@@ -17,3 +17,5 @@ export * from './settings/context';   // ThemeContextType
 export type { ThemeBase } from './core/base';
 export type { SettingsFormData } from './core/form';
 export type { DatabaseSettings } from './settings/database';
+export type { Settings, SettingsResponse } from './types';
+export * from './types';
