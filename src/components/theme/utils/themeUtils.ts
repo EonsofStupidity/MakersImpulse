@@ -1,6 +1,28 @@
-import { Theme } from '@/types/theme/types';
+import { ThemeBase } from '@/types/theme/core/types';
 
-export const convertDbSettingsToTheme = (settings: any | null): Theme => {
+export const DEFAULT_THEME_SETTINGS: ThemeBase = {
+  site_title: 'MakersImpulse',
+  primary_color: '#7FFFD4',
+  secondary_color: '#FFB6C1',
+  accent_color: '#E6E6FA',
+  text_primary_color: '#FFFFFF',
+  text_secondary_color: '#A1A1AA',
+  text_link_color: '#3B82F6',
+  text_heading_color: '#FFFFFF',
+  neon_cyan: '#41f0db',
+  neon_pink: '#ff0abe',
+  neon_purple: '#8000ff',
+  font_family_heading: 'Inter',
+  font_family_body: 'Inter',
+  font_size_base: '16px',
+  font_weight_normal: '400',
+  font_weight_bold: '700',
+  line_height_base: '1.5',
+  letter_spacing: 'normal',
+  theme_mode: 'dark'
+};
+
+export const convertDbSettingsToTheme = (settings: any | null): ThemeBase => {
   if (!settings) {
     console.log("Using default theme settings");
     return DEFAULT_THEME_SETTINGS;
@@ -12,7 +34,7 @@ export const convertDbSettingsToTheme = (settings: any | null): Theme => {
   };
 };
 
-export const applyThemeToDocument = (theme: Theme) => {
+export const applyThemeToDocument = (theme: ThemeBase) => {
   console.log("Applying theme to document:", theme);
   
   const cssVars = {
@@ -47,26 +69,4 @@ export const applyThemeToDocument = (theme: Theme) => {
       document.documentElement.style.setProperty(key, value);
     }
   });
-};
-
-export const DEFAULT_THEME_SETTINGS: Theme = {
-  site_title: 'MakersImpulse',
-  primary_color: '#7FFFD4',
-  secondary_color: '#FFB6C1',
-  accent_color: '#E6E6FA',
-  text_primary_color: '#FFFFFF',
-  text_secondary_color: '#A1A1AA',
-  text_link_color: '#3B82F6',
-  text_heading_color: '#FFFFFF',
-  neon_cyan: '#41f0db',
-  neon_pink: '#ff0abe',
-  neon_purple: '#8000ff',
-  font_family_heading: 'Inter',
-  font_family_body: 'Inter',
-  font_size_base: '16px',
-  font_weight_normal: '400',
-  font_weight_bold: '700',
-  line_height_base: '1.5',
-  letter_spacing: 'normal',
-  theme_mode: 'dark'
 };
