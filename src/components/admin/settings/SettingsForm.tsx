@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { SettingsFormContainer } from "./components/SettingsFormContainer";
 import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
-import { ThemeBase } from "@/types/theme/types";
+import { SettingsFormData } from "@/types/theme/types";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
@@ -30,7 +30,7 @@ export const SettingsForm = () => {
     handleResetToDefault,
   } = useSettingsForm();
 
-  const form = useForm<ThemeBase>({
+  const form = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),
     defaultValues: settings || undefined,
   });
@@ -45,8 +45,8 @@ export const SettingsForm = () => {
     const subscription = form.watch((value, { name, type }) => {
       if (type === "change") {
         const formValues = form.getValues();
-        handleSettingsUpdate(formValues as ThemeBase);
-        updateTheme(formValues as ThemeBase);
+        handleSettingsUpdate(formValues);
+        updateTheme(formValues);
       }
     });
     return () => subscription.unsubscribe();

@@ -10,7 +10,7 @@ export type ThemeComponentType =
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -58,14 +58,14 @@ export interface SecuritySettings {
   rate_limit_window_minutes: number;
 }
 
-export interface Settings extends ThemeBase {
-  id?: string;
-}
+export interface Settings extends ThemeBase {}
 
 export interface ThemeContextType {
   theme: ThemeBase | null;
   updateTheme: (newTheme: ThemeBase) => Promise<void>;
 }
+
+export type SettingsFormData = ThemeBase;
 
 export interface DatabaseSettingsRow {
   id: string;
