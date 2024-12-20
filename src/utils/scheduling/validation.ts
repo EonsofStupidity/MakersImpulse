@@ -1,5 +1,6 @@
 import { SchedulingValidation, SchedulingRules } from "@/types/scheduling/base";
-import { isAfter, isBefore, addMinutes, addDays } from "date-fns";
+import { isAfter, isBefore, addMinutes } from "date-fns";
+import { supabase } from "@/integrations/supabase/client";
 
 export const validateSchedulingTime = (
   scheduledTime: Date,

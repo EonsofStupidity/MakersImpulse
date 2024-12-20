@@ -1,5 +1,3 @@
-import type { Json } from "@/integrations/supabase/types";
-
 export type ScheduleStatus = 'pending' | 'completed' | 'failed';
 
 export interface ScheduledPublication {
