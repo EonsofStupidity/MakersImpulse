@@ -1,4 +1,4 @@
-import type { Build, BuildFormData, BuildQueryParams } from './index';
+import type { Build, BuildFormData, BuildQueryParams } from './types';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 export interface BuildsApiResponse {
