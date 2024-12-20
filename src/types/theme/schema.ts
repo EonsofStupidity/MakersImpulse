@@ -40,7 +40,6 @@ export const settingsSchema = z.object({
   box_shadow: z.string().optional(),
   backdrop_blur: z.string().optional(),
   transition_type: z.enum(['fade', 'slide', 'scale', 'blur']).optional(),
-  menu_animation_type: z.enum(['fade', 'slide-down', 'scale', 'blur']).optional(),
   theme_mode: z.enum(['light', 'dark', 'system']).optional(),
   component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect']).optional(),
   logo_url: z.string().optional(),
