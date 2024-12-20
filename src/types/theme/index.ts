@@ -1,29 +1,18 @@
-// Core types
-export * from './core/base';
-export * from './core/colors';
-export * from './core/context';
-export * from './core/database';
-export * from './core/effects';
-export * from './core/form';
-export * from './core/typography';
-export * from './core/types';
-export * from './core/ui';
+// Core types with clear separation of concerns
+export * from './core/base';        // ThemeBase, DEFAULT_BASE_PROPERTIES
+export * from './core/colors';      // ThemeColors, TextColors, NeonColors
+export * from './core/context';     // ThemeContextState, SettingsContextState
+export * from './core/database';    // RawSiteSettingsRow, DbSiteSettingsInsert, DbSiteSettingsUpdate
+export * from './core/effects';     // TransitionConfig, ShadowConfig, ThemeEffects
+export * from './core/form';        // ThemeFormData, ThemeFormState
+export * from './core/typography';  // FontFamilyConfig, FontWeightConfig, ThemeTypography
+export * from './core/types';       // ThemeMode, ThemeComponentType, TransitionType
+export * from './core/ui';         // UITheme, UIThemeColors, UIThemeTypography, UIThemeEffects
 
-// Settings specific types
-export * from './settings/database';
-export * from './settings/context';
+// Settings specific exports
+export * from './settings/database';  // DatabaseSettings
+export * from './settings/context';   // ThemeContextType
 
-/**
- * @deprecated Use specific imports from core/ or settings/ instead
- */
-export interface Theme extends ThemeBase {}
-
-/**
- * @deprecated Use SettingsFormData from core/form instead
- */
+// Remove deprecated exports and ensure clean separation
+export type { ThemeBase } from './core/base';
 export type { SettingsFormData } from './core/form';
-
-/**
- * @deprecated Use DatabaseSettings from settings/database instead
- */
-export type { DatabaseSettings } from './settings/database';
