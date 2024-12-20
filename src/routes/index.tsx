@@ -31,7 +31,7 @@ export const AppRoutes = () => {
     <PageTransition>
       <Suspense fallback={<LoadingSpinner />}>
         <Routes>
-          {/* Public Routes - Always Accessible */}
+          {/* Public Routes */}
           {publicRoutes.map((route) => (
             <Route
               key={route.path}
@@ -40,23 +40,16 @@ export const AppRoutes = () => {
             />
           ))}
 
-          {/* Protected Maker Space Routes */}
+          {/* Maker Space Routes */}
           {makerSpaceRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
-              element={
-                <AuthGuard 
-                  requireAuth={true}
-                  fallbackPath="/login"
-                >
-                  {route.element}
-                </AuthGuard>
-              }
+              element={route.element}
             />
           ))}
 
-          {/* Admin Routes - Restricted to admin/super_admin */}
+          {/* Admin Routes */}
           {adminRoutes.map((route) => (
             <Route
               key={route.path}
