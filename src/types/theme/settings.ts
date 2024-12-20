@@ -1,6 +1,6 @@
 import { BaseThemeProperties } from './base';
 
-export interface ThemeSettings extends BaseThemeProperties {
+export interface Settings extends BaseThemeProperties {
   id?: string;
   updated_at?: string;
   updated_by?: string;
@@ -21,7 +21,7 @@ export interface ThemeSettings extends BaseThemeProperties {
 
 export interface SettingsResponse {
   success: boolean;
-  data: ThemeSettings;
+  data: Settings;
 }
 
 export interface SettingsUpdateParams {

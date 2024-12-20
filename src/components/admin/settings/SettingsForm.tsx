@@ -5,8 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { z } from "zod";
-import { Theme, ThemeBase } from "@/types/theme";
+import { settingsSchema, type SettingsFormData, type Settings } from "@/types/theme";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { ResetDialog } from "./components/ResetDialog";
@@ -22,7 +21,6 @@ import { ThemeImportSection } from "./sections/ThemeImportSection";
 import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 
-// Move the schema here temporarily - should be moved to a proper location later
 const settingsSchema = z.object({
   site_title: z.string().min(1, "Site title is required"),
   tagline: z.string().optional(),
