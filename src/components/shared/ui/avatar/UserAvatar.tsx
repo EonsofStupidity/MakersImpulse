@@ -65,7 +65,7 @@ export const UserAvatar = ({
       className={cn(
         sizeClasses[size],
         "relative cursor-pointer transition-all duration-300",
-        isHovered && "scale-110",
+        isHovered && "scale-105",
         className
       )}
       onClick={handleAvatarClick}
@@ -83,7 +83,6 @@ export const UserAvatar = ({
         <AvatarFallbackContent email={user?.email} />
       ) : null}
       
-      {/* Hover effect */}
       <div 
         className={cn(
           "absolute inset-0 rounded-full opacity-0 transition-opacity duration-300",
