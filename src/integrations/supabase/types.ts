@@ -1383,6 +1383,27 @@ export type Database = {
         }
         Relationships: []
       }
+      security_configuration: {
+        Row: {
+          id: string
+          security_settings: Json | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          security_settings?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          security_settings?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       security_events: {
         Row: {
           created_at: string | null
@@ -1461,6 +1482,36 @@ export type Database = {
         ]
       }
       site_settings: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          setting_key: string
+          setting_type: string | null
+          setting_value: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          setting_key: string
+          setting_type?: string | null
+          setting_value?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          setting_key?: string
+          setting_type?: string | null
+          setting_value?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      theme_configuration: {
         Row: {
           accent_color: string | null
           backdrop_blur: string | null
