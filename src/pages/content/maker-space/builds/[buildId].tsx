@@ -2,7 +2,7 @@ import React from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Build } from "@/types/builds";
+import type { Build } from "@/types/builds";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
@@ -22,7 +22,20 @@ const BuildDetails = () => {
         .single();
       
       if (error) throw error;
-      return data as Build;
+      
+      // Transform the database response to match the Build type
+      const transformedData: Build = {
+        id: data.id,
+        user_id: data.user_id,
+        name: data.name,
+        description: data.description,
+        build_volume: data.build_volume,
+        parts: data.parts,
+        images: data.images,
+        created_at: data.created_at
+      };
+      
+      return transformedData;
     }
   });
 
