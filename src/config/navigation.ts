@@ -3,42 +3,53 @@ export interface NavigationItem {
   label: string;
   path: string;
   icon?: string;
+  requiresAuth?: boolean;
+  adminOnly?: boolean;
 }
 
 export const mainNavigation: NavigationItem[] = [
   {
-    id: 'dashboard',
-    label: 'Dashboard',
-    path: '/admin/dashboard'
+    id: 'home',
+    label: 'Home',
+    path: '/'
   },
   {
-    id: 'data-maestro',
-    label: 'Data Maestro',
-    path: '/admin/data-maestro'
+    id: 'maker-space',
+    label: 'Maker Space',
+    path: '/maker-space',
+    requiresAuth: true
   },
   {
-    id: 'content',
-    label: 'Content',
-    path: '/admin/content-management'
+    id: 'schedule',
+    label: 'Schedule',
+    path: '/content/schedule'
   },
   {
-    id: 'settings',
-    label: 'Settings',
-    path: '/admin/settings'
+    id: 'queue',
+    label: 'Queue',
+    path: '/content/queue'
   }
 ];
 
 export const adminRoutes = {
   dashboard: '/admin/dashboard',
   dataMaestro: '/admin/data-maestro',
-  content: '/admin/content-management',
-  settings: '/admin/settings',
   users: '/admin/users',
-  posts: '/admin/posts',
-  categories: '/admin/content-management/categories',
-  templates: '/admin/content-management/templates',
-  workflows: '/admin/content-management/workflows',
-  media: '/admin/media',
-  activityLogs: '/admin/activity-logs',
-  analytics: '/admin/analytics'
+  monitoring: '/admin/monitoring',
+  forum: '/admin/forum',
+  settings: '/admin/settings'
+};
+
+export const makerSpaceRoutes = {
+  index: '/maker-space',
+  builds: '/maker-space/builds',
+  guides: '/maker-space/guides',
+  parts: '/maker-space/parts'
+};
+
+export const authRoutes = {
+  login: '/login',
+  register: '/register',
+  profile: '/profile',
+  settings: '/settings'
 };
