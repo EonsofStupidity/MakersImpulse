@@ -1481,6 +1481,48 @@ export type Database = {
           },
         ]
       }
+      security_settings: {
+        Row: {
+          id: string
+          settings: Json
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          settings?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          settings?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
+      site_configuration: {
+        Row: {
+          id: string
+          settings: Json
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          settings?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          settings?: Json
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           created_at: string | null
@@ -1537,7 +1579,6 @@ export type Database = {
           neon_purple: string | null
           primary_color: string | null
           secondary_color: string | null
-          security_settings: Json | null
           shadow_color: string | null
           site_title: string
           spacing_unit: string | null
@@ -1578,7 +1619,6 @@ export type Database = {
           neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
-          security_settings?: Json | null
           shadow_color?: string | null
           site_title: string
           spacing_unit?: string | null
@@ -1619,7 +1659,6 @@ export type Database = {
           neon_purple?: string | null
           primary_color?: string | null
           secondary_color?: string | null
-          security_settings?: Json | null
           shadow_color?: string | null
           site_title?: string
           spacing_unit?: string | null
@@ -1936,7 +1975,6 @@ export type Database = {
           neon_purple: string | null
           primary_color: string | null
           secondary_color: string | null
-          security_settings: Json | null
           shadow_color: string | null
           site_title: string
           spacing_unit: string | null

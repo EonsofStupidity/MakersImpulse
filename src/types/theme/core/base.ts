@@ -16,19 +16,8 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  security_settings?: SecuritySettings;
   state_version?: number;
   last_sync?: string;
-}
-
-export interface SecuritySettings {
-  ip_blacklist: string[];
-  ip_whitelist: string[];
-  max_login_attempts: number;
-  rate_limit_requests: number;
-  session_timeout_minutes: number;
-  lockout_duration_minutes: number;
-  rate_limit_window_minutes: number;
 }
 
 export const DEFAULT_BASE_PROPERTIES: ThemeBase = {
