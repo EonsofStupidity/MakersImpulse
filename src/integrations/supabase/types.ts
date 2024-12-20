@@ -1620,7 +1620,7 @@ export type Database = {
           primary_color?: string | null
           secondary_color?: string | null
           shadow_color?: string | null
-          site_title: string
+          site_title?: string
           spacing_unit?: string | null
           state_version?: number | null
           tagline?: string | null

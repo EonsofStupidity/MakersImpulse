@@ -1,4 +1,6 @@
-export const DEFAULT_SETTINGS = {
+import { ThemeFormData } from "@/types/theme/core/form";
+
+export const DEFAULT_SETTINGS: ThemeFormData = {
   site_title: "MakersImpulse",
   tagline: "Create, Share, Inspire",
   primary_color: "#7FFFD4",
@@ -11,11 +13,6 @@ export const DEFAULT_SETTINGS = {
   neon_cyan: "#41f0db",
   neon_pink: "#ff0abe",
   neon_purple: "#8000ff",
-  border_radius: "0.5rem",
-  spacing_unit: "1rem",
-  transition_duration: "0.3s",
-  shadow_color: "#000000",
-  hover_scale: "1.05",
   font_family_heading: "Inter",
   font_family_body: "Inter",
   font_size_base: "16px",
@@ -23,5 +20,11 @@ export const DEFAULT_SETTINGS = {
   font_weight_bold: "700",
   line_height_base: "1.5",
   letter_spacing: "normal",
-  transition_type: "fade" as const,
+  border_radius: "0.5rem",
+  spacing_unit: "1rem",
+  transition_duration: "0.3s",
+  shadow_color: "#000000",
+  hover_scale: "1.05",
+  theme_mode: "dark",
+  transition_type: "fade",
 };

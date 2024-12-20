@@ -1,63 +1,51 @@
-// Form-specific types for managing user input
-export interface SiteSettingsFormValues {
+import { ThemeMode, ThemeComponentType } from './types';
+
+export interface ThemeFormData {
+  // Basic Settings
   site_title: string;
   tagline?: string;
-  colors: SiteSettingsColorValues;
-  typography: SiteSettingsTypographyValues;
-  effects: SiteSettingsEffectValues;
-  security: SiteSettingsSecurityValues;
+  
+  // Colors
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  
+  // Text Colors
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  
+  // Neon Effects
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+  
+  // Typography
+  font_family_heading: string;
+  font_family_body: string;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  
+  // Layout & Effects
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  
+  // Theme Configuration
+  theme_mode?: ThemeMode;
+  component_type?: ThemeComponentType;
+  transition_type?: 'fade' | 'slide' | 'scale' | 'blur';
 }
 
-export interface SiteSettingsColorValues {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: {
-    primary: string;
-    secondary: string;
-    link: string;
-    heading: string;
-  };
-  neon: {
-    cyan: string;
-    pink: string;
-    purple: string;
-  };
-}
-
-export interface SiteSettingsTypographyValues {
-  fontFamily: {
-    heading: string;
-    body: string;
-  };
-  fontSize: string;
-  fontWeight: {
-    normal: string;
-    bold: string;
-  };
-  lineHeight: string;
-  letterSpacing: string;
-}
-
-export interface SiteSettingsEffectValues {
-  borderRadius?: string;
-  spacingUnit?: string;
-  transitionDuration?: string;
-  shadowColor?: string;
-  hoverScale?: string;
-}
-
-export interface SiteSettingsSecurityValues {
-  ipBlacklist: string[];
-  ipWhitelist: string[];
-  maxLoginAttempts: number;
-  rateLimitRequests: number;
-  sessionTimeoutMinutes: number;
-  lockoutDurationMinutes: number;
-  rateLimitWindowMinutes: number;
-}
-
-export interface SiteSettingsFormState {
+export interface ThemeFormState {
   isDirty: boolean;
   isSubmitting: boolean;
   submitError?: string;
