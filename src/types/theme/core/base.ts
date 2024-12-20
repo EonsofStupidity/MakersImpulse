@@ -1,4 +1,4 @@
-import { ThemeMode, ThemeComponentType } from './types';
+import { ThemeMode, ThemeComponentType, TransitionType } from './types';
 
 export interface ThemeBase {
   id?: string;
@@ -28,7 +28,7 @@ export interface ThemeBase {
   hover_scale?: string;
   box_shadow?: string;
   backdrop_blur?: string;
-  transition_type?: ThemeMode;
+  transition_type?: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
   logo_url?: string;
@@ -41,7 +41,6 @@ export interface ThemeBase {
 
 export const DEFAULT_BASE_PROPERTIES: ThemeBase = {
   site_title: 'MakersImpulse',
-  tagline: 'Create, Share, Inspire',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
   accent_color: '#E6E6FA',
@@ -59,10 +58,5 @@ export const DEFAULT_BASE_PROPERTIES: ThemeBase = {
   font_weight_bold: '700',
   line_height_base: '1.5',
   letter_spacing: 'normal',
-  border_radius: '0.5rem',
-  spacing_unit: '1rem',
-  transition_duration: '0.3s',
-  shadow_color: '#000000',
-  hover_scale: '1.05',
   theme_mode: 'dark'
 };

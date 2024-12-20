@@ -1,14 +1,13 @@
-import { Theme, DatabaseSettingsRow } from '@/types/theme';
-import { DEFAULT_BASE_PROPERTIES } from '@/types/theme/core/base';
+import { Theme } from '@/types/theme/types';
 
-export const convertDbSettingsToTheme = (settings: DatabaseSettingsRow | null): Theme => {
+export const convertDbSettingsToTheme = (settings: any | null): Theme => {
   if (!settings) {
     console.log("Using default theme settings");
-    return DEFAULT_BASE_PROPERTIES;
+    return DEFAULT_THEME_SETTINGS;
   }
 
   return {
-    ...DEFAULT_BASE_PROPERTIES,
+    ...DEFAULT_THEME_SETTINGS,
     ...settings
   };
 };
@@ -17,13 +16,13 @@ export const applyThemeToDocument = (theme: Theme) => {
   console.log("Applying theme to document:", theme);
   
   const cssVars = {
-    '--primary-color': theme.primary_color,
-    '--secondary-color': theme.secondary_color,
-    '--accent-color': theme.accent_color,
-    '--text-primary-color': theme.text_primary_color,
-    '--text-secondary-color': theme.text_secondary_color,
-    '--text-link-color': theme.text_link_color,
-    '--text-heading-color': theme.text_heading_color,
+    '--primary': theme.primary_color,
+    '--secondary': theme.secondary_color,
+    '--accent': theme.accent_color,
+    '--foreground': theme.text_primary_color,
+    '--muted-foreground': theme.text_secondary_color,
+    '--link': theme.text_link_color,
+    '--heading': theme.text_heading_color,
     '--neon-cyan': theme.neon_cyan,
     '--neon-pink': theme.neon_pink,
     '--neon-purple': theme.neon_purple,
@@ -48,4 +47,26 @@ export const applyThemeToDocument = (theme: Theme) => {
       document.documentElement.style.setProperty(key, value);
     }
   });
+};
+
+export const DEFAULT_THEME_SETTINGS: Theme = {
+  site_title: 'MakersImpulse',
+  primary_color: '#7FFFD4',
+  secondary_color: '#FFB6C1',
+  accent_color: '#E6E6FA',
+  text_primary_color: '#FFFFFF',
+  text_secondary_color: '#A1A1AA',
+  text_link_color: '#3B82F6',
+  text_heading_color: '#FFFFFF',
+  neon_cyan: '#41f0db',
+  neon_pink: '#ff0abe',
+  neon_purple: '#8000ff',
+  font_family_heading: 'Inter',
+  font_family_body: 'Inter',
+  font_size_base: '16px',
+  font_weight_normal: '400',
+  font_weight_bold: '700',
+  line_height_base: '1.5',
+  letter_spacing: 'normal',
+  theme_mode: 'dark'
 };

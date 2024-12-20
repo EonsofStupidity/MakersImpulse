@@ -1,15 +1,5 @@
 import { z } from 'zod';
-import { ThemeMode, ThemeComponentType } from './core/types';
-
-const securitySettingsSchema = z.object({
-  ip_blacklist: z.array(z.string()),
-  ip_whitelist: z.array(z.string()),
-  max_login_attempts: z.number(),
-  rate_limit_requests: z.number(),
-  session_timeout_minutes: z.number(),
-  lockout_duration_minutes: z.number(),
-  rate_limit_window_minutes: z.number()
-});
+import { ThemeMode, ThemeComponentType, TransitionType } from './core/types';
 
 export const settingsSchema = z.object({
   id: z.string().optional(),
@@ -46,7 +36,6 @@ export const settingsSchema = z.object({
   favicon_url: z.string().optional(),
   updated_at: z.string().optional(),
   updated_by: z.string().optional(),
-  security_settings: securitySettingsSchema.optional(),
   state_version: z.number().optional(),
   last_sync: z.string().optional()
 });
