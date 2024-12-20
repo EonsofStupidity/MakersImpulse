@@ -6,6 +6,7 @@ import { applyThemeToDocument } from "./utils/themeUtils";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useAuthStore } from '@/lib/store/auth-store';
+import { convertToUpdateParams } from "@/utils/transforms/settings";
 
 interface ThemeContextType {
   theme: ThemeBase | null;
@@ -58,8 +59,13 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
     return null;
   }
 
+  const contextValue: ThemeContextType = {
+    theme,
+    updateTheme
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, updateTheme }}>
+    <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
   );
