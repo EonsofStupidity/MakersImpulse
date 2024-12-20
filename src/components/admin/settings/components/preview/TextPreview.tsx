@@ -1,15 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { ThemeBase } from "@/types/theme/core/base";
 
 interface TextPreviewProps {
-  colors: {
-    primary_color: string;
-    secondary_color: string;
-    accent_color: string;
-    neon_cyan?: string;
-    neon_pink?: string;
-    neon_purple?: string;
-  };
+  colors: Pick<ThemeBase, 
+    | 'primary_color'
+    | 'secondary_color'
+    | 'accent_color'
+    | 'neon_cyan'
+    | 'neon_pink'
+    | 'neon_purple'
+  >;
 }
 
 export const TextPreview: React.FC<TextPreviewProps> = ({ colors }) => {
