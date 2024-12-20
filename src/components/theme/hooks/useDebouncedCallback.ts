@@ -7,12 +7,10 @@ export function useDebouncedCallback<T extends (...args: any[]) => any>(
   const timeoutRef = useRef<NodeJS.Timeout>();
   const callbackRef = useRef(callback);
 
-  // Update callback ref when callback changes
   useEffect(() => {
     callbackRef.current = callback;
   }, [callback]);
 
-  // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (timeoutRef.current) {

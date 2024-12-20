@@ -18,13 +18,11 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   
   useThemeSubscription(setTheme);
 
-  // Debounced theme application
   const debouncedApplyTheme = useDebouncedCallback((newTheme: ThemeBase) => {
     console.log('Applying debounced theme:', newTheme);
     applyThemeToDocument(newTheme);
   }, theme?.preview_preferences?.update_debounce_ms || 100);
 
-  // Apply theme when it changes
   useEffect(() => {
     if (theme) {
       const isRealTimeUpdates = theme.preview_preferences?.real_time_updates ?? true;
@@ -52,7 +50,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) throw error;
       
-      setTheme({ ...theme, ...newTheme });
+      setTheme(prevTheme => ({ ...prevTheme, ...newTheme }));
       
       const isRealTimeUpdates = theme?.preview_preferences?.real_time_updates ?? true;
       if (isRealTimeUpdates) {
