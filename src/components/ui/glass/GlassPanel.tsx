@@ -1,8 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface GlassPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassPanelProps extends Omit<HTMLMotionProps<"div">, "ref"> {
   children: React.ReactNode;
   level?: "low" | "medium" | "high";
   className?: string;
@@ -24,13 +24,13 @@ export const GlassPanel = ({
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
+      {...props}
       className={cn(
         "rounded-lg border border-white/10",
         glassStyles[level],
         "bg-gradient-to-br from-white/5 to-transparent",
         className
       )}
-      {...props}
     >
       {children}
     </motion.div>

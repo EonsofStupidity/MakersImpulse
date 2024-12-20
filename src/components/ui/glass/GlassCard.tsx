@@ -1,9 +1,9 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassCardProps extends Omit<HTMLMotionProps<"div">, "ref"> {
   children: React.ReactNode;
   level?: "low" | "medium" | "high";
   interactive?: boolean;
@@ -25,8 +25,9 @@ export const GlassCard = ({
 
   return (
     <motion.div
-      whileHover={interactive ? { scale: 1.02 } : {}}
+      whileHover={interactive ? { scale: 1.02 } : undefined}
       transition={{ duration: 0.2 }}
+      {...props}
     >
       <Card
         className={cn(
@@ -36,7 +37,6 @@ export const GlassCard = ({
           "transition-all duration-300",
           className
         )}
-        {...props}
       >
         {children}
       </Card>

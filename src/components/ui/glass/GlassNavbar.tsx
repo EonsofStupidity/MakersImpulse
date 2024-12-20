@@ -1,8 +1,8 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, HTMLMotionProps } from "framer-motion";
 
-interface GlassNavbarProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GlassNavbarProps extends Omit<HTMLMotionProps<"nav">, "ref"> {
   children: React.ReactNode;
   level?: "low" | "medium" | "high";
   sticky?: boolean;
@@ -26,6 +26,7 @@ export const GlassNavbar = ({
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
+      {...props}
       className={cn(
         "w-full border-b z-50",
         sticky && "sticky top-0",
@@ -33,7 +34,6 @@ export const GlassNavbar = ({
         "transition-colors duration-300",
         className
       )}
-      {...props}
     >
       {children}
     </motion.nav>
