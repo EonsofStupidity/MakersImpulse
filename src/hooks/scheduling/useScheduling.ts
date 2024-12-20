@@ -5,13 +5,18 @@ import { toast } from "sonner";
 import { validateSchedulingTime, validateSchedulingConflicts } from "@/utils/scheduling/validation";
 import type { ScheduledPublication } from "@/types/scheduling/base";
 
-export const useScheduling = (contentId: string) => {
+export const useScheduling = (contentId: string | undefined) => {
   const queryClient = useQueryClient();
   const [isScheduling, setIsScheduling] = useState(false);
 
   const { data: scheduledPublications, isLoading } = useQuery({
     queryKey: ["scheduled-publications", contentId],
     queryFn: async () => {
+      // Don't fetch if no contentId is provided
+      if (!contentId) {
+        return [];
+      }
+
       const { data, error } = await supabase
         .from("publishing_queue")
         .select("*, profiles(display_name)")
@@ -35,7 +40,8 @@ export const useScheduling = (contentId: string) => {
       })) as ScheduledPublication[];
     },
     staleTime: 1000 * 60, // 1 minute
-    retry: 2
+    retry: 2,
+    enabled: !!contentId, // Only run query if contentId exists
   });
 
   const schedulePublication = useMutation({
@@ -46,6 +52,10 @@ export const useScheduling = (contentId: string) => {
       revisionId: string; 
       scheduledFor: Date;
     }) => {
+      if (!contentId) {
+        throw new Error("No content selected");
+      }
+
       setIsScheduling(true);
       try {
         // Validate scheduling time
@@ -105,7 +115,7 @@ export const useScheduling = (contentId: string) => {
   });
 
   return {
-    scheduledPublications,
+    scheduledPublications: scheduledPublications || [],
     isLoading,
     isScheduling,
     schedulePublication,

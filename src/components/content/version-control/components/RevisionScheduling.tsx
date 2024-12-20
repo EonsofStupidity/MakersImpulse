@@ -7,10 +7,11 @@ import { SchedulePreview } from './scheduling/SchedulePreview';
 import { QueueProcessor } from './scheduling/QueueProcessor';
 import { useScheduling } from '@/hooks/scheduling/useScheduling';
 import { addMinutes, addDays } from 'date-fns';
+import { motion } from 'framer-motion';
 
 interface RevisionSchedulingProps {
-  contentId: string;
-  revisionId: string;
+  contentId?: string;
+  revisionId?: string;
 }
 
 export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
@@ -24,7 +25,10 @@ export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
   const { schedulePublication, isScheduling } = useScheduling(contentId);
 
   const handleSchedule = async () => {
-    if (!selectedDate || !selectedTime) return;
+    if (!selectedDate || !selectedTime || !revisionId) {
+      toast.error("Please select both date and time");
+      return;
+    }
 
     const [hours, minutes] = selectedTime.split(':');
     const scheduledFor = new Date(selectedDate);
@@ -40,6 +44,14 @@ export const RevisionScheduling: React.FC<RevisionSchedulingProps> = ({
 
   const minDate = addMinutes(new Date(), 5);
   const maxDate = addDays(new Date(), 30);
+
+  if (!contentId || !revisionId) {
+    return (
+      <div className="text-center p-4 text-white/60">
+        Please select content to schedule publication
+      </div>
+    );
+  }
 
   return (
     <>
