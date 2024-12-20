@@ -4,17 +4,13 @@ import { CreateBuildButton } from "@/components/maker-space/builds/CreateBuildBu
 
 const Builds = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="container mx-auto p-6"
-    >
+    <div className="container mx-auto p-6">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">3D Printer Builds</h1>
         <CreateBuildButton />
       </div>
       <BuildsList />
-    </motion.div>
+    </div>
   );
 };
 
