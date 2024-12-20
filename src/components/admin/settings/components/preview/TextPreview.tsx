@@ -1,23 +1,22 @@
-import React from "react";
+import React, { memo } from "react";
 import { motion } from "framer-motion";
-import { ThemeBase } from "@/types/theme/core/base";
 
-type TextPreviewProps = {
-  colors: Pick<ThemeBase, 
-    | 'primary_color'
-    | 'secondary_color'
-    | 'accent_color'
-    | 'text_primary_color'
-    | 'text_secondary_color'
-    | 'text_link_color'
-    | 'text_heading_color'
-    | 'neon_cyan'
-    | 'neon_pink'
-    | 'neon_purple'
-  >;
-};
+interface TextPreviewProps {
+  colors: {
+    text_primary_color: string;
+    text_secondary_color: string;
+    text_link_color: string;
+    text_heading_color: string;
+    primary_color: string;
+    secondary_color: string;
+    accent_color: string;
+    neon_cyan?: string;
+    neon_pink?: string;
+    neon_purple?: string;
+  };
+}
 
-export const TextPreview: React.FC<TextPreviewProps> = ({ colors }) => {
+export const TextPreview = memo(({ colors }: TextPreviewProps) => {
   return (
     <motion.div 
       className="space-y-4"
@@ -42,10 +41,18 @@ export const TextPreview: React.FC<TextPreviewProps> = ({ colors }) => {
 
       <div className="space-y-2">
         <p className="text-sm text-gray-400">Neon Effects:</p>
-        <p style={{ color: colors.neon_cyan }}>Neon Cyan Text (--neon-cyan)</p>
-        <p style={{ color: colors.neon_pink }}>Neon Pink Text (--neon-pink)</p>
-        <p style={{ color: colors.neon_purple }}>Neon Purple Text (--neon-purple)</p>
+        {colors.neon_cyan && (
+          <p style={{ color: colors.neon_cyan }}>Neon Cyan Text (--neon-cyan)</p>
+        )}
+        {colors.neon_pink && (
+          <p style={{ color: colors.neon_pink }}>Neon Pink Text (--neon-pink)</p>
+        )}
+        {colors.neon_purple && (
+          <p style={{ color: colors.neon_purple }}>Neon Purple Text (--neon-purple)</p>
+        )}
       </div>
     </motion.div>
   );
-};
+});
+
+TextPreview.displayName = "TextPreview";
