@@ -2,7 +2,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { uploadMedia } from "@/utils/media";
-import { Settings, SettingsResponse } from "../../types";
+import { Settings, SettingsResponse } from "@/types/theme";
 
 export const useSettingsUpdateHandlers = () => {
   const [isSaving, setIsSaving] = useState(false);

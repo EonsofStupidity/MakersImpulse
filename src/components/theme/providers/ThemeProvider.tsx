@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Theme, ThemeContextType } from "../types/theme";
+import { Theme, ThemeContextType } from "@/types/theme/types";
 import { useThemeSettings } from "../hooks/useThemeSettings";
 import { useThemeSubscription } from "../hooks/useThemeSubscription";
 import { toast } from "sonner";

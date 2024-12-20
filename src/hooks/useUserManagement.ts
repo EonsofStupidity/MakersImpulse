@@ -1,107 +1,99 @@
-import { useState } from 'react';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { UserRole } from '@/components/admin/settings/types/settings';
+import { Settings } from '@/types/theme';
+import { useAuthStore } from '@/lib/store/auth-store';
 
 export const useUserManagement = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { session } = useAuthStore();
 
-  const { data: users, error, refetch } = useQuery({
-    queryKey: ['users'],
-    queryFn: async () => {
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
-    }
-  });
 
-  const updateRole = useMutation({
-    mutationFn: async ({ userId, newRole }: { userId: string; newRole: UserRole }) => {
-      try {
-        setIsLoading(true);
-        const { error } = await supabase
-          .from('profiles')
-          .update({ role: newRole })
-          .eq('id', userId);
-
-        if (error) throw error;
-        toast.success('User role updated successfully');
-        refetch();
-      } catch (error) {
-        console.error('Error updating user role:', error);
-        toast.error('Failed to update user role');
-      } finally {
-        setIsLoading(false);
-      }
-    }
-  });
-
-  const banUser = async (userId: string, reason: string) => {
-    try {
-      setIsLoading(true);
-      const { error } = await supabase.rpc('ban_user', {
-        p_user_id: userId,
-        p_reason: reason
-      });
-
-      if (error) throw error;
-      toast.success('User banned successfully');
-      refetch();
-    } catch (error) {
-      console.error('Error banning user:', error);
-      toast.error('Failed to ban user');
+      setUsers(data || []);
+    } catch (err) {
+      console.error('Error fetching users:', err);
+      setError(err.message);
+      toast.error('Failed to fetch users');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const getUserActivity = async (userId: string) => {
+  const updateUserRole = async (userId: string, role: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_activity')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
+      const { error } = await supabase
+        .from('profiles')
+        .update({ role })
+        .eq('id', userId);
 
       if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error fetching user activity:', error);
-      toast.error('Failed to fetch user activity');
-      return [];
+
+      toast.success('User role updated successfully');
+      await fetchUsers();
+    } catch (err) {
+      console.error('Error updating user role:', err);
+      toast.error('Failed to update user role');
     }
   };
 
-  const getUserCMSActivity = async (userId: string) => {
+  const deleteUser = async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_activity_cms')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
+      const { error } = await supabase
+        .from('profiles')
+        .delete()
+        .eq('id', userId);
 
       if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error fetching CMS activity:', error);
-      toast.error('Failed to fetch CMS activity');
-      return [];
+
+      toast.success('User deleted successfully');
+      await fetchUsers();
+    } catch (err) {
+      console.error('Error deleting user:', err);
+      toast.error('Failed to delete user');
     }
   };
+
+  const updateUserSettings = async (userId: string, settings: Partial<Settings>) => {
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ settings })
+        .eq('id', userId);
+
+      if (error) throw error;
+
+      toast.success('User settings updated successfully');
+      await fetchUsers();
+    } catch (err) {
+      console.error('Error updating user settings:', err);
+      toast.error('Failed to update user settings');
+    }
+  };
+
+  useEffect(() => {
+    if (session?.user) {
+      fetchUsers();
+    }
+  }, [session]);
 
   return {
     users,
-    error,
     isLoading,
-    refetch,
-    updateRole,
-    banUser,
-    getUserActivity,
-    getUserCMSActivity
+    error,
+    fetchUsers,
+    updateUserRole,
+    deleteUser,
+    updateUserSettings,
   };
 };

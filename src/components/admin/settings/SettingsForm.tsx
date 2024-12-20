@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react";
 import { Accordion } from "@/components/ui/accordion";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { settingsSchema, type SettingsFormData } from "@/types/theme";
+import { settingsSchema, type Settings, type SettingsFormData } from "@/types/theme";
 import { useTheme } from "@/components/theme/ThemeContext";
 import { SettingsPreview } from "./components/SettingsPreview";
 import { ResetDialog } from "./components/ResetDialog";
@@ -20,7 +20,6 @@ import { TransitionConfigSection } from "./sections/TransitionConfigSection";
 import { ThemeImportSection } from "./sections/ThemeImportSection";
 import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
-import type { Settings } from "@/types/theme";
 
 export const SettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);

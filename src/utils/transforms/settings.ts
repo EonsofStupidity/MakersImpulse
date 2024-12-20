@@ -1,5 +1,5 @@
-import type { ThemeBase } from '@/types/theme';
-import { DEFAULT_BASE_PROPERTIES } from '@/types/theme-base';
+import { ThemeBase } from '@/types/theme/types';
+import { DEFAULT_BASE_PROPERTIES } from '@/types/theme/base';
 import type { BaseSettings } from '@/types/settings/base';
 
 export const convertDbSettingsToTheme = (settings: any | null): ThemeBase => {

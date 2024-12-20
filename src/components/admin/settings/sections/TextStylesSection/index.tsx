@@ -49,6 +49,49 @@ export const TextStylesSection: React.FC<TextStylesSectionProps> = ({ form }) =>
             onChange={(value) => form.setValue("font_size_base", value)}
             description="Base font size (e.g., 16px)"
           />
+          <CSSEffectsControl
+            label="Normal Font Weight"
+            type="select"
+            value={form.watch("font_weight_normal")}
+            options={[
+              { label: "Light (300)", value: "300" },
+              { label: "Regular (400)", value: "400" },
+              { label: "Medium (500)", value: "500" }
+            ]}
+            onChange={(value) => form.setValue("font_weight_normal", value)}
+            description="Font weight for normal text"
+          />
+          <CSSEffectsControl
+            label="Bold Font Weight"
+            type="select"
+            value={form.watch("font_weight_bold")}
+            options={[
+              { label: "Semi-Bold (600)", value: "600" },
+              { label: "Bold (700)", value: "700" },
+              { label: "Extra Bold (800)", value: "800" }
+            ]}
+            onChange={(value) => form.setValue("font_weight_bold", value)}
+            description="Font weight for bold text"
+          />
+          <CSSEffectsControl
+            label="Line Height"
+            type="input"
+            value={form.watch("line_height_base")}
+            onChange={(value) => form.setValue("line_height_base", value)}
+            description="Base line height (e.g., 1.5)"
+          />
+          <CSSEffectsControl
+            label="Letter Spacing"
+            type="select"
+            value={form.watch("letter_spacing")}
+            options={[
+              { label: "Normal", value: "normal" },
+              { label: "Tight", value: "-0.025em" },
+              { label: "Wide", value: "0.025em" }
+            ]}
+            onChange={(value) => form.setValue("letter_spacing", value)}
+            description="Letter spacing for text"
+          />
         </div>
       </AccordionContent>
     </AccordionItem>

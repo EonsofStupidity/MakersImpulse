@@ -3,7 +3,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { Input } from "@/components/ui/input";
 import { ColorPicker } from "./ColorPicker";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "../types";
+import { SettingsFormData } from "@/types/theme";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface AdvancedCSSSectionProps {

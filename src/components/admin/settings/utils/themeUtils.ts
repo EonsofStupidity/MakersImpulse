@@ -1,5 +1,4 @@
-import { Theme } from '../types/theme';
-
+import { Theme } from "@/types/theme/types";
 export const DEFAULT_THEME_SETTINGS: Theme = {
   site_title: 'MakersImpulse',
   primary_color: '#7FFFD4',

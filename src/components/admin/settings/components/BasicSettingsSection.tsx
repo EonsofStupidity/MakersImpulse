@@ -2,7 +2,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormRegister, FormState } from "react-hook-form";
-import { SettingsFormData } from "../types";
+import { SettingsFormData } from "@/types/theme";
 
 interface BasicSettingsSectionProps {
   register: UseFormRegister<SettingsFormData>;

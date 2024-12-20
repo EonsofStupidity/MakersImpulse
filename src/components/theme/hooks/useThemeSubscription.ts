@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings } from "@/components/admin/settings/types";
+import { Settings } from "@/types/theme";
 import { DatabaseSettingsRow } from "../types/theme";
 import { convertDbSettingsToTheme } from "../utils/themeUtils";
 import { toast } from "sonner";

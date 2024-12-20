@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import type { Settings } from "../../types";
-import { Theme } from "../../types/theme";
+import type { Settings } from "@/types/theme";
+import { Theme } from "@/types/theme/types";
 import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../../utils/themeUtils";
 
 export const useSettingsFetch = () => {

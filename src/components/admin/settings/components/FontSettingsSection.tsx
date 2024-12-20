@@ -2,7 +2,7 @@ import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "../types";
+import { SettingsFormData } from "@/types/theme";
 
 interface FontSettingsSectionProps {
   form: UseFormReturn<SettingsFormData>;

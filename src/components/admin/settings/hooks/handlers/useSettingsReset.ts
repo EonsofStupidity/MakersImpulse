@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Settings, SettingsResponse } from "../../types";
+import { Settings, SettingsResponse } from "@/types/theme";
 import { DEFAULT_SETTINGS } from "../useSettingsDefaults";
 
 export const useSettingsReset = () => {
