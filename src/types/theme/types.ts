@@ -8,7 +8,7 @@ export type ThemeComponentType =
   | 'effect';
 
 export interface ThemeBase {
-  id?: string;
+  id: string;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
 }
