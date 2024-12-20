@@ -1,27 +1,29 @@
 import { DatabaseSettings } from '@/types/database/settings';
 import { Theme } from '@/types/theme/core';
 import { BaseSettings } from '@/types/settings/base';
+import { DEFAULT_THEME } from '@/types/theme/core';
 
 export const convertDbSettingsToTheme = (settings: DatabaseSettings | null): Theme => {
   if (!settings) {
+    console.log("Using default theme settings");
     return DEFAULT_THEME;
   }
 
   return {
     colors: {
-      primary: settings.primary_color,
-      secondary: settings.secondary_color,
-      accent: settings.accent_color,
+      primary: settings.primary_color || DEFAULT_THEME.colors.primary,
+      secondary: settings.secondary_color || DEFAULT_THEME.colors.secondary,
+      accent: settings.accent_color || DEFAULT_THEME.colors.accent,
       text: {
-        primary: settings.text_primary_color,
-        secondary: settings.text_secondary_color,
-        link: settings.text_link_color,
-        heading: settings.text_heading_color
+        primary: settings.text_primary_color || DEFAULT_THEME.colors.text.primary,
+        secondary: settings.text_secondary_color || DEFAULT_THEME.colors.text.secondary,
+        link: settings.text_link_color || DEFAULT_THEME.colors.text.link,
+        heading: settings.text_heading_color || DEFAULT_THEME.colors.text.heading
       },
       neon: {
-        cyan: settings.neon_cyan,
-        pink: settings.neon_pink,
-        purple: settings.neon_purple
+        cyan: settings.neon_cyan || DEFAULT_THEME.colors.neon.cyan,
+        pink: settings.neon_pink || DEFAULT_THEME.colors.neon.pink,
+        purple: settings.neon_purple || DEFAULT_THEME.colors.neon.purple
       }
     },
     typography: {
@@ -38,20 +40,21 @@ export const convertDbSettingsToTheme = (settings: DatabaseSettings | null): The
       letterSpacing: settings.letter_spacing
     },
     effects: {
-      borderRadius: settings.border_radius,
-      spacing: settings.spacing_unit,
+      borderRadius: settings.border_radius || DEFAULT_THEME.effects.borderRadius,
+      spacing: settings.spacing_unit || DEFAULT_THEME.effects.spacing,
       transitions: {
-        duration: settings.transition_duration,
-        type: settings.transition_type || 'fade'
+        duration: settings.transition_duration || DEFAULT_THEME.effects.transitions.duration,
+        type: settings.transition_type as Theme['effects']['transitions']['type'] || DEFAULT_THEME.effects.transitions.type
       },
       shadows: {
-        color: settings.shadow_color,
-        boxShadow: settings.box_shadow || 'none',
-        backdropBlur: settings.backdrop_blur || '0'
+        color: settings.shadow_color || DEFAULT_THEME.effects.shadows.color,
+        boxShadow: settings.box_shadow || DEFAULT_THEME.effects.shadows.boxShadow,
+        backdropBlur: settings.backdrop_blur || DEFAULT_THEME.effects.shadows.backdropBlur
       },
-      hoverScale: settings.hover_scale
+      hoverScale: settings.hover_scale || DEFAULT_THEME.effects.hoverScale
     },
-    mode: settings.theme_mode || 'dark'
+    mode: settings.theme_mode || DEFAULT_THEME.mode,
+    id: settings.id
   };
 };
 
