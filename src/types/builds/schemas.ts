@@ -18,8 +18,7 @@ export const buildPartSchema = z.object({
 export const buildImageSchema = z.object({
   url: z.string().url("Invalid image URL"),
   alt: z.string().optional(),
-  caption: z.string().optional(),
-  isPrimary: z.boolean().optional()
+  caption: z.string().optional()
 });
 
 export const buildSchema = z.object({

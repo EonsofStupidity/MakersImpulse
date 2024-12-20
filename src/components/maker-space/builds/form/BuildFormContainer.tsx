@@ -33,12 +33,16 @@ const BuildFormContainer = () => {
   const onSubmit = async (data: BuildFormData) => {
     try {
       setIsSubmitting(true);
+      console.log("Submitting build data:", data);
+      
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
       
       const { error } = await supabase
         .from('mi3dp_builds')
         .insert({
           ...data,
-          user_id: (await supabase.auth.getUser()).data.user?.id,
+          user_id: user?.id,
         });
 
       if (error) throw error;
