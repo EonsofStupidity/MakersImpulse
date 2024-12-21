@@ -18,21 +18,10 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Base theme interface that matches the database schema exactly
+// Base theme interface that exactly matches the database schema
 export interface ThemeBase {
-  id?: string;
+  // Required fields (NOT NULL in database)
   site_title: string;
-  tagline?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -40,14 +29,28 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  transition_type: TransitionType;
+  
+  // Optional fields (nullable in database)
+  id?: string;
+  tagline?: string;
+  primary_color?: string;
+  secondary_color?: string;
+  accent_color?: string;
+  text_primary_color?: string;
+  text_secondary_color?: string;
+  text_link_color?: string;
+  text_heading_color?: string;
+  neon_cyan?: string;
+  neon_pink?: string;
+  neon_purple?: string;
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  transition_type?: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
   logo_url?: string;
@@ -65,8 +68,16 @@ export interface ThemeBase {
   inherited_settings?: Record<string, any>;
 }
 
-// Form data type that extends ThemeBase
+// Form data type that extends ThemeBase with required fields for the form
 export interface ThemeFormData extends ThemeBase {
+  // These fields are required in the form even if optional in database
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
@@ -75,12 +86,6 @@ export interface ThemeFormData extends ThemeBase {
   box_shadow: string;
   backdrop_blur: string;
   transition_type: TransitionType;
-  parent_theme_id?: string;
-  inheritance_strategy?: ThemeInheritanceStrategy;
-  real_time_toggle?: boolean;
-  animations_enabled?: boolean;
-  default_animation_duration?: number;
-  preview_preferences?: PreviewPreferences;
 }
 
 // For backward compatibility
