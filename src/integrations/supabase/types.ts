@@ -155,6 +155,53 @@ export type Database = {
           },
         ]
       }
+      base_themes: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          name: string
+          settings: Json
+          updated_at: string | null
+          version: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name: string
+          settings?: Json
+          updated_at?: string | null
+          version?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name?: string
+          settings?: Json
+          updated_at?: string | null
+          version?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "base_themes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string
@@ -1572,6 +1619,10 @@ export type Database = {
           font_weight_normal: string
           hover_scale: string | null
           id: string
+          inheritance_strategy:
+            | Database["public"]["Enums"]["theme_inheritance_strategy"]
+            | null
+          inherited_settings: Json | null
           last_sync: string | null
           letter_spacing: string
           line_height_base: string
@@ -1579,6 +1630,7 @@ export type Database = {
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
+          parent_theme_id: string | null
           preview_preferences: Json | null
           primary_color: string | null
           real_time_toggle: boolean | null
@@ -1616,6 +1668,10 @@ export type Database = {
           font_weight_normal: string
           hover_scale?: string | null
           id?: string
+          inheritance_strategy?:
+            | Database["public"]["Enums"]["theme_inheritance_strategy"]
+            | null
+          inherited_settings?: Json | null
           last_sync?: string | null
           letter_spacing: string
           line_height_base: string
@@ -1623,6 +1679,7 @@ export type Database = {
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
+          parent_theme_id?: string | null
           preview_preferences?: Json | null
           primary_color?: string | null
           real_time_toggle?: boolean | null
@@ -1660,6 +1717,10 @@ export type Database = {
           font_weight_normal?: string
           hover_scale?: string | null
           id?: string
+          inheritance_strategy?:
+            | Database["public"]["Enums"]["theme_inheritance_strategy"]
+            | null
+          inherited_settings?: Json | null
           last_sync?: string | null
           letter_spacing?: string
           line_height_base?: string
@@ -1667,6 +1728,7 @@ export type Database = {
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
+          parent_theme_id?: string | null
           preview_preferences?: Json | null
           primary_color?: string | null
           real_time_toggle?: boolean | null
@@ -1686,7 +1748,110 @@ export type Database = {
           updated_at?: string | null
           updated_by?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "theme_configuration_parent_theme_id_fkey"
+            columns: ["parent_theme_id"]
+            isOneToOne: false
+            referencedRelation: "base_themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_presets: {
+        Row: {
+          category: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_public: boolean | null
+          metadata: Json | null
+          name: string
+          preview_image_url: string | null
+          settings: Json
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          metadata?: Json | null
+          name: string
+          preview_image_url?: string | null
+          settings: Json
+        }
+        Update: {
+          category?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_public?: boolean | null
+          metadata?: Json | null
+          name?: string
+          preview_image_url?: string | null
+          settings?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_presets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_versions: {
+        Row: {
+          change_summary: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          metadata: Json | null
+          settings: Json
+          theme_id: string | null
+          version_number: number
+        }
+        Insert: {
+          change_summary?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          settings: Json
+          theme_id?: string | null
+          version_number: number
+        }
+        Update: {
+          change_summary?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          settings?: Json
+          theme_id?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_versions_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       trusted_devices: {
         Row: {
@@ -1906,6 +2071,12 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_complete_theme_settings: {
+        Args: {
+          theme_id: string
+        }
+        Returns: Json
+      }
       initialize_user_gamification: {
         Args: {
           user_id: string
@@ -1928,6 +2099,13 @@ export type Database = {
           p_stack_trace?: string
         }
         Returns: string
+      }
+      merge_theme_settings: {
+        Args: {
+          child_settings: Json
+          parent_settings: Json
+        }
+        Returns: Json
       }
       parse_workflow_stages: {
         Args: {
@@ -2012,6 +2190,10 @@ export type Database = {
           font_weight_normal: string
           hover_scale: string | null
           id: string
+          inheritance_strategy:
+            | Database["public"]["Enums"]["theme_inheritance_strategy"]
+            | null
+          inherited_settings: Json | null
           last_sync: string | null
           letter_spacing: string
           line_height_base: string
@@ -2019,6 +2201,7 @@ export type Database = {
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
+          parent_theme_id: string | null
           preview_preferences: Json | null
           primary_color: string | null
           real_time_toggle: boolean | null
@@ -2082,6 +2265,7 @@ export type Database = {
         | "layout"
         | "animation"
         | "effect"
+      theme_inheritance_strategy: "override" | "merge" | "replace"
       theme_mode: "light" | "dark" | "system"
       theme_mode_type: "light" | "dark" | "system"
       transition_type: "fade" | "slide" | "scale" | "blur"

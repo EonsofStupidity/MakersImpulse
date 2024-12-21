@@ -13,6 +13,9 @@ export interface SettingsFormData extends ThemeBase {
   real_time_toggle?: boolean;
   animations_enabled?: boolean;
   default_animation_duration?: number;
+  parent_theme_id?: string;
+  inheritance_strategy?: 'merge' | 'override' | 'replace';
+  inherited_settings?: Record<string, any>;
 }
 
 export interface ThemeFormState {
