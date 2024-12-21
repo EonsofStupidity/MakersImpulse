@@ -1,11 +1,7 @@
-import { Json } from '@/types/database/json';
 import { ThemeBase } from './types';
+import { Json } from '@/types/database';
 
-export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
-  preview_preferences: string; // JSON string in DB
-  inherited_settings: string; // JSON string in DB
-}
-
+// Database-specific type that handles JSON serialization
 export interface DatabaseSettingsRow extends ThemeBase {
   id: string;
   updated_at?: string;
@@ -13,3 +9,5 @@ export interface DatabaseSettingsRow extends ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
+
+export type SettingsFormData = Partial<ThemeBase>;

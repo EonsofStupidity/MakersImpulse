@@ -13,8 +13,13 @@ export interface SecurityLog {
   user_id: string;
   event_type: string;
   severity: string;
-  details: Record<string, unknown>;
+  details: any;
   ip_address: string;
+  user_agent: string;
   created_at: string;
-  metadata: Record<string, unknown>;
+  metadata: any;
+  profiles?: {
+    username: string;
+    display_name: string;
+  };
 }
