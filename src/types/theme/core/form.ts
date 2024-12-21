@@ -1,7 +1,7 @@
-import { ThemeBase, ThemeFormData } from './types';
+import { ThemeBase, ThemeBaseDB, ThemeFormData } from './types';
 
-// Re-export the types from core/types
-export type { ThemeBase, ThemeFormData };
+// Re-export the types
+export type { ThemeBase, ThemeBaseDB, ThemeFormData };
 
 // For backward compatibility
 export type SettingsFormData = ThemeFormData;
