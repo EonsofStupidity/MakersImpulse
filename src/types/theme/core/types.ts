@@ -11,7 +11,6 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Base interface that matches database schema
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -33,11 +32,11 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius?: string;
-  spacing_unit?: string;
-  transition_duration?: string;
-  shadow_color?: string;
-  hover_scale?: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
   box_shadow?: string;
   backdrop_blur?: string;
   transition_type?: TransitionType;
@@ -58,27 +57,4 @@ export interface ThemeBase {
   inherited_settings?: Record<string, unknown>;
 }
 
-// Form data type that extends ThemeBase with required fields for the form
-export interface ThemeFormData extends Omit<ThemeBase, 'preview_preferences'> {
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  transition_type: TransitionType;
-  preview_preferences: PreviewPreferences;
-}
-
-// For backward compatibility
-export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
-
-// Form state type
-export interface ThemeFormState {
-  isDirty: boolean;
-  isSubmitting: boolean;
-  submitError?: string;
-  lastSyncedVersion?: number;
-}
+export type ThemeFormData = Required<ThemeBase>;
