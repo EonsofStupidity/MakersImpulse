@@ -1,19 +1,29 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemeFormData } from "@/types/theme";
+import { toast } from "sonner";
 
-export const useThemeInheritance = (parentThemeId: string | null, strategy: "merge" | "override" | "replace" = "merge") => {
+export const useThemeInheritance = (
+  parentThemeId: string | null, 
+  strategy: "merge" | "override" | "replace" = "merge"
+) => {
   const { data: parentTheme, isLoading: isParentLoading } = useQuery({
     queryKey: ["parent-theme", parentThemeId],
     queryFn: async () => {
       if (!parentThemeId) return null;
+      
       const { data, error } = await supabase
         .from("base_themes")
         .select("*")
         .eq("id", parentThemeId)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error("Error fetching parent theme:", error);
+        toast.error("Failed to load parent theme");
+        throw error;
+      }
+      
       return data;
     },
     enabled: !!parentThemeId

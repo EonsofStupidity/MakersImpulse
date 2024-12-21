@@ -15,6 +15,7 @@ export const useSettingsForm = () => {
   const { data: settings, isLoading } = useQuery({
     queryKey: ["theme-settings"],
     queryFn: async () => {
+      console.log("Fetching theme settings...");
       const { data, error } = await supabase
         .from("theme_configuration")
         .select("*, parent_theme:base_themes(*)")
@@ -26,6 +27,7 @@ export const useSettingsForm = () => {
         throw error;
       }
 
+      console.log("Theme settings loaded:", data);
       return data || DEFAULT_SETTINGS;
     }
   });
@@ -38,6 +40,8 @@ export const useSettingsForm = () => {
   const { mutateAsync: updateSettings } = useMutation({
     mutationFn: async (newSettings: Partial<ThemeFormData>) => {
       setIsSaving(true);
+      console.log("Updating settings with:", newSettings);
+      
       const mergedSettings = mergeThemes(newSettings as ThemeFormData, parentTheme);
       
       const { data, error } = await supabase
@@ -47,7 +51,12 @@ export const useSettingsForm = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error updating settings:", error);
+        throw error;
+      }
+      
+      console.log("Settings updated successfully:", data);
       return data;
     },
     onSuccess: () => {
