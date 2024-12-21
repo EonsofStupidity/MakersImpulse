@@ -1,9 +1,11 @@
+// Basic type enums that match our database exactly
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Preview preferences exactly matching our jsonb structure
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -11,10 +13,11 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
+// Core theme interface matching Supabase theme_configuration table exactly
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -32,22 +35,16 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  theme_mode: ThemeMode;
-  transition_type: TransitionType;
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  theme_mode?: ThemeMode;
+  transition_type?: TransitionType;
   component_type?: ThemeComponentType;
-  logo_url?: string;
-  favicon_url?: string;
-  updated_at?: string;
-  updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
@@ -55,4 +52,10 @@ export interface ThemeBase {
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, unknown>;
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
+  state_version?: number;
+  last_sync?: string;
 }

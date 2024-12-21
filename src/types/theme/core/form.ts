@@ -1,5 +1,4 @@
 import { ThemeBase } from './types';
-import { Json } from '@/types/database';
 
 export interface ThemeFormData extends ThemeBase {
   // Form-specific fields can be added here
