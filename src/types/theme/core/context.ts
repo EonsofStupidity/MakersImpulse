@@ -1,4 +1,4 @@
-import { ThemeBase } from './base';
+import { ThemeBase } from './types';
 import { PreviewPreferences } from './types';
 
 export interface ThemeContextType {

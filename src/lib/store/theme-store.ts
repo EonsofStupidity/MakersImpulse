@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase, DatabaseThemeRow } from '@/types/theme';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -72,11 +72,15 @@ export const useThemeStore = create<ThemeStore>((set) => ({
       const themeData = data ? {
         ...DEFAULT_THEME,
         ...data,
-        preview_preferences: data.preview_preferences || DEFAULT_THEME.preview_preferences,
-        inherited_settings: data.inherited_settings || {}
+        preview_preferences: typeof data.preview_preferences === 'string' 
+          ? JSON.parse(data.preview_preferences)
+          : data.preview_preferences || DEFAULT_THEME.preview_preferences,
+        inherited_settings: typeof data.inherited_settings === 'string'
+          ? JSON.parse(data.inherited_settings)
+          : data.inherited_settings || {}
       } : DEFAULT_THEME;
 
-      set({ theme: themeData });
+      set({ theme: themeData as ThemeBase });
       console.log('Theme fetched:', themeData);
     } catch (error) {
       console.error('Error fetching theme:', error);
@@ -91,7 +95,11 @@ export const useThemeStore = create<ThemeStore>((set) => ({
     try {
       const { data, error } = await supabase
         .from('theme_configuration')
-        .update(updates)
+        .update({
+          ...updates,
+          preview_preferences: JSON.stringify(updates.preview_preferences),
+          inherited_settings: JSON.stringify(updates.inherited_settings)
+        })
         .eq('id', updates.id)
         .select()
         .single();
@@ -99,7 +107,16 @@ export const useThemeStore = create<ThemeStore>((set) => ({
       if (error) throw error;
 
       set((state) => ({
-        theme: state.theme ? { ...state.theme, ...data } : null
+        theme: state.theme ? { 
+          ...state.theme,
+          ...data,
+          preview_preferences: typeof data.preview_preferences === 'string'
+            ? JSON.parse(data.preview_preferences)
+            : data.preview_preferences,
+          inherited_settings: typeof data.inherited_settings === 'string'
+            ? JSON.parse(data.inherited_settings)
+            : data.inherited_settings
+        } : null
       }));
       
       console.log('Theme updated:', data);

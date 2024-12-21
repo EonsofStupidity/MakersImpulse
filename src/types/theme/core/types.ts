@@ -59,3 +59,20 @@ export interface ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
+
+// Database-specific type that handles JSON serialization
+export interface DatabaseThemeRow extends ThemeBase {
+  id: string;
+  preview_preferences: string; // JSON string in DB
+  inherited_settings: string; // JSON string in DB
+}
+
+// Form-specific type that extends ThemeBase
+export interface ThemeFormData extends ThemeBase {
+  // Form-specific fields can be added here
+}
+
+// Settings response type
+export interface ThemeResponse extends ThemeBase {
+  // Response-specific fields can be added here
+}
