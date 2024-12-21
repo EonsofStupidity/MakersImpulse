@@ -18,6 +18,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
+// Base theme interface that matches the database schema exactly
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -49,9 +50,6 @@ export interface ThemeBase {
   transition_type: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
-  preview_preferences?: PreviewPreferences;
-  parent_theme_id?: string;
-  inheritance_strategy?: ThemeInheritanceStrategy;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -61,9 +59,13 @@ export interface ThemeBase {
   real_time_toggle?: boolean;
   animations_enabled?: boolean;
   default_animation_duration?: number;
+  preview_preferences?: PreviewPreferences;
+  parent_theme_id?: string;
+  inheritance_strategy?: ThemeInheritanceStrategy;
+  inherited_settings?: Record<string, any>;
 }
 
-// This is the form data type that extends ThemeBase
+// Form data type that extends ThemeBase
 export interface ThemeFormData extends ThemeBase {
   border_radius: string;
   spacing_unit: string;
