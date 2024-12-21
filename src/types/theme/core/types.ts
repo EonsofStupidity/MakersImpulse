@@ -55,4 +55,6 @@ export interface ThemeBase {
   inherited_settings: Record<string, unknown>;
 }
 
+export type Settings = ThemeBase;
+export type SettingsResponse = ThemeBase;
 export type ThemeFormData = ThemeBase;

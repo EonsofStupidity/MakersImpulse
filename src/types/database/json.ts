@@ -3,3 +3,5 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export interface JsonObject {
   [key: string]: Json;
 }
+
+export type JsonValue = string | number | boolean | null | JsonObject | Json[];
