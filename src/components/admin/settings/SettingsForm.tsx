@@ -2,7 +2,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { settingsSchema } from "@/types/theme/schema";
-import { SettingsFormData } from "@/types/theme/core/form";
+import { ThemeBase } from "@/types/theme/core/types";
 import { useSettingsForm } from "../hooks/useSettingsForm";
 import { SettingsFormContainer } from "./components/SettingsFormContainer";
 import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
@@ -20,7 +20,7 @@ export const SettingsForm = () => {
     handleResetToDefault,
   } = useSettingsForm();
 
-  const form = useForm<SettingsFormData>({
+  const form = useForm<ThemeBase>({
     resolver: zodResolver(settingsSchema),
     defaultValues: settings || undefined,
   });

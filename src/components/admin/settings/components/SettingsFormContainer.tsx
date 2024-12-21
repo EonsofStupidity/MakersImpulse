@@ -1,12 +1,12 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme/core/form";
+import { ThemeBase } from "@/types/theme/core/types";
 import { Card } from "@/components/ui/card";
 import { SettingsFormHeader } from "./SettingsFormHeader";
 import { SettingsFormContent } from "./SettingsFormContent";
 
 interface SettingsFormContainerProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
   isSaving: boolean;
   onResetClick: () => void;
 }

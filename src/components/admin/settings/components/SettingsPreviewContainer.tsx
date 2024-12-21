@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
+import { ThemeBase } from "@/types/theme/core/types";
 import { SettingsPreview } from "./SettingsPreview";
-import { ThemeBase } from "@/types/theme/core/base";
 
 interface SettingsPreviewContainerProps {
   settings: ThemeBase | null;
@@ -21,7 +21,7 @@ export const SettingsPreviewContainer: React.FC<SettingsPreviewContainerProps> =
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <Card className="p-6 bg-gray-800/50 border border-white/10 backdrop-blur-sm sticky top-4">
+      <Card className="p-6 bg-gray-800/50 border border-white/10 backdrop-blur-sm">
         <h3 className="text-lg font-medium text-white mb-4">Preview</h3>
         {settings && (
           <SettingsPreview
