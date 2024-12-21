@@ -1,5 +1,6 @@
 import { ThemeBase, TransitionType, ThemeInheritanceStrategy, PreviewPreferences } from './types';
 
+// Single unified form data type that extends ThemeBase
 export interface ThemeFormData extends ThemeBase {
   border_radius: string;
   spacing_unit: string;
@@ -17,4 +18,6 @@ export interface ThemeFormData extends ThemeBase {
   preview_preferences?: PreviewPreferences;
 }
 
+// For backward compatibility and to avoid breaking existing code,
+// we'll export SettingsFormData as an alias of ThemeFormData
 export type SettingsFormData = ThemeFormData;

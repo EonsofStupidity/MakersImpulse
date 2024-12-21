@@ -5,9 +5,9 @@ export * from './schema';
 
 // Clean exports for backward compatibility
 export type { 
-  ThemeBase, 
-  ThemeFormData, 
-  Settings, 
+  ThemeBase,
+  ThemeFormData,
+  Settings,
   SettingsFormData,
   ThemeFormState 
 } from './core/types';
