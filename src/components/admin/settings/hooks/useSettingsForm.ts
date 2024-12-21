@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ThemeFormData } from "@/types/theme/core/form";
 import { DEFAULT_SETTINGS } from "./useSettingsDefaults";
+import { useThemeInheritance } from "@/hooks/useThemeInheritance";
 
 export const useSettingsForm = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -16,7 +17,7 @@ export const useSettingsForm = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("theme_configuration")
-        .select("*")
+        .select("*, parent_theme:base_themes(*)")
         .single();
 
       if (error) {
@@ -29,12 +30,19 @@ export const useSettingsForm = () => {
     }
   });
 
+  const { parentTheme, mergeThemes } = useThemeInheritance(
+    settings?.parent_theme_id,
+    settings?.inheritance_strategy
+  );
+
   const { mutateAsync: updateSettings } = useMutation({
     mutationFn: async (newSettings: Partial<ThemeFormData>) => {
       setIsSaving(true);
+      const mergedSettings = mergeThemes(newSettings, parentTheme);
+      
       const { data, error } = await supabase
         .from("theme_configuration")
-        .update(newSettings)
+        .update(mergedSettings)
         .eq('id', settings?.id)
         .select()
         .single();
@@ -55,13 +63,8 @@ export const useSettingsForm = () => {
     }
   });
 
-  const handleLogoUpload = (file: File) => {
-    setLogoFile(file);
-  };
-
-  const handleFaviconUpload = (file: File) => {
-    setFaviconFile(file);
-  };
+  const handleLogoUpload = (file: File) => setLogoFile(file);
+  const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   const handleResetToDefault = async () => {
     try {
@@ -74,7 +77,7 @@ export const useSettingsForm = () => {
   };
 
   return {
-    settings,
+    settings: settings ? mergeThemes(settings, parentTheme) : null,
     isLoading,
     isSaving,
     logoFile,

@@ -9,7 +9,7 @@ import { LayoutSection } from "../sections/LayoutSection";
 import { TransitionConfigSection } from "../sections/TransitionConfigSection";
 import { AnimationsSection } from "../sections/AnimationsSection";
 import { AdvancedEffectsSection } from "../sections/AdvancedEffectsSection";
-import { ParentThemeSection } from "./ParentThemeSection";
+import { ThemeInheritanceSection } from "./ThemeInheritanceSection";
 import { SavingIndicator } from "./SavingIndicator";
 
 interface SettingsFormContentProps {
@@ -25,7 +25,7 @@ export const SettingsFormContent: React.FC<SettingsFormContentProps> = ({
     <form className="space-y-6">
       <SavingIndicator isSaving={isSaving} />
       <Accordion type="single" collapsible className="space-y-4">
-        <ParentThemeSection form={form} />
+        <ThemeInheritanceSection form={form} />
         <ThemeImportSection form={form} />
         <ColorSection form={form} />
         <TextStylesSection form={form} />
