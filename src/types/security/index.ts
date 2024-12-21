@@ -8,24 +8,16 @@ export interface SecuritySettings {
   rate_limit_window_minutes: number;
 }
 
-export interface SecurityEvent {
+export interface SecurityLog {
   id: string;
-  user_id?: string;
   event_type: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  details?: Record<string, any>;
+  error_message?: string;
+  stack_trace?: string;
+  metadata?: Record<string, unknown>;
+  created_at: string;
+  profiles?: {
+    username?: string;
+    display_name?: string;
+  };
   ip_address?: string;
-  created_at?: string;
-  metadata?: Record<string, any>;
-}
-
-export interface SecurityLog extends SecurityEvent {
-  user_agent?: string;
-}
-
-export interface SecurityConfiguration {
-  id: string;
-  security_settings: SecuritySettings;
-  updated_at?: string;
-  updated_by?: string;
 }

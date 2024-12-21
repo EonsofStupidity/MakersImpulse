@@ -1,6 +1,6 @@
-import { ThemeFormData } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types/theme";
 
-export const DEFAULT_SETTINGS: ThemeFormData = {
+export const DEFAULT_SETTINGS: ThemeBase = {
   site_title: "MakersImpulse",
   tagline: "Create, Share, Inspire",
   primary_color: "#7FFFD4",
@@ -25,24 +25,11 @@ export const DEFAULT_SETTINGS: ThemeFormData = {
   transition_duration: "0.3s",
   shadow_color: "#000000",
   hover_scale: "1.05",
-  box_shadow: "none",
-  backdrop_blur: "0",
   theme_mode: "dark",
   transition_type: "fade",
   real_time_toggle: true,
   animations_enabled: true,
   default_animation_duration: 300,
-  component_type: "color",
-  id: "",
-  logo_url: "",
-  favicon_url: "",
-  updated_at: "",
-  updated_by: "",
-  state_version: 1,
-  last_sync: new Date().toISOString(),
-  parent_theme_id: "",
-  inheritance_strategy: "merge",
-  inherited_settings: {},
   preview_preferences: {
     real_time_updates: true,
     animation_enabled: true,
