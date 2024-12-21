@@ -1,15 +1,12 @@
 import { ThemeBase } from './types';
+import { Json } from '@/types/database';
 
-// Form-specific type that extends ThemeBase
 export interface ThemeFormData extends ThemeBase {
-  // Add any form-specific fields here if needed
+  // Form-specific fields can be added here
 }
 
-// Database-specific type
+// Database-specific type that handles JSON serialization
 export interface ThemeBaseDB extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
   preview_preferences: string; // JSON string in DB
   inherited_settings: string; // JSON string in DB
 }
-
-// Re-export for convenience
-export type { ThemeBase };

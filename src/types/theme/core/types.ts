@@ -14,7 +14,7 @@ export interface PreviewPreferences {
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -32,15 +32,15 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius?: string;
-  spacing_unit?: string;
-  transition_duration?: string;
-  shadow_color?: string;
-  hover_scale?: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
-  theme_mode?: ThemeMode;
-  transition_type?: TransitionType;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
+  theme_mode: ThemeMode;
+  transition_type: TransitionType;
   component_type?: ThemeComponentType;
   logo_url?: string;
   favicon_url?: string;
