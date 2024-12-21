@@ -14,7 +14,7 @@ export const useSettingsForm = () => {
 
   const { mergeThemes } = useThemeInheritance(settings?.parent_theme_id, settings?.inheritance_strategy);
 
-  const handleSettingsUpdate = async (newSettings: SettingsFormData) => {
+  const handleSettingsUpdate = async (newSettings: Partial<SettingsFormData>) => {
     setIsSaving(true);
     try {
       const { data, error } = await supabase

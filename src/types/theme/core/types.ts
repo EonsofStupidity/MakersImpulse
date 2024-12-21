@@ -51,9 +51,6 @@ export interface ThemeBase {
   animations_enabled?: boolean;
   default_animation_duration?: number;
   preview_preferences?: PreviewPreferences;
-  parent_theme_id?: string;
-  inheritance_strategy?: 'merge' | 'override' | 'replace';
-  inherited_settings?: Record<string, any>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
