@@ -1,4 +1,4 @@
-import { ThemeBase } from './base';
+import { ThemeBase } from './types';
 
 // Form-specific type that extends ThemeBase
 export interface ThemeFormData extends ThemeBase {
@@ -12,4 +12,4 @@ export interface ThemeBaseDB extends Omit<ThemeBase, 'preview_preferences' | 'in
 }
 
 // Re-export for convenience
-export type { ThemeBase, ThemeFormData };
+export type { ThemeBase };

@@ -1,5 +1,3 @@
-import { Json } from '../database/json';
-
 export interface SecuritySettings {
   ip_blacklist: string[];
   ip_whitelist: string[];
@@ -14,13 +12,11 @@ export interface SecurityLog {
   id: string;
   event_type: string;
   severity: string;
-  user_id?: string;
-  details?: Json;
-  ip_address?: string;
+  details: Record<string, unknown>;
+  ip_address: string | null;
   created_at: string;
-  metadata?: Json;
   profiles?: {
-    username?: string;
-    display_name?: string;
+    username: string;
+    display_name: string;
   };
 }

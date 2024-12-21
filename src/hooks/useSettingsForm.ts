@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ThemeBase, ThemeBaseDB, SettingsFormData } from "@/types/theme";
+import { ThemeBase, ThemeBaseDB, ThemeFormData } from "@/types/theme";
 import { DEFAULT_SETTINGS } from "./useSettingsDefaults";
 import { useThemeInheritance } from "@/hooks/useThemeInheritance";
 
@@ -36,13 +36,19 @@ export const useSettingsForm = () => {
   );
 
   const { mutateAsync: updateSettings } = useMutation({
-    mutationFn: async (newSettings: Partial<SettingsFormData>) => {
+    mutationFn: async (newSettings: Partial<ThemeFormData>) => {
       setIsSaving(true);
       const mergedSettings = mergeThemes(newSettings as ThemeBase, parentTheme as ThemeBase);
       
+      const dbSettings: ThemeBaseDB = {
+        ...mergedSettings,
+        preview_preferences: JSON.stringify(mergedSettings.preview_preferences),
+        inherited_settings: JSON.stringify(mergedSettings.inherited_settings)
+      };
+
       const { data, error } = await supabase
         .from("theme_configuration")
-        .update(mergedSettings as ThemeBaseDB)
+        .update(dbSettings)
         .eq('id', settings?.id)
         .select()
         .single();
