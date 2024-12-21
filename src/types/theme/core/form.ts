@@ -1,4 +1,4 @@
-import { ThemeBase } from './types';
+import { ThemeBase, TransitionType, ThemeInheritanceStrategy, PreviewPreferences } from './types';
 
 export interface ThemeFormData extends ThemeBase {
   border_radius: string;
