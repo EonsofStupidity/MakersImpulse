@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useThemeStore } from "@/lib/store/theme-store";
+import { ThemeBase } from "@/types/theme/core/types";
 
 export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -18,7 +19,7 @@ export const useSettingsForm = () => {
   return {
     settings,
     isLoading,
-    isSaving: false, // We'll handle loading states in the store
+    isSaving: false,
     logoFile,
     faviconFile,
     handleLogoUpload,

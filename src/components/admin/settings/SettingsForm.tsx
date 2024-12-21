@@ -1,11 +1,11 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { settingsSchema } from "@/types/theme/schema";
 import { ThemeBase } from "@/types/theme/core/types";
-import { useSettingsForm } from "../hooks/useSettingsForm";
+import { useSettingsForm } from "./hooks/useSettingsForm";
 import { SettingsFormContainer } from "./components/SettingsFormContainer";
 import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
+import { settingsSchema } from "@/types/theme/schema";
 
 export const SettingsForm = () => {
   const {
