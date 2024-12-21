@@ -1,7 +1,6 @@
-import { ThemeBase } from './base';
+import { ThemeBase, PreviewPreferences, TransitionType, ThemeInheritanceStrategy } from './types';
 
 export interface ThemeFormData extends ThemeBase {
-  // Form-specific fields
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
@@ -9,12 +8,13 @@ export interface ThemeFormData extends ThemeBase {
   hover_scale: string;
   box_shadow: string;
   backdrop_blur: string;
-  transition_type: 'fade' | 'slide' | 'scale' | 'blur';
+  transition_type: TransitionType;
   parent_theme_id?: string;
-  inheritance_strategy?: 'merge' | 'override' | 'replace';
+  inheritance_strategy?: ThemeInheritanceStrategy;
   real_time_toggle?: boolean;
   animations_enabled?: boolean;
   default_animation_duration?: number;
+  preview_preferences?: PreviewPreferences;
 }
 
 export interface ThemeFormState {
@@ -23,3 +23,5 @@ export interface ThemeFormState {
   submitError?: string;
   lastSyncedVersion?: number;
 }
+
+export type SettingsFormData = ThemeFormData;

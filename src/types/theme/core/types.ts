@@ -70,18 +70,6 @@ export interface ThemeFormState {
   lastSyncedVersion?: number;
 }
 
-export interface ThemeFormData extends ThemeBase {
-  // Form-specific fields that extend the base theme
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  transition_type: TransitionType;
-}
-
 // For backward compatibility
 export type Settings = ThemeBase;
 export type SettingsResponse = ThemeBase;
