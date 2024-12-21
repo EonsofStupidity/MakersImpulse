@@ -17,26 +17,25 @@ export const InheritanceStatus: React.FC<InheritanceStatusProps> = ({
   if (!parentThemeId) return null;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <Badge variant="secondary" className="bg-primary/20 text-primary">
         Inheriting from: {parentThemeName}
       </Badge>
       
-      {inheritanceStrategy === "merge" && (
-        <p className="text-sm text-gray-400">
-          Only modified settings will override the parent theme
-        </p>
-      )}
-      {inheritanceStrategy === "override" && (
-        <p className="text-sm text-gray-400">
-          Your settings take precedence, falling back to parent theme when unset
-        </p>
-      )}
-      {inheritanceStrategy === "replace" && (
-        <p className="text-sm text-gray-400">
-          Parent theme values are completely ignored
-        </p>
-      )}
+      <Alert className="bg-primary/10 border-primary/20">
+        <InfoIcon className="h-4 w-4" />
+        <AlertDescription>
+          {inheritanceStrategy === "merge" && (
+            "Only modified settings will override the parent theme settings."
+          )}
+          {inheritanceStrategy === "override" && (
+            "Your settings take precedence, falling back to parent theme when unset."
+          )}
+          {inheritanceStrategy === "replace" && (
+            "Parent theme values are completely ignored."
+          )}
+        </AlertDescription>
+      </Alert>
     </div>
   );
 };

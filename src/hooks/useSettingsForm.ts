@@ -1,48 +1,74 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { SettingsFormData } from "@/types/theme/core/form";
-import { DEFAULT_THEME_SETTINGS } from "@/components/theme/utils/themeUtils";
-import { useThemeInheritance } from '@/hooks/useThemeInheritance';
+import { ThemeFormData } from "@/types/theme/core/form";
+import { DEFAULT_SETTINGS } from "./useSettingsDefaults";
+import { useThemeInheritance } from "@/hooks/useThemeInheritance";
 
 export const useSettingsForm = () => {
-  const [settings, setSettings] = useState<SettingsFormData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
+  const queryClient = useQueryClient();
 
-  const { mergeThemes } = useThemeInheritance(settings?.parent_theme_id, settings?.inheritance_strategy);
-
-  const handleSettingsUpdate = async (newSettings: Partial<SettingsFormData>) => {
-    setIsSaving(true);
-    try {
+  const { data: settings, isLoading } = useQuery({
+    queryKey: ["theme-settings"],
+    queryFn: async () => {
       const { data, error } = await supabase
-        .from('theme_configuration')
-        .update(newSettings)
+        .from("theme_configuration")
+        .select("*, parent_theme:base_themes(*)")
+        .single();
+
+      if (error) {
+        console.error("Error fetching settings:", error);
+        toast.error("Failed to load theme settings");
+        throw error;
+      }
+
+      return data || DEFAULT_SETTINGS;
+    }
+  });
+
+  const { parentTheme, mergeThemes } = useThemeInheritance(
+    settings?.parent_theme_id,
+    settings?.inheritance_strategy
+  );
+
+  const { mutateAsync: updateSettings } = useMutation({
+    mutationFn: async (newSettings: Partial<ThemeFormData>) => {
+      setIsSaving(true);
+      const mergedSettings = mergeThemes(newSettings, parentTheme);
+      
+      const { data, error } = await supabase
+        .from("theme_configuration")
+        .update(mergedSettings)
         .eq('id', settings?.id)
         .select()
         .single();
 
       if (error) throw error;
-      
-      const mergedSettings = mergeThemes(data, null);
-      setSettings(mergedSettings as SettingsFormData);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["theme-settings"] });
       toast.success("Settings updated successfully");
-    } catch (error) {
+    },
+    onError: (error) => {
       console.error("Error updating settings:", error);
       toast.error("Failed to update settings");
-    } finally {
+    },
+    onSettled: () => {
       setIsSaving(false);
     }
-  };
+  });
 
   const handleLogoUpload = (file: File) => setLogoFile(file);
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
-  
+
   const handleResetToDefault = async () => {
     try {
-      await handleSettingsUpdate(DEFAULT_THEME_SETTINGS as SettingsFormData);
+      await updateSettings(DEFAULT_SETTINGS);
       toast.success("Settings reset to default");
     } catch (error) {
       console.error("Error resetting settings:", error);
@@ -51,14 +77,14 @@ export const useSettingsForm = () => {
   };
 
   return {
-    settings,
+    settings: settings ? mergeThemes(settings, parentTheme) : null,
     isLoading,
     isSaving,
     logoFile,
     faviconFile,
     handleLogoUpload,
     handleFaviconUpload,
-    handleSettingsUpdate,
+    handleSettingsUpdate: updateSettings,
     handleResetToDefault,
   };
 };
