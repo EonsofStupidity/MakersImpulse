@@ -14,7 +14,7 @@ export interface PreviewPreferences {
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -55,7 +55,7 @@ export interface ThemeBase {
   inherited_settings: Record<string, unknown>;
 }
 
-export type ThemeFormData = ThemeBase;
+export type SettingsFormData = ThemeBase;
 
 export interface DatabaseThemeRow extends ThemeBase {
   id: string;
