@@ -69,8 +69,15 @@ export const useThemeStore = create<ThemeStore>((set) => ({
 
       if (error) throw error;
 
-      set({ theme: data || DEFAULT_THEME });
-      console.log('Theme fetched:', data);
+      const themeData = data ? {
+        ...DEFAULT_THEME,
+        ...data,
+        preview_preferences: data.preview_preferences || DEFAULT_THEME.preview_preferences,
+        inherited_settings: data.inherited_settings || {}
+      } : DEFAULT_THEME;
+
+      set({ theme: themeData });
+      console.log('Theme fetched:', themeData);
     } catch (error) {
       console.error('Error fetching theme:', error);
       set({ error: error as Error });
@@ -92,7 +99,7 @@ export const useThemeStore = create<ThemeStore>((set) => ({
       if (error) throw error;
 
       set((state) => ({
-        theme: { ...state.theme, ...data } as ThemeBase
+        theme: state.theme ? { ...state.theme, ...data } : null
       }));
       
       console.log('Theme updated:', data);

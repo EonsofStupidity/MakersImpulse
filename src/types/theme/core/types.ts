@@ -53,6 +53,6 @@ export interface ThemeBase {
   default_animation_duration: number;
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
-  inheritance_strategy?: ThemeInheritanceStrategy;
+  inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, unknown>;
 }
