@@ -10,12 +10,11 @@ export interface SecuritySettings {
 
 export interface SecurityLog {
   id: string;
+  user_id: string;
   event_type: string;
   severity: string;
-  user_id?: string;
-  ip_address?: string;
-  user_agent?: string;
-  details?: Record<string, unknown>;
+  details: Record<string, unknown>;
+  ip_address: string;
   created_at: string;
-  metadata?: Record<string, unknown>;
+  metadata: Record<string, unknown>;
 }
