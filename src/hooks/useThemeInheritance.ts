@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ThemeFormData } from "@/types/theme/core/form";
+import { ThemeFormData } from "@/types/theme";
 
 export const useThemeInheritance = (parentThemeId: string | null, strategy: "merge" | "override" | "replace" = "merge") => {
   const { data: parentTheme, isLoading: isParentLoading } = useQuery({
