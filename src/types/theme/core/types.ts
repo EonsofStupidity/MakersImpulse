@@ -35,11 +35,11 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius?: string;
-  spacing_unit?: string;
-  transition_duration?: string;
-  shadow_color?: string;
-  hover_scale?: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
   box_shadow?: string;
   backdrop_blur?: string;
   theme_mode?: ThemeMode;
