@@ -1,5 +1,12 @@
 import { z } from 'zod';
-import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy } from './core/types';
+import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy, GlassEffectLevel } from './core/types';
+
+const previewPreferencesSchema = z.object({
+  real_time_updates: z.boolean(),
+  animation_enabled: z.boolean(),
+  glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
+  update_debounce_ms: z.number().min(0).max(1000)
+});
 
 export const settingsSchema = z.object({
   id: z.string().uuid().optional(),
@@ -29,20 +36,15 @@ export const settingsSchema = z.object({
   hover_scale: z.string(),
   box_shadow: z.string(),
   backdrop_blur: z.string(),
-  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']),
-  theme_mode: z.enum(['light', 'dark', 'system']).optional(),
-  component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect']).optional(),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const),
+  theme_mode: z.enum(['light', 'dark', 'system'] as const).optional(),
+  component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect'] as const).optional(),
   real_time_toggle: z.boolean().default(true),
   animations_enabled: z.boolean().default(true),
   default_animation_duration: z.number().min(100).max(1000).default(300),
-  preview_preferences: z.object({
-    real_time_updates: z.boolean(),
-    animation_enabled: z.boolean(),
-    glass_effect_level: z.enum(['low', 'medium', 'high']),
-    update_debounce_ms: z.number()
-  }).optional(),
+  preview_preferences: previewPreferencesSchema.optional(),
   parent_theme_id: z.string().uuid().optional(),
-  inheritance_strategy: z.enum(['merge', 'override', 'replace']).optional(),
+  inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const).optional(),
   logo_url: z.string().url().optional(),
   favicon_url: z.string().url().optional(),
   updated_at: z.string().optional(),

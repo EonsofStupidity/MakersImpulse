@@ -11,10 +11,12 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 
+export type GlassEffectLevel = 'low' | 'medium' | 'high';
+
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
-  glass_effect_level: 'low' | 'medium' | 'high';
+  glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
@@ -65,7 +67,7 @@ export interface ThemeBase {
   preview_preferences?: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Record<string, any>;
+  inherited_settings?: Record<string, unknown>;
 }
 
 // Form data type that extends ThemeBase with required fields for the form
@@ -86,6 +88,7 @@ export interface ThemeFormData extends ThemeBase {
   box_shadow: string;
   backdrop_blur: string;
   transition_type: TransitionType;
+  preview_preferences: PreviewPreferences;
 }
 
 // For backward compatibility
