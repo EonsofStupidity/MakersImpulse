@@ -8,6 +8,9 @@ export type {
   ThemeBase,
   ThemeFormData,
   Settings,
-  SettingsFormData,
-  ThemeFormState 
+  SettingsFormData
+} from './core/form';
+
+export type {
+  ThemeFormState
 } from './core/types';
