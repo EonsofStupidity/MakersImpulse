@@ -32,6 +32,9 @@ export const settingsSchema = z.object({
   transition_type: z.enum(['fade', 'slide', 'scale', 'blur']).optional(),
   theme_mode: z.enum(['light', 'dark', 'system']).optional(),
   component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect']).optional(),
+  real_time_toggle: z.boolean().default(true),
+  animations_enabled: z.boolean().default(true),
+  default_animation_duration: z.number().min(100).max(1000).default(300),
   preview_preferences: z.object({
     real_time_updates: z.boolean(),
     animation_enabled: z.boolean(),

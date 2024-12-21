@@ -49,15 +49,18 @@ export interface ThemeBase {
   transition_type?: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
+  preview_preferences?: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy?: ThemeInheritanceStrategy;
-  preview_preferences?: PreviewPreferences;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
   state_version?: number;
   last_sync?: string;
+  real_time_toggle?: boolean;
+  animations_enabled?: boolean;
+  default_animation_duration?: number;
 }
 
 export interface ThemeFormState {
