@@ -1,11 +1,9 @@
-// Basic type enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Preview preferences matching database jsonb structure
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -13,7 +11,6 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Core theme interface matching database schema exactly
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -40,9 +37,9 @@ export interface ThemeBase {
   transition_duration: string;
   shadow_color: string;
   hover_scale: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
-  theme_mode?: ThemeMode;
+  box_shadow: string;
+  backdrop_blur: string;
+  theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
   real_time_toggle: boolean;
@@ -60,18 +57,4 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-// Form-specific type that extends ThemeBase
-export interface ThemeFormData extends ThemeBase {
-  // Form-specific fields can be added here
-}
-
-// Settings response type
-export interface ThemeResponse extends ThemeBase {
-  // Response-specific fields can be added here
-}
-
-// Database-specific type that handles JSON serialization
-export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
-  preview_preferences: string; // JSON string in DB
-  inherited_settings: string; // JSON string in DB
-}
+export type SettingsFormData = ThemeBase;
