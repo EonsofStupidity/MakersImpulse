@@ -17,7 +17,7 @@ export interface PreviewPreferences {
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -43,7 +43,7 @@ export interface ThemeBase {
   box_shadow?: string;
   backdrop_blur?: string;
   theme_mode?: ThemeMode;
-  transition_type?: TransitionType;
+  transition_type: TransitionType;
   component_type?: ThemeComponentType;
   real_time_toggle: boolean;
   animations_enabled: boolean;

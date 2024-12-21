@@ -29,7 +29,7 @@ export const useSettingsForm = () => {
     }
   });
 
-  const { mutate: handleSettingsUpdate, isLoading: isSaving } = useMutation({
+  const { mutate: handleSettingsUpdate, isPending: isSaving } = useMutation({
     mutationFn: async (newSettings: Partial<ThemeBase>) => {
       await updateTheme(newSettings);
     },
