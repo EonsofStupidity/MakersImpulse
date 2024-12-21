@@ -11,4 +11,4 @@ export type { ThemeBase } from './core/base';
 export type { SettingsFormData } from './core/form';
 export type { ThemeContextType } from './core/context';
 export type { DatabaseSettingsRow } from './core/database';
-export type { Settings } from './core/types';
+export type { Settings, TransitionType } from './core/types';
