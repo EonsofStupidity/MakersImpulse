@@ -2,51 +2,21 @@ import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
 import { SettingsFormData } from "@/types/theme";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
+import { ParentThemeSelect } from "./theme-inheritance/ParentThemeSelect";
+import { InheritanceStrategySelect } from "./theme-inheritance/InheritanceStrategySelect";
+import { InheritanceStatus } from "./theme-inheritance/InheritanceStatus";
+import { useParentTheme } from "./theme-inheritance/useParentTheme";
 
 interface ThemeInheritanceSectionProps {
   form: UseFormReturn<SettingsFormData>;
 }
 
 export const ThemeInheritanceSection: React.FC<ThemeInheritanceSectionProps> = ({ form }) => {
-  const { data: baseThemes, isLoading } = useQuery({
-    queryKey: ["base-themes"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("base_themes")
-        .select("*")
-        .eq("is_active", true);
-      
-      if (error) throw error;
-      return data;
-    }
-  });
-
   const parentThemeId = form.watch("parent_theme_id");
-  const inheritanceStrategy = form.watch("inheritance_strategy");
-
-  const { data: parentTheme } = useQuery({
-    queryKey: ["parent-theme", parentThemeId],
-    queryFn: async () => {
-      if (!parentThemeId) return null;
-      const { data, error } = await supabase
-        .from("base_themes")
-        .select("*")
-        .eq("id", parentThemeId)
-        .single();
-      
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!parentThemeId
-  });
+  const { parentTheme } = useParentTheme(parentThemeId);
 
   return (
     <AccordionItem value="theme-inheritance">
@@ -62,70 +32,17 @@ export const ThemeInheritanceSection: React.FC<ThemeInheritanceSectionProps> = (
             </AlertDescription>
           </Alert>
 
-          <div className="space-y-2">
-            <Label htmlFor="parent-theme">Parent Theme</Label>
-            <Select
-              value={parentThemeId || ""}
-              onValueChange={(value) => form.setValue("parent_theme_id", value)}
-            >
-              <SelectTrigger id="parent-theme" className="bg-gray-700/50 border-gray-600">
-                <SelectValue placeholder="Select a parent theme" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="">None (Standalone Theme)</SelectItem>
-                {baseThemes?.map((theme) => (
-                  <SelectItem key={theme.id} value={theme.id}>
-                    {theme.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <ParentThemeSelect form={form} />
 
           {parentThemeId && (
-            <div className="space-y-2">
-              <Label htmlFor="inheritance-strategy">Inheritance Strategy</Label>
-              <Select
-                value={inheritanceStrategy || "merge"}
-                onValueChange={(value) => form.setValue("inheritance_strategy", value as "merge" | "override" | "replace")}
-              >
-                <SelectTrigger id="inheritance-strategy" className="bg-gray-700/50 border-gray-600">
-                  <SelectValue placeholder="Select inheritance strategy" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="merge">
-                    Merge (Override only specified values)
-                  </SelectItem>
-                  <SelectItem value="override">
-                    Override (Keep parent as fallback)
-                  </SelectItem>
-                  <SelectItem value="replace">
-                    Replace (Ignore parent values)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-
-              <div className="pt-2 space-y-2">
-                <Badge variant="secondary" className="bg-primary/20 text-primary">
-                  Inheriting from: {parentTheme?.name}
-                </Badge>
-                {inheritanceStrategy === "merge" && (
-                  <p className="text-sm text-gray-400">
-                    Only modified settings will override the parent theme
-                  </p>
-                )}
-                {inheritanceStrategy === "override" && (
-                  <p className="text-sm text-gray-400">
-                    Your settings take precedence, falling back to parent theme when unset
-                  </p>
-                )}
-                {inheritanceStrategy === "replace" && (
-                  <p className="text-sm text-gray-400">
-                    Parent theme values are completely ignored
-                  </p>
-                )}
-              </div>
-            </div>
+            <>
+              <InheritanceStrategySelect form={form} />
+              <InheritanceStatus 
+                parentThemeId={parentThemeId}
+                inheritanceStrategy={form.watch("inheritance_strategy")}
+                parentThemeName={parentTheme?.name}
+              />
+            </>
           )}
         </Card>
       </AccordionContent>
