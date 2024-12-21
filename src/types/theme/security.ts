@@ -7,3 +7,19 @@ export interface SecuritySettings {
   lockout_duration_minutes: number;
   rate_limit_window_minutes: number;
 }
+
+export interface SecurityLog {
+  id: string;
+  user_id: string;
+  event_type: string;
+  severity: string;
+  details: any;
+  ip_address: string;
+  user_agent: string;
+  created_at: string;
+  metadata: any;
+  profiles?: {
+    username: string;
+    display_name: string;
+  };
+}

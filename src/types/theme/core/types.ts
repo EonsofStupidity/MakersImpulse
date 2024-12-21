@@ -18,7 +18,6 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Base theme interface that matches the database schema
 export interface ThemeBase {
   id?: string;
   site_title: string;
