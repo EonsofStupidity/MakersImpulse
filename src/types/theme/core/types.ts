@@ -18,7 +18,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-export interface Theme {
+export interface ThemeBase {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -49,13 +49,9 @@ export interface Theme {
   transition_type?: TransitionType;
   theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
-  real_time_toggle?: boolean;
-  animations_enabled?: boolean;
-  default_animation_duration?: number;
-  preview_preferences?: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Record<string, any>;
+  preview_preferences?: PreviewPreferences;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -64,8 +60,15 @@ export interface Theme {
   last_sync?: string;
 }
 
-// Form data type
-export interface ThemeFormData extends Theme {
+export interface ThemeFormState {
+  isDirty: boolean;
+  isSubmitting: boolean;
+  submitError?: string;
+  lastSyncedVersion?: number;
+}
+
+export interface ThemeFormData extends ThemeBase {
+  // Form-specific fields that extend the base theme
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
@@ -77,5 +80,5 @@ export interface ThemeFormData extends Theme {
 }
 
 // For backward compatibility
-export type Settings = Theme;
-export type SettingsResponse = Theme;
+export type Settings = ThemeBase;
+export type SettingsResponse = ThemeBase;

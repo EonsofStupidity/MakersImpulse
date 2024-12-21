@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { ThemeMode, ThemeComponentType, TransitionType } from './core/types';
+import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy } from './core/types';
 
 export const settingsSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().uuid().optional(),
   site_title: z.string().min(1, "Site title is required"),
   tagline: z.string().optional(),
   primary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
@@ -32,9 +32,6 @@ export const settingsSchema = z.object({
   transition_type: z.enum(['fade', 'slide', 'scale', 'blur']).optional(),
   theme_mode: z.enum(['light', 'dark', 'system']).optional(),
   component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect']).optional(),
-  real_time_toggle: z.boolean().default(true),
-  animations_enabled: z.boolean().default(true),
-  default_animation_duration: z.number().min(100).max(1000).default(300),
   preview_preferences: z.object({
     real_time_updates: z.boolean(),
     animation_enabled: z.boolean(),
@@ -43,7 +40,6 @@ export const settingsSchema = z.object({
   }).optional(),
   parent_theme_id: z.string().uuid().optional(),
   inheritance_strategy: z.enum(['merge', 'override', 'replace']).optional(),
-  inherited_settings: z.record(z.any()).optional(),
   logo_url: z.string().url().optional(),
   favicon_url: z.string().url().optional(),
   updated_at: z.string().optional(),
