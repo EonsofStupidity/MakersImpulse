@@ -1,5 +1,5 @@
-import { ThemeBase } from './types';
 import { Json } from '@/types/database/json';
+import { ThemeBase } from './types';
 
 export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
   preview_preferences: string; // JSON string in DB

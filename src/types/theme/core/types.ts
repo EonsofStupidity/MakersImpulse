@@ -56,5 +56,3 @@ export interface ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
-
-export type SettingsFormData = ThemeBase;

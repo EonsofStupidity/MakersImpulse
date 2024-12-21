@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ThemeBase, SettingsFormData } from "@/types/theme";
+import { ThemeBase, ThemeFormData } from "@/types/theme";
 import { useThemeStore } from "@/lib/store/theme-store";
 
 export const useSettingsForm = () => {
@@ -30,7 +30,7 @@ export const useSettingsForm = () => {
   });
 
   const { mutate: handleSettingsUpdate, isPending: isSaving } = useMutation({
-    mutationFn: async (newSettings: Partial<SettingsFormData>) => {
+    mutationFn: async (newSettings: Partial<ThemeFormData>) => {
       await updateTheme(newSettings);
     },
     onSuccess: () => {
