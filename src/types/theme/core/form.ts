@@ -1,7 +1,6 @@
-import { ThemeBase } from './base';
-import { TransitionType } from './types';
+import { Theme } from './types';
 
-export interface SettingsFormData extends ThemeBase {
+export interface SettingsFormData extends Theme {
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;

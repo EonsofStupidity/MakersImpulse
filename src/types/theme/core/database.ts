@@ -1,6 +1,6 @@
-import { ThemeBase } from './base';
+import { Theme } from './types';
 
-export interface DatabaseSettingsRow extends ThemeBase {
+export interface DatabaseSettingsRow extends Theme {
   id: string;
   updated_at?: string;
   updated_by?: string;
@@ -8,4 +8,4 @@ export interface DatabaseSettingsRow extends ThemeBase {
   last_sync?: string;
 }
 
-export type SettingsFormData = Partial<ThemeBase>;
+export type SettingsFormData = Partial<Theme>;

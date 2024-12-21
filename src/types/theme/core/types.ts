@@ -9,6 +9,8 @@ export type ThemeComponentType =
 
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 
+export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
+
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -16,7 +18,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-export interface ThemeBase {
+export interface Theme {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -51,6 +53,9 @@ export interface ThemeBase {
   animations_enabled?: boolean;
   default_animation_duration?: number;
   preview_preferences?: PreviewPreferences;
+  parent_theme_id?: string;
+  inheritance_strategy?: ThemeInheritanceStrategy;
+  inherited_settings?: Record<string, any>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -59,5 +64,6 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
+// For backward compatibility
+export type Settings = Theme;
+export type SettingsResponse = Theme;
