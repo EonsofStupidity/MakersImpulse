@@ -27,7 +27,7 @@ export const useSettingsForm = () => {
       if (error) throw error;
       
       const mergedSettings = mergeThemes(data, null);
-      setSettings(mergedSettings);
+      setSettings(mergedSettings as SettingsFormData);
       toast.success("Settings updated successfully");
     } catch (error) {
       console.error("Error updating settings:", error);
