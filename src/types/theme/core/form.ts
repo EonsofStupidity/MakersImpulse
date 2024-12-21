@@ -1,7 +1,7 @@
 import { ThemeBase } from './base';
 import { TransitionType } from './types';
 
-export interface ThemeFormData extends ThemeBase {
+export interface SettingsFormData extends ThemeBase {
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
@@ -10,6 +10,9 @@ export interface ThemeFormData extends ThemeBase {
   box_shadow: string;
   backdrop_blur: string;
   transition_type: TransitionType;
+  real_time_toggle?: boolean;
+  animations_enabled?: boolean;
+  default_animation_duration?: number;
 }
 
 export interface ThemeFormState {

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ThemeBase } from "@/types/theme/core/base";
-import { ThemeFormData } from "@/types/theme/core/form";
-import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS } from "@/components/theme/utils/themeUtils";
+import { SettingsFormData } from "@/types/theme/core/form";
+import { DEFAULT_THEME_SETTINGS } from "@/components/theme/utils/themeUtils";
 
 export const useSettingsForm = () => {
-  const [settings, setSettings] = useState<ThemeFormData | null>(null);
+  const [settings, setSettings] = useState<SettingsFormData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
 
-  const handleSettingsUpdate = async (newSettings: ThemeFormData) => {
+  const handleSettingsUpdate = async (newSettings: SettingsFormData) => {
     setIsSaving(true);
     try {
       const { data, error } = await supabase
@@ -39,7 +38,7 @@ export const useSettingsForm = () => {
   
   const handleResetToDefault = async () => {
     try {
-      await handleSettingsUpdate(DEFAULT_THEME_SETTINGS as ThemeFormData);
+      await handleSettingsUpdate(DEFAULT_THEME_SETTINGS as SettingsFormData);
       toast.success("Settings reset to default");
     } catch (error) {
       console.error("Error resetting settings:", error);
