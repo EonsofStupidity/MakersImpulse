@@ -1,4 +1,4 @@
-import { ThemeBase, PreviewPreferences, TransitionType, ThemeInheritanceStrategy } from './types';
+import { ThemeBase } from './types';
 
 export interface ThemeFormData extends ThemeBase {
   border_radius: string;
@@ -15,13 +15,6 @@ export interface ThemeFormData extends ThemeBase {
   animations_enabled?: boolean;
   default_animation_duration?: number;
   preview_preferences?: PreviewPreferences;
-}
-
-export interface ThemeFormState {
-  isDirty: boolean;
-  isSubmitting: boolean;
-  submitError?: string;
-  lastSyncedVersion?: number;
 }
 
 export type SettingsFormData = ThemeFormData;
