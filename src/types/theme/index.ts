@@ -8,9 +8,12 @@ export type {
   ThemeBase,
   ThemeFormData,
   Settings,
-  SettingsFormData
-} from './core/form';
-
-export type {
+  SettingsResponse,
+  PreviewPreferences,
+  GlassEffectLevel,
+  ThemeMode,
+  ThemeComponentType,
+  TransitionType,
+  ThemeInheritanceStrategy,
   ThemeFormState
 } from './core/types';

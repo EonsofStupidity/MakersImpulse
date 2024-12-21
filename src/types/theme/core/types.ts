@@ -1,16 +1,7 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
-
-export type ThemeComponentType = 
-  | 'color'
-  | 'typography'
-  | 'layout'
-  | 'animation'
-  | 'effect';
-
+export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
-
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
-
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
 export interface PreviewPreferences {
@@ -20,10 +11,21 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Base theme interface that exactly matches the database schema
+// Base interface that matches database schema
 export interface ThemeBase {
-  // Required fields (NOT NULL in database)
+  id?: string;
   site_title: string;
+  tagline?: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -31,20 +33,6 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  
-  // Optional fields (nullable in database)
-  id?: string;
-  tagline?: string;
-  primary_color?: string;
-  secondary_color?: string;
-  accent_color?: string;
-  text_primary_color?: string;
-  text_secondary_color?: string;
-  text_link_color?: string;
-  text_heading_color?: string;
-  neon_cyan?: string;
-  neon_pink?: string;
-  neon_purple?: string;
   border_radius?: string;
   spacing_unit?: string;
   transition_duration?: string;
@@ -71,15 +59,7 @@ export interface ThemeBase {
 }
 
 // Form data type that extends ThemeBase with required fields for the form
-export interface ThemeFormData extends ThemeBase {
-  // These fields are required in the form even if optional in database
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
+export interface ThemeFormData extends Omit<ThemeBase, 'preview_preferences'> {
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
