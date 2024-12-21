@@ -64,6 +64,18 @@ export interface Theme {
   last_sync?: string;
 }
 
+// Form data type
+export interface ThemeFormData extends Theme {
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
+  transition_type: TransitionType;
+}
+
 // For backward compatibility
 export type Settings = Theme;
 export type SettingsResponse = Theme;
