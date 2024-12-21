@@ -105,5 +105,10 @@ export interface ThemeBase {
   inherited_settings: Record<string, unknown>;
 }
 
-// Type for form data with all fields required
-export type ThemeFormData = Required<ThemeBase>;
+// Settings form data type
+export interface SettingsFormData extends Required<ThemeBase> {
+  // Additional form-specific fields can be added here
+}
+
+// Re-export for convenience
+export type { ThemeBase as Theme };
