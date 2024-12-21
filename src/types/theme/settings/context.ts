@@ -1,6 +1,8 @@
-import { ThemeBase } from '../core/base';
+import { SiteSettings } from './types';
 
-export interface ThemeContextType {
-  theme: ThemeBase | null;
-  updateTheme: (newTheme: ThemeBase) => Promise<void>;
+export interface SettingsContextType {
+  settings: SiteSettings | null;
+  updateSettings: (settings: Partial<SiteSettings>) => Promise<void>;
+  isLoading: boolean;
+  error: Error | null;
 }

@@ -5,7 +5,7 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Preview preferences matching database jsonb structure
+// Preview preferences for theme customization
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -13,11 +13,9 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Core theme interface matching database schema exactly
+// Core theme interface - visual styling only
 export interface ThemeBase {
-  id?: string;
-  site_title: string;
-  tagline?: string;
+  // Colors
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -28,6 +26,8 @@ export interface ThemeBase {
   neon_cyan: string;
   neon_pink: string;
   neon_purple: string;
+
+  // Typography
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -35,6 +35,8 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+
+  // Layout & Effects
   border_radius?: string;
   spacing_unit?: string;
   transition_duration?: string;
@@ -42,36 +44,28 @@ export interface ThemeBase {
   hover_scale?: string;
   box_shadow?: string;
   backdrop_blur?: string;
+
+  // Theme System
   theme_mode?: ThemeMode;
   transition_type?: TransitionType;
   component_type?: ThemeComponentType;
-  real_time_toggle: boolean;
-  animations_enabled: boolean;
-  default_animation_duration: number;
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, unknown>;
-  logo_url?: string;
-  favicon_url?: string;
-  updated_at?: string;
-  updated_by?: string;
+
+  // Metadata
   state_version?: number;
   last_sync?: string;
 }
 
-// Form-specific type that extends ThemeBase
+// Form-specific theme type
 export interface ThemeFormData extends ThemeBase {
-  // Form-specific fields can be added here
-}
-
-// Settings response type
-export interface ThemeResponse extends ThemeBase {
-  // Response-specific fields can be added here
-}
-
-// Database-specific type that handles JSON serialization
-export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
-  preview_preferences: string; // JSON string in DB
-  inherited_settings: string; // JSON string in DB
+  id?: string;
+  site_title: string;
+  tagline?: string;
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
 }
