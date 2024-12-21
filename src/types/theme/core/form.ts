@@ -1,7 +1,15 @@
-import { ThemeBase, ThemeBaseDB, ThemeFormData } from './types';
+import { ThemeBase } from './base';
 
-// Re-export the types
-export type { ThemeBase, ThemeBaseDB, ThemeFormData };
+// Form-specific type that extends ThemeBase
+export interface ThemeFormData extends ThemeBase {
+  // Add any form-specific fields here if needed
+}
 
-// For backward compatibility
-export type SettingsFormData = ThemeFormData;
+// Database-specific type
+export interface ThemeBaseDB extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
+  preview_preferences: string; // JSON string in DB
+  inherited_settings: string; // JSON string in DB
+}
+
+// Re-export for convenience
+export type { ThemeBase, ThemeFormData };
