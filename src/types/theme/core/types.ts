@@ -55,14 +55,4 @@ export interface ThemeBase {
   inherited_settings: Record<string, unknown>;
 }
 
-export type SettingsFormData = ThemeBase;
-
-export interface DatabaseThemeRow extends ThemeBase {
-  id: string;
-  updated_at?: string;
-  updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
-}
-
-export type ThemeResponse = DatabaseThemeRow;
+export type ThemeFormData = ThemeBase;
