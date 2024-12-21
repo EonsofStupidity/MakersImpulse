@@ -1,12 +1,8 @@
 import { ThemeBase } from './base';
+import { PreviewPreferences } from './types';
 
 export interface ThemeContextType {
   theme: ThemeBase | null;
   updateTheme: (theme: Partial<ThemeBase>) => Promise<void>;
-  previewPreferences?: {
-    real_time_updates: boolean;
-    animation_enabled: boolean;
-    glass_effect_level: 'low' | 'medium' | 'high';
-    update_debounce_ms: number;
-  };
+  previewPreferences?: PreviewPreferences;
 }
