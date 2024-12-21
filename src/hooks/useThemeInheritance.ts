@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ThemeBase } from "@/types/theme/core/base";
+import { ThemeFormData } from "@/types/theme/core/form";
 
 export const useThemeInheritance = (parentThemeId: string | null, strategy: "merge" | "override" | "replace" = "merge") => {
-  const { data: parentTheme } = useQuery({
+  const { data: parentTheme, isLoading: isParentLoading } = useQuery({
     queryKey: ["parent-theme", parentThemeId],
     queryFn: async () => {
       if (!parentThemeId) return null;
@@ -19,7 +19,7 @@ export const useThemeInheritance = (parentThemeId: string | null, strategy: "mer
     enabled: !!parentThemeId
   });
 
-  const mergeThemes = (childTheme: ThemeBase, parentTheme: ThemeBase | null) => {
+  const mergeThemes = (childTheme: ThemeFormData, parentTheme: ThemeFormData | null) => {
     if (!parentTheme) return childTheme;
 
     switch (strategy) {
@@ -44,6 +44,7 @@ export const useThemeInheritance = (parentThemeId: string | null, strategy: "mer
 
   return {
     parentTheme,
+    isParentLoading,
     mergeThemes
   };
 };

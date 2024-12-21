@@ -25,6 +25,17 @@ export const DEFAULT_SETTINGS: ThemeFormData = {
   transition_duration: "0.3s",
   shadow_color: "#000000",
   hover_scale: "1.05",
+  box_shadow: "none",
+  backdrop_blur: "0",
   theme_mode: "dark",
   transition_type: "fade",
+  real_time_toggle: true,
+  animations_enabled: true,
+  default_animation_duration: 300,
+  preview_preferences: {
+    real_time_updates: true,
+    animation_enabled: true,
+    glass_effect_level: "medium",
+    update_debounce_ms: 100
+  }
 };
