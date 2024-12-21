@@ -6,4 +6,10 @@ export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' 
   inherited_settings: string; // JSON string in DB
 }
 
-export type SettingsFormData = Partial<ThemeBase>;
+export interface DatabaseSettingsRow extends ThemeBase {
+  id: string;
+  updated_at?: string;
+  updated_by?: string;
+  state_version?: number;
+  last_sync?: string;
+}
