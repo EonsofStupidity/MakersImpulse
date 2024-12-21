@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +21,7 @@ export const CreateThreadDialog: React.FC<CreateThreadDialogProps> = ({
   onCreateThread,
   isCreating
 }) => {
-  const [newThread, setNewThread] = React.useState<NewThread>({ title: '', content: '' });
+  const [newThread, setNewThread] = useState<NewThread>({ title: '', content: '' });
 
   const handleCreateThread = () => {
     if (!newThread.title || !newThread.content) {
