@@ -1,4 +1,4 @@
-import { ThemeBase } from './core/base';
+import { ThemeBase } from './core/types';
 
 export type Settings = ThemeBase;
 export type SettingsResponse = ThemeBase;

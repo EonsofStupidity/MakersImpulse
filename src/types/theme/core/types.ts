@@ -1,11 +1,11 @@
-// Basic type enums that match our database exactly
+// Basic type enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Preview preferences exactly matching our jsonb structure
+// Preview preferences matching database jsonb structure
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -13,7 +13,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Core theme interface matching Supabase theme_configuration table exactly
+// Core theme interface matching database schema exactly
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -60,13 +60,6 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-// Database-specific type that handles JSON serialization
-export interface DatabaseThemeRow extends ThemeBase {
-  id: string;
-  preview_preferences: string; // JSON string in DB
-  inherited_settings: string; // JSON string in DB
-}
-
 // Form-specific type that extends ThemeBase
 export interface ThemeFormData extends ThemeBase {
   // Form-specific fields can be added here
@@ -75,4 +68,10 @@ export interface ThemeFormData extends ThemeBase {
 // Settings response type
 export interface ThemeResponse extends ThemeBase {
   // Response-specific fields can be added here
+}
+
+// Database-specific type that handles JSON serialization
+export interface DatabaseThemeRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
+  preview_preferences: string; // JSON string in DB
+  inherited_settings: string; // JSON string in DB
 }
