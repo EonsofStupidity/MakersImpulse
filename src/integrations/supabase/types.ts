@@ -1758,6 +1758,88 @@ export type Database = {
           },
         ]
       }
+      theme_inheritable_properties: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          property_name: string
+          property_type: Database["public"]["Enums"]["theme_property_type"]
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          property_name: string
+          property_type: Database["public"]["Enums"]["theme_property_type"]
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          property_name?: string
+          property_type?: Database["public"]["Enums"]["theme_property_type"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      theme_inheritance_log: {
+        Row: {
+          change_date: string | null
+          change_reason: string | null
+          changed_by: string | null
+          child_theme_id: string | null
+          id: string
+          new_state: Json | null
+          parent_theme_id: string | null
+          previous_state: Json | null
+        }
+        Insert: {
+          change_date?: string | null
+          change_reason?: string | null
+          changed_by?: string | null
+          child_theme_id?: string | null
+          id?: string
+          new_state?: Json | null
+          parent_theme_id?: string | null
+          previous_state?: Json | null
+        }
+        Update: {
+          change_date?: string | null
+          change_reason?: string | null
+          changed_by?: string | null
+          child_theme_id?: string | null
+          id?: string
+          new_state?: Json | null
+          parent_theme_id?: string | null
+          previous_state?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_inheritance_log_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_inheritance_log_child_theme_id_fkey"
+            columns: ["child_theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_configuration"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_inheritance_log_parent_theme_id_fkey"
+            columns: ["parent_theme_id"]
+            isOneToOne: false
+            referencedRelation: "base_themes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       theme_presets: {
         Row: {
           category: string | null
@@ -2268,6 +2350,7 @@ export type Database = {
       theme_inheritance_strategy: "override" | "merge" | "replace"
       theme_mode: "light" | "dark" | "system"
       theme_mode_type: "light" | "dark" | "system"
+      theme_property_type: "mandatory" | "optional"
       transition_type: "fade" | "slide" | "scale" | "blur"
       user_role: "subscriber" | "maker" | "admin" | "super_admin"
       workflow_stage_type:
