@@ -1,13 +1,13 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types/theme";
 import { useSettingsForm } from "./hooks/useSettingsForm";
-import { SettingsFormContainer } from "./components/SettingsFormContainer";
-import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
+import { ThemeSettingsFormContainer } from "./components/ThemeSettingsFormContainer";
+import { ThemePreviewContainer } from "./components/ThemePreviewContainer";
 import { settingsSchema } from "@/types/theme/schema";
 
-export const SettingsForm = () => {
+export const ThemeSettingsForm = () => {
   const {
     settings,
     isLoading,
@@ -50,12 +50,12 @@ export const SettingsForm = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%] min-h-[calc(100vh-4rem)]">
-      <SettingsFormContainer
+      <ThemeSettingsFormContainer
         form={form}
         isSaving={isSaving}
         onResetClick={handleResetToDefault}
       />
-      <SettingsPreviewContainer
+      <ThemePreviewContainer
         settings={settings}
         logoFile={logoFile}
         faviconFile={faviconFile}
