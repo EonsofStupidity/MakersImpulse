@@ -1,3 +1,5 @@
+import { Json } from '@/types/database/json';
+
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -45,10 +47,10 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: PreviewPreferences;
+  preview_preferences: Json;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Json;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
