@@ -7,18 +7,23 @@ export interface ContentRevision {
   version: number;
   created_at: string;
   created_by: string;
-  metadata?: Json;
 }
 
 export interface ContentWithAuthor {
   id: string;
   title: string;
   content: Json;
+  created_at: string;
   created_by: {
     display_name: string;
   };
-  created_at: string;
-  updated_at: string;
+  metadata: Json;
+  slug: string;
   status: 'draft' | 'published' | 'archived';
-  metadata?: Json;
+  type: 'template' | 'page' | 'component' | 'workflow';
+  updated_at: string;
+  updated_by: {
+    display_name: string;
+  }[];
+  version: number;
 }

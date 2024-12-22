@@ -51,9 +51,14 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Json;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
+}
+
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
