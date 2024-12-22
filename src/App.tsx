@@ -10,14 +10,16 @@ import { QueryProvider } from "@/components/auth/providers/QueryProvider";
 import { AuthProvider } from "@/components/auth/providers/AuthProvider";
 
 const App = () => {
+  console.log('App component rendering');
+  
   return (
     <ErrorBoundary>
       <QueryProvider>
         <BrowserRouter>
-          <AdminSidebarProvider>
-            <ThemeProvider>
-              <TooltipProvider>
-                <AuthProvider>
+          <ThemeProvider>
+            <TooltipProvider>
+              <AuthProvider>
+                <AdminSidebarProvider>
                   <RootLayout>
                     <AppRoutes />
                   </RootLayout>
@@ -38,10 +40,10 @@ const App = () => {
                       },
                     }}
                   />
-                </AuthProvider>
-              </TooltipProvider>
-            </ThemeProvider>
-          </AdminSidebarProvider>
+                </AdminSidebarProvider>
+              </AuthProvider>
+            </TooltipProvider>
+          </ThemeProvider>
         </BrowserRouter>
       </QueryProvider>
     </ErrorBoundary>

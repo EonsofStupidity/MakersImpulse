@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './styles/globals.css'
 
+console.log('Starting application initialization');
+
 // Create root with error boundary
 const root = ReactDOM.createRoot(document.getElementById('root')!)
 
@@ -13,6 +15,7 @@ if (process.env.NODE_ENV === 'development') {
   };
 }
 
+// Render the app
 root.render(
   <React.StrictMode>
     <App />
