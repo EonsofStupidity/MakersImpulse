@@ -13,21 +13,30 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Core theme interface - completely isolated from general settings
+// Theme-specific interface for styling configuration
 export interface ThemeBase {
   id?: string;
+  // Theme Metadata
   site_title: string;
   tagline: string;
+  
+  // Brand Colors
   primary_color: string;
   secondary_color: string;
   accent_color: string;
+  
+  // Text Colors
   text_primary_color: string;
   text_secondary_color: string;
   text_link_color: string;
   text_heading_color: string;
+  
+  // Special Effects
   neon_cyan: string;
   neon_pink: string;
   neon_purple: string;
+  
+  // Typography
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -35,8 +44,12 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  
+  // Layout & Spacing
   border_radius: string;
   spacing_unit: string;
+  
+  // Transitions & Animations
   transition_duration: string;
   shadow_color: string;
   hover_scale: string;
@@ -45,15 +58,23 @@ export interface ThemeBase {
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
+  
+  // Features
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
+  
+  // Theme System
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Json;
+  
+  // Assets
   logo_url?: string;
   favicon_url?: string;
+  
+  // Metadata
   updated_at?: string;
   updated_by?: string;
 }
