@@ -26,21 +26,15 @@ export interface Build {
   build_volume?: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
-  created_at?: string;
-}
-
-export interface BuildFormData {
-  name: string;
-  description?: string;
-  build_volume?: BuildVolume;
-  parts: BuildPart[];
-  images: BuildImage[];
+  created_at: string;
 }
 
 export interface BuildQueryParams {
   userId?: string;
-  category?: string;
-  status?: string;
-  sortBy?: string;
-  order?: 'asc' | 'desc';
+  sort?: {
+    field: string;
+    direction: 'asc' | 'desc';
+  };
 }
+
+export type BuildFormData = Omit<Build, 'id' | 'user_id' | 'created_at'>;
