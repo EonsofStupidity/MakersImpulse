@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ThemeBase } from './core/types';
+import { ThemeBase } from './types';
 
 export const settingsSchema = z.object({
   site_title: z.string(),
