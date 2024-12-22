@@ -17,16 +17,19 @@ export interface PreviewPreferences {
 
 // The core theme interface
 export interface ThemeBase {
-  // Required Visual Identity Properties
+  id?: string;
+  site_title: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
-  
-  // Required Typography Properties
   text_primary_color: string;
   text_secondary_color: string;
-  text_heading_color: string;
   text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -34,43 +37,23 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  
-  // Required Layout Properties
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
-  
-  // Required Animation Properties
-  animations_enabled: boolean;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
+  theme_mode: ThemeMode;
   transition_type: TransitionType;
-  default_animation_duration: number;
-  
-  // Optional Properties with defaults
-  id?: string;
-  site_title: string;
-  tagline?: string;
-  
-  // Optional Advanced Styling
-  shadow_color?: string;
-  hover_scale?: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
-  neon_cyan?: string;
-  neon_pink?: string;
-  neon_purple?: string;
-  
-  // Optional Theme Configuration
-  theme_mode?: ThemeMode;
   component_type?: ThemeComponentType;
-  real_time_toggle?: boolean;
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
   preview_preferences: PreviewPreferences;
-  
-  // Optional Inheritance Properties
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, unknown>;
-  
-  // Optional Metadata
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -91,9 +74,8 @@ export type ThemeResponse = ThemeBase;
 
 // Type aliases
 export type Theme = ThemeBase;
-export type Settings = ThemeBase;
-export type SettingsFormData = ThemeFormData;
-export type DatabaseSettingsRow = ThemeConfigurationRow;
 
-// Re-export Json type for convenience
-export type { Json } from './database/json';
+// Export schema
+export const themeSchema = {
+  // ... schema definition will go here
+} as const;
