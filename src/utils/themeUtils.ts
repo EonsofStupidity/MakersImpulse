@@ -1,4 +1,5 @@
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase, PreviewPreferences } from '@/types/theme/core/types';
+import { Json } from '@/types/database/json';
 
 export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
@@ -46,8 +47,22 @@ export const convertDbSettingsToTheme = (data: any): ThemeBase => {
   if (!data) {
     return DEFAULT_THEME_SETTINGS;
   }
+
+  // Parse preview_preferences from JSON if needed
+  const preview_preferences = typeof data.preview_preferences === 'string' 
+    ? JSON.parse(data.preview_preferences)
+    : data.preview_preferences;
+
   return {
     ...DEFAULT_THEME_SETTINGS,
-    ...data
+    ...data,
+    preview_preferences
+  };
+};
+
+export const serializeThemeForDb = (theme: ThemeBase): any => {
+  return {
+    ...theme,
+    preview_preferences: JSON.stringify(theme.preview_preferences)
   };
 };
