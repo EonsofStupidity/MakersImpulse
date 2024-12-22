@@ -1,33 +1,7 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-
-const DEFAULT_SETTINGS = {
-  site_title: 'MakersImpulse',
-  tagline: 'Create, Share, Inspire',
-  primary_color: '#7FFFD4',
-  secondary_color: '#FFB6C1',
-  accent_color: '#E6E6FA',
-  text_primary_color: '#FFFFFF',
-  text_secondary_color: '#A1A1AA',
-  text_link_color: '#3B82F6',
-  text_heading_color: '#FFFFFF',
-  neon_cyan: '#41f0db',
-  neon_pink: '#ff0abe',
-  neon_purple: '#8000ff',
-  font_family_heading: 'Inter',
-  font_family_body: 'Inter',
-  font_size_base: '16px',
-  font_weight_normal: '400',
-  font_weight_bold: '700',
-  line_height_base: '1.5',
-  letter_spacing: 'normal',
-  border_radius: '0.5rem',
-  spacing_unit: '1rem',
-  transition_duration: '0.3s',
-  shadow_color: '#000000',
-  hover_scale: '1.05'
-};
+import { DEFAULT_SETTINGS } from "../useSettingsDefaults";
 
 export const useSettingsReset = () => {
   const [isResetting, setIsResetting] = useState(false);
@@ -35,7 +9,32 @@ export const useSettingsReset = () => {
   const handleResetToDefault = async () => {
     setIsResetting(true);
     try {
-      const { data, error } = await supabase.rpc('update_site_settings', DEFAULT_SETTINGS);
+      const { data, error } = await supabase.rpc('update_site_settings', {
+        p_site_title: DEFAULT_SETTINGS.site_title,
+        p_tagline: DEFAULT_SETTINGS.tagline,
+        p_primary_color: DEFAULT_SETTINGS.primary_color,
+        p_secondary_color: DEFAULT_SETTINGS.secondary_color,
+        p_accent_color: DEFAULT_SETTINGS.accent_color,
+        p_text_primary_color: DEFAULT_SETTINGS.text_primary_color,
+        p_text_secondary_color: DEFAULT_SETTINGS.text_secondary_color,
+        p_text_link_color: DEFAULT_SETTINGS.text_link_color,
+        p_text_heading_color: DEFAULT_SETTINGS.text_heading_color,
+        p_neon_cyan: DEFAULT_SETTINGS.neon_cyan,
+        p_neon_pink: DEFAULT_SETTINGS.neon_pink,
+        p_neon_purple: DEFAULT_SETTINGS.neon_purple,
+        p_font_family_heading: DEFAULT_SETTINGS.font_family_heading,
+        p_font_family_body: DEFAULT_SETTINGS.font_family_body,
+        p_font_size_base: DEFAULT_SETTINGS.font_size_base,
+        p_font_weight_normal: DEFAULT_SETTINGS.font_weight_normal,
+        p_font_weight_bold: DEFAULT_SETTINGS.font_weight_bold,
+        p_line_height_base: DEFAULT_SETTINGS.line_height_base,
+        p_letter_spacing: DEFAULT_SETTINGS.letter_spacing,
+        p_border_radius: DEFAULT_SETTINGS.border_radius,
+        p_spacing_unit: DEFAULT_SETTINGS.spacing_unit,
+        p_transition_duration: DEFAULT_SETTINGS.transition_duration,
+        p_shadow_color: DEFAULT_SETTINGS.shadow_color,
+        p_hover_scale: DEFAULT_SETTINGS.hover_scale
+      });
 
       if (error) throw error;
       toast.success("Theme settings reset to default");

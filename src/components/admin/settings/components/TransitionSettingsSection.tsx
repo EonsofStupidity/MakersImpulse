@@ -4,13 +4,12 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { DEFAULT_SETTINGS } from "@/hooks/useSettingsDefaults";
-import { TransitionType } from "@/types/theme";
+import { DEFAULT_SETTINGS } from "../hooks/useSettingsDefaults";
 
 export const TransitionSettingsSection = () => {
   const [settings, setSettings] = useState({
     pageTransition: 0.3,
-    transitionType: "ease-out" as TransitionType,
+    transitionType: "ease-out",
     hoverScale: 1.05,
     animationPreset: "fade"
   });
