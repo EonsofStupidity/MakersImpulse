@@ -1968,6 +1968,60 @@ export type Database = {
         }
         Relationships: []
       }
+      unified_settings: {
+        Row: {
+          category: Database["public"]["Enums"]["setting_type"]
+          created_at: string | null
+          created_by: string | null
+          id: string
+          is_encrypted: boolean | null
+          key: string
+          metadata: Json | null
+          updated_at: string | null
+          updated_by: string | null
+          value: Json
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["setting_type"]
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          key: string
+          metadata?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["setting_type"]
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          is_encrypted?: boolean | null
+          key?: string
+          metadata?: Json | null
+          updated_at?: string | null
+          updated_by?: string | null
+          value?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "unified_settings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "unified_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_activity: {
         Row: {
           activity_type: string
@@ -2343,6 +2397,14 @@ export type Database = {
         | "Critical"
         | "3D Printer"
         | "3D Printer Hardware"
+      setting_type:
+        | "theme"
+        | "security"
+        | "content"
+        | "system"
+        | "user"
+        | "notification"
+        | "workflow"
       setting_value_type: "string" | "number" | "boolean" | "json"
       theme_component_type:
         | "color"
