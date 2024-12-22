@@ -1,6 +1,6 @@
 import React from 'react';
-import { SettingsForm } from '@/components/admin/settings/SettingsForm';
+import { ThemeSettingsForm } from '@/components/admin/theme/ThemeSettingsForm';
 
 export const ThemeSettingsTab = () => {
-  return <SettingsForm />;
+  return <ThemeSettingsForm />;
 };
