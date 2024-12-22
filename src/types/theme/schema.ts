@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { ThemeBase } from "@/types/theme";
+import { z } from 'zod';
+import { ThemeBase } from './core/types';
 
 export const settingsSchema = z.object({
   site_title: z.string(),
@@ -28,17 +28,17 @@ export const settingsSchema = z.object({
   hover_scale: z.string(),
   box_shadow: z.string(),
   backdrop_blur: z.string(),
-  theme_mode: z.enum(["light", "dark", "system"]),
-  transition_type: z.enum(["fade", "slide", "scale", "blur"]),
+  theme_mode: z.enum(['light', 'dark', 'system']),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']),
   real_time_toggle: z.boolean(),
   animations_enabled: z.boolean(),
   default_animation_duration: z.number(),
   preview_preferences: z.object({
     real_time_updates: z.boolean(),
     animation_enabled: z.boolean(),
-    glass_effect_level: z.enum(["low", "medium", "high"]),
+    glass_effect_level: z.enum(['low', 'medium', 'high']),
     update_debounce_ms: z.number()
   }),
-  inheritance_strategy: z.enum(["merge", "override", "replace"]),
+  inheritance_strategy: z.enum(['merge', 'override', 'replace']),
   inherited_settings: z.record(z.unknown())
 }) satisfies z.ZodType<ThemeBase>;

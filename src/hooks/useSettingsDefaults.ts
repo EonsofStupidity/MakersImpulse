@@ -1,4 +1,4 @@
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types/theme/core/types';
 
 export const DEFAULT_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
