@@ -1,3 +1,5 @@
+import { Json } from '../database/json';
+
 export interface BuildVolume {
   x: number;
   y: number;
@@ -9,6 +11,8 @@ export interface BuildPart {
   id: string;
   name: string;
   quantity: number;
+  notes?: string;
+  attributes?: Record<string, unknown>;
 }
 
 export interface BuildImage {
@@ -16,13 +20,18 @@ export interface BuildImage {
   caption?: string;
 }
 
-export interface Build {
-  id: string;
-  user_id: string;
+export interface BuildFormData {
   name: string;
   description?: string;
   build_volume?: BuildVolume;
-  parts?: BuildPart[];
-  images?: BuildImage[];
-  created_at?: string;
+  parts: BuildPart[];
+  images: BuildImage[];
+}
+
+export interface BuildQueryParams {
+  userId?: string;
+  category?: string;
+  status?: string;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
 }
