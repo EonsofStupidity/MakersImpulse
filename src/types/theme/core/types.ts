@@ -11,13 +11,13 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: any;
+  [key: string]: any; // Add index signature to fix Json compatibility
 }
 
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string; // Make required to match ThemeFormData
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -25,9 +25,9 @@ export interface ThemeBase {
   text_secondary_color: string;
   text_link_color: string;
   text_heading_color: string;
-  neon_cyan?: string;
-  neon_pink?: string;
-  neon_purple?: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -35,23 +35,23 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-  border_radius?: string;
-  spacing_unit?: string;
-  transition_duration?: string;
-  shadow_color?: string;
-  hover_scale?: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
-  theme_mode?: ThemeMode;
-  transition_type?: TransitionType;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
+  theme_mode: ThemeMode;
+  transition_type: TransitionType;
   component_type?: ThemeComponentType;
-  real_time_toggle?: boolean;
-  animations_enabled?: boolean;
-  default_animation_duration?: number;
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
-  inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Json;
+  inheritance_strategy: ThemeInheritanceStrategy;
+  inherited_settings: Record<string, unknown>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -61,5 +61,11 @@ export interface ThemeBase {
 export type ThemeFormData = ThemeBase;
 export type Theme = ThemeBase;
 export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
 export type SettingsFormData = ThemeBase;
+
+export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
+  preview_preferences: Json;
+  inherited_settings: Json;
+  state_version?: number;
+  last_sync?: string;
+}

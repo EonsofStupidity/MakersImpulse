@@ -6,12 +6,12 @@ const previewPreferencesSchema = z.object({
   animation_enabled: z.boolean(),
   glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
   update_debounce_ms: z.number().min(0).max(1000)
-});
+}).catchall(z.any()); // Allow additional properties
 
 export const settingsSchema = z.object({
   id: z.string().uuid().optional(),
   site_title: z.string().min(1, "Site title is required"),
-  tagline: z.string().optional(),
+  tagline: z.string(),
   primary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
   secondary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
   accent_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
@@ -36,22 +36,20 @@ export const settingsSchema = z.object({
   hover_scale: z.string(),
   box_shadow: z.string(),
   backdrop_blur: z.string(),
-  theme_mode: z.enum(['light', 'dark', 'system'] as const).optional(),
+  theme_mode: z.enum(['light', 'dark', 'system'] as const),
   transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const),
   component_type: z.enum(['color', 'typography', 'layout', 'animation', 'effect'] as const).optional(),
   real_time_toggle: z.boolean().default(true),
   animations_enabled: z.boolean().default(true),
   default_animation_duration: z.number().min(100).max(1000).default(300),
-  preview_preferences: previewPreferencesSchema.optional(),
+  preview_preferences: previewPreferencesSchema,
   parent_theme_id: z.string().uuid().optional(),
   inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const),
   inherited_settings: z.record(z.unknown()),
   logo_url: z.string().url().optional(),
   favicon_url: z.string().url().optional(),
   updated_at: z.string().optional(),
-  updated_by: z.string().optional(),
-  state_version: z.number().optional(),
-  last_sync: z.string().optional()
+  updated_by: z.string().optional()
 });
 
 export type SettingsFormData = z.infer<typeof settingsSchema>;
