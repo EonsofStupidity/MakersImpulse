@@ -1,30 +1,24 @@
-import { TableDefinition } from './core';
-import { UserRole } from '../auth';
+import { Json } from "./json";
 
-export interface ProfilesTable {
-  id: string;
-  username: string | null;
-  display_name: string | null;
-  avatar_url: string | null;
-  role: UserRole | null;
-  created_at: string;
-  updated_at: string;
-  bio: string | null;
-  website: string | null;
-  location: string | null;
-  last_seen: string | null;
-  is_banned: boolean | null;
-  ban_reason: string | null;
-  banned_at: string | null;
-  banned_by: string | null;
-  two_factor_enabled: boolean | null;
-  two_factor_secret: string | null;
-  onboarding_completed: boolean | null;
-  gamification_enabled: boolean | null;
-  visual_editor_enabled: boolean | null;
-  last_login_at: string | null;
+export interface AuthTables {
+  auth_error_logs: {
+    Row: {
+      id: string;
+      error_type: string;
+      error_message?: string;
+      stack_trace?: string;
+      metadata?: Json;
+      created_at?: string;
+    };
+  };
+  auth_sessions: {
+    Row: {
+      id: string;
+      user_id?: string;
+      refresh_token?: string;
+      created_at?: string;
+      expires_at?: string;
+      metadata?: Json;
+    };
+  };
 }
-
-export type AuthTables = {
-  profiles: TableDefinition<ProfilesTable>;
-};
