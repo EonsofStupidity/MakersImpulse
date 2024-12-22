@@ -7,10 +7,10 @@ import { useTheme } from "@/components/theme/ThemeContext";
 import { ResetDialog } from "./components/ResetDialog";
 import { toast } from "sonner";
 import { useSettingsForm } from "./hooks/useSettingsForm";
-import { SettingsFormContainer } from "./components/SettingsFormContainer";
-import { SettingsPreviewContainer } from "./components/SettingsPreviewContainer";
+import { ThemeFormContainer } from "./components/ThemeFormContainer";
+import { ThemePreviewContainer } from "./components/ThemePreviewContainer";
 
-export const SettingsForm = () => {
+export const ThemeSettingsForm = () => {
   const [showResetDialog, setShowResetDialog] = useState(false);
   const [resetConfirmation, setResetConfirmation] = useState("");
   const [confirmCheckbox, setConfirmCheckbox] = useState(false);
@@ -84,13 +84,13 @@ export const SettingsForm = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%] min-h-[calc(100vh-4rem)]">
-      <SettingsFormContainer
+      <ThemeFormContainer
         form={form}
         isSaving={isSaving}
         onResetClick={() => setShowResetDialog(true)}
       />
 
-      <SettingsPreviewContainer
+      <ThemePreviewContainer
         settings={settings}
         logoFile={logoFile}
         faviconFile={faviconFile}
