@@ -60,22 +60,16 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
-// Database row type
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
-}
-
 // Form data type
-export type ThemeFormData = ThemeBase;
+export type SettingsFormData = ThemeBase;
 
 // Response type
-export type ThemeResponse = ThemeBase;
+export type SettingsResponse = ThemeBase;
 
-// Type aliases
-export type Theme = ThemeBase;
+// Settings type
+export type Settings = ThemeBase;
 
 // Export schema
-export const themeSchema = {
-  // ... schema definition will go here
+export const settingsSchema = {
+  // Schema definition
 } as const;
