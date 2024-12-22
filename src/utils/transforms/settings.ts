@@ -1,12 +1,23 @@
 import { ThemeBase } from '@/types/theme/types';
 import { Settings } from '@/types/theme';
+import { Json } from '@/types/database/json';
 
 export const transformDatabaseSettings = (data: any): Settings => {
   if (!data) {
     return {} as Settings;
   }
+
+  // Ensure inherited_settings is properly typed as Record<string, Json>
+  const inherited_settings: Record<string, Json> = {};
+  if (data.inherited_settings) {
+    Object.entries(data.inherited_settings).forEach(([key, value]) => {
+      inherited_settings[key] = value as Json;
+    });
+  }
+
   return {
     ...data,
+    inherited_settings
   };
 };
 

@@ -56,8 +56,6 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 

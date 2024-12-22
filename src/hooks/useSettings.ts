@@ -25,7 +25,6 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
         throw error;
       }
 
-      // Explicitly type the response
       const typedData = data as UnifiedSetting<T>;
       console.log("Fetched settings:", typedData);
       return typedData;
@@ -42,7 +41,8 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
           category,
           key,
           value: value as Json,
-          updated_at: new Date().toISOString()
+          updated_at: new Date().toISOString(),
+          updated_by: (await supabase.auth.getUser()).data.user?.id
         });
 
       if (error) {
