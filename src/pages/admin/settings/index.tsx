@@ -1,9 +1,9 @@
 import React from "react";
 import { AdminNav } from "@/components/admin/dashboard/AdminNav";
-import { ThemeSettingsForm } from "@/components/admin/theme/ThemeSettingsForm";
+import { ThemeSettingsForm } from "@/components/admin/theme/components/ThemeSettingsForm";
 import { motion } from "framer-motion";
 
-const SiteSettings = () => {
+const ThemeSettings = () => {
   return (
     <div className="min-h-screen bg-gray-900 pt-20 p-8">
       <AdminNav />
@@ -24,4 +24,4 @@ const SiteSettings = () => {
   );
 };
 
-export default SiteSettings;
+export default ThemeSettings;
