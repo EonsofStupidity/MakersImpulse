@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ThemeConfiguration } from './database';
+import { ThemeMode, TransitionType, GlassEffectLevel } from './core/types';
 
-export const themeSchema = z.object({
+export const settingsSchema = z.object({
   site_title: z.string(),
   tagline: z.string().optional(),
   primary_color: z.string(),
@@ -28,19 +28,19 @@ export const themeSchema = z.object({
   hover_scale: z.string().optional(),
   box_shadow: z.string().optional(),
   backdrop_blur: z.string().optional(),
-  theme_mode: z.enum(['light', 'dark', 'system']).optional(),
-  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']).optional(),
+  theme_mode: z.enum(['light', 'dark', 'system'] as const).optional(),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const).optional(),
   real_time_toggle: z.boolean().optional(),
   animations_enabled: z.boolean().optional(),
   default_animation_duration: z.number().optional(),
   preview_preferences: z.object({
     real_time_updates: z.boolean(),
     animation_enabled: z.boolean(),
-    glass_effect_level: z.enum(['low', 'medium', 'high']),
+    glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
     update_debounce_ms: z.number()
   }).optional(),
-  inheritance_strategy: z.enum(['merge', 'override', 'replace']).optional(),
+  inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const).optional(),
   inherited_settings: z.record(z.unknown()).optional()
 });
 
-export type ThemeSchema = typeof themeSchema;
+export type ThemeSchema = typeof settingsSchema;

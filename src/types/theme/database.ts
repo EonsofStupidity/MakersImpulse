@@ -1,7 +1,6 @@
 import { Json } from '../core/json';
 import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy, PreviewPreferences } from './core/types';
 
-// Matches exactly with database schema
 export interface ThemeConfiguration {
   id?: string;
   site_title: string;
