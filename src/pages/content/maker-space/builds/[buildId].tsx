@@ -22,7 +22,14 @@ const BuildDetails = () => {
         .single();
       
       if (error) throw error;
-      return data as Build;
+
+      // Convert database JSON to typed interfaces
+      return {
+        ...data,
+        build_volume: data.build_volume as Build['build_volume'],
+        parts: data.parts as Build['parts'],
+        images: data.images as Build['images']
+      } as Build;
     }
   });
 

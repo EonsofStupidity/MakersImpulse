@@ -10,20 +10,27 @@ export const useBuildsQuery = (params?: BuildQueryParams) => {
         .from('mi3dp_builds')
         .select('*');
 
-      if (params?.sortBy) {
-        query = query.order(params.sortBy, { 
-          ascending: params.sortOrder === 'asc' 
+      if (params?.sort) {
+        query = query.order(params.sort, { 
+          ascending: params.order === 'asc' 
         });
       }
 
-      if (params?.userId) {
-        query = query.eq('user_id', params.userId);
+      if (params?.user_id) {
+        query = query.eq('user_id', params.user_id);
       }
 
       const { data, error } = await query;
       
       if (error) throw error;
-      return data as Build[];
+
+      // Convert database JSON to typed interfaces
+      return (data as any[]).map(build => ({
+        ...build,
+        build_volume: build.build_volume as BuildVolume,
+        parts: build.parts as BuildPart[],
+        images: build.images as BuildImage[]
+      })) as Build[];
     }
   });
 };

@@ -20,7 +20,14 @@ export const BuildsList = () => {
         .order('created_at', { ascending: false });
       
       if (error) throw error;
-      return data as Build[];
+
+      // Convert database JSON to typed interfaces
+      return (data as any[]).map(build => ({
+        ...build,
+        build_volume: build.build_volume as Build['build_volume'],
+        parts: build.parts as Build['parts'],
+        images: build.images as Build['images']
+      })) as Build[];
     }
   });
 
