@@ -1,17 +1,5 @@
 import { Json } from '../core/json';
-
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
-export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
-export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
-export type GlassEffectLevel = 'low' | 'medium' | 'high';
-
-export interface PreviewPreferences {
-  real_time_updates: boolean;
-  animation_enabled: boolean;
-  glass_effect_level: GlassEffectLevel;
-  update_debounce_ms: number;
-}
+import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy, PreviewPreferences } from './core/types';
 
 // Matches exactly with database schema
 export interface ThemeConfiguration {
@@ -51,9 +39,11 @@ export interface ThemeConfiguration {
   preview_preferences?: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Record<string, unknown>;
+  inherited_settings?: Record<string, Json>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
+  state_version?: number;
+  last_sync?: string;
 }
