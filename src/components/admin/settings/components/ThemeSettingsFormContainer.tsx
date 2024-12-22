@@ -1,28 +1,28 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types/theme";
 import { Card } from "@/components/ui/card";
-import { SettingsFormHeader } from "./SettingsFormHeader";
-import { SettingsFormContent } from "./SettingsFormContent";
+import { ThemeFormHeader } from "./ThemeFormHeader";
+import { ThemeFormContent } from "./ThemeFormContent";
 
-interface SettingsFormContainerProps {
+interface ThemeSettingsFormContainerProps {
   form: UseFormReturn<ThemeBase>;
   isSaving: boolean;
   onResetClick: () => void;
 }
 
-export const SettingsFormContainer: React.FC<SettingsFormContainerProps> = ({
+export const ThemeSettingsFormContainer: React.FC<ThemeSettingsFormContainerProps> = ({
   form,
   isSaving,
   onResetClick,
 }) => {
   return (
     <Card className="p-6 bg-gray-800/50 border border-white/10 backdrop-blur-sm">
-      <SettingsFormHeader 
+      <ThemeFormHeader 
         onResetClick={onResetClick}
         isSaving={isSaving}
       />
-      <SettingsFormContent 
+      <ThemeFormContent 
         form={form} 
         isSaving={isSaving} 
       />

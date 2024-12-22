@@ -15,7 +15,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// The core theme interface - used for runtime operations
+// The core theme interface
 export interface ThemeBase {
   // Required Visual Identity Properties
   primary_color: string;
@@ -68,7 +68,7 @@ export interface ThemeBase {
   // Optional Inheritance Properties
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Json;
+  inherited_settings: Record<string, unknown>;
   
   // Optional Metadata
   logo_url?: string;
@@ -77,24 +77,21 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
-// Database row type - used for database operations
-export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
-  preview_preferences: Json;
-  inherited_settings: Json;
-  state_version?: number;
-  last_sync?: string;
+// Database row type
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
-// Form data type - used for form operations
+// Form data type
 export type ThemeFormData = ThemeBase;
 
-// Response type for theme-related API calls
+// Response type
 export type ThemeResponse = ThemeBase;
 
-// Type aliases for different use cases
+// Type aliases
 export type Theme = ThemeBase;
 export type Settings = ThemeBase;
-export type SettingsResponse = ThemeResponse;
 export type SettingsFormData = ThemeFormData;
 export type DatabaseSettingsRow = ThemeConfigurationRow;
 
