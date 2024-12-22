@@ -1,4 +1,3 @@
-export type JsonPrimitive = string | number | boolean | null;
-export type JsonArray = Json[];
+export type Json = string | number | boolean | null | { [key: string]: Json } | Json[];
 export type JsonObject = { [key: string]: Json };
-export type Json = JsonPrimitive | JsonObject | JsonArray;
+export type JsonArray = Json[];

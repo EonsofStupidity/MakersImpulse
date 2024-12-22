@@ -1,4 +1,4 @@
-import { Json } from '@/types/database/json';
+import { Json } from '@/types/core/json';
 
 export interface ContentRevision {
   id: string;
@@ -13,17 +13,16 @@ export interface ContentWithAuthor {
   id: string;
   title: string;
   content: Json;
-  created_at: string;
   created_by: {
     display_name: string;
   };
-  metadata: Json;
-  slug: string;
+  created_at: string;
   status: 'draft' | 'published' | 'archived';
-  type: 'template' | 'page' | 'component' | 'workflow';
-  updated_at: string;
-  updated_by: {
-    display_name: string;
-  }[];
-  version: number;
+}
+
+export interface ContentType {
+  id: string;
+  name: string;
+  fields: Record<string, any>;
+  validations?: Record<string, any>;
 }

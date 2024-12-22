@@ -10,7 +10,7 @@ export interface BuildPart {
   name: string;
   quantity: number;
   notes?: string;
-  attributes?: Record<string, unknown>;
+  attributes?: Record<string, any>;
 }
 
 export interface BuildImage {
@@ -29,18 +29,18 @@ export interface Build {
   createdAt: string;
 }
 
-export interface BuildFormData {
-  name: string;
-  description?: string;
-  buildVolume: BuildVolume;
-  parts: BuildPart[];
-  images: BuildImage[];
-}
-
 export interface BuildQueryParams {
   userId?: string;
   sort?: {
     field: string;
     direction: 'asc' | 'desc';
   };
+}
+
+export interface BuildFormData {
+  name?: string;
+  description?: string;
+  buildVolume?: BuildVolume;
+  parts?: BuildPart[];
+  images?: BuildImage[];
 }

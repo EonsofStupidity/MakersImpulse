@@ -1,4 +1,4 @@
-import { Json } from '@/types/database/json';
+import { Json } from '@/types/core/json';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
@@ -11,13 +11,13 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json;
+  [key: string]: any;
 }
 
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
