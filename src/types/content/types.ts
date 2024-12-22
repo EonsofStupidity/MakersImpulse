@@ -1,13 +1,13 @@
-import { Json } from '../database/json';
+import { Json } from '@/types/database/json';
 
 export interface ContentRevision {
   id: string;
   content_id: string;
   content: Json;
-  version_number: number;
-  created_by: string;
+  version: number;
   created_at: string;
-  change_summary?: string;
+  created_by: string;
+  metadata?: Json;
 }
 
 export interface ContentWithAuthor {
@@ -17,10 +17,8 @@ export interface ContentWithAuthor {
   created_by: {
     display_name: string;
   };
-  metadata?: Json;
-  slug?: string;
-  status: 'draft' | 'published' | 'archived';
-  version: number;
   created_at: string;
-  updated_at?: string;
+  updated_at: string;
+  status: 'draft' | 'published' | 'archived';
+  metadata?: Json;
 }

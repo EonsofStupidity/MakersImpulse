@@ -9,8 +9,6 @@ export interface BuildPart {
   id: string;
   name: string;
   quantity: number;
-  notes?: string;
-  attributes?: Record<string, unknown>;
 }
 
 export interface BuildImage {
@@ -20,13 +18,13 @@ export interface BuildImage {
 
 export interface Build {
   id: string;
-  user_id: string;
   name: string;
   description?: string;
-  build_volume?: BuildVolume;
+  userId: string;
+  buildVolume: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
-  created_at: string;
+  createdAt: string;
 }
 
 export interface BuildQueryParams {
@@ -35,6 +33,6 @@ export interface BuildQueryParams {
     field: string;
     direction: 'asc' | 'desc';
   };
+  limit?: number;
+  offset?: number;
 }
-
-export type BuildFormData = Omit<Build, 'id' | 'user_id' | 'created_at'>;
