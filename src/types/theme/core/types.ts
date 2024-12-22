@@ -1,11 +1,13 @@
 import { Json } from '../core/json';
 
+// Core theme enums with strict typing
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Strongly typed preview preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -13,6 +15,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
+// Base theme interface with strict typing
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -55,13 +58,18 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
+  state_version?: number;
+  last_sync?: string;
 }
 
+// Theme configuration row type for database operations
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
 }
 
+// Form data type with all required fields
 export type ThemeFormData = ThemeBase;
+
+// Theme type alias for consistency
 export type Theme = ThemeBase;

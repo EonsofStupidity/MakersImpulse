@@ -6,7 +6,7 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
     throw new Error('Invalid settings data');
   }
 
-  // Ensure inherited_settings is properly typed as Record<string, Json>
+  // Ensure inherited_settings is properly typed
   const inherited_settings: Record<string, Json> = {};
   if (typeof data === 'object' && data.inherited_settings) {
     Object.entries(data.inherited_settings as Record<string, Json>).forEach(([key, value]) => {
@@ -14,7 +14,7 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
     });
   }
 
-  // Convert preview_preferences if it's a string
+  // Parse preview_preferences if it's a string
   const preview_preferences = typeof data.preview_preferences === 'string' 
     ? JSON.parse(data.preview_preferences)
     : data.preview_preferences || {
@@ -24,9 +24,23 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
         update_debounce_ms: 100
       };
 
+  // Validate and transform theme mode
+  const theme_mode = data.theme_mode || 'light';
+  if (!['light', 'dark', 'system'].includes(theme_mode)) {
+    throw new Error('Invalid theme mode');
+  }
+
+  // Validate and transform inheritance strategy
+  const inheritance_strategy = data.inheritance_strategy || 'merge';
+  if (!['merge', 'override', 'replace'].includes(inheritance_strategy)) {
+    throw new Error('Invalid inheritance strategy');
+  }
+
   // Cast the entire object to ThemeBase after ensuring all properties are correct
   return {
     ...data,
+    theme_mode,
+    inheritance_strategy,
     inherited_settings,
     preview_preferences
   } as ThemeBase;
