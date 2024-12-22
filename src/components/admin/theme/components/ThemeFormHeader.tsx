@@ -2,12 +2,12 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
-interface SettingsFormHeaderProps {
+interface ThemeFormHeaderProps {
   onResetClick: () => void;
   isSaving: boolean;
 }
 
-export const SettingsFormHeader: React.FC<SettingsFormHeaderProps> = ({
+export const ThemeFormHeader: React.FC<ThemeFormHeaderProps> = ({
   onResetClick,
   isSaving,
 }) => {

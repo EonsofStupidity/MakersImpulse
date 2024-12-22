@@ -1,7 +1,7 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Accordion } from "@/components/ui/accordion";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types/theme";
 import { ThemeImportSection } from "../sections/ThemeImportSection";
 import { ColorSection } from "../sections/ColorSection";
 import { TextStylesSection } from "../sections/TextStylesSection";
@@ -12,12 +12,12 @@ import { AdvancedEffectsSection } from "../sections/AdvancedEffectsSection";
 import { ThemeInheritanceSection } from "./ThemeInheritanceSection";
 import { SavingIndicator } from "./SavingIndicator";
 
-interface SettingsFormContentProps {
-  form: UseFormReturn<SettingsFormData>;
+interface ThemeFormContentProps {
+  form: UseFormReturn<ThemeBase>;
   isSaving: boolean;
 }
 
-export const SettingsFormContent: React.FC<SettingsFormContentProps> = ({
+export const ThemeFormContent: React.FC<ThemeFormContentProps> = ({
   form,
   isSaving
 }) => {
