@@ -1,4 +1,4 @@
-import { Json } from '@/types/database';
+import { Json } from '../database/json';
 
 export interface ContentWithAuthor {
   id: string;
@@ -10,10 +10,7 @@ export interface ContentWithAuthor {
   metadata?: Json;
   slug?: string;
   status: 'draft' | 'published' | 'archived';
-  type: 'template' | 'page' | 'component' | 'workflow';
   version: number;
   updated_at: string;
-  updated_by?: {
-    display_name: string;
-  };
+  created_at: string;
 }

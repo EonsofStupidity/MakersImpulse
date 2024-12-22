@@ -1,4 +1,5 @@
-import { PreviewPreferences, ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy } from './types';
+import { Json } from '@/types/database/json';
+import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy, PreviewPreferences } from './types';
 
 export interface ThemeBase {
   id?: string;
@@ -31,17 +32,15 @@ export interface ThemeBase {
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
-  logo_url?: string;
-  favicon_url?: string;
-  updated_at?: string;
-  updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Json;
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
 }
