@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy } from './core/types';
-import { Json } from '@/types/database/json';
 
 const previewPreferencesSchema = z.record(z.unknown());
 

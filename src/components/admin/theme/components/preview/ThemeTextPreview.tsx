@@ -1,7 +1,7 @@
 import React, { memo } from "react";
 import { motion } from "framer-motion";
 
-interface TextPreviewProps {
+interface ThemeTextPreviewProps {
   colors: {
     text_primary_color: string;
     text_secondary_color: string;
@@ -16,7 +16,7 @@ interface TextPreviewProps {
   };
 }
 
-export const TextPreview = memo(({ colors }: TextPreviewProps) => {
+export const ThemeTextPreview = memo(({ colors }: ThemeTextPreviewProps) => {
   return (
     <motion.div 
       className="space-y-4"
@@ -55,4 +55,4 @@ export const TextPreview = memo(({ colors }: TextPreviewProps) => {
   );
 });
 
-TextPreview.displayName = "TextPreview";
+ThemeTextPreview.displayName = "ThemeTextPreview";

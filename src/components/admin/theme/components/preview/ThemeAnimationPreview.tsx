@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface AnimationPreviewProps {
+interface ThemeAnimationPreviewProps {
   colors: {
     primary_color: string;
     secondary_color: string;
@@ -13,7 +13,7 @@ interface AnimationPreviewProps {
   };
 }
 
-export const AnimationPreview = memo(({ colors }: AnimationPreviewProps) => {
+export const ThemeAnimationPreview = memo(({ colors }: ThemeAnimationPreviewProps) => {
   return (
     <div className="space-y-6">
       <div>
@@ -120,4 +120,4 @@ export const AnimationPreview = memo(({ colors }: AnimationPreviewProps) => {
   );
 });
 
-AnimationPreview.displayName = "AnimationPreview";
+ThemeAnimationPreview.displayName = "ThemeAnimationPreview";

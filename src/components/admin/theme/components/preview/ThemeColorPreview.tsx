@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-interface ColorPreviewProps {
+interface ThemeColorPreviewProps {
   colors: {
     primary_color: string;
     secondary_color: string;
@@ -13,7 +13,7 @@ interface ColorPreviewProps {
   };
 }
 
-export const ColorPreview = memo(({ colors }: ColorPreviewProps) => {
+export const ThemeColorPreview = memo(({ colors }: ThemeColorPreviewProps) => {
   return (
     <div className="grid grid-cols-3 gap-4">
       <motion.div
@@ -103,4 +103,4 @@ export const ColorPreview = memo(({ colors }: ColorPreviewProps) => {
   );
 });
 
-ColorPreview.displayName = "ColorPreview";
+ThemeColorPreview.displayName = "ThemeColorPreview";
