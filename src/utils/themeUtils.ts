@@ -1,5 +1,29 @@
-import { ThemeBase, PreviewPreferences } from '@/types/theme/core/types';
+import { ThemeBase, PreviewPreferences } from '@/types/theme';
 import { Json } from '@/types/database/json';
+
+export const convertDbSettingsToTheme = (data: any): ThemeBase => {
+  if (!data) {
+    return DEFAULT_THEME_SETTINGS;
+  }
+
+  // Parse preview_preferences from JSON if needed
+  const preview_preferences = typeof data.preview_preferences === 'string' 
+    ? JSON.parse(data.preview_preferences)
+    : data.preview_preferences;
+
+  return {
+    ...DEFAULT_THEME_SETTINGS,
+    ...data,
+    preview_preferences
+  };
+};
+
+export const serializeThemeForDb = (theme: ThemeBase): any => {
+  return {
+    ...theme,
+    preview_preferences: JSON.stringify(theme.preview_preferences)
+  };
+};
 
 export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
@@ -40,29 +64,6 @@ export const DEFAULT_THEME_SETTINGS: ThemeBase = {
     update_debounce_ms: 100
   },
   inheritance_strategy: 'merge',
-  inherited_settings: {}
-};
-
-export const convertDbSettingsToTheme = (data: any): ThemeBase => {
-  if (!data) {
-    return DEFAULT_THEME_SETTINGS;
-  }
-
-  // Parse preview_preferences from JSON if needed
-  const preview_preferences = typeof data.preview_preferences === 'string' 
-    ? JSON.parse(data.preview_preferences)
-    : data.preview_preferences;
-
-  return {
-    ...DEFAULT_THEME_SETTINGS,
-    ...data,
-    preview_preferences
-  };
-};
-
-export const serializeThemeForDb = (theme: ThemeBase): any => {
-  return {
-    ...theme,
-    preview_preferences: JSON.stringify(theme.preview_preferences)
-  };
+  inherited_settings: {},
+  menu_animation_type: 'fade'
 };
