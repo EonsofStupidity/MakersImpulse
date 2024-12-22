@@ -11,13 +11,13 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: any; // Add index signature to fix Json compatibility
+  [key: string]: unknown; // Make JSON compatible
 }
 
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline: string; // Make required to match ThemeFormData
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -48,20 +48,15 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: PreviewPreferences;
+  preview_preferences: Json;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Json;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
 }
-
-export type ThemeFormData = ThemeBase;
-export type Theme = ThemeBase;
-export type Settings = ThemeBase;
-export type SettingsFormData = ThemeBase;
 
 export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
   preview_preferences: Json;
@@ -69,3 +64,8 @@ export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferen
   state_version?: number;
   last_sync?: string;
 }
+
+export type ThemeFormData = ThemeBase;
+export type Theme = ThemeBase;
+export type Settings = ThemeBase;
+export type SettingsFormData = ThemeBase;

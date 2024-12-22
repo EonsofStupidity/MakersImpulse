@@ -1,12 +1,8 @@
 import { z } from 'zod';
-import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy, GlassEffectLevel } from './core/types';
+import { ThemeMode, ThemeComponentType, TransitionType, ThemeInheritanceStrategy } from './core/types';
+import { Json } from '@/types/database/json';
 
-const previewPreferencesSchema = z.object({
-  real_time_updates: z.boolean(),
-  animation_enabled: z.boolean(),
-  glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
-  update_debounce_ms: z.number().min(0).max(1000)
-}).catchall(z.any()); // Allow additional properties
+const previewPreferencesSchema = z.record(z.unknown());
 
 export const settingsSchema = z.object({
   id: z.string().uuid().optional(),
@@ -24,7 +20,7 @@ export const settingsSchema = z.object({
   neon_purple: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, "Invalid hex color"),
   font_family_heading: z.string(),
   font_family_body: z.string(),
-  font_size_base: z.string().regex(/^\d+(\.\d+)?(px|rem|em)$/, "Invalid font size"),
+  font_size_base: z.string(),
   font_weight_normal: z.string(),
   font_weight_bold: z.string(),
   line_height_base: z.string(),
@@ -42,7 +38,7 @@ export const settingsSchema = z.object({
   real_time_toggle: z.boolean().default(true),
   animations_enabled: z.boolean().default(true),
   default_animation_duration: z.number().min(100).max(1000).default(300),
-  preview_preferences: previewPreferencesSchema,
+  preview_preferences: z.record(z.unknown()),
   parent_theme_id: z.string().uuid().optional(),
   inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const),
   inherited_settings: z.record(z.unknown()),
