@@ -1,13 +1,13 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { settingsSchema } from "@/types/theme/schema";
-import { ThemeFormData } from "@/types/theme/core/form";
+import { ThemeBase } from "@/types/theme";
 import { useSettingsForm } from "../hooks/useSettingsForm";
-import { SettingsFormContainer } from "./SettingsFormContainer";
-import { SettingsPreviewContainer } from "./SettingsPreviewContainer";
+import { ThemeFormContainer } from "./ThemeFormContainer";
+import { ThemePreviewContainer } from "./ThemePreviewContainer";
+import { settingsSchema } from "@/types/theme/schema";
 
-export const SettingsForm = () => {
+export const ThemeSettingsForm = () => {
   const {
     settings,
     isLoading,
@@ -20,9 +20,9 @@ export const SettingsForm = () => {
     handleResetToDefault,
   } = useSettingsForm();
 
-  const form = useForm<ThemeFormData>({
+  const form = useForm<ThemeBase>({
     resolver: zodResolver(settingsSchema),
-    defaultValues: settings,
+    defaultValues: settings || undefined,
   });
 
   React.useEffect(() => {
@@ -50,12 +50,12 @@ export const SettingsForm = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mx-[5%] min-h-[calc(100vh-4rem)]">
-      <SettingsFormContainer
+      <ThemeFormContainer
         form={form}
         isSaving={isSaving}
         onResetClick={handleResetToDefault}
       />
-      <SettingsPreviewContainer
+      <ThemePreviewContainer
         settings={settings}
         logoFile={logoFile}
         faviconFile={faviconFile}
