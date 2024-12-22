@@ -7,11 +7,11 @@ export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
 export interface PreviewPreferences {
-  real_time_updates?: boolean;
-  animation_enabled?: boolean;
-  glass_effect_level?: GlassEffectLevel;
-  update_debounce_ms?: number;
-  [key: string]: unknown; // Add index signature for JSON compatibility
+  real_time_updates: boolean;
+  animation_enabled: boolean;
+  glass_effect_level: GlassEffectLevel;
+  update_debounce_ms: number;
+  [key: string]: unknown;
 }
 
 export interface ThemeBase {
@@ -48,7 +48,7 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: PreviewPreferences | Json;
+  preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, unknown>;
@@ -64,10 +64,3 @@ export type ThemeFormData = ThemeBase;
 export type Theme = ThemeBase;
 export type Settings = ThemeBase;
 export type SettingsFormData = ThemeBase;
-
-export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
-  preview_preferences: Json;
-  inherited_settings: Json;
-  state_version?: number;
-  last_sync?: string;
-}
