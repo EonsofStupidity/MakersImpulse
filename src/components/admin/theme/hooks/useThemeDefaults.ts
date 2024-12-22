@@ -1,6 +1,6 @@
-import { ThemeFormData } from "@/types/theme/core/form";
+import { ThemeBase } from "@/types/theme/types";
 
-export const DEFAULT_SETTINGS: ThemeFormData = {
+export const DEFAULT_SETTINGS: ThemeBase = {
   site_title: "MakersImpulse",
   tagline: "Create, Share, Inspire",
   primary_color: "#7FFFD4",
@@ -37,5 +37,11 @@ export const DEFAULT_SETTINGS: ThemeFormData = {
     animation_enabled: true,
     glass_effect_level: "medium",
     update_debounce_ms: 100
-  }
+  },
+  inheritance_strategy: "merge",
+  inherited_settings: {}
+};
+
+export const useThemeDefaults = () => {
+  return DEFAULT_SETTINGS;
 };

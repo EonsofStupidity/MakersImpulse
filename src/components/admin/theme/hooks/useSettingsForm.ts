@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types/theme/types";
 
 export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -9,11 +9,11 @@ export const useSettingsForm = () => {
   const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings("theme", "base");
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
-    await updateSetting(settings);
+    const jsonSettings = JSON.parse(JSON.stringify(settings));
+    await updateSetting(jsonSettings);
   };
 
   const handleResetToDefault = async () => {
-    // Reset logic will be implemented here
     console.log("Reset to default");
   };
 

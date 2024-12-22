@@ -38,7 +38,9 @@ export const settingsSchema = z.object({
     animation_enabled: z.boolean(),
     glass_effect_level: z.enum(['low', 'medium', 'high']),
     update_debounce_ms: z.number()
-  }),
+  }).and(z.record(z.any())),
   inheritance_strategy: z.enum(['merge', 'override', 'replace']),
   inherited_settings: z.record(z.unknown())
 }) satisfies z.ZodType<ThemeBase>;
+
+export type SettingsSchema = typeof settingsSchema;
