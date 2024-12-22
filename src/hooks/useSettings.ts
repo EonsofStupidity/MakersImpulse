@@ -11,6 +11,8 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
   const { data: setting, isLoading } = useQuery({
     queryKey,
     queryFn: async () => {
+      console.log("Fetching settings for:", category, key);
+      
       const { data, error } = await supabase
         .from("unified_settings")
         .select("*")
@@ -18,13 +20,22 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
         .eq("key", key)
         .single();
 
-      if (error) throw error;
-      return data as UnifiedSetting<T>;
+      if (error) {
+        console.error("Error fetching settings:", error);
+        throw error;
+      }
+
+      // Explicitly type the response
+      const typedData = data as UnifiedSetting<T>;
+      console.log("Fetched settings:", typedData);
+      return typedData;
     }
   });
 
   const updateSetting = useMutation({
     mutationFn: async (value: T) => {
+      console.log("Updating settings with value:", value);
+      
       const { error } = await supabase
         .from("unified_settings")
         .upsert({
@@ -34,7 +45,10 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
           updated_at: new Date().toISOString()
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error("Error updating settings:", error);
+        throw error;
+      }
       return { success: true };
     },
     onSuccess: () => {
