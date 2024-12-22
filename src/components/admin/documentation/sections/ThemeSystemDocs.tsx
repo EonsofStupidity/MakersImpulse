@@ -13,51 +13,6 @@ export const ThemeSystemDocs = () => {
             <AccordionTrigger className="text-white">Core Types</AccordionTrigger>
             <AccordionContent className="text-gray-300 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-medium">ThemeBase</h3>
-                <pre className="bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
-                  {`interface ThemeBase {
-  id?: string;
-  site_title: string;
-  tagline: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  theme_mode: ThemeMode;
-  transition_type: TransitionType;
-  component_type?: ThemeComponentType;
-  real_time_toggle: boolean;
-  animations_enabled: boolean;
-  default_animation_duration: number;
-  preview_preferences: PreviewPreferences;
-  parent_theme_id?: string;
-  inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
-}`}
-                </pre>
-              </div>
-
-              <div className="space-y-2">
                 <h3 className="text-lg font-medium">Type Enums</h3>
                 <pre className="bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
                   {`type ThemeMode = 'light' | 'dark' | 'system';
@@ -79,6 +34,57 @@ type GlassEffectLevel = 'low' | 'medium' | 'high';`}
 }`}
                 </pre>
               </div>
+
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Theme Configuration</h3>
+                <pre className="bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
+                  {`interface ThemeConfiguration {
+  id?: string;
+  site_title: string;
+  tagline?: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+  font_family_heading: string;
+  font_family_body: string;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  border_radius?: string;
+  spacing_unit?: string;
+  transition_duration?: string;
+  shadow_color?: string;
+  hover_scale?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  theme_mode?: ThemeMode;
+  transition_type?: TransitionType;
+  component_type?: ThemeComponentType;
+  real_time_toggle?: boolean;
+  animations_enabled?: boolean;
+  default_animation_duration?: number;
+  preview_preferences?: PreviewPreferences;
+  parent_theme_id?: string;
+  inheritance_strategy?: ThemeInheritanceStrategy;
+  inherited_settings?: Record<string, Json>;
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
+  state_version?: number;
+  last_sync?: string;
+}`}
+                </pre>
+              </div>
             </AccordionContent>
           </AccordionItem>
 
@@ -91,10 +97,8 @@ type GlassEffectLevel = 'low' | 'medium' | 'high';`}
                   {`interface ThemeStore {
   theme: ThemeBase | null;
   isLoading: boolean;
-  error: Error | null;
-  fetchTheme: () => Promise<void>;
-  updateTheme: (updates: Partial<ThemeBase>) => Promise<void>;
-  resetTheme: () => Promise<void>;
+  updateTheme: (theme: Partial<ThemeBase>) => Promise<void>;
+  resetTheme: () => void;
 }`}
                 </pre>
               </div>
@@ -105,28 +109,34 @@ type GlassEffectLevel = 'low' | 'medium' | 'high';`}
             <AccordionTrigger className="text-white">Database Integration</AccordionTrigger>
             <AccordionContent className="text-gray-300 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-medium">Database Types</h3>
+                <h3 className="text-lg font-medium">Database Schema</h3>
                 <pre className="bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
-                  {`interface DatabaseSettingsRow extends ThemeBase {
-  id: string;
-  updated_at?: string;
-  updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
+                  {`interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }`}
                 </pre>
               </div>
             </AccordionContent>
           </AccordionItem>
 
-          <AccordionItem value="component-types">
-            <AccordionTrigger className="text-white">Component Types</AccordionTrigger>
+          <AccordionItem value="inheritance">
+            <AccordionTrigger className="text-white">Theme Inheritance</AccordionTrigger>
             <AccordionContent className="text-gray-300 space-y-4">
               <div className="space-y-2">
-                <h3 className="text-lg font-medium">Form Types</h3>
+                <h3 className="text-lg font-medium">Base Theme</h3>
                 <pre className="bg-gray-900/50 p-4 rounded-lg overflow-x-auto">
-                  {`interface ThemeFormData extends ThemeBase {
-  // Form-specific fields
+                  {`interface BaseTheme {
+  id: string;
+  name: string;
+  description?: string;
+  settings: Json;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  created_by?: string;
+  version: number;
+  metadata: Json;
 }`}
                 </pre>
               </div>
