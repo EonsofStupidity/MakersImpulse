@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { CSSEffectsControl } from "./CSSEffectsControl";
+import { CSSEffectsControl } from "@/components/admin/settings/components/CSSEffectsControl";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { DEFAULT_THEME_SETTINGS } from "../utils/themeUtils";
+import { DEFAULT_THEME_SETTINGS } from "@/types/theme";
 import { TransitionType } from "@/types/theme";
 
 export const TransitionSettingsSection = () => {

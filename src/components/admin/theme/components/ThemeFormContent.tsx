@@ -1,7 +1,7 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Accordion } from "@/components/ui/accordion";
-import { ThemeBase } from "@/types/theme/types";
+import { ThemeBase } from "@/types/theme";
 import { ThemeImportSection } from "../sections/ThemeImportSection";
 import { SavingIndicator } from "./SavingIndicator";
 

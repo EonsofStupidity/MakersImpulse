@@ -1,4 +1,5 @@
-import { Theme } from "@/types/theme/types";
+import { Theme } from "@/types/theme";
+
 export const DEFAULT_THEME_SETTINGS: Theme = {
   site_title: 'MakersImpulse',
   primary_color: '#7FFFD4',
@@ -63,3 +64,4 @@ export const applyThemeToDocument = (theme: Theme) => {
   document.documentElement.style.setProperty('--shadow-color', theme.shadow_color);
   document.documentElement.style.setProperty('--hover-scale', theme.hover_scale);
 };
+

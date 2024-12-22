@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { SecuritySettings } from '../../types/security';
+import { SecuritySettings } from '@/types/theme';
 
 export const RateLimitingSection = () => {
   const queryClient = useQueryClient();

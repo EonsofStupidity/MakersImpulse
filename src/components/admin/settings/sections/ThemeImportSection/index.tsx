@@ -1,16 +1,16 @@
-import React from "react";
-import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Upload, Download } from "lucide-react";
-import { toast } from "sonner";
-import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "../../types";
+import React from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { ThemeBase } from '@/types/theme';
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Upload, Download } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ThemeImportSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const ThemeImportSection: React.FC<ThemeImportSectionProps> = ({ form }) => {
@@ -23,14 +23,9 @@ export const ThemeImportSection: React.FC<ThemeImportSectionProps> = ({ form }) 
       try {
         const content = e.target?.result;
         const theme = JSON.parse(content as string);
-        
-        // Update form with imported theme values
         Object.entries(theme).forEach(([key, value]) => {
-          if (form.getValues(key as keyof SettingsFormData) !== undefined) {
-            form.setValue(key as keyof SettingsFormData, value as any);
-          }
+          form.setValue(key as keyof ThemeBase, value as any);
         });
-
         toast.success("Theme imported successfully");
       } catch (error) {
         console.error("Theme import error:", error);
