@@ -13,6 +13,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
+// Core theme interface - completely isolated from general settings
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -58,7 +59,3 @@ export interface ThemeBase {
 }
 
 export type Theme = ThemeBase;
-export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
-export type SettingsFormData = ThemeBase;
-export type DatabaseSettingsRow = ThemeBase;
