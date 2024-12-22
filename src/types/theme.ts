@@ -60,7 +60,7 @@ export interface AnimationConfig {
   type: TransitionType;
 }
 
-// The core theme interface
+// The core theme interface - used for runtime operations
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -98,14 +98,14 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Json;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
 }
 
-// Database row type
+// Database row type - used for database operations
 export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences' | 'inherited_settings'> {
   preview_preferences: Json;
   inherited_settings: Json;
@@ -113,7 +113,7 @@ export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferen
   last_sync?: string;
 }
 
-// Form data type
+// Form data type - used for form operations
 export interface ThemeFormData extends ThemeBase {
   state_version?: number;
   last_sync?: string;
