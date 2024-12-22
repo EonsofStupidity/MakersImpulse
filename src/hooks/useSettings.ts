@@ -2,8 +2,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { UnifiedSetting, SettingType } from "@/types/settings";
 import { toast } from "sonner";
+import { Json } from "@/types/core/json";
 
-export const useSettings = <T = any>(category: SettingType, key: string) => {
+export const useSettings = <T extends Json>(category: SettingType, key: string) => {
   const queryClient = useQueryClient();
   const queryKey = ["settings", category, key];
 
@@ -29,7 +30,7 @@ export const useSettings = <T = any>(category: SettingType, key: string) => {
         .upsert({
           category,
           key,
-          value,
+          value: value as Json,
           updated_at: new Date().toISOString()
         });
 
