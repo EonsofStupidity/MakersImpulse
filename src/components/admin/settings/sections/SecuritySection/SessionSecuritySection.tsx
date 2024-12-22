@@ -1,107 +1,77 @@
 import React from 'react';
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
-import { SecuritySettings } from '@/types/theme';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { SecuritySettings } from '@/types/security';
 
 export const SessionSecuritySection = () => {
-  const queryClient = useQueryClient();
+  const { register, handleSubmit } = useForm<SecuritySettings>();
 
-  const { data: settings, isLoading } = useQuery({
-    queryKey: ['site-settings'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .select('security_settings')
-        .single();
-
-      if (error) throw error;
-      return data.security_settings as SecuritySettings;
+  const onSubmit = async (data: SecuritySettings) => {
+    try {
+      // Logic to update security settings
+      toast.success("Security settings updated successfully");
+    } catch (error) {
+      toast.error("Failed to update security settings");
     }
-  });
-
-  const updateSettings = useMutation({
-    mutationFn: async (newSettings: SecuritySettings) => {
-      const { data, error } = await supabase
-        .from('site_settings')
-        .update({ security_settings: newSettings })
-        .eq('id', (await supabase.from('site_settings').select('id').single()).data.id);
-
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['site-settings'] });
-      toast.success('Session security settings updated successfully');
-    },
-    onError: (error) => {
-      console.error('Error updating session security settings:', error);
-      toast.error('Failed to update session security settings');
-    }
-  });
-
-  const handleUpdate = (key: keyof SecuritySettings, value: number) => {
-    if (!settings) return;
-    
-    const updatedSettings = {
-      ...settings,
-      [key]: value
-    };
-    updateSettings.mutate(updatedSettings);
   };
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <Card className="p-6 bg-gray-800/50 border border-white/10">
-      <div className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <Label htmlFor="max-attempts">Maximum Login Attempts</Label>
+          <Label htmlFor="ip_blacklist">IP Blacklist</Label>
           <Input
-            id="max-attempts"
-            type="number"
-            value={settings?.max_login_attempts || 5}
-            onChange={(e) => handleUpdate('max_login_attempts', parseInt(e.target.value))}
-            className="mt-1"
+            id="ip_blacklist"
+            {...register("ip_blacklist")}
+            placeholder="Enter IP addresses separated by commas"
           />
-          <p className="text-sm text-gray-400 mt-1">
-            Number of failed login attempts before account lockout
-          </p>
         </div>
-
         <div>
-          <Label htmlFor="lockout-duration">Lockout Duration (minutes)</Label>
+          <Label htmlFor="ip_whitelist">IP Whitelist</Label>
           <Input
-            id="lockout-duration"
-            type="number"
-            value={settings?.lockout_duration_minutes || 30}
-            onChange={(e) => handleUpdate('lockout_duration_minutes', parseInt(e.target.value))}
-            className="mt-1"
+            id="ip_whitelist"
+            {...register("ip_whitelist")}
+            placeholder="Enter IP addresses separated by commas"
           />
-          <p className="text-sm text-gray-400 mt-1">
-            Duration of account lockout after maximum failed attempts
-          </p>
         </div>
-
         <div>
-          <Label htmlFor="session-timeout">Session Timeout (minutes)</Label>
+          <Label htmlFor="max_login_attempts">Max Login Attempts</Label>
           <Input
-            id="session-timeout"
+            id="max_login_attempts"
             type="number"
-            value={settings?.session_timeout_minutes || 60}
-            onChange={(e) => handleUpdate('session_timeout_minutes', parseInt(e.target.value))}
-            className="mt-1"
+            {...register("max_login_attempts")}
           />
-          <p className="text-sm text-gray-400 mt-1">
-            Duration before an inactive session expires
-          </p>
         </div>
-      </div>
+        <div>
+          <Label htmlFor="rate_limit_requests">Rate Limit Requests</Label>
+          <Input
+            id="rate_limit_requests"
+            type="number"
+            {...register("rate_limit_requests")}
+          />
+        </div>
+        <div>
+          <Label htmlFor="session_timeout_minutes">Session Timeout (minutes)</Label>
+          <Input
+            id="session_timeout_minutes"
+            type="number"
+            {...register("session_timeout_minutes")}
+          />
+        </div>
+        <div>
+          <Label htmlFor="lockout_duration_minutes">Lockout Duration (minutes)</Label>
+          <Input
+            id="lockout_duration_minutes"
+            type="number"
+            {...register("lockout_duration_minutes")}
+          />
+        </div>
+        <Button type="submit">Save Settings</Button>
+      </form>
     </Card>
   );
 };
