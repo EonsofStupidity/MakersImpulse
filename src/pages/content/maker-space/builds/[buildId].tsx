@@ -23,12 +23,16 @@ const BuildDetails = () => {
       
       if (error) throw error;
 
-      // Convert database JSON to typed interfaces
+      // Transform snake_case to camelCase
       return {
-        ...data,
-        build_volume: data.build_volume as Build['build_volume'],
-        parts: data.parts as Build['parts'],
-        images: data.images as Build['images']
+        id: data.id,
+        userId: data.user_id,
+        name: data.name,
+        description: data.description,
+        buildVolume: data.build_volume,
+        parts: data.parts,
+        images: data.images,
+        createdAt: data.created_at
       } as Build;
     }
   });
@@ -73,25 +77,25 @@ const BuildDetails = () => {
         </Card>
       )}
 
-      {build.build_volume && (
+      {build.buildVolume && (
         <Card className="p-4">
           <h2 className="text-xl font-semibold mb-4">Build Volume</h2>
           <div className="grid grid-cols-4 gap-4">
             <div>
               <p className="text-sm text-gray-500">Width (X)</p>
-              <p className="text-lg font-medium">{build.build_volume.x} {build.build_volume.units}</p>
+              <p className="text-lg font-medium">{build.buildVolume.x} {build.buildVolume.units}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Depth (Y)</p>
-              <p className="text-lg font-medium">{build.build_volume.y} {build.build_volume.units}</p>
+              <p className="text-lg font-medium">{build.buildVolume.y} {build.buildVolume.units}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Height (Z)</p>
-              <p className="text-lg font-medium">{build.build_volume.z} {build.build_volume.units}</p>
+              <p className="text-lg font-medium">{build.buildVolume.z} {build.buildVolume.units}</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Units</p>
-              <p className="text-lg font-medium capitalize">{build.build_volume.units}</p>
+              <p className="text-lg font-medium capitalize">{build.buildVolume.units}</p>
             </div>
           </div>
         </Card>

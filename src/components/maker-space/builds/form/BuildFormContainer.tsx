@@ -20,7 +20,7 @@ const BuildFormContainer = () => {
     defaultValues: {
       name: "",
       description: "",
-      build_volume: {
+      buildVolume: {
         x: 200,
         y: 200,
         z: 200,
@@ -35,22 +35,19 @@ const BuildFormContainer = () => {
     try {
       setIsSubmitting(true);
       
-      // Get current user
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
       if (!user) throw new Error('No authenticated user');
 
-      // Prepare the data for insertion
+      // Transform camelCase to snake_case for database
       const buildData = {
-        ...formData,
         user_id: user.id,
-        // Ensure proper JSON serialization for complex objects
-        build_volume: formData.build_volume ? JSON.parse(JSON.stringify(formData.build_volume)) : null,
+        name: formData.name,
+        description: formData.description,
+        build_volume: formData.buildVolume ? JSON.parse(JSON.stringify(formData.buildVolume)) : null,
         parts: formData.parts ? JSON.parse(JSON.stringify(formData.parts)) : null,
         images: formData.images ? JSON.parse(JSON.stringify(formData.images)) : null
       };
-
-      console.log('Submitting build data:', buildData);
 
       const { error: insertError } = await supabase
         .from('mi3dp_builds')

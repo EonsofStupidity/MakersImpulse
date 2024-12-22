@@ -21,12 +21,16 @@ export const BuildsList = () => {
       
       if (error) throw error;
 
-      // Convert database JSON to typed interfaces
+      // Convert database JSON to typed interfaces and transform snake_case to camelCase
       return (data as any[]).map(build => ({
-        ...build,
-        build_volume: build.build_volume as Build['build_volume'],
-        parts: build.parts as Build['parts'],
-        images: build.images as Build['images']
+        id: build.id,
+        userId: build.user_id,
+        name: build.name,
+        description: build.description,
+        buildVolume: build.build_volume,
+        parts: build.parts,
+        images: build.images,
+        createdAt: build.created_at
       })) as Build[];
     }
   });
@@ -65,9 +69,9 @@ export const BuildsList = () => {
                 {build.description}
               </p>
             )}
-            {build.build_volume && (
+            {build.buildVolume && (
               <div className="text-sm text-gray-400">
-                Volume: {build.build_volume.x}x{build.build_volume.y}x{build.build_volume.z} {build.build_volume.units}
+                Volume: {build.buildVolume.x}x{build.buildVolume.y}x{build.buildVolume.z} {build.buildVolume.units}
               </div>
             )}
             <div className="text-sm text-gray-400 mt-2">

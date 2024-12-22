@@ -28,7 +28,15 @@ export interface Build {
   buildVolume?: BuildVolume;
   parts?: BuildPart[];
   images?: BuildImage[];
-  createdAt: string;
+  createdAt?: string;
+}
+
+export interface BuildFormData {
+  name: string;
+  description?: string;
+  buildVolume?: BuildVolume;
+  parts?: BuildPart[];
+  images?: BuildImage[];
 }
 
 export interface BuildQueryParams {
@@ -37,5 +45,3 @@ export interface BuildQueryParams {
   sort?: string;
   order?: 'asc' | 'desc';
 }
-
-export type BuildFormData = Omit<Build, 'id' | 'userId' | 'createdAt'>;
