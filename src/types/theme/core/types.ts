@@ -14,7 +14,7 @@ export interface PreviewPreferences {
 export interface ThemeBase {
   id?: string;
   site_title: string;
-  tagline?: string;
+  tagline: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
