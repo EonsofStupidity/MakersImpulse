@@ -47,10 +47,10 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: Json;
+  preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Json;
+  inherited_settings: Record<string, unknown>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -58,5 +58,3 @@ export interface ThemeBase {
 }
 
 export type SettingsFormData = ThemeBase;
-export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
