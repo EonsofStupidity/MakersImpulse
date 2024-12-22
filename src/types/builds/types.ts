@@ -29,19 +29,13 @@ export interface Build {
   created_at: string;
 }
 
-export interface BuildFormData {
-  name: string;
-  description?: string;
-  build_volume: BuildVolume;
-  parts: BuildPart[];
-  images: File[];
+export interface BuildQueryParams {
+  sort?: string;
+  order?: 'asc' | 'desc';
+  limit?: number;
+  offset?: number;
+  search?: string;
+  category?: string;
 }
 
-export interface BuildQueryParams {
-  userId?: string;
-  category?: string;
-  search?: string;
-  sort?: 'newest' | 'popular';
-  page?: number;
-  limit?: number;
-}
+export type BuildFormData = Omit<Build, 'id' | 'created_at' | 'user_id'>;

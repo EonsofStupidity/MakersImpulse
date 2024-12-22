@@ -1,4 +1,4 @@
-import { ThemeBase } from '../core/base';
+import { ThemeBase } from '../core/types';
 
 export interface SecuritySettings {
   ip_blacklist: string[];
@@ -19,6 +19,3 @@ export interface SiteSettings {
   max_upload_size?: number;
   allowed_file_types?: string[];
 }
-
-export type Settings = ThemeBase;
-export type SettingsResponse = ThemeBase;
