@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useCallback, useMemo } from 'react';
-import { ThemeContextType } from '@/types/theme/core/context';
-import { ThemeBase } from '@/types/theme/core/base';
+import { ThemeBase, PreviewPreferences } from '@/types/theme';
 import { useThemeSetup } from './hooks/useThemeSetup';
 import { useThemeSubscription } from './hooks/useThemeSubscription';
 import { applyThemeToDocument } from './utils/themeUtils';
@@ -8,6 +7,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useAuthStore } from '@/lib/store/auth-store';
 import { useDebouncedCallback } from './hooks/useDebouncedCallback';
+
+interface ThemeContextType {
+  theme: ThemeBase | null;
+  updateTheme: (updates: Partial<ThemeBase>) => Promise<void>;
+  previewPreferences: PreviewPreferences;
+}
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 

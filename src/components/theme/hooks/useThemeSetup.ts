@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings, DatabaseSettingsRow } from "@/types/theme";
+import { ThemeBase } from "@/types/theme";
 import { toast } from "sonner";
 import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../utils/themeUtils";
 
 export const useThemeSetup = () => {
-  const [theme, setTheme] = useState<Settings>(DEFAULT_THEME_SETTINGS);
+  const [theme, setTheme] = useState<ThemeBase>(DEFAULT_THEME_SETTINGS);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -35,8 +35,7 @@ export const useThemeSetup = () => {
           return;
         }
 
-        const dbSettings = rawData as DatabaseSettingsRow;
-        const themeData = convertDbSettingsToTheme(dbSettings);
+        const themeData = convertDbSettingsToTheme(rawData);
         
         console.log("Initial theme settings fetched:", themeData);
         setTheme(themeData);
