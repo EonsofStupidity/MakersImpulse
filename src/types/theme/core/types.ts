@@ -56,11 +56,14 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
 }
 
 export type ThemeFormData = ThemeBase;
 export type Theme = ThemeBase;
 export type Settings = ThemeBase;
 export type SettingsFormData = ThemeBase;
+
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
+}

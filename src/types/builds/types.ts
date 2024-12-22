@@ -1,5 +1,3 @@
-import { Json } from '../database/json';
-
 export interface BuildVolume {
   x: number;
   y: number;
@@ -18,6 +16,17 @@ export interface BuildPart {
 export interface BuildImage {
   url: string;
   caption?: string;
+}
+
+export interface Build {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  build_volume?: BuildVolume;
+  parts: BuildPart[];
+  images: BuildImage[];
+  created_at?: string;
 }
 
 export interface BuildFormData {
