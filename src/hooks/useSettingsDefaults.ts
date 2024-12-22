@@ -41,3 +41,7 @@ export const DEFAULT_SETTINGS: ThemeBase = {
   inheritance_strategy: 'merge',
   inherited_settings: {}
 };
+
+export const useSettingsDefaults = () => {
+  return DEFAULT_SETTINGS;
+};

@@ -11,7 +11,7 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: unknown;
+  [key: string]: Json;
 }
 
 export interface ThemeBase {
@@ -51,14 +51,13 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Json;
+  inherited_settings: Record<string, unknown>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
 }
 
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
-}
+export type Theme = ThemeBase;
+export type Settings = ThemeBase;
+export type SettingsFormData = ThemeBase;

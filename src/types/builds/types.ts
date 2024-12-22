@@ -1,5 +1,3 @@
-import { Json } from '@/types/database/json';
-
 export interface BuildVolume {
   x: number;
   y: number;
@@ -22,9 +20,9 @@ export interface BuildImage {
 
 export interface Build {
   id: string;
-  userId: string;
   name: string;
   description?: string;
+  userId: string;
   buildVolume: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
@@ -41,7 +39,7 @@ export interface BuildFormData {
 
 export interface BuildQueryParams {
   userId?: string;
-  order?: {
+  sort?: {
     field: string;
     direction: 'asc' | 'desc';
   };
