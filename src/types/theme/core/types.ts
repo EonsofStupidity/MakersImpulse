@@ -6,14 +6,15 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-export interface PreviewPreferences {
+// Make PreviewPreferences serializable
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
-// Theme-specific interface for styling configuration
+// Theme-specific interface that matches the database schema
 export interface ThemeBase {
   id?: string;
   // Theme Metadata
@@ -77,6 +78,12 @@ export interface ThemeBase {
   // Metadata
   updated_at?: string;
   updated_by?: string;
+}
+
+// Type for database operations that matches the theme_configuration table
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
 export type Theme = ThemeBase;
