@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ThemeMode, TransitionType, GlassEffectLevel } from './core/types';
+import { Json } from './core/json';
 
 export const settingsSchema = z.object({
   site_title: z.string(),
@@ -40,7 +41,7 @@ export const settingsSchema = z.object({
     update_debounce_ms: z.number()
   }).optional(),
   inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const).optional(),
-  inherited_settings: z.record(z.unknown()).optional()
+  inherited_settings: z.record(z.unknown()).transform(val => val as Record<string, Json>).optional()
 });
 
 export type ThemeSchema = typeof settingsSchema;

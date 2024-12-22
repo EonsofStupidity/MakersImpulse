@@ -11,7 +11,6 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json;
 }
 
 export interface ThemeBase {
