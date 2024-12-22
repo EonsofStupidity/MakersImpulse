@@ -7,9 +7,11 @@ import { ThemeBase } from "@/types/theme";
 
 interface ThemePreviewContainerProps {
   settings: ThemeBase;
+  logoFile?: File;
+  faviconFile?: File;
 }
 
-export const ThemePreviewContainer = memo(({ settings }: ThemePreviewContainerProps) => {
+export const ThemePreviewContainer = memo(({ settings, logoFile, faviconFile }: ThemePreviewContainerProps) => {
   return (
     <Card className="p-6 space-y-8 bg-gray-800/50 border border-white/10">
       <div>
