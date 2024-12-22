@@ -1,2 +1,2 @@
+export * from './theme';
 export * from './database/json';
-export * from './theme/core/types';
