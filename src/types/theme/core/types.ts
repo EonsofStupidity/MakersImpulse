@@ -1,4 +1,4 @@
-import { Json } from '@/types/database/json';
+import { Json } from '../core/json';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
@@ -11,6 +11,7 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
+  [key: string]: Json;
 }
 
 export interface ThemeBase {
@@ -57,6 +58,7 @@ export interface ThemeBase {
   updated_by?: string;
   state_version?: number;
   last_sync?: string;
+  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {

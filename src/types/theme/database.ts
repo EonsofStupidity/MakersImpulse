@@ -35,7 +35,7 @@ export interface ThemeConfiguration {
   real_time_toggle?: boolean;
   animations_enabled?: boolean;
   default_animation_duration?: number;
-  preview_preferences?: PreviewPreferences;
+  preview_preferences?: PreviewPreferences & Record<string, Json>;
   parent_theme_id?: string;
   inheritance_strategy?: ThemeInheritanceStrategy;
   inherited_settings?: Record<string, Json>;
