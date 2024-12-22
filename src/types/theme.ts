@@ -15,66 +15,18 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Security settings interface
-export interface SecuritySettings {
-  ip_blacklist: string[];
-  ip_whitelist: string[];
-  max_login_attempts: number;
-  rate_limit_requests: number;
-  session_timeout_minutes: number;
-  lockout_duration_minutes: number;
-  rate_limit_window_minutes: number;
-}
-
-// Font configuration
-export interface FontConfig {
-  family: string;
-  weight: string;
-  size: string;
-  lineHeight: string;
-  letterSpacing: string;
-}
-
-// Color configuration
-export interface ColorConfig {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: {
-    primary: string;
-    secondary: string;
-    link: string;
-    heading: string;
-  };
-  neon: {
-    cyan: string;
-    pink: string;
-    purple: string;
-  };
-}
-
-// Animation configuration
-export interface AnimationConfig {
-  enabled: boolean;
-  duration: number;
-  type: TransitionType;
-}
-
 // The core theme interface - used for runtime operations
 export interface ThemeBase {
-  id?: string;
-  site_title: string;
-  tagline: string;
+  // Required Visual Identity Properties
   primary_color: string;
   secondary_color: string;
   accent_color: string;
+  
+  // Required Typography Properties
   text_primary_color: string;
   text_secondary_color: string;
-  text_link_color: string;
   text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
+  text_link_color: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -82,23 +34,43 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+  
+  // Required Layout Properties
   border_radius: string;
   spacing_unit: string;
   transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  theme_mode: ThemeMode;
-  transition_type: TransitionType;
-  component_type?: ThemeComponentType;
-  real_time_toggle: boolean;
+  
+  // Required Animation Properties
   animations_enabled: boolean;
+  transition_type: TransitionType;
   default_animation_duration: number;
+  
+  // Optional Properties with defaults
+  id?: string;
+  site_title: string;
+  tagline?: string;
+  
+  // Optional Advanced Styling
+  shadow_color?: string;
+  hover_scale?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  neon_cyan?: string;
+  neon_pink?: string;
+  neon_purple?: string;
+  
+  // Optional Theme Configuration
+  theme_mode?: ThemeMode;
+  component_type?: ThemeComponentType;
+  real_time_toggle?: boolean;
   preview_preferences: PreviewPreferences;
+  
+  // Optional Inheritance Properties
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Json;
+  
+  // Optional Metadata
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -114,16 +86,10 @@ export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferen
 }
 
 // Form data type - used for form operations
-export interface ThemeFormData extends ThemeBase {
-  state_version?: number;
-  last_sync?: string;
-}
+export type ThemeFormData = ThemeBase;
 
 // Response type for theme-related API calls
-export interface ThemeResponse extends ThemeBase {
-  state_version?: number;
-  last_sync?: string;
-}
+export type ThemeResponse = ThemeBase;
 
 // Type aliases for different use cases
 export type Theme = ThemeBase;
@@ -131,11 +97,6 @@ export type Settings = ThemeBase;
 export type SettingsResponse = ThemeResponse;
 export type SettingsFormData = ThemeFormData;
 export type DatabaseSettingsRow = ThemeConfigurationRow;
-
-// Schema validation type
-export const settingsSchema = {
-  // Will be implemented when we handle validation
-} as const;
 
 // Re-export Json type for convenience
 export type { Json } from './database/json';
