@@ -1,28 +1,35 @@
-import { Json } from '@/types/core/json';
+import { Json } from '../core/json';
 
 export interface ContentRevision {
   id: string;
   content_id: string;
   content: Json;
-  version: number;
-  created_at: string;
+  metadata?: Json;
   created_by: string;
+  created_at: string;
+  version_number: number;
+  change_summary?: string;
+  rollback_metadata?: Json;
+  publish_status?: string;
+  scheduled_publish_at?: string;
+  rollback_from?: string;
 }
 
 export interface ContentWithAuthor {
   id: string;
   title: string;
   content: Json;
+  type: string;
+  status: string;
+  version: number;
   created_by: {
     display_name: string;
   };
   created_at: string;
-  status: 'draft' | 'published' | 'archived';
-}
-
-export interface ContentType {
-  id: string;
-  name: string;
-  fields: Record<string, any>;
-  validations?: Record<string, any>;
+  updated_by?: {
+    display_name: string;
+  };
+  updated_at?: string;
+  metadata?: Json;
+  slug?: string;
 }

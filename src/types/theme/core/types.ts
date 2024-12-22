@@ -58,6 +58,11 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
+}
+
 export type Theme = ThemeBase;
 export type Settings = ThemeBase;
 export type SettingsFormData = ThemeBase;
