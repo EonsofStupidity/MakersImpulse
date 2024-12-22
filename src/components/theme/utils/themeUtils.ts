@@ -2,6 +2,7 @@ import { ThemeBase } from '@/types/theme';
 
 export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
+  tagline: 'Create, Share, Inspire',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
   accent_color: '#E6E6FA',
@@ -19,17 +20,26 @@ export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   font_weight_bold: '700',
   line_height_base: '1.5',
   letter_spacing: 'normal',
+  border_radius: '0.5rem',
+  spacing_unit: '1rem',
+  transition_duration: '0.3s',
+  shadow_color: '#000000',
+  hover_scale: '1.05',
+  box_shadow: 'none',
+  backdrop_blur: '0',
   theme_mode: 'dark',
+  transition_type: 'fade',
   real_time_toggle: true,
   animations_enabled: true,
   default_animation_duration: 300,
-  transition_type: 'fade',
   preview_preferences: {
     real_time_updates: true,
     animation_enabled: true,
     glass_effect_level: 'medium',
     update_debounce_ms: 100
-  }
+  },
+  inheritance_strategy: 'merge',
+  inherited_settings: {}
 };
 
 export const convertDbSettingsToTheme = (settings: any | null): ThemeBase => {
