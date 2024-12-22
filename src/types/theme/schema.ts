@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { ThemeBase } from './types';
+import { ThemeConfiguration } from './database';
 
-export const settingsSchema = z.object({
+export const themeSchema = z.object({
   site_title: z.string(),
   tagline: z.string().optional(),
   primary_color: z.string(),
@@ -21,26 +21,26 @@ export const settingsSchema = z.object({
   font_weight_bold: z.string(),
   line_height_base: z.string(),
   letter_spacing: z.string(),
-  border_radius: z.string(),
-  spacing_unit: z.string(),
-  transition_duration: z.string(),
-  shadow_color: z.string(),
-  hover_scale: z.string(),
-  box_shadow: z.string(),
-  backdrop_blur: z.string(),
-  theme_mode: z.enum(['light', 'dark', 'system']),
-  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']),
-  real_time_toggle: z.boolean(),
-  animations_enabled: z.boolean(),
-  default_animation_duration: z.number(),
+  border_radius: z.string().optional(),
+  spacing_unit: z.string().optional(),
+  transition_duration: z.string().optional(),
+  shadow_color: z.string().optional(),
+  hover_scale: z.string().optional(),
+  box_shadow: z.string().optional(),
+  backdrop_blur: z.string().optional(),
+  theme_mode: z.enum(['light', 'dark', 'system']).optional(),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']).optional(),
+  real_time_toggle: z.boolean().optional(),
+  animations_enabled: z.boolean().optional(),
+  default_animation_duration: z.number().optional(),
   preview_preferences: z.object({
     real_time_updates: z.boolean(),
     animation_enabled: z.boolean(),
     glass_effect_level: z.enum(['low', 'medium', 'high']),
     update_debounce_ms: z.number()
-  }).and(z.record(z.any())),
-  inheritance_strategy: z.enum(['merge', 'override', 'replace']),
-  inherited_settings: z.record(z.unknown())
-}) satisfies z.ZodType<ThemeBase>;
+  }).optional(),
+  inheritance_strategy: z.enum(['merge', 'override', 'replace']).optional(),
+  inherited_settings: z.record(z.unknown()).optional()
+});
 
-export type SettingsSchema = typeof settingsSchema;
+export type ThemeSchema = typeof themeSchema;
