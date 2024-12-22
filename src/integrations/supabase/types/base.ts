@@ -4,18 +4,20 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
 
-type TableDefinition<RowType extends { id: string }> = {
-  Row: Readonly<RowType>;
-  Insert: Partial<RowType> & Required<Pick<RowType, "id">>;
-  Update: Partial<RowType>;
-  Relationships: Array<{
-    foreignKeyName: string;
-    columns: Array<keyof RowType>;
-    referencedRelation: string;
-    referencedColumns: Array<keyof RowType>;
-  }>;
+export type Database = {
+  public: {
+    Tables: Record<string, unknown>;
+    Views: Record<string, never>;
+    Functions: Record<string, unknown>;
+    Enums: Record<string, unknown>;
+    CompositeTypes: Record<string, never>;
+  };
 };
 
-export type { TableDefinition };
+export type TableDefinition<T> = {
+  Row: T;
+  Insert: Partial<T>;
+  Update: Partial<T>;
+};

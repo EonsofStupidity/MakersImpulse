@@ -1575,6 +1575,7 @@ export type Database = {
           created_at: string | null
           id: string
           metadata: Json | null
+          security_settings: Json | null
           setting_key: string
           setting_type: string | null
           setting_value: string | null
@@ -1584,6 +1585,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           metadata?: Json | null
+          security_settings?: Json | null
           setting_key: string
           setting_type?: string | null
           setting_value?: string | null
@@ -1593,6 +1595,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           metadata?: Json | null
+          security_settings?: Json | null
           setting_key?: string
           setting_type?: string | null
           setting_value?: string | null

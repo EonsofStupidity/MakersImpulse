@@ -1,56 +1,27 @@
-import type { Session } from '@supabase/supabase-js';
+import { Json } from './base';
+import { Database } from './base';
 
-export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
-
-export interface AuthUser {
-  id: string;
-  email?: string | null;
-  role?: UserRole;
-  username?: string;
-  displayName?: string;
-}
-
-export interface AuthSession {
-  user: AuthUser;
-  expires_at?: number;
-}
-
-export interface AuthState {
-  isLoading: boolean;
-  hasAccess: boolean;
-  error: Error | { message: string } | null;
-}
-
-export interface AuthGuardProps {
-  children: React.ReactNode;
-  requireAuth?: boolean;
-  requiredRole?: UserRole | UserRole[];
-  fallbackPath?: string;
-  loadingComponent?: React.ReactNode;
-  unauthorizedComponent?: React.ReactNode;
-  onError?: (error: Error | { message: string }) => void;
-}
-
-export interface RoleHierarchy {
-  [key: string]: number;
-}
-
-export interface PinLoginResponse {
-  success: boolean;
-  message: string;
-  locked_until?: string;
-  attempts_remaining?: number;
-}
-
-export interface PinSetupResponse {
-  success: boolean;
-  message: string;
-}
+export type UserRole = Database['public']['Enums']['user_role'];
 
 export interface Profile {
   id: string;
-  username?: string | null;
-  display_name?: string | null;
-  avatar_url?: string | null;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
   role?: UserRole;
+  created_at?: string;
+  updated_at?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  metadata?: Json;
+}
+
+export interface Session {
+  id: string;
+  user_id?: string;
+  refresh_token?: string;
+  created_at?: string;
+  expires_at?: string;
+  metadata?: Json;
 }

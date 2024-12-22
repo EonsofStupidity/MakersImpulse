@@ -1,38 +1,22 @@
-import { Database } from './database';
-import type { Profile } from './auth';
-import type { Json } from './database';
+import { Json } from './base';
+import { TableDefinition } from './base';
 
-export type BlogPost = Database['public']['Tables']['blog_posts']['Row'];
-export type CMSContent = Database['public']['Tables']['cms_content']['Row'];
-export type CMSComponent = Database['public']['Tables']['cms_components']['Row'];
-export type CMSCategory = Database['public']['Tables']['cms_categories']['Row'];
+export type ContentStatus = 'draft' | 'published' | 'archived';
+export type ContentType = 'page' | 'component' | 'template' | 'workflow';
 
-export type ContentStatus = Database['public']['Enums']['content_status'];
-export type ContentType = Database['public']['Enums']['content_type'];
-export type PostCategory = Database['public']['Enums']['post_category'];
-
-export interface ContentRelationship {
+export interface Content {
   id: string;
-  parentId: string;
-  childId: string;
-  relationshipType: string;
-  orderIndex?: number;
-}
-
-export interface ContentRevision {
-  id: string;
-  content_id: string;
-  content: Json;
+  title: string;
+  type: ContentType;
+  content?: Json;
   metadata?: Json;
-  created_by?: string;
-  created_at: string;
-  version_number: number;
-  change_summary?: string;
-  publish_status?: string;
-  scheduled_publish_at?: string;
-  rollback_from?: string;
-  rollback_metadata?: Json;
-  profiles?: {
-    display_name: string;
-  };
+  slug?: string;
+  status?: ContentStatus;
+  version?: number;
+  created_by: string;
+  updated_by?: string;
+  created_at?: string;
+  updated_at?: string;
 }
+
+export type ContentTable = TableDefinition<Content>;
