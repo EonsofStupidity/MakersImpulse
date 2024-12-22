@@ -5,7 +5,6 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
-export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
 
 export interface PreviewPreferences {
   real_time_updates: boolean;
