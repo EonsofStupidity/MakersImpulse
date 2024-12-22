@@ -1,11 +1,11 @@
 import { create } from "zustand";
-import { ThemeBase } from "@/types/theme";
+import { ThemeSettings } from "@/types/settings";
 import { useSettings } from "@/hooks/useSettings";
 
 interface ThemeStore {
-  theme: ThemeBase | null;
+  theme: ThemeSettings | null;
   isLoading: boolean;
-  updateTheme: (theme: Partial<ThemeBase>) => void;
+  updateTheme: (theme: Partial<ThemeSettings>) => void;
   resetTheme: () => void;
 }
 
@@ -13,7 +13,7 @@ export const useThemeStore = create<ThemeStore>((set) => {
   const { setting, updateSetting } = useSettings("theme", "base");
 
   return {
-    theme: setting?.value as ThemeBase || null,
+    theme: setting?.value as ThemeSettings || null,
     isLoading: false,
     updateTheme: async (updates) => {
       set({ isLoading: true });

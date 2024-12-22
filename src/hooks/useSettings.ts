@@ -3,11 +3,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { UnifiedSetting, SettingType } from "@/types/settings";
 import { toast } from "sonner";
 
-export const useSettings = (category: SettingType, key: string) => {
+export const useSettings = <T = any>(category: SettingType, key: string) => {
   const queryClient = useQueryClient();
+  const queryKey = ["settings", category, key];
 
   const { data: setting, isLoading } = useQuery({
-    queryKey: ["settings", category, key],
+    queryKey,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("unified_settings")
@@ -17,12 +18,12 @@ export const useSettings = (category: SettingType, key: string) => {
         .single();
 
       if (error) throw error;
-      return data as UnifiedSetting;
+      return data as UnifiedSetting<T>;
     }
   });
 
   const updateSetting = useMutation({
-    mutationFn: async (value: any) => {
+    mutationFn: async (value: T) => {
       const { error } = await supabase
         .from("unified_settings")
         .upsert({
@@ -36,7 +37,7 @@ export const useSettings = (category: SettingType, key: string) => {
       return { success: true };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["settings", category, key] });
+      queryClient.invalidateQueries({ queryKey });
       toast.success("Settings updated successfully");
     },
     onError: (error) => {
