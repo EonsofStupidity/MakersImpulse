@@ -16,7 +16,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <FormField
           control={form.control}
-          name="build_volume.x"
+          name="buildVolume.x"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Width (X)</FormLabel>
@@ -26,6 +26,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
                   type="number" 
                   className="bg-white/5"
                   onChange={e => field.onChange(Number(e.target.value))}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />
@@ -35,7 +36,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
 
         <FormField
           control={form.control}
-          name="build_volume.y"
+          name="buildVolume.y"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Depth (Y)</FormLabel>
@@ -45,6 +46,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
                   type="number" 
                   className="bg-white/5"
                   onChange={e => field.onChange(Number(e.target.value))}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />
@@ -54,7 +56,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
 
         <FormField
           control={form.control}
-          name="build_volume.z"
+          name="buildVolume.z"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Height (Z)</FormLabel>
@@ -64,6 +66,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
                   type="number" 
                   className="bg-white/5"
                   onChange={e => field.onChange(Number(e.target.value))}
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />
@@ -73,7 +76,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
 
         <FormField
           control={form.control}
-          name="build_volume.units"
+          name="buildVolume.units"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Units</FormLabel>
@@ -81,6 +84,7 @@ const BuildVolumeSection: React.FC<BuildVolumeSectionProps> = ({ form }) => {
                 <select 
                   {...field} 
                   className="w-full h-10 rounded-md border border-input bg-white/5 px-3 py-2"
+                  value={field.value || ''}
                 >
                   <option value="mm">Millimeters (mm)</option>
                   <option value="cm">Centimeters (cm)</option>

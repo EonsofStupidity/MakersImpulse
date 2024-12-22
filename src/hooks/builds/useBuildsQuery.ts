@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Build, BuildQueryParams } from "@/types/builds";
+import type { Build, BuildQueryParams, BuildVolume, BuildPart, BuildImage } from "@/types/builds";
 
 export const useBuildsQuery = (params?: BuildQueryParams) => {
   return useQuery({
@@ -16,8 +16,8 @@ export const useBuildsQuery = (params?: BuildQueryParams) => {
         });
       }
 
-      if (params?.user_id) {
-        query = query.eq('user_id', params.user_id);
+      if (params?.userId) {
+        query = query.eq('user_id', params.userId);
       }
 
       const { data, error } = await query;
@@ -27,9 +27,11 @@ export const useBuildsQuery = (params?: BuildQueryParams) => {
       // Convert database JSON to typed interfaces
       return (data as any[]).map(build => ({
         ...build,
-        build_volume: build.build_volume as BuildVolume,
+        userId: build.user_id,
+        buildVolume: build.build_volume as BuildVolume,
         parts: build.parts as BuildPart[],
-        images: build.images as BuildImage[]
+        images: build.images as BuildImage[],
+        createdAt: build.created_at
       })) as Build[];
     }
   });

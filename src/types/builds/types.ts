@@ -25,17 +25,17 @@ export interface Build {
   userId: string;
   name: string;
   description?: string;
-  buildVolume: BuildVolume;
-  parts: BuildPart[];
-  images: BuildImage[];
+  buildVolume?: BuildVolume;
+  parts?: BuildPart[];
+  images?: BuildImage[];
   createdAt: string;
 }
 
 export interface BuildQueryParams {
   userId?: string;
   name?: string;
-  sortField?: string;
-  sortDirection?: 'asc' | 'desc';
+  sort?: string;
+  order?: 'asc' | 'desc';
 }
 
 export type BuildFormData = Omit<Build, 'id' | 'userId' | 'createdAt'>;
