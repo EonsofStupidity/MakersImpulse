@@ -1,6 +1,5 @@
 import { Json } from '@/types/core/json';
 
-// Core theme enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -58,11 +57,6 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-}
-
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
 }
 
 export type ThemeFormData = ThemeBase;
