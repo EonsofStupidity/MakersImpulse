@@ -1,4 +1,4 @@
-import { Json } from '../types/json';
+import { Json } from '@/types/core/json';
 
 export interface ContentRevision {
   id: string;
@@ -13,6 +13,10 @@ export interface ContentRevision {
   publish_status?: string;
   scheduled_publish_at?: string;
   rollback_from?: string;
+  profiles?: {
+    username: string;
+    display_name: string;
+  };
 }
 
 export interface ContentWithAuthor {

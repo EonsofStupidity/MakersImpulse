@@ -1,4 +1,4 @@
-import { Json } from './json';
+import { Json } from '@/types/core/json';
 
 export interface BuildVolume {
   x: number;
@@ -18,6 +18,17 @@ export interface BuildImage {
   caption?: string;
 }
 
+export interface BuildRow {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  build_volume: Json;
+  parts: Json;
+  images: Json;
+  created_at?: string;
+}
+
 export interface Build {
   id: string;
   userId: string;
@@ -29,23 +40,19 @@ export interface Build {
   createdAt: string;
 }
 
-export const convertJsonToBuildVolume = (json: Json): BuildVolume => {
-  if (typeof json !== 'object' || !json) {
-    throw new Error('Invalid BuildVolume data');
-  }
-  return json as BuildVolume;
-};
+export const transformBuildFromDb = (row: BuildRow): Build => {
+  const buildVolume = row.build_volume as unknown as BuildVolume;
+  const parts = row.parts as unknown as BuildPart[];
+  const images = row.images as unknown as BuildImage[];
 
-export const convertJsonToBuildParts = (json: Json): BuildPart[] => {
-  if (!Array.isArray(json)) {
-    throw new Error('Invalid BuildParts data');
-  }
-  return json as BuildPart[];
-};
-
-export const convertJsonToBuildImages = (json: Json): BuildImage[] => {
-  if (!Array.isArray(json)) {
-    throw new Error('Invalid BuildImages data');
-  }
-  return json as BuildImage[];
+  return {
+    id: row.id,
+    userId: row.user_id,
+    name: row.name,
+    description: row.description || '',
+    buildVolume,
+    parts,
+    images,
+    createdAt: row.created_at || new Date().toISOString()
+  };
 };
