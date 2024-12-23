@@ -1,7 +1,25 @@
-import { Theme } from "@/types/theme";
+import { ThemeBase } from '@/types/theme/core/types';
 
-export const DEFAULT_THEME_SETTINGS: Theme = {
+export const convertDbSettingsToTheme = (data: any): ThemeBase => {
+  if (!data) {
+    return DEFAULT_THEME_SETTINGS;
+  }
+
+  // Parse preview_preferences from JSON if needed
+  const preview_preferences = typeof data.preview_preferences === 'string' 
+    ? JSON.parse(data.preview_preferences)
+    : data.preview_preferences;
+
+  return {
+    ...DEFAULT_THEME_SETTINGS,
+    ...data,
+    preview_preferences: preview_preferences || DEFAULT_THEME_SETTINGS.preview_preferences
+  };
+};
+
+export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
+  tagline: 'Create, Share, Inspire',
   primary_color: '#7FFFD4',
   secondary_color: '#FFB6C1',
   accent_color: '#E6E6FA',
@@ -24,23 +42,24 @@ export const DEFAULT_THEME_SETTINGS: Theme = {
   transition_duration: '0.3s',
   shadow_color: '#000000',
   hover_scale: '1.05',
-  theme_mode: 'dark'
+  box_shadow: 'none',
+  backdrop_blur: '0',
+  theme_mode: 'dark',
+  transition_type: 'fade',
+  real_time_toggle: true,
+  animations_enabled: true,
+  default_animation_duration: 300,
+  preview_preferences: {
+    real_time_updates: true,
+    animation_enabled: true,
+    glass_effect_level: 'medium',
+    update_debounce_ms: 100
+  },
+  inheritance_strategy: 'merge',
+  inherited_settings: {}
 };
 
-export const convertDbSettingsToTheme = (settings: any | null): Theme => {
-  if (!settings) {
-    console.log("Using default theme settings");
-    return DEFAULT_THEME_SETTINGS;
-  }
-
-  return {
-    ...DEFAULT_THEME_SETTINGS,
-    ...settings
-  };
-};
-
-export const applyThemeToDocument = (theme: Theme) => {
-  console.log("Applying theme to document:", theme);
+export const applyThemeToDocument = (theme: ThemeBase) => {
   document.documentElement.style.setProperty('--primary-color', theme.primary_color);
   document.documentElement.style.setProperty('--secondary-color', theme.secondary_color);
   document.documentElement.style.setProperty('--accent-color', theme.accent_color);
@@ -63,5 +82,6 @@ export const applyThemeToDocument = (theme: Theme) => {
   document.documentElement.style.setProperty('--transition-duration', theme.transition_duration);
   document.documentElement.style.setProperty('--shadow-color', theme.shadow_color);
   document.documentElement.style.setProperty('--hover-scale', theme.hover_scale);
+  document.documentElement.style.setProperty('--box-shadow', theme.box_shadow);
+  document.documentElement.style.setProperty('--backdrop-blur', theme.backdrop_blur);
 };
-

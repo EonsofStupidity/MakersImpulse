@@ -5,12 +5,12 @@ import { CSSEffectsControl } from "./CSSEffectsControl";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { DEFAULT_SETTINGS } from "../hooks/useSettingsDefaults";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase, TransitionType } from "@/types/theme/core/types";
 
 export const TransitionSettingsSection = () => {
   const [settings, setSettings] = useState({
     pageTransition: 0.3,
-    transitionType: "ease-out",
+    transitionType: "ease-out" as TransitionType,
     hoverScale: 1.05,
     animationPreset: "fade"
   });
@@ -20,24 +20,14 @@ export const TransitionSettingsSection = () => {
     
     try {
       const updateData = {
-        p_site_title: DEFAULT_SETTINGS.site_title,
-        p_tagline: DEFAULT_SETTINGS.tagline,
-        p_primary_color: DEFAULT_SETTINGS.primary_color,
-        p_secondary_color: DEFAULT_SETTINGS.secondary_color,
-        p_accent_color: DEFAULT_SETTINGS.accent_color,
-        p_text_primary_color: DEFAULT_SETTINGS.text_primary_color,
-        p_text_secondary_color: DEFAULT_SETTINGS.text_secondary_color,
-        p_text_link_color: DEFAULT_SETTINGS.text_link_color,
-        p_text_heading_color: DEFAULT_SETTINGS.text_heading_color,
-        p_font_family_heading: DEFAULT_SETTINGS.font_family_heading,
-        p_font_family_body: DEFAULT_SETTINGS.font_family_body,
-        p_font_size_base: DEFAULT_SETTINGS.font_size_base,
-        p_font_weight_normal: DEFAULT_SETTINGS.font_weight_normal,
-        p_font_weight_bold: DEFAULT_SETTINGS.font_weight_bold,
-        p_line_height_base: DEFAULT_SETTINGS.line_height_base,
-        p_letter_spacing: DEFAULT_SETTINGS.letter_spacing,
-        p_transition_duration: `${value}s`,
-        p_hover_scale: value.toString()
+        ...DEFAULT_SETTINGS,
+        transition_duration: `${value}s`,
+        hover_scale: value.toString(),
+        neon_cyan: DEFAULT_SETTINGS.neon_cyan,
+        neon_pink: DEFAULT_SETTINGS.neon_pink,
+        neon_purple: DEFAULT_SETTINGS.neon_purple,
+        border_radius: DEFAULT_SETTINGS.border_radius,
+        letter_spacing: DEFAULT_SETTINGS.letter_spacing
       };
 
       const { data, error } = await supabase.rpc('update_site_settings', updateData);

@@ -16,8 +16,9 @@ export interface PreviewPreferences {
 }
 
 export interface ThemeBase {
-  // Required fields
+  id?: string;
   site_title: string;
+  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -42,20 +43,16 @@ export interface ThemeBase {
   hover_scale: string;
   box_shadow: string;
   backdrop_blur: string;
-
-  // Optional fields
-  id?: string;
-  tagline?: string;
-  theme_mode?: ThemeMode;
-  transition_type?: TransitionType;
+  theme_mode: ThemeMode;
+  transition_type: TransitionType;
   component_type?: ThemeComponentType;
-  real_time_toggle?: boolean;
-  animations_enabled?: boolean;
-  default_animation_duration?: number;
-  preview_preferences?: PreviewPreferences;
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
+  preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
-  inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Record<string, Json>;
+  inheritance_strategy: ThemeInheritanceStrategy;
+  inherited_settings: Record<string, Json>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
@@ -69,21 +66,12 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
-// Lifecycle and validation types
-export type ThemeLifecycleState = 'initializing' | 'active' | 'deactivating' | 'cleanup';
-export type ThemeSyncState = 'pending' | 'syncing' | 'completed' | 'error';
+// Type aliases
+export type Theme = ThemeBase;
+export type PartialTheme = Partial<ThemeBase>;
+export type ThemeFormData = ThemeBase;
 
-export interface ThemeLifecycleOptions {
-  autoSync?: boolean;
-  syncInterval?: number;
-}
-
-export interface ThemeSyncOptions {
-  force?: boolean;
-  timeout?: number;
-  debounce_ms?: number;
-}
-
+// Validation types
 export interface ThemeValidationError {
   field: string;
   message: string;
@@ -95,13 +83,14 @@ export interface ThemeValidationResult {
   errors: ThemeValidationError[];
 }
 
-export interface ThemeValidationRule {
-  field: string;
-  validator: (value: any) => boolean;
-  message: string;
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  lastSync?: string;
+  error?: string;
 }
 
-// Type aliases
-export type Theme = ThemeBase;
-export type PartialTheme = Partial<ThemeBase>;
-export type ThemeFormData = ThemeBase;
+export interface ThemeSyncOptions {
+  force?: boolean;
+  timeout?: number;
+  debounce_ms?: number;
+}
