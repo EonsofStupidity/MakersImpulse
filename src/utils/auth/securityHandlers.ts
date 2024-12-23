@@ -9,10 +9,17 @@ export const validateSession = async (session: any) => {
     .from('profiles')
     .select('is_banned')
     .eq('id', session.user.id)
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
-  if (profile?.is_banned) {
+  
+  // If no profile exists or if banned
+  if (!profile) {
+    console.log('No profile found for user:', session.user.id);
+    return true; // Allow access while profile is being created
+  }
+  
+  if (profile.is_banned) {
     throw new Error('Account is banned');
   }
 
@@ -36,11 +43,15 @@ export const handleSecurityEvent = async (
         ip_address: null // In a real app, you'd get this from the request
       });
 
-    if (error) throw error;
+    if (error) {
+      console.error('Failed to log security event:', error);
+      throw error;
+    }
     
     console.log('Security event logged:', { userId, eventType, severity, details });
   } catch (error) {
     console.error('Failed to log security event:', error);
+    // Don't throw here - we don't want security logging to break core functionality
   }
 };
 
