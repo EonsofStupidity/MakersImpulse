@@ -29,7 +29,7 @@ export const TransitionSettingsSection = () => {
         letter_spacing: DEFAULT_SETTINGS.letter_spacing
       };
 
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('theme_configuration')
         .update(updateData)
         .single();

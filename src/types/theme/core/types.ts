@@ -7,12 +7,11 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-export interface PreviewPreferences {
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json;
 }
 
 export interface ThemeBase {
@@ -59,6 +58,11 @@ export interface ThemeBase {
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
   [key: string]: any; // Allow additional properties
+}
+
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
 export interface ThemeLifecycleState {

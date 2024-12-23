@@ -1,10 +1,10 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
-import { ThemeColorPreview } from "./preview/ThemeColorPreview";
-import { ThemeTextPreview } from "./preview/ThemeTextPreview";
-import { ThemeAnimationPreview } from "./preview/ThemeAnimationPreview";
-import { ThemeAdvancedCSSEditor } from "./ThemeAdvancedCSSEditor";
+import { ColorPreview } from "./preview/ColorPreview";
+import { TextPreview } from "./preview/TextPreview";
+import { AnimationPreview } from "./preview/AnimationPreview";
+import { AdvancedCSSEditor } from "./ThemeAdvancedCSSEditor";
 
 interface SettingsPreviewProps {
   settings: {
@@ -58,9 +58,9 @@ export const ThemePreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
         </motion.div>
 
         <div className="space-y-4">
-          <ThemeColorPreview colors={settings} />
-          <ThemeTextPreview colors={settings} />
-          <ThemeAnimationPreview colors={settings} />
+          <ColorPreview colors={settings} />
+          <TextPreview colors={settings} />
+          <AnimationPreview colors={settings} />
         </div>
 
         {settings.favicon_url && (
@@ -78,7 +78,7 @@ export const ThemePreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
           </motion.div>
         )}
 
-        <ThemeAdvancedCSSEditor
+        <AdvancedCSSEditor
           currentCSS={`/* Current Theme CSS Variables */
 :root {
   --primary: ${settings.primary_color};
