@@ -1,8 +1,13 @@
 import { useMemo } from 'react';
-import { ThemeValidationRule, ThemeValidationResult } from '@/types/theme/core/validation';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeValidationResult, ThemeValidationError, ThemeBase } from '@/types/theme/core/types';
 
-const defaultValidationRules: ThemeValidationRule[] = [
+interface ValidationRule {
+  field: string;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
+const defaultValidationRules: ValidationRule[] = [
   {
     field: 'site_title',
     validator: (value) => typeof value === 'string' && value.length > 0,
@@ -17,20 +22,21 @@ const defaultValidationRules: ThemeValidationRule[] = [
 
 export const useThemeValidation = (theme: Partial<ThemeBase>) => {
   const validate = useMemo(() => {
-    return (rules: ThemeValidationRule[] = defaultValidationRules): ThemeValidationResult => {
-      const errors: Record<string, string[]> = {};
+    return (rules: ValidationRule[] = defaultValidationRules): ThemeValidationResult => {
+      const errors: ThemeValidationError[] = [];
       
       rules.forEach(rule => {
         if (!rule.validator(theme[rule.field])) {
-          if (!errors[rule.field]) {
-            errors[rule.field] = [];
-          }
-          errors[rule.field].push(rule.message);
+          errors.push({
+            field: rule.field,
+            message: rule.message,
+            code: `invalid_${rule.field}`
+          });
         }
       });
 
       return {
-        isValid: Object.keys(errors).length === 0,
+        isValid: errors.length === 0,
         errors
       };
     };

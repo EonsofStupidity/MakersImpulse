@@ -57,12 +57,7 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: any; // Allow additional properties
-}
-
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+  [key: string]: any; // Add index signature to satisfy JsonObject constraint
 }
 
 export interface ThemeLifecycleState {
@@ -70,9 +65,10 @@ export interface ThemeLifecycleState {
   error?: string;
 }
 
-export interface ThemeLifecycleOptions {
-  autoApply?: boolean;
-  onError?: (error: Error) => void;
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  error?: string;
+  last_sync?: string;
 }
 
 export interface ThemeValidationError {
@@ -81,29 +77,7 @@ export interface ThemeValidationError {
   code: string;
 }
 
-export interface ThemeValidationResult {
+export type ThemeValidationResult = {
   isValid: boolean;
   errors: ThemeValidationError[];
-}
-
-export interface ThemeValidationRule {
-  field: string;
-  validator: (value: any) => boolean;
-  message: string;
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  error?: string;
-}
-
-export interface ThemeSyncOptions {
-  force?: boolean;
-  timeout?: number;
-  debounce_ms?: number;
-}
-
-// Type aliases
-export type Theme = ThemeBase;
-export type PartialTheme = Partial<ThemeBase>;
-export type ThemeFormData = ThemeBase;
+};

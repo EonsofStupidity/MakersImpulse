@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { ThemeLifecycleState } from '@/types/theme/core/lifecycle';
+import { ThemeLifecycleState, ThemeBase } from '@/types/theme/core/types';
 import { useTheme } from '@/components/theme/ThemeContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const useThemeLifecycle = () => {
-  const [lifecycleState, setLifecycleState] = useState<ThemeLifecycleState>('initializing');
+  const [lifecycleState, setLifecycleState] = useState<ThemeLifecycleState>({
+    status: 'initializing'
+  });
   const { theme, updateTheme } = useTheme();
 
   useEffect(() => {
@@ -18,11 +20,15 @@ export const useThemeLifecycle = () => {
 
         if (error) throw error;
 
-        updateTheme(themeConfig);
-        setLifecycleState('active');
+        await updateTheme(themeConfig as Partial<ThemeBase>);
+        setLifecycleState({ status: 'ready' });
         toast.success('Theme initialized successfully');
       } catch (error) {
         console.error('Theme initialization error:', error);
+        setLifecycleState({
+          status: 'error',
+          error: 'Failed to initialize theme'
+        });
         toast.error('Failed to initialize theme');
       }
     };
@@ -30,7 +36,9 @@ export const useThemeLifecycle = () => {
     initializeTheme();
 
     return () => {
-      setLifecycleState('cleanup');
+      setLifecycleState({
+        status: 'initializing'
+      });
     };
   }, [updateTheme]);
 
@@ -38,7 +46,7 @@ export const useThemeLifecycle = () => {
     try {
       setLifecycleState(newState);
       
-      if (newState === 'deactivating') {
+      if (newState.status === 'deactivating') {
         await supabase
           .from('theme_configuration')
           .update({ last_sync: new Date().toISOString() })
