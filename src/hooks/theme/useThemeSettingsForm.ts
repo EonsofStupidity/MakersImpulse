@@ -31,7 +31,7 @@ export const useThemeSettingsForm = () => {
         preview_preferences: {
           real_time_updates: true,
           animation_enabled: true,
-          glass_effect_level: 'medium',
+          glass_effect_level: 'medium' as const,
           update_debounce_ms: 100
         }
       } as ThemeBase;

@@ -1,14 +1,13 @@
 import { z } from 'zod';
-import { ThemeMode, TransitionType, GlassEffectLevel, ThemeInheritanceStrategy } from './core/types';
 
 export const previewPreferencesSchema = z.object({
   real_time_updates: z.boolean(),
   animation_enabled: z.boolean(),
-  glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
+  glass_effect_level: z.enum(['low', 'medium', 'high']),
   update_debounce_ms: z.number().min(0).max(1000)
 }).catchall(z.any());
 
-export const themeSchema = z.object({
+export const settingsSchema = z.object({
   site_title: z.string(),
   tagline: z.string().optional(),
   primary_color: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/),
@@ -35,16 +34,14 @@ export const themeSchema = z.object({
   hover_scale: z.string(),
   box_shadow: z.string(),
   backdrop_blur: z.string(),
-  theme_mode: z.enum(['light', 'dark', 'system'] as const),
-  transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const),
+  theme_mode: z.enum(['light', 'dark', 'system']),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']),
   real_time_toggle: z.boolean(),
   animations_enabled: z.boolean(),
   default_animation_duration: z.number(),
   preview_preferences: previewPreferencesSchema,
-  parent_theme_id: z.string().uuid().optional(),
-  inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const),
+  inheritance_strategy: z.enum(['merge', 'override', 'replace']),
   inherited_settings: z.record(z.unknown())
 }).catchall(z.any());
 
-export type ThemeSchema = typeof themeSchema;
-export const settingsSchema = themeSchema;
+export type ThemeSchema = typeof settingsSchema;

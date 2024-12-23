@@ -58,7 +58,7 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: any; // Add index signature
+  [key: string]: Json | undefined;
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
@@ -66,16 +66,16 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
-export interface ThemeLifecycleState {
+export type ThemeLifecycleState = {
   status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
-}
+};
 
-export interface ThemeSyncState {
+export type ThemeSyncState = {
   status: 'pending' | 'syncing' | 'completed' | 'error';
   error?: string;
   last_sync?: string;
-}
+};
 
 export interface ThemeValidationError {
   field: string;
