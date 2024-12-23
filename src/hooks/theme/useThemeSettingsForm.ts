@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import { ThemeBase } from "@/types/theme/core/types";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export const useThemeSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);

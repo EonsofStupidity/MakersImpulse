@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { ThemeColorPreview } from "./preview/ThemeColorPreview";
 import { ThemeTextPreview } from "./preview/ThemeTextPreview";
 import { ThemeAnimationPreview } from "./preview/ThemeAnimationPreview";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types/theme/core/types";
 import { motion } from "framer-motion";
 
 interface PreviewContainerProps {

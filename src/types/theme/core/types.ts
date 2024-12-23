@@ -66,16 +66,16 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
-export type ThemeLifecycleState = {
+export interface ThemeLifecycleState {
   status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
-};
+}
 
-export type ThemeSyncState = {
+export interface ThemeSyncState {
   status: 'pending' | 'syncing' | 'completed' | 'error';
   error?: string;
   last_sync?: string;
-};
+}
 
 export interface ThemeValidationError {
   field: string;
@@ -83,10 +83,10 @@ export interface ThemeValidationError {
   code: string;
 }
 
-export type ThemeValidationResult = {
+export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
-};
+}
 
 export interface ThemeValidationRule {
   validate: (value: any) => boolean;
