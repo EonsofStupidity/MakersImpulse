@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import { ThemeBase } from "@/types/theme/core/types";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { transformDatabaseSettings } from "@/utils/transforms/settings";
-import { Json } from "@/types/database/json";
 
 export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -12,16 +13,36 @@ export const useSettingsForm = () => {
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
-      // Convert settings to the correct format before sending to Supabase
-      const jsonSettings = JSON.parse(JSON.stringify(settings)) as Json;
-      await updateSetting(jsonSettings);
+      console.log("Updating settings:", settings);
+      await updateSetting(settings);
+      toast.success("Theme settings updated");
     } catch (error) {
       console.error("Error updating settings:", error);
+      toast.error("Failed to update theme settings");
     }
   };
 
   const handleResetToDefault = async () => {
-    console.log("Reset to default");
+    try {
+      const { error } = await supabase
+        .from("theme_configuration")
+        .update({
+          theme_mode: 'light',
+          preview_preferences: {
+            real_time_updates: true,
+            animation_enabled: true,
+            glass_effect_level: 'medium',
+            update_debounce_ms: 100
+          }
+        })
+        .eq('id', themeSettings?.id);
+
+      if (error) throw error;
+      toast.success("Theme reset to defaults");
+    } catch (error) {
+      console.error("Error resetting theme:", error);
+      toast.error("Failed to reset theme");
+    }
   };
 
   const handleLogoUpload = (file: File) => setLogoFile(file);
