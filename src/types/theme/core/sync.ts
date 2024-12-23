@@ -1,14 +1,14 @@
-import { Json } from '../core/json';
+import { ThemeBase } from './types';
 
 export interface ThemeSyncState {
-  last_sync: string;
-  sync_status: 'pending' | 'syncing' | 'synced' | 'error';
-  sync_error?: string;
-  pending_changes: Record<string, Json>;
+  lastSynced: string | null;
+  isSyncing: boolean;
+  error: string | null;
 }
 
 export interface ThemeSyncOptions {
-  debounce_ms: number;
-  retry_attempts: number;
-  batch_updates: boolean;
+  autoSync: boolean;
+  syncInterval: number;
+  retryOnError: boolean;
+  maxRetries: number;
 }

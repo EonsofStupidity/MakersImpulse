@@ -1,11 +1,14 @@
-import { Json } from '../core/json';
+import { ThemeBase } from './types';
 
-export type ThemeLifecycleState = 'initializing' | 'active' | 'deactivating' | 'cleanup';
+export interface ThemeLifecycleHooks {
+  onInit?: (theme: ThemeBase) => void | Promise<void>;
+  onUpdate?: (oldTheme: ThemeBase, newTheme: ThemeBase) => void | Promise<void>;
+  onError?: (error: Error, theme: ThemeBase) => void | Promise<void>;
+  onDestroy?: (theme: ThemeBase) => void | Promise<void>;
+}
 
-export interface ThemeLifecycle {
-  state: ThemeLifecycleState;
-  initialized_at?: string;
-  last_active?: string;
-  cleanup_required: boolean;
-  metadata: Record<string, Json>;
+export interface ThemeLifecycleState {
+  isInitialized: boolean;
+  isUpdating: boolean;
+  error: Error | null;
 }

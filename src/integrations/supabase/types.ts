@@ -1603,6 +1603,169 @@ export type Database = {
         }
         Relationships: []
       }
+      theme_access_control: {
+        Row: {
+          created_at: string | null
+          id: string
+          permissions: string[] | null
+          restrictions: Json | null
+          theme_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          permissions?: string[] | null
+          restrictions?: Json | null
+          theme_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          permissions?: string[] | null
+          restrictions?: Json | null
+          theme_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_access_control_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_access_control_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_analytics: {
+        Row: {
+          created_at: string | null
+          error_metrics: Json | null
+          id: string
+          performance_metrics: Json | null
+          theme_id: string | null
+          updated_at: string | null
+          usage_metrics: Json | null
+        }
+        Insert: {
+          created_at?: string | null
+          error_metrics?: Json | null
+          id?: string
+          performance_metrics?: Json | null
+          theme_id?: string | null
+          updated_at?: string | null
+          usage_metrics?: Json | null
+        }
+        Update: {
+          created_at?: string | null
+          error_metrics?: Json | null
+          id?: string
+          performance_metrics?: Json | null
+          theme_id?: string | null
+          updated_at?: string | null
+          usage_metrics?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_analytics_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_base_configuration: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          metadata: Json | null
+          name: string
+          updated_at: string | null
+          version: number
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name: string
+          updated_at?: string | null
+          version?: number
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          metadata?: Json | null
+          name?: string
+          updated_at?: string | null
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_base_configuration_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_components: {
+        Row: {
+          created_at: string | null
+          dependencies: Json | null
+          id: string
+          name: string
+          properties: Json
+          transformer: string | null
+          type: string
+          updated_at: string | null
+          validator: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          dependencies?: Json | null
+          id?: string
+          name: string
+          properties: Json
+          transformer?: string | null
+          type: string
+          updated_at?: string | null
+          validator?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          dependencies?: Json | null
+          id?: string
+          name?: string
+          properties?: Json
+          transformer?: string | null
+          type?: string
+          updated_at?: string | null
+          validator?: string | null
+        }
+        Relationships: []
+      }
       theme_configuration: {
         Row: {
           accent_color: string | null
@@ -1761,6 +1924,41 @@ export type Database = {
           },
         ]
       }
+      theme_history: {
+        Row: {
+          action: string
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          state: Json
+          theme_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          state: Json
+          theme_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          state?: Json
+          theme_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_history_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       theme_inheritable_properties: {
         Row: {
           created_at: string | null
@@ -1787,6 +1985,54 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      theme_inheritance: {
+        Row: {
+          child_id: string | null
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          overrides: Json | null
+          parent_id: string | null
+          strategy: string
+          updated_at: string | null
+        }
+        Insert: {
+          child_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          overrides?: Json | null
+          parent_id?: string | null
+          strategy: string
+          updated_at?: string | null
+        }
+        Update: {
+          child_id?: string | null
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          overrides?: Json | null
+          parent_id?: string | null
+          strategy?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_inheritance_child_id_fkey"
+            columns: ["child_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_inheritance_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       theme_inheritance_log: {
         Row: {
@@ -1843,6 +2089,94 @@ export type Database = {
           },
         ]
       }
+      theme_integrations: {
+        Row: {
+          config: Json
+          created_at: string | null
+          error: Json | null
+          id: string
+          integration_type: string
+          last_sync: string | null
+          state: Json | null
+          status: string | null
+          theme_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          config: Json
+          created_at?: string | null
+          error?: Json | null
+          id?: string
+          integration_type: string
+          last_sync?: string | null
+          state?: Json | null
+          status?: string | null
+          theme_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          config?: Json
+          created_at?: string | null
+          error?: Json | null
+          id?: string
+          integration_type?: string
+          last_sync?: string | null
+          state?: Json | null
+          status?: string | null
+          theme_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_integrations_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_migrations: {
+        Row: {
+          applied_at: string | null
+          changes: Json
+          created_at: string | null
+          id: string
+          status: string | null
+          theme_id: string | null
+          version_from: number
+          version_to: number
+        }
+        Insert: {
+          applied_at?: string | null
+          changes: Json
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          theme_id?: string | null
+          version_from: number
+          version_to: number
+        }
+        Update: {
+          applied_at?: string | null
+          changes?: Json
+          created_at?: string | null
+          id?: string
+          status?: string | null
+          theme_id?: string | null
+          version_from?: number
+          version_to?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_migrations_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       theme_presets: {
         Row: {
           category: string | null
@@ -1886,6 +2220,41 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      theme_snapshots: {
+        Row: {
+          created_at: string | null
+          id: string
+          label: string | null
+          state: Json
+          tags: string[] | null
+          theme_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          state: Json
+          tags?: string[] | null
+          theme_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          state?: Json
+          tags?: string[] | null
+          theme_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "theme_snapshots_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
             referencedColumns: ["id"]
           },
         ]
