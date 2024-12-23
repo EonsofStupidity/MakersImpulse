@@ -7,6 +7,50 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Theme validation types
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeValidationRule {
+  field: keyof ThemeBase;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
+// Theme lifecycle types
+export interface ThemeLifecycleState {
+  isInitialized: boolean;
+  isLoading: boolean;
+  error: Error | null;
+}
+
+export interface ThemeLifecycleOptions {
+  autoInit?: boolean;
+  onInit?: () => void;
+  onError?: (error: Error) => void;
+}
+
+// Theme sync types
+export interface ThemeSyncState {
+  isSyncing: boolean;
+  lastSyncedAt: Date | null;
+  error: Error | null;
+}
+
+export interface ThemeSyncOptions {
+  syncInterval?: number;
+  retryAttempts?: number;
+  onSync?: () => void;
+  onError?: (error: Error) => void;
+}
+
 // Preview preferences matching database schema
 export interface PreviewPreferences extends JsonObject {
   real_time_updates: boolean;
@@ -17,7 +61,7 @@ export interface PreviewPreferences extends JsonObject {
 
 // Base theme interface matching database schema exactly
 export interface ThemeBase extends JsonObject {
-  // Required fields from database (NOT NULL)
+  // Required fields
   id?: string;
   site_title: string;
   font_family_heading: string;
@@ -28,7 +72,7 @@ export interface ThemeBase extends JsonObject {
   line_height_base: string;
   letter_spacing: string;
 
-  // Optional fields from database (NULL allowed)
+  // Optional fields
   tagline?: string;
   primary_color?: string;
   secondary_color?: string;
@@ -63,6 +107,7 @@ export interface ThemeBase extends JsonObject {
   parent_theme_id?: string;
   updated_at?: string;
   updated_by?: string;
+  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 
   // Allow additional string-indexed properties
   [key: string]: Json | undefined;
@@ -105,3 +150,6 @@ export interface ThemeUpdatePayload {
 // Utility types
 export type PartialTheme = Partial<ThemeBase>;
 export type ThemeFormData = ThemeBase;
+
+// Re-export for backward compatibility
+export type Theme = ThemeBase;
