@@ -61,17 +61,16 @@ export interface ThemeBase {
   [key: string]: any; // Allow additional properties
 }
 
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error';
+  error?: string;
 }
 
-// Type aliases
-export type Theme = ThemeBase;
-export type PartialTheme = Partial<ThemeBase>;
-export type ThemeFormData = ThemeBase;
+export interface ThemeLifecycleOptions {
+  autoApply?: boolean;
+  onError?: (error: Error) => void;
+}
 
-// Validation types
 export interface ThemeValidationError {
   field: string;
   message: string;
@@ -83,9 +82,14 @@ export interface ThemeValidationResult {
   errors: ThemeValidationError[];
 }
 
+export interface ThemeValidationRule {
+  field: string;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
 export interface ThemeSyncState {
   status: 'pending' | 'syncing' | 'completed' | 'error';
-  lastSync?: string;
   error?: string;
 }
 
@@ -94,3 +98,8 @@ export interface ThemeSyncOptions {
   timeout?: number;
   debounce_ms?: number;
 }
+
+// Type aliases
+export type Theme = ThemeBase;
+export type PartialTheme = Partial<ThemeBase>;
+export type ThemeFormData = ThemeBase;

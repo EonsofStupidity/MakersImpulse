@@ -20,7 +20,6 @@ export const TransitionSettingsSection = () => {
     
     try {
       const updateData = {
-        ...DEFAULT_SETTINGS,
         transition_duration: `${value}s`,
         hover_scale: value.toString(),
         neon_cyan: DEFAULT_SETTINGS.neon_cyan,
@@ -30,7 +29,10 @@ export const TransitionSettingsSection = () => {
         letter_spacing: DEFAULT_SETTINGS.letter_spacing
       };
 
-      const { data, error } = await supabase.rpc('update_site_settings', updateData);
+      const { data, error } = await supabase
+        .from('theme_configuration')
+        .update(updateData)
+        .single();
 
       if (error) throw error;
       
