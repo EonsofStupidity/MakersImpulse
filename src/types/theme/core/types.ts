@@ -7,11 +7,12 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-export interface PreviewPreferences extends Record<string, Json> {
+export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
+  [key: string]: Json;
 }
 
 export interface ThemeBase {
@@ -57,11 +58,16 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: any; // Add index signature to satisfy JsonObject constraint
+  [key: string]: any; // Add index signature
+}
+
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
 export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error';
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
 }
 
@@ -81,3 +87,18 @@ export type ThemeValidationResult = {
   isValid: boolean;
   errors: ThemeValidationError[];
 };
+
+export interface ThemeValidationRule {
+  validate: (value: any) => boolean;
+  message: string;
+}
+
+export interface ThemeLifecycleOptions {
+  autoInit?: boolean;
+  onStateChange?: (state: ThemeLifecycleState) => void;
+}
+
+export interface ThemeSyncOptions {
+  debounce_ms?: number;
+  onSync?: (state: ThemeSyncState) => void;
+}

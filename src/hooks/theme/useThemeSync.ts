@@ -7,7 +7,7 @@ import { useDebouncedCallback } from '@/hooks/useDebouncedCallback';
 
 export const useThemeSync = (options: { debounce_ms?: number } = {}) => {
   const [syncState, setSyncState] = useState<ThemeSyncState>({
-    status: 'synced',
+    status: 'pending',
     last_sync: new Date().toISOString()
   });
 

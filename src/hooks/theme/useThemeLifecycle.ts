@@ -36,9 +36,7 @@ export const useThemeLifecycle = () => {
     initializeTheme();
 
     return () => {
-      setLifecycleState({
-        status: 'initializing'
-      });
+      setLifecycleState({ status: 'initializing' });
     };
   }, [updateTheme]);
 
@@ -46,11 +44,11 @@ export const useThemeLifecycle = () => {
     try {
       setLifecycleState(newState);
       
-      if (newState.status === 'deactivating') {
+      if (newState.status === 'deactivating' && theme?.id) {
         await supabase
           .from('theme_configuration')
           .update({ last_sync: new Date().toISOString() })
-          .eq('id', theme?.id);
+          .eq('id', theme.id);
       }
     } catch (error) {
       console.error('Theme state transition error:', error);
