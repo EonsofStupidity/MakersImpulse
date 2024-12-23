@@ -1,22 +1,26 @@
-import { Json } from './core/json';
+// Core JSON types
+export type JsonPrimitive = string | number | boolean | null;
+export type JsonObject = { [key: string]: Json };
+export type JsonArray = Json[];
+export type Json = JsonPrimitive | JsonObject | JsonArray;
 
-// Core theme enums
+// Theme enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Preview preferences interface
+// Preview preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: any;
+  [key: string]: Json;
 }
 
-// The core theme interface
+// Main theme interface
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -54,13 +58,33 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Record<string, Json>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
+
+// Form data type
+export type ThemeFormData = ThemeBase;
+
+// Settings form data
+export type SettingsFormData = ThemeBase;
+
+// Settings response
+export type SettingsResponse = ThemeBase;
+
+// Settings type
+export type Settings = ThemeBase;
+
+// Theme configuration
+export type ThemeConfiguration = ThemeBase;
+
+// Export schema
+export const settingsSchema = {
+  // Schema definition will be added when needed
+} as const;
 
 // Default theme settings
 export const DEFAULT_THEME_SETTINGS: ThemeBase = {
@@ -102,20 +126,5 @@ export const DEFAULT_THEME_SETTINGS: ThemeBase = {
     update_debounce_ms: 100
   },
   inheritance_strategy: 'merge',
-  inherited_settings: {},
-  menu_animation_type: 'fade'
+  inherited_settings: {}
 };
-
-// Form data type
-export type SettingsFormData = ThemeBase;
-
-// Response type
-export type SettingsResponse = ThemeBase;
-
-// Settings type
-export type Settings = ThemeBase;
-
-// Export schema
-export const settingsSchema = {
-  // Schema definition
-} as const;
