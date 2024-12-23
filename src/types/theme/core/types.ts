@@ -1,13 +1,12 @@
 import { Json } from '@/types/database/json';
 
-// Core theme enums with strict typing
+// Core theme enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Strongly typed preview preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -16,7 +15,6 @@ export interface PreviewPreferences {
   [key: string]: Json;
 }
 
-// Base theme interface with strict typing
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -61,16 +59,13 @@ export interface ThemeBase {
   updated_by?: string;
   state_version?: number;
   last_sync?: string;
+  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 
-// Database row type
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
 }
 
-// Form data type
 export type ThemeFormData = Partial<ThemeBase>;
-
-// Theme type alias
 export type Theme = ThemeBase;
