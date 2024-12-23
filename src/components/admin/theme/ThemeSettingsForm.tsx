@@ -6,6 +6,8 @@ import { useSettingsForm } from "./hooks/useSettingsForm";
 import { ThemeSettingsFormContainer } from "./components/ThemeSettingsFormContainer";
 import { ThemePreviewContainer } from "./components/ThemePreviewContainer";
 import { settingsSchema } from "@/types/theme/schema";
+import { useTheme } from "@/components/theme/ThemeContext";
+import { toast } from "sonner";
 
 export const ThemeSettingsForm = () => {
   const {
@@ -14,11 +16,11 @@ export const ThemeSettingsForm = () => {
     isSaving,
     logoFile,
     faviconFile,
-    handleLogoUpload,
-    handleFaviconUpload,
     handleSettingsUpdate,
     handleResetToDefault,
   } = useSettingsForm();
+
+  const { updateTheme } = useTheme();
 
   const form = useForm<ThemeBase>({
     resolver: zodResolver(settingsSchema),
@@ -34,11 +36,15 @@ export const ThemeSettingsForm = () => {
   React.useEffect(() => {
     const subscription = form.watch((value, { name, type }) => {
       if (type === "change") {
-        handleSettingsUpdate(form.getValues());
+        const formValues = form.getValues();
+        console.log("Updating theme with values:", formValues);
+        handleSettingsUpdate(formValues);
+        updateTheme(formValues);
+        toast.success("Theme updated");
       }
     });
     return () => subscription.unsubscribe();
-  }, [form.watch, handleSettingsUpdate]);
+  }, [form.watch, handleSettingsUpdate, updateTheme]);
 
   if (isLoading) {
     return (
