@@ -20,17 +20,3 @@ export function isJson(value: unknown): value is Json {
   }
   return false;
 }
-
-// Database specific JSON utilities
-export type DbJson = Json;
-export type DbJsonObject = JsonObject;
-export type DbJsonArray = JsonArray;
-
-// Conversion utilities
-export function toDbJson<T extends Json>(value: T): DbJson {
-  return value;
-}
-
-export function fromDbJson<T extends Json>(value: DbJson): T {
-  return value as T;
-}
