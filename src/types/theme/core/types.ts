@@ -25,7 +25,7 @@ export interface ThemeValidationRule {
 }
 
 // Theme lifecycle types
-export type ThemeLifecycleState = 'initializing' | 'active' | 'error' | 'cleanup';
+export type ThemeLifecycleState = 'initializing' | 'active' | 'error' | 'cleanup' | 'deactivating';
 
 export interface ThemeLifecycleOptions {
   autoInit?: boolean;
@@ -38,6 +38,7 @@ export interface ThemeSyncState {
   isSyncing: boolean;
   lastSyncedAt: Date | null;
   error: Error | null;
+  last_sync?: string;
 }
 
 export interface ThemeSyncOptions {
