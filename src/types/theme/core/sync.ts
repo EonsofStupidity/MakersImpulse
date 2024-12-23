@@ -1,14 +1,17 @@
 import { ThemeBase } from './types';
 
-export interface ThemeSyncState {
-  lastSynced: string | null;
-  isSyncing: boolean;
-  error: string | null;
-}
+export type ThemeSyncState = 'idle' | 'syncing' | 'error';
 
 export interface ThemeSyncOptions {
-  autoSync: boolean;
-  syncInterval: number;
-  retryOnError: boolean;
-  maxRetries: number;
+  debounceMs?: number;
+  retryAttempts?: number;
+  onSyncComplete?: (theme: ThemeBase) => void;
+  onSyncError?: (error: Error) => void;
+}
+
+export interface ThemeSyncHook {
+  state: ThemeSyncState;
+  lastSync: Date | null;
+  sync: () => Promise<void>;
+  cancelSync: () => void;
 }
