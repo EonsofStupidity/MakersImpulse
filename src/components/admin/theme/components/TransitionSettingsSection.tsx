@@ -1,124 +1,96 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { UseFormReturn } from "react-hook-form";
+import { ThemeBase, TransitionType } from "@/types/theme";
 import { CSSEffectsControl } from "@/components/admin/settings/components/CSSEffectsControl";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { DEFAULT_THEME_SETTINGS } from "@/types/theme";
-import { TransitionType } from "@/types/theme";
 
-export const TransitionSettingsSection = () => {
-  const [settings, setSettings] = useState({
-    pageTransition: 0.3,
-    transitionType: "ease-out" as TransitionType,
-    hoverScale: 1.05,
-    animationPreset: "fade"
-  });
+interface TransitionSettingsSectionProps {
+  form: UseFormReturn<ThemeBase>;
+}
 
-  const handleSettingChange = async (key: string, value: number | string) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-    
-    try {
-      const { data, error } = await supabase.rpc('update_site_settings', {
-        ...DEFAULT_THEME_SETTINGS,
-        p_transition_duration: `${value}s`,
-        p_hover_scale: value.toString()
-      });
-
-      if (error) throw error;
-      
-      toast.success("Transition settings updated");
-    } catch (error) {
-      console.error("Failed to update settings:", error);
-      toast.error("Failed to update settings");
-    }
+export const TransitionSettingsSection: React.FC<TransitionSettingsSectionProps> = ({ form }) => {
+  const handleToggleChange = (field: "real_time_toggle" | "animations_enabled", value: boolean) => {
+    form.setValue(field, value);
+    toast.success(`${field === "real_time_toggle" ? "Real-time updates" : "Animations"} ${value ? "enabled" : "disabled"}`);
   };
 
   return (
-    <AccordionItem value="transition-settings">
+    <AccordionItem value="animations">
       <AccordionTrigger className="text-lg font-semibold text-white">
-        <motion.div
-          initial={{ opacity: 0.8 }}
-          whileHover={{ opacity: 1, scale: 1.02 }}
-          className="flex items-center gap-2"
-        >
-          Transitions & Motion
-        </motion.div>
+        Animations & Real-time Updates
       </AccordionTrigger>
       <AccordionContent className="space-y-6 pt-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <CSSEffectsControl
-            label="Page Transition Duration"
-            type="slider"
-            value={settings.pageTransition}
-            min={0.1}
-            max={1}
-            step={0.1}
-            onChange={(value) => handleSettingChange('pageTransition', value)}
-            description="Duration of page transition animations"
-            previewClass="animate-fade-in"
-          />
-        </motion.div>
+        <Card className="p-4 space-y-6 bg-gray-800/50 border border-white/10">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="real-time-toggle" className="text-sm font-medium text-white">
+                Real-time Updates
+              </Label>
+              <Switch
+                id="real-time-toggle"
+                checked={form.watch("real_time_toggle") ?? true}
+                onCheckedChange={(checked) => handleToggleChange("real_time_toggle", checked)}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="animations-enabled" className="text-sm font-medium text-white">
+                Enable Animations
+              </Label>
+              <Switch
+                id="animations-enabled"
+                checked={form.watch("animations_enabled") ?? true}
+                onCheckedChange={(checked) => handleToggleChange("animations_enabled", checked)}
+              />
+            </div>
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <CSSEffectsControl
-            label="Element Transition Type"
-            type="select"
-            value={settings.transitionType}
-            options={[
-              { label: "Ease Out", value: "ease-out" },
-              { label: "Ease In", value: "ease-in" },
-              { label: "Linear", value: "linear" }
-            ]}
-            onChange={(value) => handleSettingChange('transitionType', value)}
-            description="Default transition timing function"
-          />
-        </motion.div>
+          <div className="space-y-4">
+            <h3 className="text-sm font-medium text-white">Animation Settings</h3>
+            <CSSEffectsControl
+              label="Default Animation Duration (ms)"
+              type="slider"
+              value={form.watch("default_animation_duration") || 300}
+              min={100}
+              max={1000}
+              step={50}
+              onChange={(value) => form.setValue("default_animation_duration", value)}
+              description="Set the default duration for all animations"
+            />
+            <CSSEffectsControl
+              label="Transition Type"
+              type="select"
+              value={form.watch("transition_type") || "fade"}
+              options={[
+                { label: "Fade", value: "fade" },
+                { label: "Slide", value: "slide" },
+                { label: "Scale", value: "scale" },
+                { label: "Blur", value: "blur" }
+              ]}
+              onChange={(value) => form.setValue("transition_type", value as TransitionType)}
+              description="Select the type of transition between elements"
+            />
+          </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
-        >
-          <CSSEffectsControl
-            label="Hover Scale Factor"
-            type="slider"
-            value={settings.hoverScale}
-            min={1}
-            max={1.2}
-            step={0.01}
-            onChange={(value) => handleSettingChange('hoverScale', value)}
-            description="Scale factor for hover animations"
-            previewClass="hover:scale-110"
-          />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3, delay: 0.3 }}
-        >
-          <CSSEffectsControl
-            label="Animation Preset"
-            type="select"
-            value={settings.animationPreset}
-            options={[
-              { label: "Fade", value: "fade" },
-              { label: "Slide", value: "slide" },
-              { label: "Scale", value: "scale" }
-            ]}
-            onChange={(value) => handleSettingChange('animationPreset', value)}
-            description="Default animation preset for elements"
-          />
-        </motion.div>
+          {form.watch("animations_enabled") && (
+            <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
+              <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
+              <div className="space-y-4">
+                <div
+                  className="p-4 bg-primary/10 rounded-lg transition-all"
+                  style={{
+                    transitionDuration: `${form.watch("default_animation_duration")}ms`,
+                  }}
+                >
+                  <p className="text-primary text-sm">Animation Preview</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </Card>
       </AccordionContent>
     </AccordionItem>
   );

@@ -1,7 +1,9 @@
 import React from 'react';
-import { ThemeSettingsForm } from '@/components/admin/theme/ThemeSettingsForm';
+import { ThemeSettingsForm } from './components/ThemeSettingsForm';
 import { themeSchema } from '@/types/theme/schema';
 
 export const ThemeCustomizer = () => {
-  return <ThemeSettingsForm schema={themeSchema} />;
+  return <ThemeSettingsForm />;
 };
+
+export { ThemeSettingsForm };

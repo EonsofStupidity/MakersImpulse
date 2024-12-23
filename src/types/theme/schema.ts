@@ -47,3 +47,4 @@ export const themeSchema = z.object({
 }).catchall(z.any());
 
 export type ThemeSchema = typeof themeSchema;
+export const settingsSchema = themeSchema;

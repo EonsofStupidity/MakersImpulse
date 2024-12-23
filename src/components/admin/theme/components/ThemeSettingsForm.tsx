@@ -14,8 +14,6 @@ export const ThemeSettingsForm = () => {
     isSaving,
     logoFile,
     faviconFile,
-    handleLogoUpload,
-    handleFaviconUpload,
     handleSettingsUpdate,
     handleResetToDefault,
   } = useSettingsForm();
@@ -32,8 +30,8 @@ export const ThemeSettingsForm = () => {
   }, [settings, form]);
 
   React.useEffect(() => {
-    const subscription = form.watch((value, { name, type }) => {
-      if (type === "change") {
+    const subscription = form.watch((value) => {
+      if (value) {
         handleSettingsUpdate(form.getValues());
       }
     });
