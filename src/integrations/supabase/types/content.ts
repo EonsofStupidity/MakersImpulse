@@ -1,22 +1,35 @@
-import { Json } from './base';
-import { TableDefinition } from './base';
+import { Json } from '../types/json';
 
-export type ContentStatus = 'draft' | 'published' | 'archived';
-export type ContentType = 'page' | 'component' | 'template' | 'workflow';
-
-export interface Content {
+export interface ContentRevision {
   id: string;
-  title: string;
-  type: ContentType;
-  content?: Json;
-  metadata?: Json;
-  slug?: string;
-  status?: ContentStatus;
-  version?: number;
+  content_id: string;
+  content: Json;
+  metadata: Json;
   created_by: string;
-  updated_by?: string;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  version_number: number;
+  change_summary?: string;
+  rollback_metadata?: Json;
+  publish_status?: string;
+  scheduled_publish_at?: string;
+  rollback_from?: string;
 }
 
-export type ContentTable = TableDefinition<Content>;
+export interface ContentWithAuthor {
+  id: string;
+  title: string;
+  content: Json;
+  type: 'template' | 'page' | 'component' | 'workflow';
+  metadata: Json;
+  slug: string;
+  status: 'draft' | 'published' | 'archived';
+  version: number;
+  created_by: {
+    display_name: string;
+  };
+  updated_by: {
+    display_name: string;
+  };
+  created_at: string;
+  updated_at: string;
+}

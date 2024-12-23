@@ -78,13 +78,38 @@ export interface ThemeBase {
   [key: string]: any;
 }
 
-// Database row type with additional fields
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+// Lifecycle and validation types
+export type ThemeLifecycleState = 'initializing' | 'active' | 'deactivating' | 'cleanup';
+export type ThemeSyncState = 'pending' | 'syncing' | 'completed' | 'error';
+
+export interface ThemeLifecycleOptions {
+  autoSync?: boolean;
+  syncInterval?: number;
 }
 
-// Utility types
+export interface ThemeSyncOptions {
+  force?: boolean;
+  timeout?: number;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeValidationRule {
+  field: string;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
+// Type aliases
 export type PartialTheme = Partial<ThemeBase>;
 export type ThemeFormData = ThemeBase;
 export type Theme = ThemeBase;

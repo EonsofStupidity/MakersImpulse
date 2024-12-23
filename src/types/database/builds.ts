@@ -1,26 +1,51 @@
-import type { Json } from '../core/json';
-import type { BuildVolume, BuildPart, BuildImage } from '../builds/core';
+import { Json } from './json';
 
-export interface BuildRow {
+export interface BuildVolume {
+  x: number;
+  y: number;
+  z: number;
+  units: string;
+}
+
+export interface BuildPart {
   id: string;
-  user_id: string;
   name: string;
-  description?: string;
-  build_volume: Json;
-  parts: Json;
-  images: Json;
-  created_at?: string;
+  quantity: number;
 }
 
-export function transformBuildFromDb(row: BuildRow) {
-  return {
-    id: row.id,
-    userId: row.user_id,
-    name: row.name,
-    description: row.description,
-    buildVolume: row.build_volume as BuildVolume,
-    parts: row.parts as BuildPart[],
-    images: row.images as BuildImage[],
-    createdAt: row.created_at
-  };
+export interface BuildImage {
+  url: string;
+  caption?: string;
 }
+
+export interface Build {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  buildVolume: BuildVolume;
+  parts: BuildPart[];
+  images: BuildImage[];
+  createdAt: string;
+}
+
+export const convertJsonToBuildVolume = (json: Json): BuildVolume => {
+  if (typeof json !== 'object' || !json) {
+    throw new Error('Invalid BuildVolume data');
+  }
+  return json as BuildVolume;
+};
+
+export const convertJsonToBuildParts = (json: Json): BuildPart[] => {
+  if (!Array.isArray(json)) {
+    throw new Error('Invalid BuildParts data');
+  }
+  return json as BuildPart[];
+};
+
+export const convertJsonToBuildImages = (json: Json): BuildImage[] => {
+  if (!Array.isArray(json)) {
+    throw new Error('Invalid BuildImages data');
+  }
+  return json as BuildImage[];
+};
