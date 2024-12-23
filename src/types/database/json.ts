@@ -6,17 +6,14 @@ export type JsonObject = { [key: string]: Json };
 // Combined JSON type
 export type Json = JsonPrimitive | JsonObject | JsonArray;
 
-// Helper type for database operations
-export type DbJson = Json | Record<string, unknown>;
-
 // Type guard for JSON
 export function isJson(value: unknown): value is Json {
   if (value === null) return true;
-  if (typeof value === 'boolean') return true;
-  if (typeof value === 'number') return true;
-  if (typeof value === 'string') return true;
+  if (typeof value === "boolean") return true;
+  if (typeof value === "number") return true;
+  if (typeof value === "string") return true;
   if (Array.isArray(value)) return value.every(isJson);
-  if (typeof value === 'object') {
+  if (typeof value === "object") {
     return Object.values(value as object).every(isJson);
   }
   return false;

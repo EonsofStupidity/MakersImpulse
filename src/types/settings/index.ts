@@ -1,4 +1,4 @@
-import { Json } from '../core/json';
+import { Json } from '@/types/database/json';
 import { BaseEntity } from '../core/common';
 
 export type SettingType = 'theme' | 'security' | 'content' | 'system' | 'user' | 'notification' | 'workflow';
