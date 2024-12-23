@@ -1,6 +1,5 @@
 /**
  * Core JSON type definitions
- * Single source of truth for all JSON types in the application
  */
 
 // Basic JSON value types
@@ -17,7 +16,7 @@ export function isJson(value: unknown): value is Json {
   if (typeof value === "string") return true;
   if (Array.isArray(value)) return value.every(isJson);
   if (typeof value === "object") {
-    return Object.values(value as object).every(isJson);
+    return Object.values(value as object).every((v) => v === undefined || isJson(v));
   }
   return false;
 }
