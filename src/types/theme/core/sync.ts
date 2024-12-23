@@ -1,13 +1,4 @@
-import { ThemeBase } from './types';
-
-export type ThemeSyncState = 'idle' | 'syncing' | 'error';
-
-export interface ThemeSyncOptions {
-  debounceMs?: number;
-  retryAttempts?: number;
-  onSyncComplete?: (theme: ThemeBase) => void;
-  onSyncError?: (error: Error) => void;
-}
+import { ThemeBase, ThemeSyncState, ThemeSyncOptions } from './types';
 
 export interface ThemeSyncHook {
   state: ThemeSyncState;
@@ -15,3 +6,12 @@ export interface ThemeSyncHook {
   sync: () => Promise<void>;
   cancelSync: () => void;
 }
+
+export const createThemeSync = (options: ThemeSyncOptions = {}): ThemeSyncHook => {
+  return {
+    state: 'idle',
+    lastSync: null,
+    sync: async () => {},
+    cancelSync: () => {}
+  };
+};

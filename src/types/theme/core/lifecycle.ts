@@ -1,12 +1,4 @@
-import { ThemeBase } from './types';
-
-export type ThemeLifecycleState = 'initializing' | 'ready' | 'updating' | 'error';
-
-export interface ThemeLifecycleOptions {
-  autoSync?: boolean;
-  syncInterval?: number;
-  onStateChange?: (state: ThemeLifecycleState) => void;
-}
+import { ThemeBase, ThemeLifecycleState, ThemeLifecycleOptions } from './types';
 
 export interface ThemeLifecycleHook {
   state: ThemeLifecycleState;
@@ -14,3 +6,12 @@ export interface ThemeLifecycleHook {
   update: (theme: Partial<ThemeBase>) => Promise<void>;
   cleanup: () => void;
 }
+
+export const createThemeLifecycle = (options: ThemeLifecycleOptions = {}): ThemeLifecycleHook => {
+  return {
+    state: 'initializing',
+    initialize: async () => {},
+    update: async () => {},
+    cleanup: () => {}
+  };
+};

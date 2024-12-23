@@ -18,6 +18,7 @@ export interface PreviewPreferences extends Record<string, Json> {
 // Base theme interface with strict typing and proper JSON extension
 export interface ThemeBase {
   // Required core properties
+  id?: string;
   site_title: string;
   primary_color: string;
   secondary_color: string;
@@ -43,7 +44,6 @@ export interface ThemeBase {
   inherited_settings: Record<string, Json>;
 
   // Optional properties
-  id?: string;
   tagline?: string;
   border_radius?: string;
   spacing_unit?: string;
@@ -63,7 +63,11 @@ export interface ThemeBase {
   neon_purple?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 
-  // Allow additional string-indexed properties
+  // Database-specific fields
+  state_version?: number;
+  last_sync?: string;
+
+  // Allow additional string-indexed properties for flexibility
   [key: string]: Json | undefined;
 }
 
@@ -78,3 +82,67 @@ export type ThemeFormData = ThemeBase;
 
 // Utility type for partial theme updates
 export type PartialTheme = Partial<ThemeBase>;
+
+// Theme update payload type
+export interface ThemeUpdatePayload {
+  p_site_title: string;
+  p_tagline: string;
+  p_primary_color: string;
+  p_secondary_color: string;
+  p_accent_color: string;
+  p_text_primary_color: string;
+  p_text_secondary_color: string;
+  p_text_link_color: string;
+  p_text_heading_color: string;
+  p_neon_cyan: string;
+  p_neon_pink: string;
+  p_neon_purple: string;
+  p_font_family_heading: string;
+  p_font_family_body: string;
+  p_font_size_base: string;
+  p_font_weight_normal: string;
+  p_font_weight_bold: string;
+  p_line_height_base: string;
+  p_letter_spacing: string;
+  p_border_radius: string;
+  p_spacing_unit: string;
+  p_transition_duration: string;
+  p_shadow_color: string;
+  p_hover_scale: string;
+}
+
+// Theme validation types
+export interface ThemeValidationRule {
+  field: keyof ThemeBase;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
+export interface ThemeValidationError {
+  field: keyof ThemeBase;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+// Theme lifecycle types
+export type ThemeLifecycleState = 'initializing' | 'ready' | 'updating' | 'error' | 'cleanup';
+
+export interface ThemeLifecycleOptions {
+  autoSync?: boolean;
+  syncInterval?: number;
+  onStateChange?: (state: ThemeLifecycleState) => void;
+}
+
+// Theme sync types
+export type ThemeSyncState = 'idle' | 'syncing' | 'error';
+
+export interface ThemeSyncOptions {
+  debounceMs?: number;
+  retryAttempts?: number;
+  onSyncComplete?: (theme: ThemeBase) => void;
+  onSyncError?: (error: Error) => void;
+}
