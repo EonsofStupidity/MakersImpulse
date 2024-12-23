@@ -7,58 +7,16 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Theme validation types
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export interface ThemeValidationRule {
-  field: keyof ThemeBase;
-  validator: (value: any) => boolean;
-  message: string;
-}
-
-// Theme lifecycle types
-export type ThemeLifecycleState = 'initializing' | 'active' | 'error' | 'cleanup' | 'deactivating';
-
-export interface ThemeLifecycleOptions {
-  autoInit?: boolean;
-  onInit?: () => void;
-  onError?: (error: Error) => void;
-}
-
-// Theme sync types
-export interface ThemeSyncState {
-  isSyncing: boolean;
-  lastSyncedAt: Date | null;
-  error: Error | null;
-  last_sync?: string;
-}
-
-export interface ThemeSyncOptions {
-  syncInterval?: number;
-  retryAttempts?: number;
-  onSync?: () => void;
-  onError?: (error: Error) => void;
-  debounce_ms?: number;
-}
-
 // Preview preferences
-export interface PreviewPreferences extends JsonObject {
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
-// Base theme interface
-export interface ThemeBase extends JsonObject {
+// Base theme interface with index signature
+export interface ThemeBase extends Record<string, any> {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -101,16 +59,10 @@ export interface ThemeBase extends JsonObject {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: Json | undefined;
+  [key: string]: any; // Index signature for additional properties
 }
 
-// Database row type
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
-}
-
-// Form data type
+// Theme update payload type
 export interface ThemeUpdatePayload {
   p_site_title: string;
   p_tagline: string;
@@ -136,6 +88,55 @@ export interface ThemeUpdatePayload {
   p_transition_duration: string;
   p_shadow_color: string;
   p_hover_scale: string;
+}
+
+// Theme lifecycle types
+export type ThemeLifecycleState = 'initializing' | 'active' | 'error' | 'cleanup' | 'deactivating';
+
+export interface ThemeLifecycleOptions {
+  autoInit?: boolean;
+  onInit?: () => void;
+  onError?: (error: Error) => void;
+}
+
+// Theme sync types
+export interface ThemeSyncState {
+  isSyncing: boolean;
+  lastSyncedAt: Date | null;
+  error: Error | null;
+  last_sync?: string;
+  sync_status?: 'pending' | 'syncing' | 'completed' | 'error';
+}
+
+export interface ThemeSyncOptions {
+  syncInterval?: number;
+  retryAttempts?: number;
+  onSync?: () => void;
+  onError?: (error: Error) => void;
+  debounce_ms?: number;
+}
+
+// Theme validation types
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeValidationRule {
+  field: keyof ThemeBase;
+  validator: (value: any) => boolean;
+  message: string;
+}
+
+// Database row type
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
 // Utility types
