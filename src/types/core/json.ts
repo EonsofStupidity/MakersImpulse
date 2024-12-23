@@ -20,3 +20,8 @@ export function isJson(value: unknown): value is Json {
   }
   return false;
 }
+
+// Database JSON types
+export type DbJson = Json;
+export type DbJsonObject = { [key: string]: DbJson };
+export type DbJsonArray = DbJson[];

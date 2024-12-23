@@ -16,7 +16,7 @@ export interface PreviewPreferences extends Record<string, Json> {
 }
 
 // Base theme interface with strict typing and proper JSON extension
-export interface ThemeBase extends Record<string, Json | undefined> {
+export interface ThemeBase {
   // Required core properties
   site_title: string;
   primary_color: string;
@@ -62,6 +62,9 @@ export interface ThemeBase extends Record<string, Json | undefined> {
   neon_pink?: string;
   neon_purple?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
+
+  // Allow additional string-indexed properties
+  [key: string]: Json | undefined;
 }
 
 // Database row type with additional fields
@@ -72,7 +75,6 @@ export interface ThemeConfigurationRow extends ThemeBase {
 
 // Form data type
 export type ThemeFormData = ThemeBase;
-export type Theme = ThemeBase;
 
 // Utility type for partial theme updates
 export type PartialTheme = Partial<ThemeBase>;
