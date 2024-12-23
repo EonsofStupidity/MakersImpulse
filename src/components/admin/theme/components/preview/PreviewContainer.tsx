@@ -6,10 +6,10 @@ import { ThemeAnimationPreview } from "./ThemeAnimationPreview";
 import { ThemeBase } from "@/types/theme";
 
 interface PreviewContainerProps {
-  settings: ThemeBase;
+  settings: Partial<ThemeBase>;
 }
 
-export const ThemePreviewContainer = memo(({ settings }: PreviewContainerProps) => {
+export const PreviewContainer = memo(({ settings }: PreviewContainerProps) => {
   return (
     <Card className="p-6 space-y-8 bg-gray-800/50 border border-white/10">
       <div>
@@ -30,4 +30,4 @@ export const ThemePreviewContainer = memo(({ settings }: PreviewContainerProps) 
   );
 });
 
-ThemePreviewContainer.displayName = "ThemePreviewContainer";
+PreviewContainer.displayName = "PreviewContainer";
