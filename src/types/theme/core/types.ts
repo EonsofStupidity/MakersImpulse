@@ -45,6 +45,10 @@ export interface ThemeBase extends JsonObject {
   neon_cyan?: string;
   neon_pink?: string;
   neon_purple?: string;
+  box_shadow?: string;
+  backdrop_blur?: string;
+  logo_url?: string;
+  favicon_url?: string;
 
   // Theme system fields
   theme_mode: ThemeMode;
@@ -53,6 +57,12 @@ export interface ThemeBase extends JsonObject {
   preview_preferences: PreviewPreferences;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: JsonObject;
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
+  parent_theme_id?: string;
+  updated_at?: string;
+  updated_by?: string;
 
   // Allow additional string-indexed properties
   [key: string]: Json | undefined;
