@@ -1,4 +1,4 @@
 export * from './core/types';
-export * from './core/lifecycle';
-export * from './core/sync';
-export * from './core/validation';
+export type { ThemeLifecycleState, ThemeLifecycleOptions } from './core/lifecycle';
+export type { ThemeSyncState, ThemeSyncOptions } from './core/sync';
+export type { ThemeValidationError, ThemeValidationResult, ThemeValidationRule } from './core/validation';

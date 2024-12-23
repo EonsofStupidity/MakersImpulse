@@ -1,6 +1,6 @@
 import { Json, JsonObject } from '@/types/core/json';
 
-// Theme enums with strict typing
+// Core enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -25,11 +25,7 @@ export interface ThemeValidationRule {
 }
 
 // Theme lifecycle types
-export interface ThemeLifecycleState {
-  isInitialized: boolean;
-  isLoading: boolean;
-  error: Error | null;
-}
+export type ThemeLifecycleState = 'initializing' | 'active' | 'error' | 'cleanup';
 
 export interface ThemeLifecycleOptions {
   autoInit?: boolean;
@@ -49,9 +45,10 @@ export interface ThemeSyncOptions {
   retryAttempts?: number;
   onSync?: () => void;
   onError?: (error: Error) => void;
+  debounce_ms?: number;
 }
 
-// Preview preferences matching database schema
+// Preview preferences
 export interface PreviewPreferences extends JsonObject {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -59,11 +56,21 @@ export interface PreviewPreferences extends JsonObject {
   update_debounce_ms: number;
 }
 
-// Base theme interface matching database schema exactly
+// Base theme interface
 export interface ThemeBase extends JsonObject {
-  // Required fields
   id?: string;
   site_title: string;
+  tagline?: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -71,55 +78,38 @@ export interface ThemeBase extends JsonObject {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
-
-  // Optional fields
-  tagline?: string;
-  primary_color?: string;
-  secondary_color?: string;
-  accent_color?: string;
-  text_primary_color?: string;
-  text_secondary_color?: string;
-  text_link_color?: string;
-  text_heading_color?: string;
-  border_radius?: string;
-  spacing_unit?: string;
-  transition_duration?: string;
-  shadow_color?: string;
-  hover_scale?: string;
-  neon_cyan?: string;
-  neon_pink?: string;
-  neon_purple?: string;
-  box_shadow?: string;
-  backdrop_blur?: string;
-  logo_url?: string;
-  favicon_url?: string;
-
-  // Theme system fields
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
-  preview_preferences: PreviewPreferences;
-  inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: JsonObject;
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
+  preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
+  inheritance_strategy: ThemeInheritanceStrategy;
+  inherited_settings: Record<string, Json>;
+  logo_url?: string;
+  favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-
-  // Allow additional string-indexed properties
   [key: string]: Json | undefined;
 }
 
-// Database row type with additional fields
+// Database row type
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
 }
 
-// Form data type matching function parameters
+// Form data type
 export interface ThemeUpdatePayload {
   p_site_title: string;
   p_tagline: string;
@@ -150,6 +140,4 @@ export interface ThemeUpdatePayload {
 // Utility types
 export type PartialTheme = Partial<ThemeBase>;
 export type ThemeFormData = ThemeBase;
-
-// Re-export for backward compatibility
 export type Theme = ThemeBase;
