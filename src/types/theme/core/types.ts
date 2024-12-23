@@ -1,4 +1,4 @@
-import { Json } from './json';
+import { Json } from '../core/json';
 
 // Core theme enums with strict typing
 export type ThemeMode = 'light' | 'dark' | 'system';
@@ -13,6 +13,7 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
+  [key: string]: Json;
 }
 
 // Base theme interface with strict typing
@@ -62,14 +63,14 @@ export interface ThemeBase {
   last_sync?: string;
 }
 
-// Theme configuration row type for database operations
+// Database row type
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
 }
 
-// Form data type with all required fields
-export type ThemeFormData = ThemeBase;
+// Form data type
+export type ThemeFormData = Partial<ThemeBase>;
 
-// Theme type alias for consistency
+// Theme type alias
 export type Theme = ThemeBase;

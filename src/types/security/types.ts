@@ -1,3 +1,5 @@
+import { Json } from '../core/json';
+
 export interface SecuritySettings {
   ip_blacklist: string[];
   ip_whitelist: string[];
@@ -13,7 +15,7 @@ export interface SecurityLog {
   user_id: string;
   event_type: string;
   severity: string;
-  details: Record<string, unknown>;
+  details: Record<string, Json>;
   ip_address?: string;
   created_at: string;
 }
@@ -23,10 +25,10 @@ export interface SecurityEvent {
   user_id?: string;
   event_type: string;
   severity: 'low' | 'medium' | 'high' | 'critical';
-  details?: Record<string, any>;
+  details?: Record<string, Json>;
   ip_address?: string;
   created_at: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, Json>;
 }
 
 export interface SecurityAuditLog extends SecurityEvent {
