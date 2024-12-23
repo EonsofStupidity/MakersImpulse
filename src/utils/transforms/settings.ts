@@ -75,20 +75,3 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
     transition_type: (typedData.transition_type as TransitionType) || 'fade'
   } as ThemeBase;
 };
-
-export const convertToUpdateParams = (settings: Partial<ThemeBase>): Record<string, string> => {
-  const prefix = 'p_';
-  const result: Record<string, string> = {};
-
-  Object.entries(settings).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
-      if (typeof value === 'object') {
-        result[`${prefix}${key}`] = JSON.stringify(value);
-      } else {
-        result[`${prefix}${key}`] = String(value);
-      }
-    }
-  });
-
-  return result;
-};

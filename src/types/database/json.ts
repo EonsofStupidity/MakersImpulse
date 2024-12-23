@@ -1,12 +1,10 @@
 // Basic JSON value types
 export type JsonPrimitive = string | number | boolean | null;
-export type JsonArray = Json[];
 export type JsonObject = { [key: string]: Json };
-
-// Combined JSON type
+export type JsonArray = Json[];
 export type Json = JsonPrimitive | JsonObject | JsonArray;
 
-// Type guard for JSON
+// Type guard for JSON validation
 export function isJson(value: unknown): value is Json {
   if (value === null) return true;
   if (typeof value === "boolean") return true;
