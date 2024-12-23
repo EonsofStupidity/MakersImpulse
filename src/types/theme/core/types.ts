@@ -7,7 +7,7 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Preview preferences
+// Preview preferences with proper JSON typing
 export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -15,7 +15,7 @@ export interface PreviewPreferences extends Record<string, Json> {
   update_debounce_ms: number;
 }
 
-// Base theme interface
+// Base theme interface with strict typing
 export interface ThemeBase extends Record<string, Json | undefined> {
   id?: string;
   site_title: string;
@@ -61,7 +61,7 @@ export interface ThemeBase extends Record<string, Json | undefined> {
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 
-// Database row type
+// Database row type with additional fields
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
@@ -70,3 +70,6 @@ export interface ThemeConfigurationRow extends ThemeBase {
 // Form data type
 export type ThemeFormData = ThemeBase;
 export type Theme = ThemeBase;
+
+// Utility type for partial theme updates
+export type PartialTheme = Partial<ThemeBase>;
