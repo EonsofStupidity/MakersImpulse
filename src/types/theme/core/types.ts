@@ -1,4 +1,4 @@
-import { Json } from '../../core/json';
+import { Json } from '@/types/core/json';
 
 // Theme enums
 export type ThemeMode = 'light' | 'dark' | 'system';

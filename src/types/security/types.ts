@@ -1,4 +1,4 @@
-import { Json } from '../core/json';
+import { Json } from '@/types/core/json';
 
 export interface SecuritySettings extends Record<string, Json | undefined> {
   ip_blacklist: string[];

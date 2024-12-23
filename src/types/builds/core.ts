@@ -1,4 +1,4 @@
-import { Json } from '../core/json';
+import { Json } from '@/types/core/json';
 
 export interface BuildVolume {
   x: number;
@@ -30,4 +30,12 @@ export interface Build {
   parts: BuildPart[];
   images: BuildImage[];
   createdAt: string;
+}
+
+// Query parameters for build listing
+export interface BuildQueryParams {
+  userId?: string;
+  name?: string;
+  sort?: string;
+  order?: 'asc' | 'desc';
 }
