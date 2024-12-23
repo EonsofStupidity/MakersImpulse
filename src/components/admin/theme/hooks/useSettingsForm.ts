@@ -8,12 +8,16 @@ export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
+  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase & Record<string, any>>("theme", "base");
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
-      console.log("Updating settings:", settings);
-      await updateSetting(settings);
+      const updatedSettings = {
+        ...themeSettings?.value,
+        ...settings
+      } as ThemeBase;
+      
+      await updateSetting(updatedSettings);
       toast.success("Theme settings updated");
     } catch (error) {
       console.error("Error updating settings:", error);

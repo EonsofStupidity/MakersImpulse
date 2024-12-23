@@ -4,58 +4,17 @@ import { toast } from "sonner";
 import { ColorPreview } from "./ColorPreview";
 import { TextPreview } from "./TextPreview";
 import { AnimationPreview } from "./AnimationPreview";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
-import { useThemeInheritance } from "@/hooks/useThemeInheritance";
+import { AdvancedCSSEditor } from "../ThemeAdvancedCSSEditor";
+import { ThemeBase } from "@/types/theme";
 
 interface SettingsPreviewProps {
-  settings: {
-    site_title: string;
-    tagline?: string;
-    primary_color: string;
-    secondary_color: string;
-    accent_color: string;
-    neon_cyan?: string;
-    neon_pink?: string;
-    neon_purple?: string;
-    logo_url?: string;
-    favicon_url?: string;
-    parent_theme_id?: string;
-    inheritance_strategy?: 'merge' | 'override' | 'replace';
-  };
-  isLoading?: boolean;
-  error?: Error | null;
+  settings: ThemeBase;
 }
 
-export const SettingsPreview: React.FC<SettingsPreviewProps> = ({ 
-  settings,
-  isLoading,
-  error
-}) => {
-  const { parentTheme, isParentLoading } = useThemeInheritance(settings.parent_theme_id);
-
-  if (error) {
-    return (
-      <Alert variant="destructive">
-        <AlertDescription>
-          Error loading theme settings: {error.message}
-        </AlertDescription>
-      </Alert>
-    );
-  }
-
-  if (isLoading || isParentLoading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  const effectiveSettings = settings.parent_theme_id && parentTheme ? {
-    ...parentTheme,
-    ...settings
-  } : settings;
+export const ThemePreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
+  React.useEffect(() => {
+    toast.success("Preview updated with new colors");
+  }, [settings.primary_color, settings.secondary_color, settings.accent_color]);
 
   return (
     <AnimatePresence mode="wait">
@@ -65,50 +24,34 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          key={effectiveSettings.primary_color}
+          key={settings.primary_color}
         >
-          {effectiveSettings.logo_url && (
+          {settings.logo_url && (
             <img
-              src={effectiveSettings.logo_url}
+              src={settings.logo_url}
               alt="Logo"
               className="w-12 h-12 object-contain rounded"
             />
           )}
           <div>
-            <h2 className="text-xl font-bold" style={{ color: effectiveSettings.primary_color }}>
-              {effectiveSettings.site_title}
+            <h2 className="text-xl font-bold" style={{ color: settings.primary_color }}>
+              {settings.site_title}
             </h2>
-            {effectiveSettings.tagline && (
-              <p className="text-sm" style={{ color: effectiveSettings.secondary_color }}>
-                {effectiveSettings.tagline}
+            {settings.tagline && (
+              <p className="text-sm" style={{ color: settings.secondary_color }}>
+                {settings.tagline}
               </p>
             )}
           </div>
         </motion.div>
 
-        {settings.parent_theme_id && parentTheme && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-4"
-          >
-            <Alert>
-              <AlertDescription>
-                Inheriting settings from theme: {parentTheme.site_title}
-                <br />
-                Strategy: {settings.inheritance_strategy || 'merge'}
-              </AlertDescription>
-            </Alert>
-          </motion.div>
-        )}
-
         <div className="space-y-4">
-          <ColorPreview colors={effectiveSettings} />
-          <TextPreview colors={effectiveSettings} />
-          <AnimationPreview colors={effectiveSettings} />
+          <ColorPreview colors={settings} />
+          <TextPreview colors={settings} />
+          <AnimationPreview colors={settings} />
         </div>
 
-        {effectiveSettings.favicon_url && (
+        {settings.favicon_url && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -116,12 +59,34 @@ export const SettingsPreview: React.FC<SettingsPreviewProps> = ({
           >
             <p className="text-sm text-gray-400 mb-2">Favicon Preview:</p>
             <img
-              src={effectiveSettings.favicon_url}
+              src={settings.favicon_url}
               alt="Favicon"
               className="w-8 h-8 object-contain"
             />
           </motion.div>
         )}
+
+        <AdvancedCSSEditor
+          currentCSS={`/* Current Theme CSS Variables */
+:root {
+  --primary: ${settings.primary_color};
+  --secondary: ${settings.secondary_color};
+  --accent: ${settings.accent_color};
+  --neon-cyan: ${settings.neon_cyan};
+  --neon-pink: ${settings.neon_pink};
+  --neon-purple: ${settings.neon_purple};
+}`}
+          onSave={(css) => {
+            const styleSheet = new CSSStyleSheet();
+            styleSheet.replaceSync(css);
+            document.adoptedStyleSheets = [styleSheet];
+            toast.success("CSS updated successfully");
+          }}
+          onReset={() => {
+            document.adoptedStyleSheets = [];
+            toast.success("CSS reset to default");
+          }}
+        />
       </div>
     </AnimatePresence>
   );

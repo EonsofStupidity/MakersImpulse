@@ -9,7 +9,12 @@ export const useSettingsForm = () => {
   const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings("theme", "base");
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
-    await updateSetting(settings);
+    const updatedSettings = {
+      ...themeSettings?.value,
+      ...settings
+    } as ThemeBase;
+    
+    await updateSetting(updatedSettings);
   };
 
   const handleResetToDefault = async () => {
