@@ -4,7 +4,7 @@ export interface BuildVolume {
   x: number;
   y: number;
   z: number;
-  units: string;
+  units: 'mm' | 'cm' | 'inches';
 }
 
 export interface BuildPart {
@@ -12,7 +12,7 @@ export interface BuildPart {
   name: string;
   quantity: number;
   notes?: string;
-  attributes?: Record<string, unknown>;
+  attributes?: Record<string, Json>;
 }
 
 export interface BuildImage {
@@ -29,20 +29,5 @@ export interface Build {
   buildVolume: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
-  createdAt?: string;
-}
-
-export interface BuildFormData {
-  name: string;
-  description?: string;
-  buildVolume?: BuildVolume;
-  parts?: BuildPart[];
-  images?: BuildImage[];
-}
-
-export interface BuildQueryParams {
-  userId?: string;
-  name?: string;
-  sort?: string;
-  order?: 'asc' | 'desc';
+  createdAt: string;
 }

@@ -8,16 +8,15 @@ export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
 // Preview preferences
-export interface PreviewPreferences {
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json;
 }
 
 // Base theme interface
-export interface ThemeBase {
+export interface ThemeBase extends Record<string, Json | undefined> {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -62,5 +61,12 @@ export interface ThemeBase {
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
 }
 
+// Database row type
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
+}
+
 // Form data type
 export type ThemeFormData = ThemeBase;
+export type Theme = ThemeBase;

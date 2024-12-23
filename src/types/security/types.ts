@@ -1,6 +1,6 @@
 import { Json } from '../core/json';
 
-export interface SecuritySettings {
+export interface SecuritySettings extends Record<string, Json | undefined> {
   ip_blacklist: string[];
   ip_whitelist: string[];
   max_login_attempts: number;
@@ -8,16 +8,6 @@ export interface SecuritySettings {
   session_timeout_minutes: number;
   lockout_duration_minutes: number;
   rate_limit_window_minutes: number;
-}
-
-export interface SecurityLog {
-  id: string;
-  user_id: string;
-  event_type: string;
-  severity: string;
-  details: Record<string, Json>;
-  ip_address?: string;
-  created_at: string;
 }
 
 export interface SecurityEvent {
