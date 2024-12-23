@@ -1,5 +1,5 @@
 /**
- * Core JSON type definitions
+ * Core JSON type definitions with strict type safety
  */
 
 // Basic JSON value types
@@ -8,7 +8,12 @@ export type JsonObject = { [key: string]: Json | undefined };
 export type JsonArray = Json[];
 export type Json = JsonPrimitive | JsonObject | JsonArray;
 
-// Type guard for JSON validation
+// Database JSON types that match Supabase schema
+export type DbJson = Json;
+export type DbJsonObject = { [key: string]: DbJson };
+export type DbJsonArray = DbJson[];
+
+// Type guards for runtime validation
 export function isJson(value: unknown): value is Json {
   if (value === null) return true;
   if (typeof value === "boolean") return true;
@@ -20,8 +25,3 @@ export function isJson(value: unknown): value is Json {
   }
   return false;
 }
-
-// Database JSON types
-export type DbJson = Json;
-export type DbJsonObject = { [key: string]: DbJson };
-export type DbJsonArray = DbJson[];
