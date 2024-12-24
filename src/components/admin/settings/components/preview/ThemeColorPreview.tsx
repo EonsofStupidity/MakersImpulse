@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types/theme/core/types';
 
 interface ThemeColorPreviewProps {
   colors: Partial<ThemeBase>;
@@ -13,15 +13,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.primary_color }}
+            style={{ backgroundColor: colors.colors?.primary }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.secondary_color }}
+            style={{ backgroundColor: colors.colors?.secondary }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.accent_color }}
+            style={{ backgroundColor: colors.colors?.accent }}
           />
         </div>
       </div>
@@ -31,15 +31,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.text_primary_color }}
+            style={{ backgroundColor: colors.colors?.text.primary }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.text_secondary_color }}
+            style={{ backgroundColor: colors.colors?.text.secondary }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.text_heading_color }}
+            style={{ backgroundColor: colors.colors?.text.heading }}
           />
         </div>
       </div>
@@ -49,15 +49,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.neon_cyan }}
+            style={{ backgroundColor: colors.colors?.neon.cyan }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.neon_pink }}
+            style={{ backgroundColor: colors.colors?.neon.pink }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: colors.neon_purple }}
+            style={{ backgroundColor: colors.colors?.neon.purple }}
           />
         </div>
       </div>
