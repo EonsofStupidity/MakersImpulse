@@ -1,31 +1,52 @@
-import { ThemeBase, ThemeConfigurationRow } from '../theme/core/types';
+import { Json } from '../core/json';
 
-export interface TableDefinition<T> {
-  Row: T;
-  Insert: Partial<T>;
-  Update: Partial<T>;
-}
-
-export type ThemeTable = TableDefinition<ThemeConfigurationRow>;
-export type ActivityTable = TableDefinition<ActivityRow>;
-export type MediaTable = TableDefinition<MediaRow>;
-
-export interface ActivityRow {
+// Exact match to Supabase schema
+export interface ThemeRow {
   id: string;
-  user_id: string;
-  action: string;
-  details: string;
-  created_at: string;
+  site_title: string;
+  tagline?: string;
+  primary_color: string;
+  secondary_color: string;
+  accent_color: string;
+  text_primary_color: string;
+  text_secondary_color: string;
+  text_link_color: string;
+  text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+  font_family_heading: string;
+  font_family_body: string;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
+  shadow_color: string;
+  hover_scale: string;
+  box_shadow: string;
+  backdrop_blur: string;
+  theme_mode: 'light' | 'dark' | 'system';
+  transition_type: 'fade' | 'slide' | 'scale' | 'blur';
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
+  preview_preferences: Json;
+  parent_theme_id?: string;
+  inheritance_strategy: 'merge' | 'override' | 'replace';
+  inherited_settings: Json;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export interface SecurityLogRow extends ActivityRow {
-  severity: 'info' | 'warning' | 'error';
-  metadata: Json;
+export interface ThemeConfigurationRow extends ThemeRow {
+  state_version: number;
+  last_sync: string;
 }
 
-export interface MediaRow {
-  id: string;
-  url: string;
-  type: string;
-  created_at: string;
-}
+export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
