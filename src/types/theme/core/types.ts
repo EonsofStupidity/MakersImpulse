@@ -6,36 +6,14 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-export interface PreviewPreferences extends Record<string, Json> {
+export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code?: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
-  error?: string;
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  last_sync: string;
-  error?: string;
-}
-
-export interface ThemeBase extends Record<string, any> {
+export interface ThemeBase {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -89,18 +67,19 @@ export type SettingsFormData = ThemeBase;
 export type Settings = ThemeBase;
 export type Theme = ThemeBase;
 
-export interface SettingsResponse<T = any> {
-  id: string;
-  value: T;
-}
-
 export interface AuthUser {
   id: string;
-  email: string;
-  displayName?: string;
+  email?: string;
+  displayName: string;
   bio?: string;
   website?: string;
   location?: string;
-  created_at?: string;
+  created_at: string;
   role?: 'subscriber' | 'maker' | 'admin' | 'super_admin';
+  metadata?: Record<string, Json>;
+}
+
+export interface SettingsResponse<T = any> {
+  id: string;
+  value: T;
 }

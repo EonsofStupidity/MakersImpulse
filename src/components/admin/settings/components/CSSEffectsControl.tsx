@@ -50,18 +50,18 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         'hover_scale',
         'box_shadow',
         'backdrop_blur'
-      ];
+      ] as const;
 
       const numberFields = [
         'default_animation_duration'
-      ];
+      ] as const;
 
-      if (stringFields.includes(name)) {
+      if (stringFields.includes(name as any)) {
         form.setValue(name, String(newValue));
-      } else if (numberFields.includes(name)) {
+      } else if (numberFields.includes(name as any)) {
         form.setValue(name, Number(newValue));
       } else {
-        form.setValue(name, newValue);
+        form.setValue(name, newValue as any);
       }
     } else {
       onChange(newValue);
