@@ -3,22 +3,22 @@ export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
 export interface AuthUser {
   id: string;
   email?: string | null;
-  displayName?: string;
+  role?: UserRole;
   username?: string;
-  avatar_url?: string;
+  displayName?: string;
   bio?: string;
   website?: string;
   location?: string;
-  created_at?: string;
-  role?: UserRole;
-  metadata?: Record<string, any>;
 }
 
-export interface Profile extends AuthUser {
-  updated_at?: string;
-  last_seen?: string;
-  is_banned?: boolean;
-  ban_reason?: string;
-  banned_at?: string;
-  banned_by?: string;
+export interface AuthSession {
+  user: AuthUser;
+  expires_at?: number;
+}
+
+export interface AuthState {
+  isLoading: boolean;
+  hasAccess: boolean;
+  error: Error | { message: string } | null;
+  isTransitioning?: boolean;
 }

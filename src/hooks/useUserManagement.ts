@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { UserRole } from '@/types/auth/types';
 import { Settings } from '@/types/theme';
-import { useAuthStore } from '@/lib/store/auth-store';
 
 export const useUserManagement = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { session } = useAuthStore();
 
   const fetchUsers = async () => {
     try {
@@ -19,9 +18,8 @@ export const useUserManagement = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
       setUsers(data || []);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching users:', err);
       setError(err.message);
       toast.error('Failed to fetch users');
@@ -30,7 +28,7 @@ export const useUserManagement = () => {
     }
   };
 
-  const updateUserRole = async (userId: string, role: string) => {
+  const updateUserRole = async (userId: string, role: UserRole) => {
     try {
       const { error } = await supabase
         .from('profiles')
@@ -38,10 +36,9 @@ export const useUserManagement = () => {
         .eq('id', userId);
 
       if (error) throw error;
-
       toast.success('User role updated successfully');
       await fetchUsers();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error updating user role:', err);
       toast.error('Failed to update user role');
     }
@@ -55,37 +52,33 @@ export const useUserManagement = () => {
         .eq('id', userId);
 
       if (error) throw error;
-
       toast.success('User deleted successfully');
       await fetchUsers();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error deleting user:', err);
       toast.error('Failed to delete user');
     }
   };
 
-  const updateUserSettings = async (userId: string, settings: Partial<Settings>) => {
+  const updateUserSettings = async (userId: string, userSettings: Partial<Settings>) => {
     try {
       const { error } = await supabase
         .from('profiles')
-        .update({ settings })
+        .update({ metadata: { settings: userSettings } })
         .eq('id', userId);
 
       if (error) throw error;
-
       toast.success('User settings updated successfully');
       await fetchUsers();
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error updating user settings:', err);
       toast.error('Failed to update user settings');
     }
   };
 
   useEffect(() => {
-    if (session?.user) {
-      fetchUsers();
-    }
-  }, [session]);
+    fetchUsers();
+  }, []);
 
   return {
     users,

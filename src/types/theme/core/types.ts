@@ -5,17 +5,12 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
-export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
-
-export type CSSValue = string;
-export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: boolean | string | number;
 }
 
 export interface ThemeBase {
@@ -34,18 +29,18 @@ export interface ThemeBase {
   neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
-  font_size_base: CSSValue;
-  font_weight_normal: CSSValue;
-  font_weight_bold: CSSValue;
-  line_height_base: CSSValue;
-  letter_spacing: CSSValue;
-  border_radius: CSSValue;
-  spacing_unit: CSSValue;
-  transition_duration: CSSValue;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
+  letter_spacing: string;
+  border_radius: string;
+  spacing_unit: string;
+  transition_duration: string;
   shadow_color: string;
-  hover_scale: CSSValue;
+  hover_scale: string;
   box_shadow: string;
-  backdrop_blur: CSSValue;
+  backdrop_blur: string;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
@@ -56,23 +51,36 @@ export interface ThemeBase {
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
-  logo_url?: string;
-  favicon_url?: string;
-  updated_at?: string;
-  updated_by?: string;
-  [key: string]: Json | undefined;
 }
 
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
+export type SettingsFormData = ThemeBase;
+
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
   last_sync: string;
-}
-
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
 }
 
-export type ThemeFormData = ThemeBase;
-export type Settings = ThemeBase;
+export interface ThemeValidationError {
+  field: keyof ThemeBase;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeValidationRule {
+  field: keyof ThemeBase;
+  validate: (value: any) => boolean;
+  message: string;
+}
+
+export type SettingsResponse = {
+  success: boolean;
+  data?: ThemeBase;
+  error?: string;
+};
+
 export type Theme = ThemeBase;
