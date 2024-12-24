@@ -61,44 +61,42 @@ export interface ThemeBase {
   [key: string]: Json | undefined;
 }
 
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+export interface BuildVolume {
+  x: number;
+  y: number;
+  z: number;
+  units: string;
 }
 
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
-  error?: string;
+export interface Build {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  buildVolume: BuildVolume;
+  parts: Record<string, any>;
+  images: string[];
+  createdAt: string;
 }
 
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  error?: string;
-  last_sync?: string;
+export interface ContentWithAuthor {
+  id: string;
+  title: string;
+  content: Json;
+  metadata: Json;
+  slug: string;
+  status: 'draft' | 'published' | 'archived';
+  type: 'template' | 'guide' | 'part' | 'workflow';
+  version: number;
+  created_at: string;
+  updated_at: string;
+  created_by: { display_name: string };
+  updated_by: { display_name: string };
 }
 
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export interface ThemeValidationRule {
-  validate: (value: any) => boolean;
-  message: string;
-}
-
-export interface ThemeLifecycleOptions {
-  autoInit?: boolean;
-  onStateChange?: (state: ThemeLifecycleState) => void;
-}
-
-export interface ThemeSyncOptions {
-  debounce_ms?: number;
-  onSync?: (state: ThemeSyncState) => void;
+export interface BuildQueryParams {
+  userId?: string;
+  name?: string;
+  sort?: string;
+  order?: 'asc' | 'desc';
 }

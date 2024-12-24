@@ -1,13 +1,5 @@
-export type ComponentType = 
-  | 'bearings'
-  | 'extruders'
-  | 'addons'
-  | 'other';
-
-export interface NavigationItem {
-  title: string;
-  href: string;
-  icon?: React.ComponentType;
-  requiresAuth?: boolean;
-  children?: NavigationItem[];
+export interface CustomComponents {
+  IconLeft?: React.ComponentType<any>;
+  IconRight?: React.ComponentType<any>;
+  [key: string]: React.ComponentType<any> | undefined;
 }
