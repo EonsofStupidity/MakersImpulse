@@ -51,15 +51,19 @@ export interface ThemeBase {
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
+  logo_url?: string;
+  favicon_url?: string;
+  updated_at?: string;
+  updated_by?: string;
+}
+
+export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences'> {
+  preview_preferences: Json;
+  state_version: number;
+  last_sync: string;
 }
 
 export type SettingsFormData = ThemeBase;
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  last_sync: string;
-  error?: string;
-}
 
 export interface ThemeValidationError {
   field: keyof ThemeBase;
@@ -72,3 +76,26 @@ export interface ThemeValidationResult {
 }
 
 export type Theme = ThemeBase;
+
+// Type guard for preview preferences
+export function isPreviewPreferences(value: unknown): value is PreviewPreferences {
+  if (!value || typeof value !== 'object') return false;
+  const v = value as PreviewPreferences;
+  return (
+    typeof v.real_time_updates === 'boolean' &&
+    typeof v.animation_enabled === 'boolean' &&
+    typeof v.update_debounce_ms === 'number' &&
+    ['low', 'medium', 'high'].includes(v.glass_effect_level)
+  );
+}
+
+// Helper to convert Json to PreviewPreferences
+export function convertToPreviewPreferences(json: Json): PreviewPreferences {
+  if (isPreviewPreferences(json)) return json;
+  return {
+    real_time_updates: true,
+    animation_enabled: true,
+    glass_effect_level: 'medium',
+    update_debounce_ms: 100
+  };
+}
