@@ -1,27 +1,22 @@
-import React, { memo } from "react";
+import React from 'react';
+import { ThemeBase } from '@/types/theme';
 import { Card } from "@/components/ui/card";
-import { ThemeColorPreview } from "./ThemeColorPreview";
-import { ThemeTextPreview } from "./ThemeTextPreview";
-import { ThemeAnimationPreview } from "./ThemeAnimationPreview";
-import { ThemeBase } from "@/types/theme/core/types";
-import { motion } from "framer-motion";
+import { ThemeColorPreview } from './ThemeColorPreview';
+import { ThemeTextPreview } from './ThemeTextPreview';
+import { ThemeAnimationPreview } from './ThemeAnimationPreview';
+import { motion } from 'framer-motion';
 
 interface PreviewContainerProps {
   settings: ThemeBase;
 }
 
-export const PreviewContainer = memo(({ settings }: PreviewContainerProps) => {
-  const previewStyle = {
-    backdropFilter: `blur(${settings.effects?.backdrop.blur || '0px'})`,
-    transition: `all ${settings.effects?.transition.duration || '0.3s'} ${settings.effects?.transition.type || 'ease'}`,
-  };
-
+export const PreviewContainer: React.FC<PreviewContainerProps> = ({ settings }) => {
   return (
-    <Card className="p-6 space-y-8 bg-gray-800/50 border border-white/10" style={previewStyle}>
+    <Card className="p-6 bg-gray-800/50 border border-white/10">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: settings.animations?.defaultDuration ? settings.animations.defaultDuration / 1000 : 0.3 }}
+        transition={{ duration: 0.3 }}
         className="space-y-8"
       >
         <div>
@@ -39,19 +34,28 @@ export const PreviewContainer = memo(({ settings }: PreviewContainerProps) => {
           <ThemeAnimationPreview colors={settings} />
         </div>
 
-        {settings.preview_preferences && (
-          <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
-            <h4 className="text-sm font-medium text-white mb-2">Preview Preferences</h4>
-            <div className="space-y-2 text-sm text-gray-400">
-              <p>Real-time updates: {settings.preview_preferences.real_time_updates ? 'Enabled' : 'Disabled'}</p>
-              <p>Animations: {settings.preview_preferences.animation_enabled ? 'Enabled' : 'Disabled'}</p>
-              <p>Glass effect: {settings.preview_preferences.glass_effect_level}</p>
-            </div>
+        {settings.logo_url && (
+          <div>
+            <h3 className="text-lg font-medium text-white mb-4">Logo Preview</h3>
+            <img
+              src={settings.logo_url}
+              alt="Logo"
+              className="max-w-[200px] h-auto"
+            />
+          </div>
+        )}
+
+        {settings.favicon_url && (
+          <div>
+            <h3 className="text-lg font-medium text-white mb-4">Favicon Preview</h3>
+            <img
+              src={settings.favicon_url}
+              alt="Favicon"
+              className="w-8 h-8"
+            />
           </div>
         )}
       </motion.div>
     </Card>
   );
-});
-
-PreviewContainer.displayName = "PreviewContainer";
+};
