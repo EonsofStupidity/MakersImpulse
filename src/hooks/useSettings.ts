@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { UnifiedSetting, SettingType } from "@/types/settings";
+import { UnifiedSetting, SettingType } from "@/types/settings/core/types";
 import { toast } from "sonner";
 import { Json } from "@/types/core/json";
 
@@ -25,9 +25,7 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
         throw error;
       }
 
-      const typedData = data as UnifiedSetting<T>;
-      console.log("Fetched settings:", typedData);
-      return typedData;
+      return data as UnifiedSetting<T>;
     }
   });
 
@@ -49,7 +47,6 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
         console.error("Error updating settings:", error);
         throw error;
       }
-      return { success: true };
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey });
