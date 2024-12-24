@@ -56,22 +56,19 @@ export const transformDatabaseToTheme = (data: Json): ThemeBase => {
         blur: data.backdrop_blur as string || '0'
       }
     },
-    mode: (data.theme_mode as ThemeBase['mode']) || 'light',
     animations: {
       enabled: Boolean(data.animations_enabled),
       defaultDuration: Number(data.default_animation_duration) || 300
     },
-    preview: {
+    preview_preferences: {
       real_time_updates: true,
       animation_enabled: true,
       glass_effect_level: 'medium',
       update_debounce_ms: 100,
       ...(data.preview_preferences as Json || {})
     },
-    inheritance: {
-      strategy: (data.inheritance_strategy as ThemeBase['inheritance']['strategy']) || 'merge',
-      settings: (data.inherited_settings as Record<string, any>) || {}
-    }
+    inheritance_strategy: (data.inheritance_strategy as ThemeBase['inheritance_strategy']) || 'merge',
+    inherited_settings: (data.inherited_settings as Record<string, any>) || {}
   };
 };
 
