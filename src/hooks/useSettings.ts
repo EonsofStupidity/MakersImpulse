@@ -1,67 +1,59 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { UnifiedSetting, SettingType } from "@/types/settings/core/types";
-import { toast } from "sonner";
-import { Json } from "@/types/core/json";
+import { useCallback, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { ApplicationSettings } from '@/types/settings/core/types';
 
-export const useSettings = <T extends Json>(category: SettingType, key: string) => {
-  const queryClient = useQueryClient();
-  const queryKey = ["settings", category, key];
+export const useSettings = () => {
+  const [settings, setSettings] = useState<ApplicationSettings | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const { data: setting, isLoading } = useQuery({
-    queryKey,
-    queryFn: async (): Promise<UnifiedSetting<T>> => {
-      console.log("Fetching settings for:", category, key);
-      
+  const fetchSettings = useCallback(async () => {
+    try {
       const { data, error } = await supabase
-        .from("unified_settings")
-        .select("*")
-        .eq("category", category)
-        .eq("key", key)
+        .from('application_settings')
+        .select('*')
         .single();
 
-      if (error) {
-        console.error("Error fetching settings:", error);
-        throw error;
-      }
+      if (error) throw error;
 
-      return data as UnifiedSetting<T>;
+      setSettings(data);
+      console.log('Settings loaded:', data);
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      toast.error('Failed to load application settings');
+    } finally {
+      setIsLoading(false);
     }
-  });
+  }, []);
 
-  const updateSetting = useMutation({
-    mutationFn: async (value: T) => {
-      console.log("Updating settings with value:", value);
-      
-      const { error } = await supabase
-        .from("unified_settings")
-        .upsert({
-          category,
-          key,
-          value: value as Json,
-          updated_at: new Date().toISOString(),
-          updated_by: (await supabase.auth.getUser()).data.user?.id
-        });
+  const updateSettings = useCallback(async (updates: Partial<ApplicationSettings>) => {
+    try {
+      setIsUpdating(true);
+      const { data, error } = await supabase
+        .from('application_settings')
+        .update(updates)
+        .eq('id', settings?.id)
+        .select()
+        .single();
 
-      if (error) {
-        console.error("Error updating settings:", error);
-        throw error;
-      }
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey });
-      toast.success("Settings updated successfully");
-    },
-    onError: (error) => {
-      console.error("Error updating settings:", error);
-      toast.error("Failed to update settings");
+      if (error) throw error;
+
+      setSettings(data);
+      toast.success('Settings updated successfully');
+    } catch (error) {
+      console.error('Error updating settings:', error);
+      toast.error('Failed to update settings');
+    } finally {
+      setIsUpdating(false);
     }
-  });
+  }, [settings?.id]);
 
   return {
-    setting,
+    settings,
     isLoading,
-    updateSetting: updateSetting.mutate,
-    isUpdating: updateSetting.isPending
+    isUpdating,
+    fetchSettings,
+    updateSettings
   };
 };

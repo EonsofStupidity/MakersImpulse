@@ -93,6 +93,45 @@ export type Database = {
         }
         Relationships: []
       }
+      application_settings: {
+        Row: {
+          created_at: string | null
+          created_by: string | null
+          favicon_url: string | null
+          id: string
+          logo_url: string | null
+          metadata: Json | null
+          site_title: string
+          tagline: string | null
+          updated_at: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          created_by?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          metadata?: Json | null
+          site_title?: string
+          tagline?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          created_by?: string | null
+          favicon_url?: string | null
+          id?: string
+          logo_url?: string | null
+          metadata?: Json | null
+          site_title?: string
+          tagline?: string | null
+          updated_at?: string | null
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       auth_error_logs: {
         Row: {
           created_at: string | null
@@ -1777,7 +1816,6 @@ export type Database = {
             | Database["public"]["Enums"]["theme_component_type"]
             | null
           default_animation_duration: number | null
-          favicon_url: string | null
           font_family_body: string
           font_family_heading: string
           font_size_base: string
@@ -1792,7 +1830,6 @@ export type Database = {
           last_sync: string | null
           letter_spacing: string
           line_height_base: string
-          logo_url: string | null
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
@@ -1802,10 +1839,8 @@ export type Database = {
           real_time_toggle: boolean | null
           secondary_color: string | null
           shadow_color: string | null
-          site_title: string
           spacing_unit: string | null
           state_version: number | null
-          tagline: string | null
           text_heading_color: string | null
           text_link_color: string | null
           text_primary_color: string | null
@@ -1826,7 +1861,6 @@ export type Database = {
             | Database["public"]["Enums"]["theme_component_type"]
             | null
           default_animation_duration?: number | null
-          favicon_url?: string | null
           font_family_body: string
           font_family_heading: string
           font_size_base: string
@@ -1841,7 +1875,6 @@ export type Database = {
           last_sync?: string | null
           letter_spacing: string
           line_height_base: string
-          logo_url?: string | null
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
@@ -1851,10 +1884,8 @@ export type Database = {
           real_time_toggle?: boolean | null
           secondary_color?: string | null
           shadow_color?: string | null
-          site_title?: string
           spacing_unit?: string | null
           state_version?: number | null
-          tagline?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
@@ -1875,7 +1906,6 @@ export type Database = {
             | Database["public"]["Enums"]["theme_component_type"]
             | null
           default_animation_duration?: number | null
-          favicon_url?: string | null
           font_family_body?: string
           font_family_heading?: string
           font_size_base?: string
@@ -1890,7 +1920,6 @@ export type Database = {
           last_sync?: string | null
           letter_spacing?: string
           line_height_base?: string
-          logo_url?: string | null
           neon_cyan?: string | null
           neon_pink?: string | null
           neon_purple?: string | null
@@ -1900,10 +1929,8 @@ export type Database = {
           real_time_toggle?: boolean | null
           secondary_color?: string | null
           shadow_color?: string | null
-          site_title?: string
           spacing_unit?: string | null
           state_version?: number | null
-          tagline?: string | null
           text_heading_color?: string | null
           text_link_color?: string | null
           text_primary_color?: string | null
@@ -2690,7 +2717,6 @@ export type Database = {
             | Database["public"]["Enums"]["theme_component_type"]
             | null
           default_animation_duration: number | null
-          favicon_url: string | null
           font_family_body: string
           font_family_heading: string
           font_size_base: string
@@ -2705,7 +2731,6 @@ export type Database = {
           last_sync: string | null
           letter_spacing: string
           line_height_base: string
-          logo_url: string | null
           neon_cyan: string | null
           neon_pink: string | null
           neon_purple: string | null
@@ -2715,10 +2740,8 @@ export type Database = {
           real_time_toggle: boolean | null
           secondary_color: string | null
           shadow_color: string | null
-          site_title: string
           spacing_unit: string | null
           state_version: number | null
-          tagline: string | null
           text_heading_color: string | null
           text_link_color: string | null
           text_primary_color: string | null
