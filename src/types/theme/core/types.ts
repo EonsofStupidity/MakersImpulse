@@ -7,15 +7,15 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Strictly typed preview preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: boolean | number | GlassEffectLevel | undefined;
 }
 
-// Base theme interface with string keys only
+// Base theme interface with explicit property types
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -53,15 +53,14 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, Json>;
+  inherited_settings: Record<string, unknown>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  [key: string]: string | number | boolean | PreviewPreferences | Record<string, Json> | undefined | ThemeMode | TransitionType | ThemeComponentType | ThemeInheritanceStrategy;
 }
 
-// Type for form data that matches ThemeBase
+// Type aliases for form data and settings
 export type ThemeFormData = ThemeBase;
 export type SettingsFormData = ThemeBase;
 export type Settings = ThemeBase;
