@@ -1,43 +1,13 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types/theme';
+import { useThemePreview } from '@/hooks/theme/useThemePreview';
 
 interface ThemeColorPreviewProps {
   colors: Partial<ThemeBase>;
 }
 
 export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) => {
-  // Handle both nested and flat structures
-  const getColor = (key: string) => {
-    if (colors.colors) {
-      // New nested structure
-      switch (key) {
-        case 'primary': return colors.colors.primary;
-        case 'secondary': return colors.colors.secondary;
-        case 'accent': return colors.colors.accent;
-        case 'text_primary': return colors.colors.text?.primary;
-        case 'text_secondary': return colors.colors.text?.secondary;
-        case 'text_heading': return colors.colors.text?.heading;
-        case 'neon_cyan': return colors.colors.neon?.cyan;
-        case 'neon_pink': return colors.colors.neon?.pink;
-        case 'neon_purple': return colors.colors.neon?.purple;
-        default: return undefined;
-      }
-    } else {
-      // Legacy flat structure
-      switch (key) {
-        case 'primary': return (colors as any).primary_color;
-        case 'secondary': return (colors as any).secondary_color;
-        case 'accent': return (colors as any).accent_color;
-        case 'text_primary': return (colors as any).text_primary_color;
-        case 'text_secondary': return (colors as any).text_secondary_color;
-        case 'text_heading': return (colors as any).text_heading_color;
-        case 'neon_cyan': return (colors as any).neon_cyan;
-        case 'neon_pink': return (colors as any).neon_pink;
-        case 'neon_purple': return (colors as any).neon_purple;
-        default: return undefined;
-      }
-    }
-  };
+  const { getColor } = useThemePreview();
 
   return (
     <div className="grid grid-cols-3 gap-4">
@@ -46,15 +16,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('primary') }}
+            style={{ backgroundColor: getColor('primary', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('secondary') }}
+            style={{ backgroundColor: getColor('secondary', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('accent') }}
+            style={{ backgroundColor: getColor('accent', colors) }}
           />
         </div>
       </div>
@@ -64,15 +34,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('text_primary') }}
+            style={{ backgroundColor: getColor('text_primary', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('text_secondary') }}
+            style={{ backgroundColor: getColor('text_secondary', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('text_heading') }}
+            style={{ backgroundColor: getColor('text_heading', colors) }}
           />
         </div>
       </div>
@@ -82,15 +52,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) 
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('neon_cyan') }}
+            style={{ backgroundColor: getColor('neon_cyan', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('neon_pink') }}
+            style={{ backgroundColor: getColor('neon_pink', colors) }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: getColor('neon_purple') }}
+            style={{ backgroundColor: getColor('neon_purple', colors) }}
           />
         </div>
       </div>
