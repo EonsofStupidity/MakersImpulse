@@ -8,7 +8,6 @@ const previewPreferencesSchema = z.object({
   update_debounce_ms: z.number()
 });
 
-// PURE THEME VALIDATION - NO SETTINGS
 export const themeSchema = z.object({
   colors: z.object({
     primary: z.string(),

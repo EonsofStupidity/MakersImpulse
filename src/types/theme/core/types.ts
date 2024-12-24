@@ -68,7 +68,6 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// PURE THEME - NO SETTINGS CONTAMINATION
 export interface ThemeBase {
   colors: ThemeColors;
   typography: ThemeTypography;
