@@ -7,12 +7,10 @@ export const formatCSSValue = (value: string | number, defaultUnit: CSSUnit = 'p
     return `${value}${defaultUnit}`;
   }
   
-  // If it's already a valid CSS value with a unit, return as is
   if (cssUnits.some(unit => value.endsWith(unit))) {
-    return value;
+    return value as CSSValue;
   }
   
-  // Otherwise, append the default unit
   return `${value}${defaultUnit}`;
 };
 
@@ -34,6 +32,6 @@ export const convertToNumber = (value: CSSValue): number => {
   return num;
 };
 
-export const convertToString = (value: number | string, defaultUnit: CSSUnit = 'px'): CSSValue => {
+export const convertToString = (value: number | string, defaultUnit: CSSUnit = 'px'): string => {
   return formatCSSValue(value, defaultUnit);
 };

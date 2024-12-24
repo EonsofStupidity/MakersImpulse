@@ -1,10 +1,13 @@
-import { Json } from '@/types/core/json';
+import { Json } from '@/types/database/json';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
+export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
+export type CSSValue = `${number}${CSSUnit}` | 'auto' | 'none' | 'inherit';
+export type UserRole = 'admin' | 'super_admin' | 'subscriber' | 'maker';
 
 export interface PreviewPreferences {
   real_time_updates: boolean;
@@ -14,6 +17,7 @@ export interface PreviewPreferences {
 }
 
 export interface ThemeBase {
+  id?: string;
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -50,16 +54,23 @@ export interface ThemeBase {
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
-}
-
-export type SettingsFormData = ThemeBase;
-
-export interface ThemeConfiguration extends ThemeBase {
-  id: string;
+  logo_url?: string;
+  favicon_url?: string;
   created_at?: string;
   updated_at?: string;
-  state_version?: number;
-  last_sync?: string;
+  updated_by?: string;
+}
+
+export interface ThemeLifecycleState {
+  status: 'initial' | 'loading' | 'ready' | 'syncing' | 'error';
+  error?: string;
+  lastSync?: string;
+}
+
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  last_sync: string;
+  error?: string;
 }
 
 export interface ThemeValidationError {
@@ -71,4 +82,17 @@ export interface ThemeValidationError {
 export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
+}
+
+export type Settings = ThemeBase;
+export type SettingsFormData = ThemeBase;
+
+export interface ThemeConfiguration extends ThemeBase {
+  state_version?: number;
+  last_sync?: string;
+}
+
+export interface SettingsResponse {
+  data: Settings;
+  error: null | Error;
 }
