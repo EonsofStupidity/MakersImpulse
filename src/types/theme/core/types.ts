@@ -1,6 +1,5 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
-export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 
 export interface ThemeBase {
   // Colors
@@ -32,6 +31,8 @@ export interface ThemeBase {
   hover_scale: string;
   box_shadow: string;
   backdrop_blur: string;
+
+  // Behavior
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   animations_enabled: boolean;

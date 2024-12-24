@@ -11,7 +11,6 @@ export interface ApplicationSettings {
   updated_by?: string;
 }
 
-// Form data type for settings only - NO THEME STUFF
 export interface SettingsFormData {
   site_title: string;
   tagline?: string;
