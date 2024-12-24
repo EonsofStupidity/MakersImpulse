@@ -68,39 +68,5 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
-  error?: string;
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  error?: string;
-  last_sync?: string;
-}
-
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export type ThemeValidationResult = {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-};
-
-export interface ThemeValidationRule {
-  validate: (value: any) => boolean;
-  message: string;
-}
-
-export interface ThemeLifecycleOptions {
-  autoInit?: boolean;
-  onStateChange?: (state: ThemeLifecycleState) => void;
-}
-
-export interface ThemeSyncOptions {
-  debounce_ms?: number;
-  onSync?: (state: ThemeSyncState) => void;
-}
+export type ThemeFormData = ThemeBase;
+export type Theme = ThemeBase;
