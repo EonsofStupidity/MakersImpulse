@@ -52,6 +52,9 @@ export interface ThemeBase {
   inherited_settings?: Record<string, unknown>
 }
 
+// Form handling type
+export type ThemeFormData = ThemeBase
+
 // Minimal state management type
 export interface ThemeState extends ThemeBase {
   isDirty?: boolean
@@ -59,6 +62,3 @@ export interface ThemeState extends ThemeBase {
   syncStatus?: 'idle' | 'syncing' | 'error'
   syncError?: string
 }
-
-// Form handling type
-export type ThemeFormData = ThemeBase
