@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Build, BuildQueryParams } from "@/types/builds/core";
-import { BuildRow, transformBuildFromDb } from "@/types/database/builds";
+import type { Build, BuildQueryParams } from "@/types";
 
 export const useBuildsQuery = (params?: BuildQueryParams) => {
   return useQuery({
@@ -25,7 +24,7 @@ export const useBuildsQuery = (params?: BuildQueryParams) => {
       
       if (error) throw error;
 
-      return (data as BuildRow[]).map(transformBuildFromDb);
+      return data as Build[];
     }
   });
 };
