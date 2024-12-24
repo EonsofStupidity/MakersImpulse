@@ -20,7 +20,7 @@ interface CSSEffectsControlProps {
   previewClass?: string;
   description?: string;
   form?: UseFormReturn<SettingsFormData>;
-  name?: keyof SettingsFormData;
+  name?: string;
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
