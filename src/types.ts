@@ -10,6 +10,40 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | ''
 export type CSSValue = `${number}${CSSUnit}` | string
 export type SettingType = 'theme' | 'system' | 'user'
 
+// Auth types
+export interface AuthUser {
+  id: string
+  email?: string | null
+  displayName?: string | null
+  username?: string | null
+  bio?: string | null
+  website?: string | null
+  location?: string | null
+  createdAt: string
+  updatedAt: string
+  role?: UserRole
+  avatar_url?: string | null
+  last_seen?: string | null
+  metadata?: Record<string, unknown>
+}
+
+// Profile types
+export interface Profile {
+  id: string
+  username?: string | null
+  display_name?: string | null
+  avatar_url?: string | null
+  bio?: string | null
+  website?: string | null
+  location?: string | null
+  created_at?: string | null
+  updated_at?: string | null
+  role?: UserRole
+  last_seen?: string | null
+  metadata?: Record<string, unknown>
+}
+
+// Direct 1:1 mapping with database columns
 export interface ThemeBase {
   id?: string
   colors?: {
@@ -159,18 +193,6 @@ export interface BuildQueryParams {
 }
 
 export type BuildFormData = Omit<Build, 'id' | 'created_at'>
-
-export interface AuthUser {
-  id: string
-  email: string
-  displayName?: string
-  username?: string
-  bio?: string
-  website?: string
-  location?: string
-  createdAt: string
-  updatedAt: string
-}
 
 export interface ContentWithAuthor {
   id: string

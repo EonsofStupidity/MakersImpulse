@@ -9,7 +9,7 @@ import { Loader2 } from "lucide-react";
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileForm } from '@/components/profile/ProfileForm';
 import { ProfileView } from '@/components/profile/ProfileView';
-import type { AuthUser } from '@/types/auth/types';
+import type { AuthUser } from '@/types';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
