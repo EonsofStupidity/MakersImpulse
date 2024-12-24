@@ -186,7 +186,7 @@ export interface Build {
   created_at: string;
 }
 
-export type BuildFormData = Omit<Build, 'id' | 'created_at'>;
+export interface BuildFormData extends Omit<Build, 'id' | 'created_at'> {}
 
 export interface BuildQueryParams {
   userId?: string;
@@ -229,30 +229,6 @@ export interface ThemeSyncState {
   error?: string;
 }
 
-export interface ThemeStateTypes {
-  isDirty: boolean;
-  lastSync: Date | null;
-  syncStatus: 'idle' | 'syncing' | 'error';
-  syncError?: string;
-}
-
-export interface ThemeStyleTypes {
-  colors: Record<string, string>;
-  typography: Record<string, string>;
-  spacing: Record<string, string>;
-  effects: Record<string, string>;
-}
-
-export interface ThemeAnimationTypes {
-  transitions: Record<TransitionType, string>;
-  timing: string;
-  duration: number;
-  motionPreferences: {
-    reducedMotion: boolean;
-    prefersReducedMotion: boolean;
-  };
-}
-
 // Content Types
 export interface ContentWithAuthor {
   id: string;
@@ -273,12 +249,6 @@ export interface ContentWithAuthor {
   slug?: string;
 }
 
-// User Types
-export interface UserTableRowActionsProps {
-  userId: string;
-  onActionComplete?: () => void;
-}
-
 // Theme Styles
 export interface ThemeStyles {
   colors: Record<string, string>;
@@ -287,19 +257,18 @@ export interface ThemeStyles {
   effects: Record<string, string>;
 }
 
-// Accordion Types
-export interface AccordionItem {
-  id: string;
-  title: string;
-  content: React.ReactNode;
-}
-
-// Schema Types
-export const buildSchema = {
-  // Add schema definition here
-};
-
 // Application Settings
 export interface ApplicationSettings extends ThemeBase {
   // Add any additional application settings here
 }
+
+// Schema
+export const buildSchema = {};
+
+// Form Types
+export type UseFormReturn<T> = {
+  watch: (name?: string) => any;
+  setValue: (name: string, value: any) => void;
+  getValues: () => T;
+  reset: (values?: T) => void;
+};

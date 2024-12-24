@@ -1,16 +1,13 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types";
-import { Card } from "@/components/ui/card";
-
+import { UseFormReturn, ThemeBase } from "@/types";
 import { ParentThemeSelect } from "./theme-inheritance/ParentThemeSelect";
 import { InheritanceStrategySelect } from "./theme-inheritance/InheritanceStrategySelect";
 import { InheritanceStatus } from "./theme-inheritance/InheritanceStatus";
 import { useParentTheme } from "./theme-inheritance/useParentTheme";
 
 interface ThemeInheritanceSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const ThemeInheritanceSection: React.FC<ThemeInheritanceSectionProps> = ({ form }) => {
@@ -23,7 +20,7 @@ export const ThemeInheritanceSection: React.FC<ThemeInheritanceSectionProps> = (
         Theme Inheritance & Presets
       </AccordionTrigger>
       <AccordionContent className="space-y-4 pt-4">
-        <Card className="p-4 space-y-4 bg-gray-800/50 border border-white/10">
+        <div className="p-4 space-y-4 bg-gray-800/50 border border-white/10">
           <ParentThemeSelect form={form} />
           
           {parentThemeId && (
@@ -36,7 +33,7 @@ export const ThemeInheritanceSection: React.FC<ThemeInheritanceSectionProps> = (
               />
             </>
           )}
-        </Card>
+        </div>
       </AccordionContent>
     </AccordionItem>
   );

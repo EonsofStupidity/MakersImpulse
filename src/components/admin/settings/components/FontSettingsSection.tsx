@@ -1,7 +1,6 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types";
+import { UseFormReturn, ThemeBase } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface FontSettingsSectionProps {

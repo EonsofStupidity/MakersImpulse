@@ -1,18 +1,17 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types";
+import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Card } from "@/components/ui/card";
 import { toast } from "sonner";
 
-interface AnimationsSectionProps {
+interface ThemeAnimationsSectionProps {
   form: UseFormReturn<ThemeBase>;
 }
 
-export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) => {
+export const ThemeAnimationsSection: React.FC<ThemeAnimationsSectionProps> = ({ form }) => {
   const handleToggleChange = (field: "real_time_toggle" | "animations_enabled", value: boolean) => {
     form.setValue(field, value);
     toast.success(`${field === "real_time_toggle" ? "Real-time updates" : "Animations"} ${value ? "enabled" : "disabled"}`);
