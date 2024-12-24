@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ThemeMode, TransitionType, GlassEffectLevel, ThemeInheritanceStrategy } from './core/types';
+import { ThemeMode, TransitionType, GlassEffectLevel, ThemeInheritanceStrategy } from './index';
 
 export const previewPreferencesSchema = z.object({
   real_time_updates: z.boolean(),
