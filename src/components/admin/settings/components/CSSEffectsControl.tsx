@@ -5,8 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase, CSSValue } from "@/types/theme";
-import { convertToNumber, convertToString, formatCSSValue } from "@/utils/css";
+import { ThemeBase } from "@/types/theme/core/types";
 
 interface CSSEffectsControlProps {
   label: string;
@@ -58,11 +57,11 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
       ];
 
       if (stringFields.includes(name)) {
-        form.setValue(name, formatCSSValue(newValue));
+        form.setValue(name, String(newValue));
       } else if (numberFields.includes(name)) {
         form.setValue(name, Number(newValue));
       } else {
-        form.setValue(name, newValue as any);
+        form.setValue(name, newValue as never);
       }
     } else {
       onChange(newValue);
@@ -72,7 +71,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
   const renderControl = () => {
     switch (type) {
       case "slider":
-        const numValue = typeof value === 'string' ? convertToNumber(value as CSSValue) : value;
+        const numValue = typeof value === 'string' ? parseFloat(value) : value;
         return (
           <div className="flex items-center gap-4">
             <Slider
@@ -80,13 +79,13 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
               min={min}
               max={max}
               step={step}
-              onValueChange={(values) => handleInputChange(convertToString(values[0]))}
+              onValueChange={(values) => handleInputChange(values[0])}
               className="flex-1"
             />
             <Input
               type="number"
               value={numValue}
-              onChange={(e) => handleInputChange(convertToString(Number(e.target.value)))}
+              onChange={(e) => handleInputChange(Number(e.target.value))}
               className="w-20 bg-gray-700/50 border-gray-600 text-white"
               min={min}
               max={max}

@@ -47,7 +47,7 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: PreviewPreferences & Record<string, Json>;
+  preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
@@ -70,17 +70,5 @@ export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
 }
-
-export interface ThemeValidationRule {
-  field: keyof ThemeBase;
-  validate: (value: any) => boolean;
-  message: string;
-}
-
-export type SettingsResponse = {
-  success: boolean;
-  data?: ThemeBase;
-  error?: string;
-};
 
 export type Theme = ThemeBase;

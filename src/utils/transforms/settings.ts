@@ -8,7 +8,6 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
 
   const typedData = data as Record<string, Json>;
 
-  // Ensure inherited_settings is properly typed
   const inherited_settings: Record<string, Json> = {};
   if (typedData.inherited_settings && typeof typedData.inherited_settings === 'object') {
     Object.entries(typedData.inherited_settings as Record<string, Json>).forEach(([key, value]) => {
@@ -16,7 +15,6 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
     });
   }
 
-  // Parse preview_preferences if it's a string
   const preview_preferences = typeof typedData.preview_preferences === 'string' 
     ? JSON.parse(typedData.preview_preferences)
     : typedData.preview_preferences || {
@@ -26,24 +24,17 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
         update_debounce_ms: 100
       };
 
-  // Validate and transform theme mode
   const theme_mode = (typedData.theme_mode as string) || 'light';
   if (!['light', 'dark', 'system'].includes(theme_mode)) {
     throw new Error('Invalid theme mode');
   }
 
-  // Validate and transform inheritance strategy
   const inheritance_strategy = (typedData.inheritance_strategy as string) || 'merge';
   if (!['merge', 'override', 'replace'].includes(inheritance_strategy)) {
     throw new Error('Invalid inheritance strategy');
   }
 
   return {
-    ...typedData,
-    theme_mode,
-    inheritance_strategy,
-    inherited_settings,
-    preview_preferences,
     site_title: typedData.site_title as string || 'Default Title',
     primary_color: typedData.primary_color as string || '#000000',
     secondary_color: typedData.secondary_color as string || '#000000',
@@ -69,9 +60,14 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
     neon_cyan: typedData.neon_cyan as string || '#00ffff',
     neon_pink: typedData.neon_pink as string || '#ff00ff',
     neon_purple: typedData.neon_purple as string || '#800080',
+    theme_mode,
+    transition_type: (typedData.transition_type as TransitionType) || 'fade',
     real_time_toggle: Boolean(typedData.real_time_toggle),
     animations_enabled: Boolean(typedData.animations_enabled),
     default_animation_duration: Number(typedData.default_animation_duration) || 300,
-    transition_type: (typedData.transition_type as TransitionType) || 'fade'
+    preview_preferences,
+    inheritance_strategy,
+    inherited_settings,
+    ...typedData
   } as ThemeBase;
 };
