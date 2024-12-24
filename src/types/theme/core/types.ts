@@ -6,6 +6,8 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
+export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
+export type CSSValue = `${number}${CSSUnit}`;
 
 // Preview Preferences
 export interface PreviewPreferences {
@@ -52,4 +54,30 @@ export interface ThemeBase {
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, any>;
   component_type?: ThemeComponentType;
+}
+
+// Validation Types
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+// Lifecycle Types
+export interface ThemeLifecycleState {
+  isInitialized: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+// Sync Types
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  lastSync?: string;
+  error?: string;
 }
