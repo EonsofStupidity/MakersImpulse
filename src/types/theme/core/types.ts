@@ -7,6 +7,30 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Lifecycle and sync states
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error';
+  error?: string;
+}
+
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  last_sync: string;
+  error?: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export type ThemeValidationRule = (value: any) => boolean | string;
+
 // Strictly typed preview preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
@@ -71,3 +95,6 @@ export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
 }
+
+// Helper type to extract string keys from ThemeBase
+export type ThemeBaseStringKeys = Extract<keyof ThemeBase, string>;

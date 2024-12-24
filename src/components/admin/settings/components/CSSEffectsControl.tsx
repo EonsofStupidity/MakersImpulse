@@ -20,7 +20,7 @@ interface CSSEffectsControlProps {
   previewClass?: string;
   description?: string;
   form?: UseFormReturn<SettingsFormData>;
-  name?: string;
+  name?: keyof SettingsFormData;
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
@@ -40,7 +40,9 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      form.setValue(name, String(newValue));
+      // Convert to string for form values that expect strings
+      const convertedValue = typeof newValue === 'number' ? String(newValue) : newValue;
+      form.setValue(name, convertedValue as any);
     } else {
       onChange(newValue);
     }
@@ -52,7 +54,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         return (
           <div className="flex items-center gap-4">
             <Slider
-              value={[typeof value === 'number' ? value : 0]}
+              value={[typeof value === 'number' ? value : parseFloat(value) || 0]}
               min={min}
               max={max}
               step={step}
