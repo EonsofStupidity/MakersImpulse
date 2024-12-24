@@ -1,4 +1,4 @@
-import { ThemeBase, TransitionType } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types/theme/core/types';
 import { Json } from '@/types/database/json';
 
 export const transformDatabaseSettings = (data: Json): ThemeBase => {

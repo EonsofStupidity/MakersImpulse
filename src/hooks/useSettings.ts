@@ -10,7 +10,7 @@ export const useSettings = <T extends Json>(category: SettingType, key: string) 
 
   const { data: setting, isLoading } = useQuery({
     queryKey,
-    queryFn: async () => {
+    queryFn: async (): Promise<UnifiedSetting<T>> => {
       console.log("Fetching settings for:", category, key);
       
       const { data, error } = await supabase

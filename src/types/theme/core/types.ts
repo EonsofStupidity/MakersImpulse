@@ -44,5 +44,4 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, any>;
-  component_type?: ThemeComponentType;
 }
