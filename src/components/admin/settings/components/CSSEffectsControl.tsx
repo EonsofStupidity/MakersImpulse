@@ -40,25 +40,28 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      // Convert number to string for string fields
-      const convertedValue = typeof newValue === 'number' && 
-        (name === 'font_size_base' || 
-         name === 'line_height_base' || 
-         name === 'letter_spacing' ||
-         name === 'border_radius' ||
-         name === 'spacing_unit' ||
-         name === 'transition_duration' ||
-         name === 'hover_scale' ||
-         name === 'box_shadow' ||
-         name === 'backdrop_blur')
-        ? String(newValue)
-        : newValue;
-      
-      // Convert string to number for number fields
-      if (name === 'default_animation_duration' && typeof convertedValue === 'string') {
-        form.setValue(name, Number(convertedValue));
+      const stringFields = [
+        'font_size_base',
+        'line_height_base',
+        'letter_spacing',
+        'border_radius',
+        'spacing_unit',
+        'transition_duration',
+        'hover_scale',
+        'box_shadow',
+        'backdrop_blur'
+      ];
+
+      const numberFields = [
+        'default_animation_duration'
+      ];
+
+      if (stringFields.includes(name)) {
+        form.setValue(name, String(newValue));
+      } else if (numberFields.includes(name)) {
+        form.setValue(name, Number(newValue));
       } else {
-        form.setValue(name as any, convertedValue as any);
+        form.setValue(name, newValue);
       }
     } else {
       onChange(newValue);
