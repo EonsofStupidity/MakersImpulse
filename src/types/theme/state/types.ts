@@ -1,6 +1,7 @@
 import { ThemeBase } from '../core/types';
 
 export interface ThemeState extends ThemeBase {
+  // ONLY state management properties
   isDirty: boolean;
   lastSync: Date | null;
   syncStatus: 'idle' | 'syncing' | 'error';

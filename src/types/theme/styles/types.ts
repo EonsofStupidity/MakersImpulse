@@ -2,13 +2,14 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}`;
 
 export interface ThemeStyles {
-  '--primary-color': string;
-  '--secondary-color': string;
-  '--accent-color': string;
-  '--text-primary-color': string;
-  '--text-secondary-color': string;
-  '--text-link-color': string;
-  '--text-heading-color': string;
+  // ONLY CSS variables
+  '--primary': string;
+  '--secondary': string;
+  '--accent': string;
+  '--foreground': string;
+  '--muted-foreground': string;
+  '--link': string;
+  '--heading': string;
   '--neon-cyan': string;
   '--neon-pink': string;
   '--neon-purple': string;
