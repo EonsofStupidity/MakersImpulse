@@ -1,11 +1,11 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types/theme/core/types';
 
 interface ThemeColorPreviewProps {
-  theme: Partial<ThemeBase>;
+  colors: Partial<ThemeBase>;
 }
 
-export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ theme }) => {
+export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ colors }) => {
   return (
     <div className="grid grid-cols-3 gap-4">
       <div>
@@ -13,15 +13,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ theme }) =
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.primary_color }}
+            style={{ backgroundColor: colors.primary_color }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.secondary_color }}
+            style={{ backgroundColor: colors.secondary_color }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.accent_color }}
+            style={{ backgroundColor: colors.accent_color }}
           />
         </div>
       </div>
@@ -31,15 +31,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ theme }) =
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.text_primary_color }}
+            style={{ backgroundColor: colors.text_primary_color }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.text_secondary_color }}
+            style={{ backgroundColor: colors.text_secondary_color }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.text_heading_color }}
+            style={{ backgroundColor: colors.text_heading_color }}
           />
         </div>
       </div>
@@ -49,15 +49,15 @@ export const ThemeColorPreview: React.FC<ThemeColorPreviewProps> = ({ theme }) =
         <div className="space-y-2">
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.neon_cyan }}
+            style={{ backgroundColor: colors.neon_cyan }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.neon_pink }}
+            style={{ backgroundColor: colors.neon_pink }}
           />
           <div 
             className="w-full h-16 rounded-lg transition-colors"
-            style={{ backgroundColor: theme.neon_purple }}
+            style={{ backgroundColor: colors.neon_purple }}
           />
         </div>
       </div>
