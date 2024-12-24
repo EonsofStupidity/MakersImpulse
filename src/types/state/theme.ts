@@ -22,10 +22,3 @@ export interface ThemeSyncState {
   last_sync?: string;
   error?: string;
 }
-
-export interface PreviewPreferences {
-  real_time_updates: boolean;
-  animation_enabled: boolean;
-  glass_effect_level: 'low' | 'medium' | 'high';
-  update_debounce_ms: number;
-}

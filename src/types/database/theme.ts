@@ -1,6 +1,5 @@
 import { Json } from '../core/json';
 
-// Exact match to Supabase schema
 export interface ThemeRow {
   id: string;
   site_title: string;
@@ -46,7 +45,3 @@ export interface ThemeConfigurationRow extends ThemeRow {
   state_version: number;
   last_sync: string;
 }
-
-export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
-export type ThemeMode = 'light' | 'dark' | 'system';
-export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
