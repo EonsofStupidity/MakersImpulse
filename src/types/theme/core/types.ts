@@ -24,6 +24,11 @@ export interface ThemeBase {
   neon_cyan: string;
   neon_pink: string;
   neon_purple: string;
-  transition_type: TransitionType;
+  box_shadow: string;
+  backdrop_blur: string;
   theme_mode: ThemeMode;
+  transition_type: TransitionType;
+  real_time_toggle: boolean;
+  animations_enabled: boolean;
+  default_animation_duration: number;
 }
