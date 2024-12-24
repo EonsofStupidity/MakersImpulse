@@ -12,7 +12,7 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json | boolean | number | GlassEffectLevel;
+  [key: string]: boolean | number | GlassEffectLevel | undefined;
 }
 
 export interface ThemeBase {
@@ -57,10 +57,9 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
   state_version?: number;
   last_sync?: string;
-  [key: string]: Json | string | boolean | number | PreviewPreferences | Record<string, Json> | undefined | ThemeMode | TransitionType | ThemeComponentType | ThemeInheritanceStrategy;
+  [key: string]: string | number | boolean | PreviewPreferences | Record<string, Json> | undefined | ThemeMode | TransitionType | ThemeComponentType | ThemeInheritanceStrategy;
 }
 
 // Type aliases for different use cases
@@ -69,6 +68,12 @@ export type Settings = ThemeBase;
 export type SettingsFormData = ThemeBase;
 export type SettingsResponse = ThemeBase;
 export type Theme = ThemeBase;
+
+// Database row type
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
+}
 
 // Lifecycle and sync types
 export interface ThemeLifecycleState {
