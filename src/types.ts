@@ -8,8 +8,10 @@ export type UserRole = 'admin' | 'editor' | 'user' | 'subscriber'
 export type ContentStatus = 'draft' | 'published' | 'archived'
 export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | ''
 export type CSSValue = `${number}${CSSUnit}` | string
+export type SettingType = 'theme' | 'system' | 'user'
 
 export interface ThemeBase {
+  id?: string
   // Colors (exactly as in DB)
   primary_color: string
   secondary_color: string
@@ -57,13 +59,17 @@ export interface ThemeBase {
   }
   parent_theme_id?: string | null
   inheritance_strategy?: ThemeInheritanceStrategy
-  inherited_settings?: Record<string, unknown>
+  inherited_settings?: Json
 
   // Site Info
   site_title?: string
   tagline?: string
   logo_url?: string
   favicon_url?: string
+
+  // Database fields
+  updated_at?: string
+  updated_by?: string
 }
 
 // Form handling type
@@ -210,6 +216,47 @@ export interface ThemeAnimation {
     scale: string
     blur: string
   }
+  timing: string
+  duration: number
+  motionPreferences: {
+    reducedMotion: boolean
+    prefersReducedMotion: boolean
+  }
+}
+
+// Settings Types
+export interface Settings {
+  id: string
+  category: SettingType
+  key: string
+  value: Json
+  metadata?: Record<string, unknown>
+  is_encrypted?: boolean
+  created_at?: string
+  updated_at?: string
+  created_by?: string
+  updated_by?: string
+}
+
+// Theme State Types
+export interface ThemeStateTypes {
+  isDirty: boolean
+  lastSync: Date | null
+  syncStatus: 'idle' | 'syncing' | 'error'
+  syncError?: string
+}
+
+// Theme Style Types
+export interface ThemeStyleTypes {
+  colors: Record<string, string>
+  typography: Record<string, string>
+  spacing: Record<string, string>
+  effects: Record<string, string>
+}
+
+// Theme Animation Types
+export interface ThemeAnimationTypes {
+  transitions: Record<TransitionType, string>
   timing: string
   duration: number
   motionPreferences: {
