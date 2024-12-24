@@ -12,7 +12,48 @@ export type SettingType = 'theme' | 'system' | 'user'
 
 export interface ThemeBase {
   id?: string
-  // Colors (exactly as in DB)
+  colors?: {
+    primary: string
+    secondary: string
+    accent: string
+    text: {
+      primary: string
+      secondary: string
+      heading: string
+    }
+    neon: {
+      cyan: string
+      pink: string
+      purple: string
+    }
+  }
+  typography?: {
+    fontFamilyHeading: string
+    fontFamilyBody: string
+    fontSizeBase: string
+    fontWeightNormal: string
+    fontWeightBold: string
+    lineHeightBase: string
+    letterSpacing: string
+  }
+  effects?: {
+    borderRadius: string
+    spacingUnit: string
+    transitionDuration: string
+    shadowColor: string
+    hoverScale: string
+    boxShadow: string
+    backdropBlur: string
+  }
+  spacing?: {
+    unit: string
+    scale: Record<string, string>
+  }
+  animations?: {
+    enabled: boolean
+    duration: number
+    type: TransitionType
+  }
   primary_color: string
   secondary_color: string
   accent_color: string
@@ -23,8 +64,6 @@ export interface ThemeBase {
   neon_cyan: string
   neon_pink: string
   neon_purple: string
-
-  // Typography (exactly as in DB)
   font_family_heading: string
   font_family_body: string
   font_size_base: string
@@ -32,8 +71,6 @@ export interface ThemeBase {
   font_weight_bold: string
   line_height_base: string
   letter_spacing: string
-
-  // Layout & Effects (exactly as in DB)
   border_radius: string
   spacing_unit: string
   transition_duration: string
@@ -41,16 +78,12 @@ export interface ThemeBase {
   hover_scale: string
   box_shadow: string
   backdrop_blur: string
-
-  // Behavior (exactly as in DB)
   theme_mode: ThemeMode
   transition_type: TransitionType
   animations_enabled: boolean
   default_animation_duration: number
   real_time_toggle?: boolean
   component_type?: ComponentType
-
-  // Optional fields from DB
   preview_preferences?: {
     real_time_updates: boolean
     animation_enabled: boolean
@@ -60,22 +93,16 @@ export interface ThemeBase {
   parent_theme_id?: string | null
   inheritance_strategy?: ThemeInheritanceStrategy
   inherited_settings?: Json
-
-  // Site Info
   site_title?: string
   tagline?: string
   logo_url?: string
   favicon_url?: string
-
-  // Database fields
   updated_at?: string
   updated_by?: string
 }
 
-// Form handling type
 export type ThemeFormData = ThemeBase
 
-// Minimal state management type
 export interface ThemeState extends ThemeBase {
   isDirty?: boolean
   lastSync?: Date | null
@@ -83,20 +110,17 @@ export interface ThemeState extends ThemeBase {
   syncError?: string
 }
 
-// Theme Lifecycle State
 export interface ThemeLifecycleState {
   status: 'initializing' | 'ready' | 'error' | 'deactivating'
   error?: string
 }
 
-// Theme Sync State
 export interface ThemeSyncState {
   status: 'pending' | 'syncing' | 'completed' | 'error'
   last_sync: string
   error?: string
 }
 
-// Build types
 export interface Build {
   id: string
   user_id: string
@@ -136,7 +160,6 @@ export interface BuildQueryParams {
 
 export type BuildFormData = Omit<Build, 'id' | 'created_at'>
 
-// Auth types
 export interface AuthUser {
   id: string
   email: string
@@ -149,7 +172,6 @@ export interface AuthUser {
   updatedAt: string
 }
 
-// Content types
 export interface ContentWithAuthor {
   id: string
   title: string
@@ -161,7 +183,6 @@ export interface ContentWithAuthor {
   version: number
 }
 
-// Settings types
 export interface ApplicationSettings {
   id: string
   site_title: string
@@ -175,7 +196,6 @@ export interface ApplicationSettings {
   updated_by?: string
 }
 
-// Database types
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export interface BuildRow {
@@ -189,7 +209,6 @@ export interface BuildRow {
   created_at: string
 }
 
-// Theme Database Types
 export interface ThemeConfiguration {
   id: string
   settings: Json
@@ -197,18 +216,15 @@ export interface ThemeConfiguration {
   updated_by?: string
 }
 
-// State Types
 export interface ThemeStateData extends ThemeBase {
   state_version: number
   last_sync: string
 }
 
-// Style Types
 export interface ThemeStyles {
   [key: `--${string}`]: string | number
 }
 
-// Animation Types
 export interface ThemeAnimation {
   transitions: {
     fade: string
@@ -224,7 +240,6 @@ export interface ThemeAnimation {
   }
 }
 
-// Settings Types
 export interface Settings {
   id: string
   category: SettingType
@@ -238,7 +253,6 @@ export interface Settings {
   updated_by?: string
 }
 
-// Theme State Types
 export interface ThemeStateTypes {
   isDirty: boolean
   lastSync: Date | null
@@ -246,7 +260,6 @@ export interface ThemeStateTypes {
   syncError?: string
 }
 
-// Theme Style Types
 export interface ThemeStyleTypes {
   colors: Record<string, string>
   typography: Record<string, string>
@@ -254,7 +267,6 @@ export interface ThemeStyleTypes {
   effects: Record<string, string>
 }
 
-// Theme Animation Types
 export interface ThemeAnimationTypes {
   transitions: Record<TransitionType, string>
   timing: string
