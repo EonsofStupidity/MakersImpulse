@@ -2,11 +2,11 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormRegister, FormState } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types";
 
 interface BasicSettingsSectionProps {
-  register: UseFormRegister<SettingsFormData>;
-  formState: FormState<SettingsFormData>;
+  register: UseFormRegister<ThemeBase>;
+  formState: FormState<ThemeBase>;
 }
 
 export const BasicSettingsSection: React.FC<BasicSettingsSectionProps> = ({

@@ -1,13 +1,13 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from '@/types';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { InfoIcon } from "lucide-react";
 
 interface InheritanceStrategySelectProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const InheritanceStrategySelect: React.FC<InheritanceStrategySelectProps> = ({ form }) => {
@@ -30,15 +30,9 @@ export const InheritanceStrategySelect: React.FC<InheritanceStrategySelectProps>
             <SelectValue placeholder="Select inheritance strategy" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="merge">
-              Merge - Override only specified values
-            </SelectItem>
-            <SelectItem value="override">
-              Override - Keep parent as fallback
-            </SelectItem>
-            <SelectItem value="replace">
-              Replace - Ignore parent values
-            </SelectItem>
+            <SelectItem value="merge">Merge - Override only specified values</SelectItem>
+            <SelectItem value="override">Override - Keep parent as fallback</SelectItem>
+            <SelectItem value="replace">Replace - Ignore parent values</SelectItem>
           </SelectContent>
         </Select>
       </div>

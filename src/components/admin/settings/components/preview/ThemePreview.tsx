@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { ColorPreview } from "./ColorPreview";
 import { TextPreview } from "./TextPreview";
 import { AnimationPreview } from "./AnimationPreview";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from '@/types';
 
 interface ThemePreviewProps {
   settings: ThemeBase;

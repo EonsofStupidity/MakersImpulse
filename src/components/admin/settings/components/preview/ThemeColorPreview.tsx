@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types';
 
 interface ThemeColorPreviewProps {
   colors: Partial<ThemeBase>;

@@ -1,6 +1,7 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types';
 import { Card } from "@/components/ui/card";
+
 import { ThemeColorPreview } from './ThemeColorPreview';
 import { ThemeTextPreview } from './ThemeTextPreview';
 import { ThemeAnimationPreview } from './ThemeAnimationPreview';

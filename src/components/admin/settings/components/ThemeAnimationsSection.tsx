@@ -1,7 +1,7 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase, TransitionType } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";

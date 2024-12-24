@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types';
 
 interface ThemeAnimationPreviewProps {
   colors: Partial<ThemeBase>;

@@ -1,8 +1,9 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Accordion } from "@/components/ui/accordion";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { SavingIndicator } from "./SavingIndicator";
+
 import { ThemeImportSection } from "../sections/ThemeImportSection";
 
 interface ThemeFormContentProps {
