@@ -1,13 +1,12 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Input } from "@/components/ui/input";
 import { ColorPicker } from "./ColorPicker";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/settings/types";
+import { ThemeBase } from "@/types/theme/core/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface AdvancedCSSSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) => {
@@ -22,7 +21,7 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
             label="Border Radius"
             type="input"
             value={form.watch("spacing.borderRadius")}
-            onChange={(value) => form.setValue("spacing.borderRadius", value)}
+            onChange={(value) => form.setValue("spacing.borderRadius", value as string)}
             description="Border radius for UI elements (e.g., 0.5rem)"
           />
           
@@ -30,7 +29,7 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
             label="Spacing Unit"
             type="input"
             value={form.watch("spacing.unit")}
-            onChange={(value) => form.setValue("spacing.unit", value)}
+            onChange={(value) => form.setValue("spacing.unit", value as string)}
             description="Base spacing unit for layout (e.g., 1rem)"
           />
           
@@ -67,7 +66,7 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
             label="Box Shadow"
             type="select"
             value={form.watch("effects.shadow.boxShadow")}
-            onChange={(value) => form.setValue("effects.shadow.boxShadow", value)}
+            onChange={(value) => form.setValue("effects.shadow.boxShadow", value as string)}
             options={[
               { label: "None", value: "none" },
               { label: "Small", value: "sm" },

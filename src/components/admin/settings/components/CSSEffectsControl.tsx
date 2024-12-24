@@ -20,7 +20,7 @@ interface CSSEffectsControlProps {
   previewClass?: string;
   description?: string;
   form?: UseFormReturn<ThemeBase>;
-  name?: keyof ThemeBase | `typography.${keyof ThemeBase['typography']}` | `effects.${keyof ThemeBase['effects']}` | `spacing.${keyof ThemeBase['spacing']}` | `animations.${keyof ThemeBase['animations']}`;
+  name?: keyof ThemeBase['typography'] | keyof ThemeBase['effects'] | keyof ThemeBase['spacing'] | keyof ThemeBase['animations'];
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
@@ -40,16 +40,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      const [namespace, field] = name.split('.') as [keyof ThemeBase, string];
-      
-      if (field) {
-        form.setValue(namespace, {
-          ...form.watch(namespace),
-          [field]: newValue
-        } as any);
-      } else {
-        form.setValue(name, newValue as any);
-      }
+      form.setValue(name, newValue as any);
     } else {
       onChange(newValue);
     }
