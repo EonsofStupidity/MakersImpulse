@@ -15,6 +15,7 @@ export interface PreviewPreferences {
   [key: string]: boolean | number | GlassEffectLevel | undefined;
 }
 
+// Base theme interface with string keys only
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -57,58 +58,17 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  state_version?: number;
-  last_sync?: string;
   [key: string]: string | number | boolean | PreviewPreferences | Record<string, Json> | undefined | ThemeMode | TransitionType | ThemeComponentType | ThemeInheritanceStrategy;
 }
 
-// Type aliases for different use cases
+// Type for form data that matches ThemeBase
 export type ThemeFormData = ThemeBase;
-export type Settings = ThemeBase;
 export type SettingsFormData = ThemeBase;
-export type SettingsResponse = ThemeBase;
+export type Settings = ThemeBase;
 export type Theme = ThemeBase;
 
-// Database row type
+// Database row type with additional fields
 export interface ThemeConfigurationRow extends ThemeBase {
   state_version: number;
   last_sync: string;
-}
-
-// Lifecycle and sync types
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
-  error?: string;
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  error?: string;
-  last_sync?: string;
-}
-
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export type ThemeValidationResult = {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-};
-
-export interface ThemeValidationRule {
-  validate: (value: any) => boolean;
-  message: string;
-}
-
-export interface ThemeLifecycleOptions {
-  autoInit?: boolean;
-  onStateChange?: (state: ThemeLifecycleState) => void;
-}
-
-export interface ThemeSyncOptions {
-  debounce_ms?: number;
-  onSync?: (state: ThemeSyncState) => void;
 }

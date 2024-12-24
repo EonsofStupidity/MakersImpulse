@@ -14,11 +14,19 @@ interface TransitionConfigSectionProps {
 export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = ({ form }) => {
   const [previewKey, setPreviewKey] = React.useState(0);
 
-  const handleTransitionChange = (value: any) => {
+  const handleTransitionChange = (value: string | number) => {
     setPreviewKey(prev => prev + 1);
     toast.success("Transition updated", {
       description: "Your changes have been applied"
     });
+  };
+
+  const getFormValue = (field: keyof SettingsFormData): string | number => {
+    const value = form.watch(field);
+    if (typeof value === 'boolean') {
+      return value ? 1 : 0;
+    }
+    return value as string | number;
   };
 
   return (
@@ -33,7 +41,7 @@ export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = (
             <CSSEffectsControl
               label="Default Transition Type"
               type="select"
-              value={form.watch("transition_type")}
+              value={getFormValue("transition_type")}
               options={[
                 { label: "Fade", value: "fade" },
                 { label: "Slide", value: "slide" },
@@ -41,7 +49,7 @@ export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = (
                 { label: "Blur", value: "blur" }
               ]}
               onChange={(value) => {
-                form.setValue("transition_type", value);
+                form.setValue("transition_type", value as any);
                 handleTransitionChange(value);
               }}
               description="Select the default transition style for page changes"
@@ -49,35 +57,15 @@ export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = (
             <CSSEffectsControl
               label="Transition Duration"
               type="slider"
-              value={parseFloat(form.watch("transition_duration"))}
+              value={getFormValue("transition_duration")}
               min={0.1}
               max={1}
               step={0.1}
               onChange={(value) => {
-                form.setValue("transition_duration", value.toString());
+                form.setValue("transition_duration", String(value));
                 handleTransitionChange(value);
               }}
               description="Adjust the duration of transitions in seconds"
-            />
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white">Menu Transitions</h3>
-            <CSSEffectsControl
-              label="Menu Animation Style"
-              type="select"
-              value={form.watch("menu_animation_type") || "fade"}
-              options={[
-                { label: "Fade", value: "fade" },
-                { label: "Slide Down", value: "slide-down" },
-                { label: "Scale", value: "scale" },
-                { label: "Blur", value: "blur" }
-              ]}
-              onChange={(value) => {
-                form.setValue("menu_animation_type", value);
-                handleTransitionChange(value);
-              }}
-              description="Select how menus and dropdowns animate"
             />
           </div>
 
@@ -89,7 +77,7 @@ export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = (
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ 
-                  duration: parseFloat(form.watch("transition_duration")),
+                  duration: Number(form.watch("transition_duration")),
                   ease: "easeOut"
                 }}
                 className="bg-primary/10 p-4 rounded-lg"

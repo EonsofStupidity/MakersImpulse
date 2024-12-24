@@ -10,12 +10,12 @@ import { SettingsFormData } from "@/types/theme";
 interface CSSEffectsControlProps {
   label: string;
   type: "slider" | "select" | "input";
-  value: number | string;
+  value: string | number;
   options?: { label: string; value: string }[];
   min?: number;
   max?: number;
   step?: number;
-  onChange: (value: any) => void;
+  onChange: (value: string | number) => void;
   className?: string;
   previewClass?: string;
   description?: string;
@@ -38,9 +38,9 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
   form,
   name
 }) => {
-  const handleInputChange = (newValue: number | string) => {
+  const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      form.setValue(name, newValue.toString());
+      form.setValue(name, String(newValue));
     } else {
       onChange(newValue);
     }
@@ -73,7 +73,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
       case "select":
         return (
           <Select 
-            value={value.toString()} 
+            value={String(value)} 
             onValueChange={handleInputChange}
           >
             <SelectTrigger className="w-full bg-gray-700/50 border-gray-600 text-white">
@@ -92,7 +92,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         return (
           <Input
             type="text"
-            value={value}
+            value={String(value)}
             onChange={(e) => handleInputChange(e.target.value)}
             className="w-full bg-gray-700/50 border-gray-600 text-white"
           />
