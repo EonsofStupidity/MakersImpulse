@@ -1,7 +1,9 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
+export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 
 export interface ThemeBase {
+  // Colors
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -9,6 +11,11 @@ export interface ThemeBase {
   text_secondary_color: string;
   text_link_color: string;
   text_heading_color: string;
+  neon_cyan: string;
+  neon_pink: string;
+  neon_purple: string;
+
+  // Typography
   font_family_heading: string;
   font_family_body: string;
   font_size_base: string;
@@ -16,19 +23,17 @@ export interface ThemeBase {
   font_weight_bold: string;
   line_height_base: string;
   letter_spacing: string;
+
+  // Layout & Effects
   border_radius: string;
   spacing_unit: string;
+  transition_duration: string;
   shadow_color: string;
   hover_scale: string;
-  transition_duration: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
   box_shadow: string;
   backdrop_blur: string;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
-  real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
 }

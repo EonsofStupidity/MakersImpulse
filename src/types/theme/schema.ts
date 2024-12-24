@@ -1,71 +1,35 @@
 import { z } from 'zod';
-import { ThemeMode, TransitionType, ThemeInheritanceStrategy, GlassEffectLevel } from './core/types';
+import { ThemeMode, TransitionType } from './core/types';
 
-const previewPreferencesSchema = z.object({
-  real_time_updates: z.boolean(),
-  animation_enabled: z.boolean(),
-  glass_effect_level: z.enum(['low', 'medium', 'high'] as const),
-  update_debounce_ms: z.number()
-});
-
-// PURE THEME VALIDATION - NO SETTINGS
 export const themeSchema = z.object({
-  colors: z.object({
-    primary: z.string(),
-    secondary: z.string(),
-    accent: z.string(),
-    text: z.object({
-      primary: z.string(),
-      secondary: z.string(),
-      link: z.string(),
-      heading: z.string()
-    }),
-    neon: z.object({
-      cyan: z.string(),
-      pink: z.string(),
-      purple: z.string()
-    })
-  }),
-  typography: z.object({
-    fontFamily: z.object({
-      heading: z.string(),
-      body: z.string()
-    }),
-    fontSize: z.string(),
-    fontWeight: z.object({
-      normal: z.string(),
-      bold: z.string()
-    }),
-    lineHeight: z.string(),
-    letterSpacing: z.string()
-  }),
-  spacing: z.object({
-    borderRadius: z.string(),
-    unit: z.string()
-  }),
-  effects: z.object({
-    transition: z.object({
-      duration: z.string(),
-      type: z.enum(['fade', 'slide', 'scale', 'blur'] as const)
-    }),
-    shadow: z.object({
-      color: z.string(),
-      boxShadow: z.string()
-    }),
-    hover: z.object({
-      scale: z.string()
-    }),
-    backdrop: z.object({
-      blur: z.string()
-    })
-  }),
-  animations: z.object({
-    enabled: z.boolean(),
-    defaultDuration: z.number()
-  }),
-  preview_preferences: previewPreferencesSchema,
-  inheritance_strategy: z.enum(['merge', 'override', 'replace'] as const),
-  inherited_settings: z.record(z.any())
+  primary_color: z.string(),
+  secondary_color: z.string(),
+  accent_color: z.string(),
+  text_primary_color: z.string(),
+  text_secondary_color: z.string(),
+  text_link_color: z.string(),
+  text_heading_color: z.string(),
+  neon_cyan: z.string(),
+  neon_pink: z.string(),
+  neon_purple: z.string(),
+  font_family_heading: z.string(),
+  font_family_body: z.string(),
+  font_size_base: z.string(),
+  font_weight_normal: z.string(),
+  font_weight_bold: z.string(),
+  line_height_base: z.string(),
+  letter_spacing: z.string(),
+  border_radius: z.string(),
+  spacing_unit: z.string(),
+  transition_duration: z.string(),
+  shadow_color: z.string(),
+  hover_scale: z.string(),
+  box_shadow: z.string(),
+  backdrop_blur: z.string(),
+  theme_mode: z.enum(['light', 'dark', 'system'] as const),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const),
+  animations_enabled: z.boolean(),
+  default_animation_duration: z.number()
 });
 
 export type ThemeFormData = z.infer<typeof themeSchema>;
