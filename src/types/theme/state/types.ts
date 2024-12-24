@@ -23,6 +23,7 @@ export interface ThemeSyncState {
 export interface ThemeValidationError {
   field: string;
   message: string;
+  code: string;
 }
 
 export interface ThemeValidationResult {
