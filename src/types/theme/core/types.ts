@@ -11,6 +11,13 @@ export interface PreviewPreferences {
 }
 
 export interface ThemeBase {
+  // Core Properties
+  id?: string;
+  site_title?: string;
+  tagline?: string;
+  logo_url?: string;
+  favicon_url?: string;
+
   // Colors
   primary_color: string;
   secondary_color: string;
@@ -46,4 +53,35 @@ export interface ThemeBase {
   transition_type: TransitionType;
   animations_enabled: boolean;
   default_animation_duration: number;
+  preview_preferences?: PreviewPreferences;
+
+  // Nested Structures
+  typography?: {
+    heading: string;
+    body: string;
+    base: string;
+  };
+  effects?: {
+    transition: {
+      duration: string;
+    };
+    shadow: {
+      color: string;
+      boxShadow: string;
+    };
+    hover: {
+      scale: string;
+    };
+    backdrop: {
+      blur: string;
+    };
+  };
+  spacing?: {
+    borderRadius: string;
+    unit: string;
+  };
+  animations?: {
+    enabled: boolean;
+    defaultDuration: number;
+  };
 }
