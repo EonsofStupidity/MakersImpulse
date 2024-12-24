@@ -1,4 +1,4 @@
-// Direct 1:1 mapping with database columns
+// Core Types
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
@@ -10,52 +10,54 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user';
 
-// Auth types
+// JSON Type
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+
+// Auth Types
 export interface AuthUser {
   id: string;
   email: string;
-  displayName?: string | null;
-  username?: string | null;
-  bio?: string | null;
-  website?: string | null;
-  location?: string | null;
+  displayName?: string;
+  username?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
   createdAt: Date;
   updatedAt: Date;
   role: UserRole;
-  avatar_url?: string | null;
-  last_seen?: string | null;
+  avatar_url?: string;
+  last_seen?: string;
   metadata?: Record<string, unknown>;
 }
 
-// Profile types
+// Profile Types
 export interface Profile {
   id: string;
-  username?: string | null;
-  display_name?: string | null;
-  avatar_url?: string | null;
-  bio?: string | null;
-  website?: string | null;
-  location?: string | null;
-  created_at?: string | null;
-  updated_at?: string | null;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  created_at?: string;
+  updated_at?: string;
   role?: UserRole;
-  last_seen?: string | null;
+  last_seen?: string;
   metadata?: Record<string, unknown>;
 }
 
 // CSS Effects Control Props
 export interface CSSEffectsControlProps {
-  theme?: ThemeBase;
-  onChange: (value: string | number) => void;
-  className?: string;
   label: string;
   type: string;
   value: string | number;
+  onChange: (value: string | number) => void;
   min?: number;
   max?: number;
   step?: number;
   options?: Array<{ label: string; value: string }>;
   description?: string;
+  className?: string;
 }
 
 // Theme Base
@@ -150,21 +152,12 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
-// Build types
-export interface Build {
-  id: string;
-  user_id: string;
-  name: string;
-  description?: string;
-  build_volume: {
-    x: number;
-    y: number;
-    z: number;
-    units: string;
-  };
-  parts: BuildPart[];
-  images: BuildImage[];
-  created_at: string;
+// Build Types
+export interface BuildVolume {
+  x: number;
+  y: number;
+  z: number;
+  units: string;
 }
 
 export interface BuildPart {
@@ -182,15 +175,26 @@ export interface BuildImage {
   caption?: string;
 }
 
+export interface Build {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  build_volume: BuildVolume;
+  parts: BuildPart[];
+  images: BuildImage[];
+  created_at: string;
+}
+
+export type BuildFormData = Omit<Build, 'id' | 'created_at'>;
+
 export interface BuildQueryParams {
   userId?: string;
   sort?: string;
   order?: 'asc' | 'desc';
 }
 
-export type BuildFormData = Omit<Build, 'id' | 'created_at'>;
-
-// Settings types
+// Settings Types
 export interface Settings {
   id: string;
   category: SettingType;
@@ -204,10 +208,9 @@ export interface Settings {
   updated_by?: string;
 }
 
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
-
 export type SettingsFormData = ThemeBase;
 
+// Theme State Types
 export interface ThemeState extends ThemeBase {
   isDirty?: boolean;
   lastSync?: Date | null;
@@ -250,7 +253,7 @@ export interface ThemeAnimationTypes {
   };
 }
 
-// Add missing type for content with author
+// Content Types
 export interface ContentWithAuthor {
   id: string;
   title: string;
@@ -270,8 +273,33 @@ export interface ContentWithAuthor {
   slug?: string;
 }
 
-// Add missing type for UserTableRowActionsProps
+// User Types
 export interface UserTableRowActionsProps {
   userId: string;
   onActionComplete?: () => void;
+}
+
+// Theme Styles
+export interface ThemeStyles {
+  colors: Record<string, string>;
+  typography: Record<string, string>;
+  spacing: Record<string, string>;
+  effects: Record<string, string>;
+}
+
+// Accordion Types
+export interface AccordionItem {
+  id: string;
+  title: string;
+  content: React.ReactNode;
+}
+
+// Schema Types
+export const buildSchema = {
+  // Add schema definition here
+};
+
+// Application Settings
+export interface ApplicationSettings extends ThemeBase {
+  // Add any additional application settings here
 }
