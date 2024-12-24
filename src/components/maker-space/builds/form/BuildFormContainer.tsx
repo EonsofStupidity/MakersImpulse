@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
-import { buildSchema, type BuildFormData } from '@/types/builds';
+import { buildSchema, type BuildFormData } from '@/types';
 import { Form } from '@/components/ui/form';
 import BuildBasicSection from './BuildBasicSection';
 import BuildVolumeSection from './BuildVolumeSection';

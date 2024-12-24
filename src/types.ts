@@ -62,3 +62,58 @@ export interface ThemeState extends ThemeBase {
   syncStatus?: 'idle' | 'syncing' | 'error'
   syncError?: string
 }
+
+// Build types
+export interface Build {
+  id: string
+  user_id: string
+  name: string
+  description?: string
+  build_volume: {
+    x: number
+    y: number
+    z: number
+    units: string
+  }
+  parts: BuildPart[]
+  images: BuildImage[]
+  created_at: string
+}
+
+export interface BuildPart {
+  id: string
+  name: string
+  quantity: number
+}
+
+export interface BuildImage {
+  url: string
+  type: string
+  alt?: string
+  caption?: string
+}
+
+export type BuildFormData = Omit<Build, 'id' | 'created_at'>
+
+// Auth types
+export interface AuthUser {
+  id: string
+  email: string
+  createdAt: string
+  updatedAt: string
+  bio?: string
+  website?: string
+  location?: string
+}
+
+// Content types
+export interface ContentWithAuthor {
+  id: string
+  title: string
+  content: unknown
+  created_by: { display_name: string }
+  created_at: string
+  updated_at: string
+  status: 'draft' | 'published' | 'archived'
+  version: number
+}

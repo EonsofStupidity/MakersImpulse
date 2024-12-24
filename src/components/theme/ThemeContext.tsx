@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useCallback, useMemo } from 'react';
-import { ThemeBase, PreviewPreferences } from '@/types/theme';
+import { ThemeBase } from '@/types';
+type PreviewPreferences = ThemeBase['preview_preferences'];
 import { useThemeSetup } from './hooks/useThemeSetup';
 import { useThemeSubscription } from './hooks/useThemeSubscription';
 import { applyThemeToDocument } from './utils/themeUtils';

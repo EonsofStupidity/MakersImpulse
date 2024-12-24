@@ -27,7 +27,7 @@ export const BuildsList = () => {
         userId: build.user_id,
         name: build.name,
         description: build.description,
-        buildVolume: build.build_volume,
+        build_volume: build.build_volume,
         parts: build.parts,
         images: build.images,
         createdAt: build.created_at
@@ -69,9 +69,9 @@ export const BuildsList = () => {
                 {build.description}
               </p>
             )}
-            {build.buildVolume && (
+            {build.build_volume && (
               <div className="text-sm text-gray-400">
-                Volume: {build.buildVolume.x}x{build.buildVolume.y}x{build.buildVolume.z} {build.buildVolume.units}
+                Volume: {build.build_volume.x}x{build.build_volume.y}x{build.build_volume.z} {build.build_volume.units}
               </div>
             )}
             <div className="text-sm text-gray-400 mt-2">
