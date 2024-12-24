@@ -15,7 +15,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="p-4 rounded-lg"
-            style={{ backgroundColor: colors.primary_color }}
+            style={{ backgroundColor: colors.colors?.primary }}
           >
             Hover Scale Effect
           </motion.div>
@@ -23,7 +23,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className="p-4 rounded-lg"
-            style={{ backgroundColor: colors.secondary_color }}
+            style={{ backgroundColor: colors.colors?.secondary }}
           >
             Fade Animation
           </motion.div>
@@ -31,7 +31,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
             initial={{ x: -20 }}
             animate={{ x: 0 }}
             className="p-4 rounded-lg"
-            style={{ backgroundColor: colors.accent_color }}
+            style={{ backgroundColor: colors.colors?.accent }}
           >
             Slide Animation
           </motion.div>
