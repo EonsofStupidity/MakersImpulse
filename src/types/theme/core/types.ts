@@ -58,7 +58,7 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: Json | undefined;
+  [key: string]: any; // Add index signature
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
@@ -83,10 +83,10 @@ export interface ThemeValidationError {
   code: string;
 }
 
-export interface ThemeValidationResult {
+export type ThemeValidationResult = {
   isValid: boolean;
   errors: ThemeValidationError[];
-}
+};
 
 export interface ThemeValidationRule {
   validate: (value: any) => boolean;

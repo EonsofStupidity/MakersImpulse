@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
 import { ThemeBase } from "@/types/theme/core/types";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 export const useThemeSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -32,7 +31,7 @@ export const useThemeSettingsForm = () => {
         preview_preferences: {
           real_time_updates: true,
           animation_enabled: true,
-          glass_effect_level: 'medium' as const,
+          glass_effect_level: 'medium',
           update_debounce_ms: 100
         }
       } as ThemeBase;
