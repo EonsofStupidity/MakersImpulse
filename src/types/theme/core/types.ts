@@ -1,13 +1,12 @@
 import { Json } from '@/types/core/json';
 
-// Core enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-export interface PreviewPreferences {
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
@@ -36,7 +35,7 @@ export interface ThemeSyncState {
   error?: string;
 }
 
-export interface ThemeBase {
+export interface ThemeBase extends Record<string, any> {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -73,7 +72,7 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
-  inherited_settings: Record<string, unknown>;
+  inherited_settings: Record<string, Json>;
   logo_url?: string;
   favicon_url?: string;
   updated_at?: string;
