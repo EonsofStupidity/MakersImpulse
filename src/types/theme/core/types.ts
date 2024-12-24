@@ -68,7 +68,6 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// The clean, visual-only theme interface
 export interface ThemeBase {
   colors: ThemeColors;
   typography: ThemeTypography;
@@ -78,18 +77,4 @@ export interface ThemeBase {
   preview_preferences: PreviewPreferences;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, any>;
-}
-
-// Separate interface for non-visual configuration
-export interface Settings {
-  site_title: string;
-  tagline?: string;
-  logo_url?: string;
-  favicon_url?: string;
-  theme_mode?: ThemeMode;
-  created_at?: string;
-  updated_at?: string;
-  created_by?: string;
-  updated_by?: string;
-  metadata?: Record<string, any>;
 }

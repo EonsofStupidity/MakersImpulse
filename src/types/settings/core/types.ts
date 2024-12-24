@@ -1,7 +1,6 @@
 import { Json } from '@/types/core/json';
 
 export interface Settings {
-  // Configuration only
   id?: string;
   site_title: string;
   tagline?: string;
