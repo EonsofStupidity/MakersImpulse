@@ -3,7 +3,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { Input } from "@/components/ui/input";
 import { ColorPicker } from "./ColorPicker";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { SettingsFormData } from "@/types/settings/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface AdvancedCSSSectionProps {
@@ -21,53 +21,53 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
           <CSSEffectsControl
             label="Border Radius"
             type="input"
-            value={form.watch("border_radius")}
-            onChange={(value) => form.setValue("border_radius", value)}
+            value={form.watch("spacing.borderRadius")}
+            onChange={(value) => form.setValue("spacing.borderRadius", value)}
             description="Border radius for UI elements (e.g., 0.5rem)"
           />
           
           <CSSEffectsControl
             label="Spacing Unit"
             type="input"
-            value={form.watch("spacing_unit")}
-            onChange={(value) => form.setValue("spacing_unit", value)}
+            value={form.watch("spacing.unit")}
+            onChange={(value) => form.setValue("spacing.unit", value)}
             description="Base spacing unit for layout (e.g., 1rem)"
           />
           
           <CSSEffectsControl
             label="Transition Duration"
             type="slider"
-            value={parseFloat(form.watch("transition_duration"))}
+            value={parseFloat(form.watch("effects.transition.duration"))}
             min={0.1}
             max={1}
             step={0.1}
-            onChange={(value) => form.setValue("transition_duration", value.toString())}
+            onChange={(value) => form.setValue("effects.transition.duration", value.toString())}
             description="Duration for animations (in seconds)"
           />
           
           <ColorPicker
             label="Shadow Color"
             cssVar="--shadow"
-            value={form.watch("shadow_color")}
-            onChange={(color) => form.setValue("shadow_color", color)}
+            value={form.watch("effects.shadow.color")}
+            onChange={(color) => form.setValue("effects.shadow.color", color)}
           />
           
           <CSSEffectsControl
             label="Hover Scale"
             type="slider"
-            value={parseFloat(form.watch("hover_scale"))}
+            value={parseFloat(form.watch("effects.hover.scale"))}
             min={1}
             max={1.2}
             step={0.01}
-            onChange={(value) => form.setValue("hover_scale", value.toString())}
+            onChange={(value) => form.setValue("effects.hover.scale", value.toString())}
             description="Scale factor for hover effects"
           />
 
           <CSSEffectsControl
             label="Box Shadow"
             type="select"
-            value={form.watch("box_shadow") || "none"}
-            onChange={(value) => form.setValue("box_shadow", value)}
+            value={form.watch("effects.shadow.boxShadow")}
+            onChange={(value) => form.setValue("effects.shadow.boxShadow", value)}
             options={[
               { label: "None", value: "none" },
               { label: "Small", value: "sm" },
@@ -80,11 +80,11 @@ export const AdvancedCSSSection: React.FC<AdvancedCSSSectionProps> = ({ form }) 
           <CSSEffectsControl
             label="Backdrop Blur"
             type="slider"
-            value={parseInt(form.watch("backdrop_blur") || "0")}
+            value={parseInt(form.watch("effects.backdrop.blur") || "0")}
             min={0}
             max={20}
             step={1}
-            onChange={(value) => form.setValue("backdrop_blur", value.toString())}
+            onChange={(value) => form.setValue("effects.backdrop.blur", value.toString())}
             description="Blur effect for backdrop elements (in pixels)"
           />
         </div>

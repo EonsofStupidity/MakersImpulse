@@ -20,7 +20,7 @@ interface CSSEffectsControlProps {
   previewClass?: string;
   description?: string;
   form?: UseFormReturn<ThemeBase>;
-  name?: keyof ThemeBase;
+  name?: keyof ThemeBase | `typography.${keyof ThemeBase['typography']}` | `effects.${keyof ThemeBase['effects']}` | `spacing.${keyof ThemeBase['spacing']}` | `animations.${keyof ThemeBase['animations']}`;
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
@@ -40,28 +40,15 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      const stringFields: Array<keyof ThemeBase> = [
-        'font_size_base',
-        'line_height_base',
-        'letter_spacing',
-        'border_radius',
-        'spacing_unit',
-        'transition_duration',
-        'hover_scale',
-        'box_shadow',
-        'backdrop_blur'
-      ];
-
-      const numberFields: Array<keyof ThemeBase> = [
-        'default_animation_duration'
-      ];
-
-      if (stringFields.includes(name)) {
-        form.setValue(name, String(newValue));
-      } else if (numberFields.includes(name)) {
-        form.setValue(name, Number(newValue));
+      const [namespace, field] = name.split('.') as [keyof ThemeBase, string];
+      
+      if (field) {
+        form.setValue(namespace, {
+          ...form.watch(namespace),
+          [field]: newValue
+        } as any);
       } else {
-        form.setValue(name, newValue as never);
+        form.setValue(name, newValue as any);
       }
     } else {
       onChange(newValue);
