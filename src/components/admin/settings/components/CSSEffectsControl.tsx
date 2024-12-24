@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types";
 
 interface CSSEffectsControlProps {
   label: string;

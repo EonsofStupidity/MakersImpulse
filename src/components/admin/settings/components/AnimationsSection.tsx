@@ -1,7 +1,7 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
@@ -32,7 +32,7 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
               </Label>
               <Switch
                 id="animations-enabled"
-                checked={form.watch("animations.enabled")}
+                checked={form.watch("animations_enabled")}
                 onCheckedChange={(checked) => handleToggleChange("enabled", checked)}
               />
             </div>
@@ -43,23 +43,23 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
             <CSSEffectsControl
               label="Default Animation Duration (ms)"
               type="slider"
-              value={form.watch("animations.defaultDuration")}
+              value={form.watch("default_animation_duration")}
               min={100}
               max={1000}
               step={50}
-              onChange={(value) => form.setValue("animations.defaultDuration", value)}
+              onChange={(value) => form.setValue("default_animation_duration", value)}
               description="Set the default duration for all animations"
             />
           </div>
 
-          {form.watch("animations.enabled") && (
+          {form.watch("animations_enabled") && (
             <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
               <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
               <div className="space-y-4">
                 <div
                   className="p-4 bg-primary/10 rounded-lg transition-all"
                   style={{
-                    transitionDuration: `${form.watch("animations.defaultDuration")}ms`,
+                    transitionDuration: `${form.watch("default_animation_duration")}ms`,
                   }}
                 >
                   <p className="text-primary text-sm">Animation Preview</p>
