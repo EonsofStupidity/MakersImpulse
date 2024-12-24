@@ -2,7 +2,6 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}`;
 
 export interface ThemeStyles {
-  // ONLY CSS variables
   '--primary': string;
   '--secondary': string;
   '--accent': string;

@@ -1,9 +1,7 @@
 import { Json } from '@/types/core/json';
 
-export type SettingType = 'theme' | 'system' | 'user' | 'security';
-
-export interface SettingsFormData {
-  // ONLY configuration/metadata
+export interface Settings {
+  // Configuration only
   id?: string;
   site_title: string;
   tagline?: string;
@@ -13,22 +11,10 @@ export interface SettingsFormData {
   updated_at?: string;
   created_by?: string;
   updated_by?: string;
-}
-
-export interface UnifiedSetting<T = Json> {
-  id: string;
-  category: SettingType;
-  key: string;
-  value: T;
   metadata?: Record<string, Json>;
-  is_encrypted?: boolean;
-  created_at?: string;
-  updated_at?: string;
-  created_by?: string;
-  updated_by?: string;
 }
 
-export interface SettingsResponse<T = any> {
+export interface SettingsResponse {
   id: string;
-  value: T;
+  value: Settings;
 }

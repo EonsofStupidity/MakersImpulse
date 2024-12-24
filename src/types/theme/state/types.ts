@@ -1,7 +1,6 @@
 import { ThemeBase } from '../core/types';
 
 export interface ThemeState extends ThemeBase {
-  // ONLY state management properties
   isDirty: boolean;
   lastSync: Date | null;
   syncStatus: 'idle' | 'syncing' | 'error';
@@ -10,16 +9,23 @@ export interface ThemeState extends ThemeBase {
   localChanges: Partial<ThemeBase>;
 }
 
-export interface ThemeStore {
-  theme: ThemeState | null;
-  setTheme: (theme: ThemeState) => void;
-  updateTheme: (updates: Partial<ThemeState>) => void;
-  resetTheme: () => void;
-  syncTheme: () => Promise<void>;
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
+  error?: string;
 }
 
 export interface ThemeSyncState {
   status: 'pending' | 'syncing' | 'completed' | 'error';
   last_sync?: string;
   error?: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
 }
