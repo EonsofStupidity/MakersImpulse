@@ -1,122 +1,107 @@
-import React from "react";
+import { ThemeBase } from '@/types';
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types";
 
 interface CSSEffectsControlProps {
-  label: string;
-  type: "slider" | "select" | "input";
-  value: string | number;
-  options?: { label: string; value: string }[];
-  min?: number;
-  max?: number;
-  step?: number;
-  onChange: (value: string | number) => void;
+  theme: ThemeBase;
+  onChange: (key: keyof ThemeBase['effects'], value: string) => void;
   className?: string;
-  previewClass?: string;
-  description?: string;
-  form?: UseFormReturn<ThemeBase>;
-  name?: keyof ThemeBase['typography'] | keyof ThemeBase['effects'] | keyof ThemeBase['spacing'] | keyof ThemeBase['animations'];
 }
 
-export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
-  label,
-  type,
-  value,
-  options,
-  min = 0,
-  max = 100,
-  step = 1,
-  onChange,
-  className,
-  previewClass,
-  description,
-  form,
-  name
-}) => {
-  const handleInputChange = (newValue: string | number) => {
-    if (form && name) {
-      form.setValue(name, newValue as any);
-    } else {
-      onChange(newValue);
-    }
-  };
-
-  const renderControl = () => {
-    switch (type) {
-      case "slider":
-        const numValue = typeof value === 'string' ? parseFloat(value) : value;
-        return (
-          <div className="flex items-center gap-4">
-            <Slider
-              value={[numValue]}
-              min={min}
-              max={max}
-              step={step}
-              onValueChange={(values) => handleInputChange(values[0])}
-              className="flex-1"
-            />
-            <Input
-              type="number"
-              value={numValue}
-              onChange={(e) => handleInputChange(Number(e.target.value))}
-              className="w-20 bg-gray-700/50 border-gray-600 text-white"
-              min={min}
-              max={max}
-              step={step}
-            />
-          </div>
-        );
-      case "select":
-        return (
-          <Select 
-            value={String(value)} 
-            onValueChange={handleInputChange}
-          >
-            <SelectTrigger className="w-full bg-gray-700/50 border-gray-600 text-white">
-              <SelectValue placeholder="Select option" />
-            </SelectTrigger>
-            <SelectContent>
-              {options?.map((option) => (
-                <SelectItem key={option.value} value={option.value}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        );
-      case "input":
-        return (
-          <Input
-            type="text"
-            value={String(value)}
-            onChange={(e) => handleInputChange(e.target.value)}
-            className="w-full bg-gray-700/50 border-gray-600 text-white"
-          />
-        );
-      default:
-        return null;
-    }
+export const CSSEffectsControl = ({ theme, onChange, className }: CSSEffectsControlProps) => {
+  const handleSliderChange = (key: keyof ThemeBase['effects'], value: number[]) => {
+    onChange(key, `${value[0]}px`);
   };
 
   return (
-    <div className={cn("space-y-2", className)}>
-      <div className="flex justify-between items-center">
-        <Label className="text-sm text-gray-300">{label}</Label>
-        {previewClass && (
-          <div className={cn("text-sm px-2 py-1 rounded bg-gray-800/50", previewClass)}>
-            Preview
-          </div>
-        )}
+    <div className={cn("space-y-6", className)}>
+      <div className="space-y-2">
+        <Label>Border Radius</Label>
+        <Slider
+          defaultValue={[parseInt(theme.effects?.borderRadius || '0')]}
+          max={20}
+          step={1}
+          onValueChange={(value) => handleSliderChange('borderRadius', value)}
+        />
+        <Input
+          type="text"
+          value={theme.effects?.borderRadius}
+          onChange={(e) => onChange('borderRadius', e.target.value)}
+          className="mt-2"
+        />
       </div>
-      {description && (
-        <p className="text-xs text-gray-400">{description}</p>
-      )}
-      {renderControl()}
+
+      <div className="space-y-2">
+        <Label>Spacing Unit</Label>
+        <Input
+          type="text"
+          value={theme.effects?.spacingUnit}
+          onChange={(e) => onChange('spacingUnit', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Transition Duration</Label>
+        <Input
+          type="text"
+          value={theme.effects?.transitionDuration}
+          onChange={(e) => onChange('transitionDuration', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Shadow Color</Label>
+        <Input
+          type="color"
+          value={theme.effects?.shadowColor}
+          onChange={(e) => onChange('shadowColor', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Hover Scale</Label>
+        <Slider
+          defaultValue={[parseFloat(theme.effects?.hoverScale || '1') * 100]}
+          max={150}
+          step={1}
+          onValueChange={(value) => onChange('hoverScale', (value[0] / 100).toString())}
+        />
+        <Input
+          type="text"
+          value={theme.effects?.hoverScale}
+          onChange={(e) => onChange('hoverScale', e.target.value)}
+          className="mt-2"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Box Shadow</Label>
+        <Input
+          type="text"
+          value={theme.effects?.boxShadow}
+          onChange={(e) => onChange('boxShadow', e.target.value)}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label>Backdrop Blur</Label>
+        <Slider
+          defaultValue={[parseInt(theme.effects?.backdropBlur || '0')]}
+          max={20}
+          step={1}
+          onValueChange={(value) => handleSliderChange('backdropBlur', value)}
+        />
+        <Input
+          type="text"
+          value={theme.effects?.backdropBlur}
+          onChange={(e) => onChange('backdropBlur', e.target.value)}
+          className="mt-2"
+        />
+      </div>
     </div>
   );
 };
+
+export default CSSEffectsControl;

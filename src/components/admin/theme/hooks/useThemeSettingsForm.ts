@@ -1,39 +1,39 @@
-import { useState } from "react";
-import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase, Settings } from '@/types';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-export const useSettingsForm = () => {
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [faviconFile, setFaviconFile] = useState<File | null>(null);
-  
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings("theme", "base");
+export const useThemeSettingsForm = (themeId: string) => {
+  const [themeSettings, setThemeSettings] = useState<ThemeBase | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
-    const updatedSettings = {
-      ...themeSettings?.value,
-      ...settings
-    } as ThemeBase;
-    
-    await updateSetting(updatedSettings);
-  };
+  useEffect(() => {
+    const fetchThemeSettings = async () => {
+      setLoading(true);
+      setError(null);
 
-  const handleResetToDefault = async () => {
-    // Reset logic will be implemented here
-    console.log("Reset to default");
-  };
+      try {
+        const { data, error } = await supabase
+          .from('themes')
+          .select('*')
+          .eq('id', themeId)
+          .single();
 
-  const handleLogoUpload = (file: File) => setLogoFile(file);
-  const handleFaviconUpload = (file: File) => setFaviconFile(file);
+        if (error) throw error;
 
-  return {
-    settings: themeSettings?.value as ThemeBase,
-    isLoading,
-    isSaving: isUpdating,
-    logoFile,
-    faviconFile,
-    handleLogoUpload,
-    handleFaviconUpload,
-    handleSettingsUpdate,
-    handleResetToDefault,
-  };
+        setThemeSettings(data);
+      } catch (error) {
+        console.error('Error fetching theme settings:', error);
+        setError('Failed to load theme settings');
+        toast.error('Failed to load theme settings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchThemeSettings();
+  }, [themeId]);
+
+  return { themeSettings, loading, error };
 };

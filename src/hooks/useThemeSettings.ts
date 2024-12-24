@@ -1,31 +1,39 @@
-import { useState, useCallback } from 'react';
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import { ThemeBase } from "@/types/theme/core/types";
-import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS } from "../utils/themeUtils";
+import { ThemeBase, ThemeState } from '@/types';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
-export const useThemeSettings = () => {
+export const useThemeSettings = (themeId: string) => {
   const [theme, setTheme] = useState<ThemeBase | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchSettings = useCallback(async () => {
-    try {
-      const { data: rawData, error } = await supabase
-        .from("theme_configuration")
-        .select("*")
-        .single();
+  useEffect(() => {
+    const fetchTheme = async () => {
+      setLoading(true);
+      setError(null);
 
-      if (error) throw error;
+      try {
+        const { data, error: fetchError } = await supabase
+          .from('themes')
+          .select('*')
+          .eq('id', themeId)
+          .single();
 
-      const themeData = convertDbSettingsToTheme(rawData);
-      setTheme(themeData);
-      toast.success("Theme settings loaded");
-      
-    } catch (error) {
-      console.error("Error fetching theme settings:", error);
-      setTheme(DEFAULT_THEME_SETTINGS);
-      toast.error("Failed to load theme settings");
-    }
-  }, []);
+        if (fetchError) throw fetchError;
 
-  return { theme, setTheme, fetchSettings };
+        setTheme(data);
+      } catch (err) {
+        console.error('Error fetching theme:', err);
+        setError('Failed to load theme settings');
+        toast.error('Failed to load theme settings');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTheme();
+  }, [themeId]);
+
+  return { theme, loading, error };
 };

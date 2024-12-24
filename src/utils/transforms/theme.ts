@@ -1,5 +1,4 @@
-import { ThemeBase } from '@/types/theme/core/types';
-
+import { ThemeBase, ThemeState } from '@/types'
 export const applyThemeToDocument = (theme: ThemeBase): void => {
   const root = document.documentElement;
   

@@ -1,82 +1,66 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import React, { useState } from 'react';
+import { BuildFormData } from '@/types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
-import { supabase } from '@/integrations/supabase/client';
-import { buildSchema, type BuildFormData } from '@/types';
-import { Form } from '@/components/ui/form';
-import BuildBasicSection from './BuildBasicSection';
-import BuildVolumeSection from './BuildVolumeSection';
-import BuildImagesSection from './BuildImagesSection';
-import FormActions from './FormActions';
 
-const BuildFormContainer = () => {
-  const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = React.useState(false);
+interface BuildFormContainerProps {
+  initialData: BuildFormData;
+  onSubmit: (data: BuildFormData) => void;
+}
 
-  const form = useForm<BuildFormData>({
-    resolver: zodResolver(buildSchema),
-    defaultValues: {
-      name: "",
-      description: "",
-      buildVolume: {
-        x: 200,
-        y: 200,
-        z: 200,
-        units: "mm"
-      },
-      parts: [],
-      images: []
-    }
-  });
+const BuildFormContainer: React.FC<BuildFormContainerProps> = ({ initialData, onSubmit }) => {
+  const [formData, setFormData] = useState<BuildFormData>(initialData);
 
-  const onSubmit = async (formData: BuildFormData) => {
-    try {
-      setIsSubmitting(true);
-      
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) throw userError;
-      if (!user) throw new Error('No authenticated user');
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
-      // Transform camelCase to snake_case for database
-      const buildData = {
-        user_id: user.id,
-        name: formData.name,
-        description: formData.description,
-        build_volume: formData.buildVolume ? JSON.parse(JSON.stringify(formData.buildVolume)) : null,
-        parts: formData.parts ? JSON.parse(JSON.stringify(formData.parts)) : null,
-        images: formData.images ? JSON.parse(JSON.stringify(formData.images)) : null
-      };
-
-      const { error: insertError } = await supabase
-        .from('mi3dp_builds')
-        .insert(buildData);
-
-      if (insertError) {
-        console.error('Insert error:', insertError);
-        throw insertError;
-      }
-
-      toast.success("Build created successfully!");
-      navigate("/maker-space/builds");
-    } catch (error) {
-      console.error("Error creating build:", error);
-      toast.error("Failed to create build. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSubmit(formData);
+    toast.success('Build data submitted successfully!');
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <BuildBasicSection form={form} />
-        <BuildVolumeSection form={form} />
-        <BuildImagesSection form={form} />
-        <FormActions isSubmitting={isSubmitting} />
+    <Card className="p-6">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Build Name</label>
+          <Input
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+          <Textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="build_volume" className="block text-sm font-medium text-gray-700">Build Volume</label>
+          <Input
+            id="build_volume"
+            name="build_volume"
+            value={formData.build_volume}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <Button type="submit" className="w-full">Submit Build</Button>
       </form>
-    </Form>
+    </Card>
   );
 };
 

@@ -1,18 +1,52 @@
-import { ThemeRow, ThemeConfigurationRow } from '@/types/database/theme';
-import { ThemeState } from '@/types/state/theme';
+import { ThemeBase, ThemeState } from '@/types';
 
-export const transformDatabaseToState = (row: ThemeRow): ThemeState => {
+// Function to transform theme data into a format suitable for the application
+export const transformThemeData = (theme: ThemeBase): ThemeState => {
   return {
-    ...row,
+    ...theme,
     isDirty: false,
-    lastSync: row.last_sync ? new Date(row.last_sync) : null,
+    lastSync: null,
     syncStatus: 'idle',
-    isPreviewMode: false,
-    localChanges: {}
+    syncError: undefined,
   };
 };
 
-export const validateDatabaseState = (state: Partial<ThemeState>): boolean => {
+// Function to validate theme data
+export const validateThemeData = (theme: ThemeBase): boolean => {
   // Add validation logic here
-  return true;
+  return true; // Placeholder for actual validation
+};
+
+// Function to convert theme state to a format suitable for storage
+export const convertThemeStateForStorage = (state: ThemeState): ThemeBase => {
+  const { isDirty, lastSync, syncStatus, syncError, ...themeData } = state;
+  return themeData;
+};
+
+// Function to merge two theme objects
+export const mergeThemes = (baseTheme: ThemeBase, newTheme: ThemeBase): ThemeBase => {
+  return {
+    ...baseTheme,
+    ...newTheme,
+    colors: {
+      ...baseTheme.colors,
+      ...newTheme.colors,
+    },
+    typography: {
+      ...baseTheme.typography,
+      ...newTheme.typography,
+    },
+    effects: {
+      ...baseTheme.effects,
+      ...newTheme.effects,
+    },
+    spacing: {
+      ...baseTheme.spacing,
+      ...newTheme.spacing,
+    },
+    animations: {
+      ...baseTheme.animations,
+      ...newTheme.animations,
+    },
+  };
 };

@@ -1,6 +1,7 @@
-import React from 'react';
-import { useUserManagement } from '@/hooks/useUserManagement';
-import { Loader2, User } from 'lucide-react';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useProfiles } from "@/hooks/useProfiles";
+import { UserRole } from "@/types";
 import {
   Table,
   TableBody,
@@ -9,124 +10,92 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { RoleSelector } from './RoleSelector';
-import { UserTableRowActions } from './UserTableRowActions';
-import { ErrorState } from '@/components/shared/error-handling/ErrorState';
-import { UserRole } from '@/components/auth/types';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { UserTableRowActions } from "./UserTableRowActions";
+import { Search, UserPlus } from "lucide-react";
 
-interface UsersListProps {
-  searchQuery: string;
-}
-
-export const UsersList = ({ searchQuery }: UsersListProps) => {
-  const { users, isLoading, error, refetch, updateRole } = useUserManagement();
-
-  const filteredProfiles = users?.filter((profile) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      profile.username?.toLowerCase().includes(searchLower) ||
-      profile.display_name?.toLowerCase().includes(searchLower) ||
-      profile.role?.toLowerCase().includes(searchLower)
-    );
-  });
-
-  const handleRoleChange = async (userId: string, role: UserRole) => {
-    try {
-      await updateRole.mutateAsync({ userId, newRole: role });
-    } catch (error) {
-      console.error('Error updating role:', error);
-    }
-  };
+export const UsersList = () => {
+  const navigate = useNavigate();
+  const { data: users, isLoading, error } = useProfiles();
+  const [searchQuery, setSearchQuery] = useState("");
 
   if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="w-8 h-8 text-[#ff0abe] animate-spin" />
-      </div>
-    );
+    return <div>Loading users...</div>;
   }
 
   if (error) {
-    return (
-      <ErrorState 
-        title="Failed to load users" 
-        message="There was an error loading the user list. Please try again." 
-        onRetry={() => refetch()}
-      />
-    );
+    return <div>Error loading users: {error.message}</div>;
   }
 
+  const filteredUsers = users?.filter((user) => {
+    const searchLower = searchQuery.toLowerCase();
+    return (
+      user.username?.toLowerCase().includes(searchLower) ||
+      user.display_name?.toLowerCase().includes(searchLower) ||
+      user.role?.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
-    <div className="bg-gray-800/50 border border-white/10 rounded-lg overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-white/10 hover:bg-white/5">
-            <TableHead className="text-white">User</TableHead>
-            <TableHead className="text-white">Role</TableHead>
-            <TableHead className="text-white">Status</TableHead>
-            <TableHead className="text-white">Location</TableHead>
-            <TableHead className="text-white">Last Seen</TableHead>
-            <TableHead className="text-white">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredProfiles?.map((profile) => (
-            <TableRow 
-              key={profile.id}
-              className="border-white/10 hover:bg-white/5"
-            >
-              <TableCell className="font-medium text-white">
-                <div className="flex items-center gap-3">
-                  <Avatar className="h-8 w-8 border border-white/10">
-                    <AvatarImage src={profile.avatar_url || undefined} />
-                    <AvatarFallback className="bg-gray-700 text-white">
-                      <User className="h-4 w-4" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{profile.display_name || 'Unnamed User'}</div>
-                    {profile.username && (
-                      <div className="text-sm text-gray-400">@{profile.username}</div>
-                    )}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <RoleSelector
-                  currentRole={profile.role || 'subscriber'}
-                  onRoleChange={(role) => handleRoleChange(profile.id, role)}
-                  disabled={profile.is_banned}
-                />
-              </TableCell>
-              <TableCell>
-                {profile.is_banned ? (
-                  <Badge variant="destructive">Banned</Badge>
-                ) : (
-                  <Badge variant="secondary">Active</Badge>
-                )}
-              </TableCell>
-              <TableCell className="text-gray-400">
-                {profile.location || 'Not specified'}
-              </TableCell>
-              <TableCell className="text-gray-400">
-                {profile.last_seen 
-                  ? new Date(profile.last_seen).toLocaleDateString()
-                  : 'Never'
-                }
-              </TableCell>
-              <TableCell>
-                <UserTableRowActions 
-                  userId={profile.id}
-                  currentRole={profile.role || 'subscriber'}
-                  isBanned={profile.is_banned}
-                />
-              </TableCell>
+    <div className="space-y-4">
+      <div className="flex justify-between items-center">
+        <div className="relative w-72">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search users..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+        <Button
+          onClick={() => navigate("/admin/users/new")}
+          className="bg-[#41f0db]/10 hover:bg-[#41f0db]/20 text-[#41f0db]"
+        >
+          <UserPlus className="mr-2 h-4 w-4" />
+          Add User
+        </Button>
+      </div>
+
+      <div className="rounded-md border border-white/10">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Username</TableHead>
+              <TableHead>Display Name</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Last Seen</TableHead>
+              <TableHead>Created At</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredUsers?.map((user) => (
+              <TableRow key={user.id}>
+                <TableCell className="font-medium">{user.username}</TableCell>
+                <TableCell>{user.display_name}</TableCell>
+                <TableCell>
+                  <span className="capitalize">{user.role}</span>
+                </TableCell>
+                <TableCell>
+                  {user.last_seen
+                    ? new Date(user.last_seen).toLocaleDateString()
+                    : "Never"}
+                </TableCell>
+                <TableCell>
+                  {new Date(user.created_at).toLocaleDateString()}
+                </TableCell>
+                <TableCell className="text-right">
+                  <UserTableRowActions user={user} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };
+
+export default UsersList;
