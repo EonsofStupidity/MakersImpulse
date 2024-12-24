@@ -1,6 +1,5 @@
 import { Json } from '@/types/core/json';
 
-// Core enums
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -13,6 +12,43 @@ export interface PreviewPreferences {
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
   [key: string]: Json;
+}
+
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
+  error?: string;
+}
+
+export interface ThemeLifecycleOptions {
+  autoActivate?: boolean;
+  preserveState?: boolean;
+}
+
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  last_sync: string;
+  error?: string;
+}
+
+export interface ThemeSyncOptions {
+  debounce_ms?: number;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeValidationRule {
+  field: string;
+  validate: (value: any) => boolean;
+  message: string;
 }
 
 export interface ThemeBase {
@@ -61,42 +97,7 @@ export interface ThemeBase {
   [key: string]: Json | undefined;
 }
 
-export interface BuildVolume {
-  x: number;
-  y: number;
-  z: number;
-  units: string;
-}
-
-export interface Build {
-  id: string;
-  userId: string;
-  name: string;
-  description: string;
-  buildVolume: BuildVolume;
-  parts: Record<string, any>;
-  images: string[];
-  createdAt: string;
-}
-
-export interface ContentWithAuthor {
-  id: string;
-  title: string;
-  content: Json;
-  metadata: Json;
-  slug: string;
-  status: 'draft' | 'published' | 'archived';
-  type: 'template' | 'guide' | 'part' | 'workflow';
-  version: number;
-  created_at: string;
-  updated_at: string;
-  created_by: { display_name: string };
-  updated_by: { display_name: string };
-}
-
-export interface BuildQueryParams {
-  userId?: string;
-  name?: string;
-  sort?: string;
-  order?: 'asc' | 'desc';
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
