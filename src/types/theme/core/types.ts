@@ -6,13 +6,16 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
+// Make PreviewPreferences compatible with JsonObject
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
+  [key: string]: boolean | string | number; // Add index signature for Json compatibility
 }
 
+// Ensure strict types for all properties
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -47,7 +50,7 @@ export interface ThemeBase {
   real_time_toggle: boolean;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences: PreviewPreferences;
+  preview_preferences: PreviewPreferences & Record<string, Json>;
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
@@ -55,6 +58,7 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
+  [key: string]: Json | undefined; // Add index signature for database compatibility
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
@@ -62,11 +66,36 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
+// Add missing lifecycle and validation types
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
+  error?: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeSyncState {
+  status: 'idle' | 'syncing' | 'error' | 'success';
+  lastSync?: string;
+  error?: string;
+}
+
+export type ThemeValidationRule = (value: any) => ThemeValidationError | null;
+
 export type ThemeFormData = ThemeBase;
-export type SettingsFormData = ThemeBase;
 export type Settings = ThemeBase;
 export type Theme = ThemeBase;
 
+// Ensure AuthUser type matches database schema
 export interface AuthUser {
   id: string;
   email?: string;
@@ -77,9 +106,5 @@ export interface AuthUser {
   created_at: string;
   role?: 'subscriber' | 'maker' | 'admin' | 'super_admin';
   metadata?: Record<string, Json>;
-}
-
-export interface SettingsResponse<T = any> {
-  id: string;
-  value: T;
+  display_name?: string;
 }

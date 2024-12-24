@@ -40,6 +40,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
+      // Type guard for string fields
       const stringFields = [
         'font_size_base',
         'line_height_base',
@@ -52,6 +53,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         'backdrop_blur'
       ] as const;
 
+      // Type guard for number fields
       const numberFields = [
         'default_animation_duration'
       ] as const;
