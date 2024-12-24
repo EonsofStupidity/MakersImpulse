@@ -2,6 +2,12 @@
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur'
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace'
+export type ComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect'
+export type GlassEffectLevel = 'low' | 'medium' | 'high'
+export type UserRole = 'admin' | 'editor' | 'user' | 'subscriber'
+export type ContentStatus = 'draft' | 'published' | 'archived'
+export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | ''
+export type CSSValue = `${number}${CSSUnit}` | string
 
 export interface ThemeBase {
   // Colors (exactly as in DB)
@@ -39,17 +45,25 @@ export interface ThemeBase {
   transition_type: TransitionType
   animations_enabled: boolean
   default_animation_duration: number
+  real_time_toggle?: boolean
+  component_type?: ComponentType
 
   // Optional fields from DB
   preview_preferences?: {
     real_time_updates: boolean
     animation_enabled: boolean
-    glass_effect_level: 'low' | 'medium' | 'high'
+    glass_effect_level: GlassEffectLevel
     update_debounce_ms: number
   }
   parent_theme_id?: string | null
   inheritance_strategy?: ThemeInheritanceStrategy
   inherited_settings?: Record<string, unknown>
+
+  // Site Info
+  site_title?: string
+  tagline?: string
+  logo_url?: string
+  favicon_url?: string
 }
 
 // Form handling type
@@ -61,6 +75,19 @@ export interface ThemeState extends ThemeBase {
   lastSync?: Date | null
   syncStatus?: 'idle' | 'syncing' | 'error'
   syncError?: string
+}
+
+// Theme Lifecycle State
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating'
+  error?: string
+}
+
+// Theme Sync State
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error'
+  last_sync: string
+  error?: string
 }
 
 // Build types
@@ -84,6 +111,8 @@ export interface BuildPart {
   id: string
   name: string
   quantity: number
+  notes?: string
+  attributes?: Record<string, unknown>
 }
 
 export interface BuildImage {
@@ -93,17 +122,25 @@ export interface BuildImage {
   caption?: string
 }
 
+export interface BuildQueryParams {
+  userId?: string
+  sort?: string
+  order?: 'asc' | 'desc'
+}
+
 export type BuildFormData = Omit<Build, 'id' | 'created_at'>
 
 // Auth types
 export interface AuthUser {
   id: string
   email: string
-  createdAt: string
-  updatedAt: string
+  displayName?: string
+  username?: string
   bio?: string
   website?: string
   location?: string
+  createdAt: string
+  updatedAt: string
 }
 
 // Content types
@@ -114,6 +151,69 @@ export interface ContentWithAuthor {
   created_by: { display_name: string }
   created_at: string
   updated_at: string
-  status: 'draft' | 'published' | 'archived'
+  status: ContentStatus
   version: number
+}
+
+// Settings types
+export interface ApplicationSettings {
+  id: string
+  site_title: string
+  tagline?: string
+  logo_url?: string
+  favicon_url?: string
+  metadata?: Record<string, unknown>
+  created_at?: string
+  updated_at?: string
+  created_by?: string
+  updated_by?: string
+}
+
+// Database types
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export interface BuildRow {
+  id: string
+  user_id: string
+  name: string
+  description: string
+  build_volume: Json
+  parts: Json
+  images: Json
+  created_at: string
+}
+
+// Theme Database Types
+export interface ThemeConfiguration {
+  id: string
+  settings: Json
+  updated_at?: string
+  updated_by?: string
+}
+
+// State Types
+export interface ThemeStateData extends ThemeBase {
+  state_version: number
+  last_sync: string
+}
+
+// Style Types
+export interface ThemeStyles {
+  [key: `--${string}`]: string | number
+}
+
+// Animation Types
+export interface ThemeAnimation {
+  transitions: {
+    fade: string
+    slide: string
+    scale: string
+    blur: string
+  }
+  timing: string
+  duration: number
+  motionPreferences: {
+    reducedMotion: boolean
+    prefersReducedMotion: boolean
+  }
 }
