@@ -23,26 +23,26 @@ export const FontColorSettingsSection = ({ form }: { form: UseFormReturn<ThemeBa
             <ColorPicker
               label="Primary Text"
               cssVar="--foreground"
-              value={form.watch("colors.text.primary")}
-              onChange={(color) => form.setValue("colors.text.primary", color)}
+              value={form.watch("text_primary_color")}
+              onChange={(color) => form.setValue("text_primary_color", color)}
             />
             <ColorPicker
               label="Secondary Text"
               cssVar="--muted-foreground"
-              value={form.watch("colors.text.secondary")}
-              onChange={(color) => form.setValue("colors.text.secondary", color)}
+              value={form.watch("text_secondary_color")}
+              onChange={(color) => form.setValue("text_secondary_color", color)}
             />
             <ColorPicker
               label="Link Text"
               cssVar="--link"
-              value={form.watch("colors.text.link")}
-              onChange={(color) => form.setValue("colors.text.link", color)}
+              value={form.watch("text_link_color")}
+              onChange={(color) => form.setValue("text_link_color", color)}
             />
             <ColorPicker
               label="Heading Text"
               cssVar="--heading"
-              value={form.watch("colors.text.heading")}
-              onChange={(color) => form.setValue("colors.text.heading", color)}
+              value={form.watch("text_heading_color")}
+              onChange={(color) => form.setValue("text_heading_color", color)}
             />
           </TabsContent>
 
@@ -50,20 +50,20 @@ export const FontColorSettingsSection = ({ form }: { form: UseFormReturn<ThemeBa
             <ColorPicker
               label="Neon Cyan"
               cssVar="--neon-cyan"
-              value={form.watch("colors.neon.cyan")}
-              onChange={(color) => form.setValue("colors.neon.cyan", color)}
+              value={form.watch("neon_cyan")}
+              onChange={(color) => form.setValue("neon_cyan", color)}
             />
             <ColorPicker
               label="Neon Pink"
               cssVar="--neon-pink"
-              value={form.watch("colors.neon.pink")}
-              onChange={(color) => form.setValue("colors.neon.pink", color)}
+              value={form.watch("neon_pink")}
+              onChange={(color) => form.setValue("neon_pink", color)}
             />
             <ColorPicker
               label="Neon Purple"
               cssVar="--neon-purple"
-              value={form.watch("colors.neon.purple")}
-              onChange={(color) => form.setValue("colors.neon.purple", color)}
+              value={form.watch("neon_purple")}
+              onChange={(color) => form.setValue("neon_purple", color)}
             />
           </TabsContent>
 
@@ -71,20 +71,20 @@ export const FontColorSettingsSection = ({ form }: { form: UseFormReturn<ThemeBa
             <ColorPicker
               label="Primary Color"
               cssVar="--primary"
-              value={form.watch("colors.primary")}
-              onChange={(color) => form.setValue("colors.primary", color)}
+              value={form.watch("primary_color")}
+              onChange={(color) => form.setValue("primary_color", color)}
             />
             <ColorPicker
               label="Secondary Color"
               cssVar="--secondary"
-              value={form.watch("colors.secondary")}
-              onChange={(color) => form.setValue("colors.secondary", color)}
+              value={form.watch("secondary_color")}
+              onChange={(color) => form.setValue("secondary_color", color)}
             />
             <ColorPicker
               label="Accent Color"
               cssVar="--accent"
-              value={form.watch("colors.accent")}
-              onChange={(color) => form.setValue("colors.accent", color)}
+              value={form.watch("accent_color")}
+              onChange={(color) => form.setValue("accent_color", color)}
             />
           </TabsContent>
         </Tabs>
