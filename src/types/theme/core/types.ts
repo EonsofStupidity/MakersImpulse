@@ -5,15 +5,17 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
+export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%';
+export type CSSValue = `${number}${CSSUnit}` | 'auto' | 'none' | 'inherit';
 
-export interface PreviewPreferences {
+export interface PreviewPreferences extends Record<string, Json> {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
-export interface ThemeBase {
+export interface ThemeBase extends Record<string, Json> {
   id?: string;
   site_title: string;
   tagline?: string;
@@ -57,17 +59,30 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
-export interface ThemeConfigurationRow extends Omit<ThemeBase, 'preview_preferences'> {
-  preview_preferences: Json;
-  state_version: number;
-  last_sync: string;
+export interface ThemeLifecycleState {
+  status: 'initial' | 'loading' | 'ready' | 'syncing' | 'error';
+  error?: string;
+  lastSync?: string;
 }
 
-export type SettingsFormData = ThemeBase;
+export interface ThemeSyncState {
+  isSyncing: boolean;
+  lastSyncTime?: string;
+  error?: string;
+}
 
 export interface ThemeValidationError {
-  field: keyof ThemeBase;
+  field: keyof ThemeBase | string;
   message: string;
+  code: string;
+  path?: string[];
+}
+
+export interface ThemeValidationRule {
+  field: keyof ThemeBase | string;
+  validate: (value: any) => boolean;
+  message: string;
+  code: string;
 }
 
 export interface ThemeValidationResult {
@@ -76,26 +91,3 @@ export interface ThemeValidationResult {
 }
 
 export type Theme = ThemeBase;
-
-// Type guard for preview preferences
-export function isPreviewPreferences(value: unknown): value is PreviewPreferences {
-  if (!value || typeof value !== 'object') return false;
-  const v = value as PreviewPreferences;
-  return (
-    typeof v.real_time_updates === 'boolean' &&
-    typeof v.animation_enabled === 'boolean' &&
-    typeof v.update_debounce_ms === 'number' &&
-    ['low', 'medium', 'high'].includes(v.glass_effect_level)
-  );
-}
-
-// Helper to convert Json to PreviewPreferences
-export function convertToPreviewPreferences(json: Json): PreviewPreferences {
-  if (isPreviewPreferences(json)) return json;
-  return {
-    real_time_updates: true,
-    animation_enabled: true,
-    glass_effect_level: 'medium',
-    update_debounce_ms: 100
-  };
-}

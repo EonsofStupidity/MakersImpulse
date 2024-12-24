@@ -1,24 +1,24 @@
-export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
+export type UserRole = 'admin' | 'super_admin' | 'moderator' | 'subscriber';
 
 export interface AuthUser {
   id: string;
-  email?: string | null;
-  role?: UserRole;
-  username?: string;
-  displayName?: string;
+  email: string;
+  role: UserRole;
+  display_name?: string;
+  avatar_url?: string;
   bio?: string;
   website?: string;
   location?: string;
+  created_at: string;
+  updated_at?: string;
+  last_sign_in_at?: string;
+  metadata?: Record<string, any>;
 }
 
-export interface AuthSession {
-  user: AuthUser;
-  expires_at?: number;
-}
-
-export interface AuthState {
-  isLoading: boolean;
-  hasAccess: boolean;
-  error: Error | { message: string } | null;
-  isTransitioning?: boolean;
+export interface Settings {
+  theme?: string;
+  notifications?: boolean;
+  language?: string;
+  timezone?: string;
+  [key: string]: any;
 }
