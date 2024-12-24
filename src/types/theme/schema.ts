@@ -1,4 +1,5 @@
-import { z } from 'zod'
+import { z } from 'zod';
+import { ThemeMode, TransitionType } from '../types';
 
 export const settingsSchema = z.object({
   primary_color: z.string(),
@@ -25,8 +26,8 @@ export const settingsSchema = z.object({
   hover_scale: z.string(),
   box_shadow: z.string(),
   backdrop_blur: z.string(),
-  theme_mode: z.enum(['light', 'dark', 'system']),
-  transition_type: z.enum(['fade', 'slide', 'scale', 'blur']),
+  theme_mode: z.enum(['light', 'dark', 'system'] as const),
+  transition_type: z.enum(['fade', 'slide', 'scale', 'blur'] as const),
   animations_enabled: z.boolean(),
   default_animation_duration: z.number(),
   preview_preferences: z.object({
@@ -38,4 +39,6 @@ export const settingsSchema = z.object({
   parent_theme_id: z.string().nullable().optional(),
   inheritance_strategy: z.enum(['merge', 'override', 'replace']).optional(),
   inherited_settings: z.record(z.unknown()).optional()
-})
+});
+
+export const themeSchema = settingsSchema;

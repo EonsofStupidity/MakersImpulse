@@ -1,14 +1,14 @@
+export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
+
 export interface AuthUser {
-  id: string
-  email?: string
-  displayName?: string
-  avatarUrl?: string
-  role?: string
-  bio?: string
-  website?: string
-  location?: string
-  lastSeen?: Date
-  createdAt?: Date
-  updatedAt?: Date
-  metadata?: Record<string, any>
+  id: string;
+  email: string;
+  displayName?: string;
+  role: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+  bio?: string;
+  website?: string;
+  location?: string;
+  username?: string;
 }

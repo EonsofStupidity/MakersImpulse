@@ -2,7 +2,7 @@ import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { ColorPicker } from "./ColorPicker";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 
 interface AdvancedCSSSectionProps {
