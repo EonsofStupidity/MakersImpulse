@@ -63,10 +63,47 @@ export interface ThemeBase {
   [key: string]: Json | string | boolean | number | PreviewPreferences | Record<string, Json> | undefined | ThemeMode | TransitionType | ThemeComponentType | ThemeInheritanceStrategy;
 }
 
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+// Type aliases for different use cases
+export type ThemeFormData = ThemeBase;
+export type Settings = ThemeBase;
+export type SettingsFormData = ThemeBase;
+export type SettingsResponse = ThemeBase;
+export type Theme = ThemeBase;
+
+// Lifecycle and sync types
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
+  error?: string;
 }
 
-export type ThemeFormData = ThemeBase;
-export type Theme = ThemeBase;
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  error?: string;
+  last_sync?: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export type ThemeValidationResult = {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+};
+
+export interface ThemeValidationRule {
+  validate: (value: any) => boolean;
+  message: string;
+}
+
+export interface ThemeLifecycleOptions {
+  autoInit?: boolean;
+  onStateChange?: (state: ThemeLifecycleState) => void;
+}
+
+export interface ThemeSyncOptions {
+  debounce_ms?: number;
+  onSync?: (state: ThemeSyncState) => void;
+}

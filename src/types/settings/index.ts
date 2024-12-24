@@ -1,5 +1,5 @@
-import { Json } from '@/types/database/json';
-import { BaseEntity } from '../core/common';
+import { Json } from '@/types/core/json';
+import { ThemeBase } from '@/types/theme/core/types';
 
 export type SettingType = 'theme' | 'security' | 'content' | 'system' | 'user' | 'notification' | 'workflow';
 
@@ -12,5 +12,11 @@ export interface UnifiedSetting<T = Json> extends BaseEntity {
   updated_by?: string;
 }
 
-export * from './theme';
-export * from './security';
+interface BaseEntity {
+  id: string;
+  created_at?: string;
+  updated_at?: string;
+  metadata?: Json;
+}
+
+export type { ThemeBase };
