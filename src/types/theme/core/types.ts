@@ -5,17 +5,16 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
+export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
 
-// Make PreviewPreferences compatible with JsonObject
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: boolean | string | number; // Add index signature for Json compatibility
+  [key: string]: boolean | string | number;
 }
 
-// Ensure strict types for all properties
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -58,7 +57,7 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
-  [key: string]: Json | undefined; // Add index signature for database compatibility
+  [key: string]: Json | undefined;
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
@@ -66,7 +65,6 @@ export interface ThemeConfigurationRow extends ThemeBase {
   last_sync: string;
 }
 
-// Add missing lifecycle and validation types
 export interface ThemeLifecycleState {
   status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
@@ -95,7 +93,6 @@ export type ThemeFormData = ThemeBase;
 export type Settings = ThemeBase;
 export type Theme = ThemeBase;
 
-// Ensure AuthUser type matches database schema
 export interface AuthUser {
   id: string;
   email?: string;
@@ -104,7 +101,9 @@ export interface AuthUser {
   website?: string;
   location?: string;
   created_at: string;
-  role?: 'subscriber' | 'maker' | 'admin' | 'super_admin';
+  role?: UserRole;
   metadata?: Record<string, Json>;
   display_name?: string;
 }
+
+export interface SettingsFormData extends ThemeBase {}

@@ -5,7 +5,7 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types/theme";
 
 interface CSSEffectsControlProps {
   label: string;
@@ -19,8 +19,8 @@ interface CSSEffectsControlProps {
   className?: string;
   previewClass?: string;
   description?: string;
-  form?: UseFormReturn<SettingsFormData>;
-  name?: keyof SettingsFormData;
+  form?: UseFormReturn<ThemeBase>;
+  name?: keyof ThemeBase;
 }
 
 export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
@@ -40,8 +40,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
 }) => {
   const handleInputChange = (newValue: string | number) => {
     if (form && name) {
-      // Type guard for string fields
-      const stringFields = [
+      const stringFields: Array<keyof ThemeBase> = [
         'font_size_base',
         'line_height_base',
         'letter_spacing',
@@ -51,16 +50,15 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
         'hover_scale',
         'box_shadow',
         'backdrop_blur'
-      ] as const;
+      ];
 
-      // Type guard for number fields
-      const numberFields = [
+      const numberFields: Array<keyof ThemeBase> = [
         'default_animation_duration'
-      ] as const;
+      ];
 
-      if (stringFields.includes(name as any)) {
+      if (stringFields.includes(name)) {
         form.setValue(name, String(newValue));
-      } else if (numberFields.includes(name as any)) {
+      } else if (numberFields.includes(name)) {
         form.setValue(name, Number(newValue));
       } else {
         form.setValue(name, newValue as any);
