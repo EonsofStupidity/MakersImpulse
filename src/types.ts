@@ -45,8 +45,8 @@ export interface Profile {
 
 // CSS Effects Control Props
 export interface CSSEffectsControlProps {
-  theme: ThemeBase;
-  onChange: (key: keyof ThemeBase['effects'], value: string) => void;
+  theme?: ThemeBase;
+  onChange: (value: string | number) => void;
   className?: string;
   label: string;
   type: string;
@@ -248,4 +248,30 @@ export interface ThemeAnimationTypes {
     reducedMotion: boolean;
     prefersReducedMotion: boolean;
   };
+}
+
+// Add missing type for content with author
+export interface ContentWithAuthor {
+  id: string;
+  title: string;
+  content: Json;
+  type: string;
+  status: ContentStatus;
+  created_by: {
+    display_name: string;
+  };
+  updated_by: {
+    display_name: string;
+  };
+  created_at: string;
+  updated_at: string;
+  metadata?: Json;
+  version: number;
+  slug?: string;
+}
+
+// Add missing type for UserTableRowActionsProps
+export interface UserTableRowActionsProps {
+  userId: string;
+  onActionComplete?: () => void;
 }

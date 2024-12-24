@@ -1,17 +1,28 @@
 import { motion } from "framer-motion";
-import { BuildsList } from "@/components/maker-space/builds/BuildsList";
+import BuildsList from "@/components/maker-space/builds/BuildsList";
 import { CreateBuildButton } from "@/components/maker-space/builds/CreateBuildButton";
+import { useBuildsQuery } from "@/hooks/builds/useBuildsQuery";
 
-const Builds = () => {
+const BuildsPage = () => {
+  const { data: builds, isLoading } = useBuildsQuery();
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
-    <div className="container mx-auto p-6">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="container mx-auto px-4 py-8"
+    >
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">3D Printer Builds</h1>
+        <h1 className="text-3xl font-bold">Builds</h1>
         <CreateBuildButton />
       </div>
-      <BuildsList />
-    </div>
+      <BuildsList builds={builds || []} />
+    </motion.div>
   );
 };
 
-export default Builds;
+export default BuildsPage;

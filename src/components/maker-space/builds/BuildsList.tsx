@@ -1,31 +1,18 @@
 import React from 'react';
 import { Build } from '@/types';
-import { useBuildsQuery } from '@/hooks/builds/useBuildsQuery';
-import { Card } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
 
-const BuildsList = () => {
-  const { data: builds, isLoading, error } = useBuildsQuery();
+interface BuildsListProps {
+  builds: Build[];
+}
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="animate-spin h-6 w-6 text-gray-500" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <div>Error loading builds: {error.message}</div>;
-  }
-
+const BuildsList: React.FC<BuildsListProps> = ({ builds }) => {
   return (
-    <div className="space-y-4">
-      {builds?.map((build: Build) => (
-        <Card key={build.id} className="p-4">
-          <h2 className="text-lg font-bold">{build.name}</h2>
+    <div className="grid gap-4">
+      {builds.map((build) => (
+        <div key={build.id} className="p-4 border rounded">
+          <h3>{build.name}</h3>
           <p>{build.description}</p>
-        </Card>
+        </div>
       ))}
     </div>
   );
