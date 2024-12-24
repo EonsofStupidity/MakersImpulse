@@ -7,9 +7,29 @@ export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-// Lifecycle and sync states
+// Strictly typed preview preferences
+export interface PreviewPreferences {
+  real_time_updates: boolean;
+  animation_enabled: boolean;
+  glass_effect_level: GlassEffectLevel;
+  update_debounce_ms: number;
+  [key: string]: unknown; // Allow additional properties
+}
+
+// Validation types
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code?: string; // Make code optional to fix validation errors
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
 export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error';
+  status: 'initializing' | 'ready' | 'error' | 'deactivating';
   error?: string;
 }
 
@@ -19,27 +39,7 @@ export interface ThemeSyncState {
   error?: string;
 }
 
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export type ThemeValidationRule = (value: any) => boolean | string;
-
-// Strictly typed preview preferences
-export interface PreviewPreferences {
-  real_time_updates: boolean;
-  animation_enabled: boolean;
-  glass_effect_level: GlassEffectLevel;
-  update_debounce_ms: number;
-}
-
-// Base theme interface with explicit property types
+// Base theme interface with explicit property types and index signature
 export interface ThemeBase {
   id?: string;
   site_title: string;
@@ -82,6 +82,13 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
+  [key: string]: unknown; // Add index signature to allow additional properties
+}
+
+// Database row type with additional fields
+export interface ThemeConfigurationRow extends ThemeBase {
+  state_version: number;
+  last_sync: string;
 }
 
 // Type aliases for form data and settings
@@ -90,11 +97,57 @@ export type SettingsFormData = ThemeBase;
 export type Settings = ThemeBase;
 export type Theme = ThemeBase;
 
-// Database row type with additional fields
-export interface ThemeConfigurationRow extends ThemeBase {
-  state_version: number;
-  last_sync: string;
+// Response type for settings
+export interface SettingsResponse<T = any> {
+  id: string;
+  value: T;
 }
 
-// Helper type to extract string keys from ThemeBase
-export type ThemeBaseStringKeys = Extract<keyof ThemeBase, string>;
+// Content types
+export interface ContentWithAuthor {
+  id: string;
+  title: string;
+  content: Json;
+  created_by: {
+    display_name: string;
+  };
+  created_at: string;
+  updated_at: string;
+  status: 'draft' | 'published' | 'archived';
+  type: 'template' | 'component' | 'page' | 'workflow';
+  version: number;
+  metadata: Json;
+  slug: string;
+  updated_by?: string;
+}
+
+// Build types
+export interface BuildVolume {
+  x: number;
+  y: number;
+  z: number;
+  units: string;
+}
+
+export interface Build {
+  id: string;
+  userId: string;
+  name: string;
+  description: string;
+  buildVolume: BuildVolume;
+  parts: Json;
+  images: Json;
+  createdAt: string;
+}
+
+// Auth types
+export interface AuthUser {
+  id: string;
+  email: string;
+  displayName?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  created_at?: string;
+  role?: 'subscriber' | 'maker' | 'admin' | 'super_admin';
+}
