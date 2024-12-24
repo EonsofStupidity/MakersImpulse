@@ -35,7 +35,6 @@ export const transformDatabaseSettings = (data: Json): ThemeBase => {
   }
 
   return {
-    site_title: typedData.site_title as string || 'Default Title',
     primary_color: typedData.primary_color as string || '#000000',
     secondary_color: typedData.secondary_color as string || '#000000',
     accent_color: typedData.accent_color as string || '#000000',

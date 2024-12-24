@@ -1,15 +1,9 @@
-import { Json } from '@/types/core/json';
-
-// Base Types
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
-export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
-export type CSSValue = `${number}${CSSUnit}`;
 
-// Preview Preferences
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -17,10 +11,7 @@ export interface PreviewPreferences {
   update_debounce_ms: number;
 }
 
-// Core Theme Interface
 export interface ThemeBase {
-  site_title: string;
-  tagline?: string;
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -54,30 +45,4 @@ export interface ThemeBase {
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, any>;
   component_type?: ThemeComponentType;
-}
-
-// Validation Types
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-// Lifecycle Types
-export interface ThemeLifecycleState {
-  isInitialized: boolean;
-  isLoading: boolean;
-  error: string | null;
-}
-
-// Sync Types
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  lastSync?: string;
-  error?: string;
 }
