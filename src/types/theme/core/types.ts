@@ -1,23 +1,7 @@
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
-export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
-export type GlassEffectLevel = 'low' | 'medium' | 'high';
-
-export interface PreviewPreferences {
-  real_time_updates: boolean;
-  animation_enabled: boolean;
-  glass_effect_level: GlassEffectLevel;
-  update_debounce_ms: number;
-}
 
 export interface ThemeBase {
-  // Core Properties
-  id?: string;
-  site_title?: string;
-  tagline?: string;
-  logo_url?: string;
-  favicon_url?: string;
-
   // Colors
   primary_color: string;
   secondary_color: string;
@@ -53,35 +37,4 @@ export interface ThemeBase {
   transition_type: TransitionType;
   animations_enabled: boolean;
   default_animation_duration: number;
-  preview_preferences?: PreviewPreferences;
-
-  // Nested Structures
-  typography?: {
-    heading: string;
-    body: string;
-    base: string;
-  };
-  effects?: {
-    transition: {
-      duration: string;
-    };
-    shadow: {
-      color: string;
-      boxShadow: string;
-    };
-    hover: {
-      scale: string;
-    };
-    backdrop: {
-      blur: string;
-    };
-  };
-  spacing?: {
-    borderRadius: string;
-    unit: string;
-  };
-  animations?: {
-    enabled: boolean;
-    defaultDuration: number;
-  };
 }
