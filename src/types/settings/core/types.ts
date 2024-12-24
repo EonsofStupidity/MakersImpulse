@@ -1,15 +1,9 @@
+import { ThemeBase } from '@/types/theme/core/types';
+
 export type SettingType = 'theme' | 'system' | 'user' | 'security';
 
-export interface SettingsFormData {
-  // Site Configuration
-  site_title: string;
-  tagline?: string;
-  
-  // Assets
-  logo_url?: string;
-  favicon_url?: string;
-  
-  // Metadata
+export interface SettingsFormData extends ThemeBase {
+  id?: string;
   created_at?: string;
   updated_at?: string;
   created_by?: string;
