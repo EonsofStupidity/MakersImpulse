@@ -12,7 +12,6 @@ export interface PreviewPreferences {
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
-  [key: string]: Json;
 }
 
 export interface ThemeBase {
@@ -58,7 +57,9 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: any; // Add index signature to resolve type errors
+  state_version?: number;
+  last_sync?: string;
+  [key: string]: any;
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
