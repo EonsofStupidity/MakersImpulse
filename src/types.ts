@@ -13,15 +13,15 @@ export type SettingType = 'theme' | 'system' | 'user'
 // Auth types
 export interface AuthUser {
   id: string
-  email?: string | null
+  email: string
   displayName?: string | null
   username?: string | null
   bio?: string | null
   website?: string | null
   location?: string | null
-  createdAt: string
-  updatedAt: string
-  role?: UserRole
+  createdAt: Date
+  updatedAt: Date
+  role: UserRole
   avatar_url?: string | null
   last_seen?: string | null
   metadata?: Record<string, unknown>
@@ -43,7 +43,22 @@ export interface Profile {
   metadata?: Record<string, unknown>
 }
 
-// Direct 1:1 mapping with database columns
+// CSS Effects Control Props
+export interface CSSEffectsControlProps {
+  theme: ThemeBase
+  onChange: (key: keyof ThemeBase['effects'], value: string) => void
+  className?: string
+  label: string
+  type: string
+  value: string | number
+  min?: number
+  max?: number
+  step?: number
+  options?: Array<{ label: string; value: string }>
+  description?: string
+}
+
+// Theme Base
 export interface ThemeBase {
   id?: string
   colors?: {
@@ -135,26 +150,7 @@ export interface ThemeBase {
   updated_by?: string
 }
 
-export type ThemeFormData = ThemeBase
-
-export interface ThemeState extends ThemeBase {
-  isDirty?: boolean
-  lastSync?: Date | null
-  syncStatus?: 'idle' | 'syncing' | 'error'
-  syncError?: string
-}
-
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating'
-  error?: string
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error'
-  last_sync: string
-  error?: string
-}
-
+// Build types
 export interface Build {
   id: string
   user_id: string
@@ -194,74 +190,7 @@ export interface BuildQueryParams {
 
 export type BuildFormData = Omit<Build, 'id' | 'created_at'>
 
-export interface ContentWithAuthor {
-  id: string
-  title: string
-  content: unknown
-  created_by: { display_name: string }
-  created_at: string
-  updated_at: string
-  status: ContentStatus
-  version: number
-}
-
-export interface ApplicationSettings {
-  id: string
-  site_title: string
-  tagline?: string
-  logo_url?: string
-  favicon_url?: string
-  metadata?: Record<string, unknown>
-  created_at?: string
-  updated_at?: string
-  created_by?: string
-  updated_by?: string
-}
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
-
-export interface BuildRow {
-  id: string
-  user_id: string
-  name: string
-  description: string
-  build_volume: Json
-  parts: Json
-  images: Json
-  created_at: string
-}
-
-export interface ThemeConfiguration {
-  id: string
-  settings: Json
-  updated_at?: string
-  updated_by?: string
-}
-
-export interface ThemeStateData extends ThemeBase {
-  state_version: number
-  last_sync: string
-}
-
-export interface ThemeStyles {
-  [key: `--${string}`]: string | number
-}
-
-export interface ThemeAnimation {
-  transitions: {
-    fade: string
-    slide: string
-    scale: string
-    blur: string
-  }
-  timing: string
-  duration: number
-  motionPreferences: {
-    reducedMotion: boolean
-    prefersReducedMotion: boolean
-  }
-}
-
+// Settings types
 export interface Settings {
   id: string
   category: SettingType
@@ -273,6 +202,28 @@ export interface Settings {
   updated_at?: string
   created_by?: string
   updated_by?: string
+}
+
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+
+export type SettingsFormData = ThemeBase
+
+export interface ThemeState extends ThemeBase {
+  isDirty?: boolean
+  lastSync?: Date | null
+  syncStatus?: 'idle' | 'syncing' | 'error'
+  syncError?: string
+}
+
+export interface ThemeLifecycleState {
+  status: 'initializing' | 'ready' | 'error' | 'deactivating'
+  error?: string
+}
+
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error'
+  last_sync: string
+  error?: string
 }
 
 export interface ThemeStateTypes {
@@ -297,4 +248,29 @@ export interface ThemeAnimationTypes {
     reducedMotion: boolean
     prefersReducedMotion: boolean
   }
+}
+
+// Content types
+export interface ContentWithAuthor {
+  id: string
+  title: string
+  content: unknown
+  created_by: { display_name: string }
+  created_at: string
+  updated_at: string
+  status: ContentStatus
+  version: number
+}
+
+export interface ApplicationSettings {
+  id: string
+  site_title: string
+  tagline?: string
+  logo_url?: string
+  favicon_url?: string
+  metadata?: Record<string, unknown>
+  created_at?: string
+  updated_at?: string
+  created_by?: string
+  updated_by?: string
 }
