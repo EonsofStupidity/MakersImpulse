@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { useSettingsForm } from "./hooks/useSettingsForm";
 import { ThemeSettingsFormContainer } from "./components/ThemeSettingsFormContainer";
 import { ThemePreviewContainer } from "./components/ThemePreviewContainer";

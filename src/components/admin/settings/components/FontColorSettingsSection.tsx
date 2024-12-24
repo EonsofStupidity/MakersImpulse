@@ -3,7 +3,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { ColorPicker } from "./ColorPicker";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types";
 
 export const FontColorSettingsSection = ({ form }: { form: UseFormReturn<ThemeBase> }) => {
   return (
