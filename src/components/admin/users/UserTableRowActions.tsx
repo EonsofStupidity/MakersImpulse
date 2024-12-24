@@ -39,4 +39,4 @@ const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTableRowAct
   );
 };
 
-export default UserTableRowActions;
+export { UserTableRowActions };
