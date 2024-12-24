@@ -7,16 +7,16 @@ export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%';
 export type CSSValue = `${number}${CSSUnit}` | 'auto' | 'none' | 'inherit';
+export type UserRole = 'admin' | 'super_admin' | 'subscriber' | 'maker';
 
-export interface PreviewPreferences extends Record<string, Json> {
+export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
   glass_effect_level: GlassEffectLevel;
   update_debounce_ms: number;
 }
 
-export interface ThemeBase extends Record<string, Json> {
-  id?: string;
+export interface ThemeBase {
   site_title: string;
   tagline?: string;
   primary_color: string;
@@ -88,6 +88,31 @@ export interface ThemeValidationRule {
 export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
+}
+
+export interface Settings extends ThemeBase {
+  id: string;
+  created_at?: string;
+}
+
+export interface SettingsFormData extends ThemeBase {
+  // Form-specific fields that extend ThemeBase
+}
+
+export interface SettingsResponse {
+  data: Settings;
+  error: null | Error;
+}
+
+export interface ThemeConfigurationRow extends ThemeBase {
+  id: string;
+  created_at: string;
+  state_version: number;
+  last_sync: string;
+}
+
+export interface ThemeConfiguration extends ThemeConfigurationRow {
+  preview_preferences: PreviewPreferences & Record<string, Json>;
 }
 
 export type Theme = ThemeBase;
