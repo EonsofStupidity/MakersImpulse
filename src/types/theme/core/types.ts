@@ -58,7 +58,7 @@ export interface ThemeBase {
   updated_at?: string;
   updated_by?: string;
   menu_animation_type?: 'fade' | 'slide-down' | 'scale' | 'blur';
-  [key: string]: any; // Add index signature
+  [key: string]: any; // Add index signature to resolve type errors
 }
 
 export interface ThemeConfigurationRow extends ThemeBase {
