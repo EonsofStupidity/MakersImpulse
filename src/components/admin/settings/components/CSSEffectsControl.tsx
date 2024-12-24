@@ -5,7 +5,8 @@ import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase, CSSValue } from "@/types/theme";
+import { convertToNumber, convertToString, formatCSSValue } from "@/utils/css";
 
 interface CSSEffectsControlProps {
   label: string;
@@ -57,7 +58,7 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
       ];
 
       if (stringFields.includes(name)) {
-        form.setValue(name, String(newValue));
+        form.setValue(name, formatCSSValue(newValue));
       } else if (numberFields.includes(name)) {
         form.setValue(name, Number(newValue));
       } else {
@@ -71,20 +72,21 @@ export const CSSEffectsControl: React.FC<CSSEffectsControlProps> = ({
   const renderControl = () => {
     switch (type) {
       case "slider":
+        const numValue = typeof value === 'string' ? convertToNumber(value as CSSValue) : value;
         return (
           <div className="flex items-center gap-4">
             <Slider
-              value={[typeof value === 'number' ? value : parseFloat(value) || 0]}
+              value={[numValue]}
               min={min}
               max={max}
               step={step}
-              onValueChange={(values) => handleInputChange(values[0])}
+              onValueChange={(values) => handleInputChange(convertToString(values[0]))}
               className="flex-1"
             />
             <Input
               type="number"
-              value={value}
-              onChange={(e) => handleInputChange(Number(e.target.value))}
+              value={numValue}
+              onChange={(e) => handleInputChange(convertToString(Number(e.target.value)))}
               className="w-20 bg-gray-700/50 border-gray-600 text-white"
               min={min}
               max={max}

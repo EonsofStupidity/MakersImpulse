@@ -7,6 +7,9 @@ export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
 
+export type CSSValue = string;
+export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
+
 export interface PreviewPreferences {
   real_time_updates: boolean;
   animation_enabled: boolean;
@@ -31,18 +34,18 @@ export interface ThemeBase {
   neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
+  font_size_base: CSSValue;
+  font_weight_normal: CSSValue;
+  font_weight_bold: CSSValue;
+  line_height_base: CSSValue;
+  letter_spacing: CSSValue;
+  border_radius: CSSValue;
+  spacing_unit: CSSValue;
+  transition_duration: CSSValue;
   shadow_color: string;
-  hover_scale: string;
+  hover_scale: CSSValue;
   box_shadow: string;
-  backdrop_blur: string;
+  backdrop_blur: CSSValue;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   component_type?: ThemeComponentType;
@@ -70,40 +73,6 @@ export interface ThemeLifecycleState {
   error?: string;
 }
 
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export interface ThemeSyncState {
-  status: 'idle' | 'syncing' | 'error' | 'success';
-  lastSync?: string;
-  error?: string;
-}
-
-export type ThemeValidationRule = (value: any) => ThemeValidationError | null;
-
 export type ThemeFormData = ThemeBase;
 export type Settings = ThemeBase;
 export type Theme = ThemeBase;
-
-export interface AuthUser {
-  id: string;
-  email?: string;
-  displayName: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  created_at: string;
-  role?: UserRole;
-  metadata?: Record<string, Json>;
-  display_name?: string;
-}
-
-export interface SettingsFormData extends ThemeBase {}
