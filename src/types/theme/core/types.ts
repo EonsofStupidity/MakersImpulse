@@ -5,9 +5,6 @@ export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation'
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
-export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%';
-export type CSSValue = `${number}${CSSUnit}` | 'auto' | 'none' | 'inherit';
-export type UserRole = 'admin' | 'super_admin' | 'subscriber' | 'maker';
 
 export interface PreviewPreferences {
   real_time_updates: boolean;
@@ -53,34 +50,20 @@ export interface ThemeBase {
   parent_theme_id?: string;
   inheritance_strategy: ThemeInheritanceStrategy;
   inherited_settings: Record<string, Json>;
-  logo_url?: string;
-  favicon_url?: string;
+}
+
+export type SettingsFormData = ThemeBase;
+
+export interface ThemeConfiguration extends ThemeBase {
+  id: string;
+  created_at?: string;
   updated_at?: string;
-  updated_by?: string;
-}
-
-export interface ThemeLifecycleState {
-  status: 'initial' | 'loading' | 'ready' | 'syncing' | 'error';
-  error?: string;
-  lastSync?: string;
-}
-
-export interface ThemeSyncState {
-  isSyncing: boolean;
-  lastSyncTime?: string;
-  error?: string;
+  state_version?: number;
+  last_sync?: string;
 }
 
 export interface ThemeValidationError {
-  field: keyof ThemeBase | string;
-  message: string;
-  code: string;
-  path?: string[];
-}
-
-export interface ThemeValidationRule {
-  field: keyof ThemeBase | string;
-  validate: (value: any) => boolean;
+  field: keyof ThemeBase;
   message: string;
   code: string;
 }
@@ -89,30 +72,3 @@ export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
 }
-
-export interface Settings extends ThemeBase {
-  id: string;
-  created_at?: string;
-}
-
-export interface SettingsFormData extends ThemeBase {
-  // Form-specific fields that extend ThemeBase
-}
-
-export interface SettingsResponse {
-  data: Settings;
-  error: null | Error;
-}
-
-export interface ThemeConfigurationRow extends ThemeBase {
-  id: string;
-  created_at: string;
-  state_version: number;
-  last_sync: string;
-}
-
-export interface ThemeConfiguration extends ThemeConfigurationRow {
-  preview_preferences: PreviewPreferences & Record<string, Json>;
-}
-
-export type Theme = ThemeBase;
