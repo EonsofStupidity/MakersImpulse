@@ -1,5 +1,5 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types/theme/core/types';
 
 interface ThemeTextPreviewProps {
   colors: Partial<ThemeBase>;
@@ -11,16 +11,16 @@ export const ThemeTextPreview: React.FC<ThemeTextPreviewProps> = ({ colors }) =>
       <div>
         <h3 className="text-sm font-medium text-white mb-2">Text Styles</h3>
         <div className="space-y-2">
-          <p style={{ color: colors.text_primary_color }}>
+          <p style={{ color: colors.colors?.text.primary }}>
             Primary Text Color Sample
           </p>
-          <p style={{ color: colors.text_secondary_color }}>
+          <p style={{ color: colors.colors?.text.secondary }}>
             Secondary Text Color Sample
           </p>
-          <p style={{ color: colors.text_link_color }}>
+          <p style={{ color: colors.colors?.text.link }}>
             Link Text Color Sample
           </p>
-          <h4 style={{ color: colors.text_heading_color }}>
+          <h4 style={{ color: colors.colors?.text.heading }}>
             Heading Text Color Sample
           </h4>
         </div>
