@@ -1,4 +1,4 @@
-// Core theme types that everything else builds from
+// Core theme types
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type ThemeComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -58,13 +58,13 @@ export interface ThemeBase {
   updated_by?: string;
 }
 
-// Database-specific theme type that extends base theme
+// Database-specific theme type
 export interface ThemeConfiguration extends ThemeBase {
   state_version?: number;
   last_sync?: string;
 }
 
-// Type for theme validation results
+// Theme validation types
 export interface ThemeValidationResult {
   isValid: boolean;
   errors: ThemeValidationError[];
