@@ -7,6 +7,26 @@ interface ThemeAnimationPreviewProps {
 }
 
 export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ colors }) => {
+  const getColor = (key: string) => {
+    if (colors.colors) {
+      // New nested structure
+      switch (key) {
+        case 'primary': return colors.colors.primary;
+        case 'secondary': return colors.colors.secondary;
+        case 'accent': return colors.colors.accent;
+        default: return undefined;
+      }
+    } else {
+      // Legacy flat structure
+      switch (key) {
+        case 'primary': return (colors as any).primary_color;
+        case 'secondary': return (colors as any).secondary_color;
+        case 'accent': return (colors as any).accent_color;
+        default: return undefined;
+      }
+    }
+  };
+
   const animationEnabled = colors.animations?.enabled ?? true;
   const duration = colors.animations?.defaultDuration ? colors.animations.defaultDuration / 1000 : 0.3;
   const hoverScale = parseFloat(colors.effects?.hover.scale || '1.05');
@@ -29,7 +49,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
             transition={{ duration }}
             className="p-4 rounded-lg"
             style={{ 
-              backgroundColor: colors.colors?.primary,
+              backgroundColor: getColor('primary'),
               backdropFilter: `blur(${colors.effects?.backdrop.blur || '0px'})`,
               boxShadow: colors.effects?.shadow.boxShadow
             }}
@@ -41,7 +61,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
             animate={{ opacity: 1 }}
             transition={{ duration }}
             className="p-4 rounded-lg"
-            style={{ backgroundColor: colors.colors?.secondary }}
+            style={{ backgroundColor: getColor('secondary') }}
           >
             Fade Animation
           </motion.div>
@@ -50,7 +70,7 @@ export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ co
             animate={{ x: 0 }}
             transition={{ duration }}
             className="p-4 rounded-lg"
-            style={{ backgroundColor: colors.colors?.accent }}
+            style={{ backgroundColor: getColor('accent') }}
           >
             Slide Animation
           </motion.div>
