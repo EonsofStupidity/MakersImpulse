@@ -1,5 +1,6 @@
 import { ThemeBase, ThemeState } from '@/types';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
+
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -31,3 +32,4 @@ export const useThemeLifecycle = () => {
 
   return { theme, isLoading };
 };
+
