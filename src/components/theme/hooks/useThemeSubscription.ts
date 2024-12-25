@@ -4,16 +4,22 @@ import { supabase } from '@/integrations/supabase/client';
 
 export const useThemeSubscription = (onThemeChange: (theme: ThemeBase) => void) => {
   useEffect(() => {
-    const subscription = supabase
-      .from('theme_configuration')
-      .on('UPDATE', (payload) => {
-        const updatedTheme = payload.new as ThemeBase;
-        onThemeChange(updatedTheme);
-      })
+    const channel = supabase.channel('theme_changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'theme_configuration'
+        },
+        (payload) => {
+          onThemeChange(payload.new as ThemeBase);
+        }
+      )
       .subscribe();
 
     return () => {
-      supabase.removeSubscription(subscription);
+      void supabase.removeChannel(channel);
     };
   }, [onThemeChange]);
 };
