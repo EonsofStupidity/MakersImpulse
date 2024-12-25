@@ -90,7 +90,6 @@ export interface ThemeBase {
     fontFamily: {
       heading: string;
       body: string;
-      fontFamilyHeading: string;
     };
     fontSize: {
       base: string;
@@ -219,9 +218,6 @@ export interface AuthUser {
   metadata?: Record<string, unknown>;
 }
 
-// Form Types
-export type { UseFormReturn } from 'react-hook-form';
-
 // Settings Types
 export interface Settings extends ThemeBase {
   category: SettingType;
@@ -249,7 +245,6 @@ export interface Profile {
 
 // Props Types
 export interface UserTableRowActionsProps {
-  user: Profile;
   onRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
