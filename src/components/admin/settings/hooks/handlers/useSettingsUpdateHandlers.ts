@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings } from "@/types";
+import { Settings, ThemeBase } from "@/types";
 import { toast } from "sonner";
 
 export const useSettingsUpdateHandlers = () => {
@@ -8,15 +8,7 @@ export const useSettingsUpdateHandlers = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
 
-  const handleLogoUpload = (file: File) => {
-    setLogoFile(file);
-  };
-
-  const handleFaviconUpload = (file: File) => {
-    setFaviconFile(file);
-  };
-
-  const handleSettingsUpdate = async (settings: Settings) => {
+  const handleSettingsUpdate = async (settings: ThemeBase) => {
     setIsSaving(true);
     try {
       const { data, error } = await supabase
@@ -24,9 +16,7 @@ export const useSettingsUpdateHandlers = () => {
         .update(settings)
         .eq("id", settings.id);
 
-      if (error) {
-        throw error;
-      }
+      if (error) throw error;
 
       toast.success("Settings updated successfully");
       return data;
@@ -36,6 +26,14 @@ export const useSettingsUpdateHandlers = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleLogoUpload = (file: File) => {
+    setLogoFile(file);
+  };
+
+  const handleFaviconUpload = (file: File) => {
+    setFaviconFile(file);
   };
 
   return {
