@@ -1,6 +1,6 @@
-import { ThemeBase } from '@/types';
-import { supabase } from '@/integrations/supabase/client';
 import { useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { ThemeBase } from '@/types';
 
 export const useThemeSubscription = (onThemeChange: (theme: ThemeBase) => void) => {
   useEffect(() => {
@@ -13,8 +13,7 @@ export const useThemeSubscription = (onThemeChange: (theme: ThemeBase) => void) 
           table: 'theme_configuration'
         },
         (payload) => {
-          const updatedTheme = payload.new as unknown as ThemeBase;
-          onThemeChange(updatedTheme);
+          onThemeChange(payload.new as ThemeBase);
         }
       )
       .subscribe();

@@ -1,4 +1,4 @@
-import { UserRole, Settings } from '@/types';
+import { UserRole } from '@/types';
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,11 +9,11 @@ interface UserTableRowActionsProps {
   onRoleChange: (userId: string, newRole: UserRole) => void;
 }
 
-const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTableRowActionsProps) => {
+export const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTableRowActionsProps) => {
   const handleRoleChange = async (newRole: UserRole) => {
     try {
       const { error } = await supabase
-        .from('users')
+        .from('profiles')
         .update({ role: newRole })
         .eq('id', userId);
 
@@ -38,5 +38,3 @@ const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTableRowAct
     </div>
   );
 };
-
-export { UserTableRowActions };
