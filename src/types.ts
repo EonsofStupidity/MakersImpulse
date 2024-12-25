@@ -147,7 +147,6 @@ export interface ThemeState extends ThemeBase {
   error: string | null;
 }
 
-// Build Types
 export interface BuildVolume {
   x: number;
   y: number;
@@ -181,7 +180,7 @@ export interface Build {
   created_at: string;
 }
 
-export interface BuildFormData extends Omit<Build, 'id' | 'user_id' | 'created_at'> {}
+export interface BuildFormData extends Omit<Build, 'id' | 'created_at'> {}
 
 export interface BuildQueryParams {
   userId?: string;
@@ -193,7 +192,6 @@ export interface BuildQueryParams {
   order?: string;
 }
 
-// Auth Types
 export interface AuthUser {
   id: string;
   email: string;
@@ -210,7 +208,6 @@ export interface AuthUser {
   metadata?: Record<string, unknown>;
 }
 
-// Settings Types
 export interface Settings extends ThemeBase {
   category: SettingType;
   key: string;
@@ -219,7 +216,6 @@ export interface Settings extends ThemeBase {
   is_encrypted?: boolean;
 }
 
-// Profile Types
 export interface Profile {
   id: string;
   username?: string;
@@ -235,9 +231,9 @@ export interface Profile {
   metadata?: Record<string, unknown>;
 }
 
-// Props Types
 export interface UserTableRowActionsProps {
   onRoleChange: (userId: string, newRole: UserRole) => void;
+  user: Profile;
 }
 
 export interface BuildFormContainerProps {
@@ -250,22 +246,37 @@ export interface BuildImagesSectionProps {
   onImagesChange: (images: BuildImage[]) => void;
 }
 
-// Content Types
 export interface ContentWithAuthor {
   id: string;
   title: string;
   content: Json;
   type: string;
   status: ContentStatus;
-  created_by: {
-    display_name: string;
-  };
-  updated_by: {
-    display_name: string;
-  };
+  created_by: string;
+  updated_by: string;
   created_at: string;
   updated_at: string;
   metadata?: Json;
   version: number;
   slug?: string;
+}
+
+export interface ThemeStyles {
+  [key: string]: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeSyncState {
+  lastSync: string | null;
+  syncStatus: 'idle' | 'syncing' | 'error';
+  syncError?: string;
 }
