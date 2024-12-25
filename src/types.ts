@@ -70,52 +70,6 @@ export interface ThemeBase {
   updated_by?: string;
   created_at?: string;
   created_by?: string;
-  colors?: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    text: {
-      primary: string;
-      secondary: string;
-      heading: string;
-      link: string;
-    };
-    neon: {
-      cyan: string;
-      pink: string;
-      purple: string;
-    };
-  };
-  typography?: {
-    fontFamily: {
-      heading: string;
-      body: string;
-    };
-    fontSize: {
-      base: string;
-    };
-    fontWeight: {
-      normal: string;
-      bold: string;
-    };
-    lineHeight: {
-      base: string;
-    };
-    letterSpacing: string;
-  };
-  effects?: {
-    borderRadius: string;
-    boxShadow: string;
-    backdropBlur: string;
-    shadowColor: string;
-  };
-  spacing?: {
-    unit: string;
-  };
-  animations?: {
-    enabled: boolean;
-    duration: number;
-  };
 }
 
 export interface ThemeState extends ThemeBase {
