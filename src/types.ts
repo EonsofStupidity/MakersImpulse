@@ -269,4 +269,3 @@ export interface ContentWithAuthor {
   version: number;
   slug?: string;
 }
-
