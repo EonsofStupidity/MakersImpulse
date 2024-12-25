@@ -1,3 +1,5 @@
+import { UseFormReturn as HookFormReturn } from 'react-hook-form';
+
 // Core Types
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
@@ -10,8 +12,8 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
 
-// JSON Type
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+// Re-export UseFormReturn
+export type UseFormReturn<T = any> = HookFormReturn<T>;
 
 // Theme Types
 export interface ThemePreviewPreferences {
@@ -73,6 +75,7 @@ export interface ThemeBase {
       primary: string;
       secondary: string;
       heading: string;
+      link: string;
     };
     neon: {
       cyan: string;
@@ -84,6 +87,7 @@ export interface ThemeBase {
     fontFamily: {
       heading: string;
       body: string;
+      fontFamilyHeading: string;
     };
     fontSize: {
       base: string;
@@ -101,6 +105,7 @@ export interface ThemeBase {
     borderRadius: string;
     boxShadow: string;
     backdropBlur: string;
+    shadowColor: string;
   };
   spacing?: {
     unit: string;
