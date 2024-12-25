@@ -25,23 +25,6 @@ export interface ThemeValidationResult {
   errors: ThemeValidationError[];
 }
 
-// Theme State Types
-export interface ThemeState extends ThemeBase {
-  isLoading: boolean;
-  error: string | null;
-  isDirty?: boolean;
-  lastSync?: string;
-  syncStatus?: string;
-  syncError?: string;
-}
-
-// Theme Sync State
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  lastSync?: string;
-  error?: string;
-}
-
 // Theme Base
 export interface ThemeBase {
   id?: string;
@@ -92,6 +75,39 @@ export interface ThemeBase {
   updated_by?: string;
   created_at?: string;
   created_by?: string;
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    text: {
+      primary: string;
+      secondary: string;
+      link: string;
+      heading: string;
+    };
+    neon: {
+      cyan: string;
+      pink: string;
+      purple: string;
+    };
+  };
+}
+
+// Theme State Types
+export interface ThemeState extends ThemeBase {
+  isLoading: boolean;
+  error: string | null;
+  isDirty?: boolean;
+  lastSync?: string;
+  syncStatus?: string;
+  syncError?: string;
+}
+
+// Theme Sync State
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  lastSync?: string;
+  error?: string;
 }
 
 // Theme Styles
@@ -134,50 +150,6 @@ export interface CSSEffectsControlProps {
   options?: Array<{ label: string; value: string }>;
   description?: string;
   className?: string;
-}
-
-// Build Types
-export interface BuildVolume {
-  x: number;
-  y: number;
-  z: number;
-  units: string;
-}
-
-export interface BuildPart {
-  id: string;
-  name: string;
-  quantity: number;
-  notes?: string;
-  attributes?: Record<string, unknown>;
-}
-
-export interface BuildImage {
-  url: string;
-  type: string;
-  alt?: string;
-  caption?: string;
-}
-
-export interface Build {
-  id: string;
-  user_id: string;
-  name: string;
-  description?: string;
-  build_volume: BuildVolume;
-  parts: BuildPart[];
-  images: BuildImage[];
-  created_at: string;
-}
-
-export interface BuildFormData extends Omit<Build, 'id' | 'user_id' | 'created_at'> {}
-
-export interface BuildQueryParams {
-  userId?: string;
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
 }
 
 // Auth Types
@@ -278,4 +250,50 @@ export interface Settings extends ThemeBase {
   value: Json;
   metadata?: Json;
   is_encrypted?: boolean;
+}
+
+// Build Types
+export interface BuildVolume {
+  x: number;
+  y: number;
+  z: number;
+  units: string;
+}
+
+export interface BuildPart {
+  id: string;
+  name: string;
+  quantity: number;
+  notes?: string;
+  attributes?: Record<string, unknown>;
+}
+
+export interface BuildImage {
+  url: string;
+  type: string;
+  alt?: string;
+  caption?: string;
+}
+
+export interface Build {
+  id: string;
+  user_id: string;
+  name: string;
+  description?: string;
+  build_volume: BuildVolume;
+  parts: BuildPart[];
+  images: BuildImage[];
+  created_at: string;
+}
+
+export interface BuildFormData extends Omit<Build, 'id' | 'user_id' | 'created_at'> {}
+
+export interface BuildQueryParams {
+  userId?: string;
+  limit?: number;
+  offset?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+  sort?: string;
+  order?: string;
 }
