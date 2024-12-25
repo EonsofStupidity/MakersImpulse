@@ -8,12 +8,12 @@ export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
+  const { settings, isLoading, updateSettings, isUpdating } = useSettings();
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
       console.log("Updating settings:", settings);
-      await updateSetting(settings);
+      await updateSettings(settings as ThemeBase);
       toast.success("Theme settings updated");
     } catch (error) {
       console.error("Error updating settings:", error);
@@ -34,7 +34,7 @@ export const useSettingsForm = () => {
             update_debounce_ms: 100
           }
         })
-        .eq('id', themeSettings?.id);
+        .eq('id', settings?.id);
 
       if (error) throw error;
       toast.success("Theme reset to defaults");
@@ -48,7 +48,7 @@ export const useSettingsForm = () => {
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   return {
-    settings: themeSettings?.value as ThemeBase,
+    settings: settings as ThemeBase,
     isLoading,
     isSaving: isUpdating,
     logoFile,

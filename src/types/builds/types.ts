@@ -1,30 +1,17 @@
-export interface BuildImage {
-  url: string;
-  alt: string;
-  caption: string;
-  type: string;
-}
+import { Json } from '@/types';
 
-export interface BuildPart {
-  id: string;
-  name: string;
-  quantity: number;
-  notes?: string;
-  attributes?: Record<string, any>;
-}
-
-export interface Build {
-  id: string;
+export interface BuildFormData {
+  id?: string;
   user_id: string;
   name: string;
   description?: string;
-  build_volume: {
-    x: number;
-    y: number;
-    z: number;
-    units: string;
-  };
+  build_volume: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
-  created_at: string;
+}
+
+export interface BuildQueryParams {
+  userId?: string;
+  sort?: string;
+  order?: 'asc' | 'desc';
 }
