@@ -1,61 +1,30 @@
-import { useState } from "react";
-import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme/core/types";
-import { toast } from "sonner";
+import { ThemeBase } from '@/types';
+import { useSettings } from '@/hooks/useSettings';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
 
 export const useThemeSettingsForm = () => {
-  const [logoFile, setLogoFile] = useState<File | null>(null);
-  const [faviconFile, setFaviconFile] = useState<File | null>(null);
-  
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
+  const { settings, updateSettings } = useSettings();
+  const [theme, setTheme] = useState<ThemeBase | null>(null);
 
-  const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
+  useEffect(() => {
+    if (settings) {
+      setTheme(settings as ThemeBase);
+    }
+  }, [settings]);
+
+  const handleUpdate = async (updatedTheme: Partial<ThemeBase>) => {
     try {
-      const updatedSettings = {
-        ...themeSettings?.value,
-        ...settings
-      } as ThemeBase;
-      
-      await updateSetting(updatedSettings);
-      toast.success("Theme settings updated");
+      await updateSettings({ ...theme, ...updatedTheme });
+      toast.success('Theme settings updated successfully');
     } catch (error) {
-      console.error("Error updating settings:", error);
-      toast.error("Failed to update theme settings");
+      console.error('Error updating theme settings:', error);
+      toast.error('Failed to update theme settings');
     }
   };
-
-  const handleResetToDefault = async () => {
-    try {
-      const defaultSettings: Partial<ThemeBase> = {
-        theme_mode: 'light',
-        preview_preferences: {
-          real_time_updates: true,
-          animation_enabled: true,
-          glass_effect_level: 'medium',
-          update_debounce_ms: 100
-        }
-      };
-
-      await updateSetting(defaultSettings as ThemeBase);
-      toast.success("Theme reset to defaults");
-    } catch (error) {
-      console.error("Error resetting theme:", error);
-      toast.error("Failed to reset theme");
-    }
-  };
-
-  const handleLogoUpload = (file: File) => setLogoFile(file);
-  const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   return {
-    settings: themeSettings?.value as ThemeBase,
-    isLoading,
-    isSaving: isUpdating,
-    logoFile,
-    faviconFile,
-    handleLogoUpload,
-    handleFaviconUpload,
-    handleSettingsUpdate,
-    handleResetToDefault,
+    theme,
+    handleUpdate,
   };
 };

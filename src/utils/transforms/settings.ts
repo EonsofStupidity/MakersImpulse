@@ -1,5 +1,4 @@
-import { SettingsFormData } from '@/types/settings/core/types';
-import { Json } from '@/types/core/json';
+import { Json } from '@/types';
 
 export const transformDatabaseSettings = (data: Json): SettingsFormData => {
   if (!data || typeof data !== 'object' || Array.isArray(data)) {

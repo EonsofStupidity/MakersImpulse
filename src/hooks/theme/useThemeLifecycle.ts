@@ -1,63 +1,33 @@
-import { useState, useEffect } from 'react';
-import { ThemeLifecycleState, ThemeBase } from '@/types/theme/core/types';
-import { useTheme } from '@/components/theme/ThemeContext';
+import { ThemeBase, ThemeState } from '@/types';
+import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 export const useThemeLifecycle = () => {
-  const [lifecycleState, setLifecycleState] = useState<ThemeLifecycleState>({
-    status: 'initializing'
-  });
-  const { theme, updateTheme } = useTheme();
+  const [theme, setTheme] = useState<ThemeBase | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const initializeTheme = async () => {
+    const fetchTheme = async () => {
       try {
-        const { data: themeConfig, error } = await supabase
+        const { data, error } = await supabase
           .from('theme_configuration')
           .select('*')
           .single();
 
         if (error) throw error;
 
-        await updateTheme(themeConfig as Partial<ThemeBase>);
-        setLifecycleState({ status: 'ready' });
-        toast.success('Theme initialized successfully');
+        setTheme(data as ThemeBase);
       } catch (error) {
-        console.error('Theme initialization error:', error);
-        setLifecycleState({
-          status: 'error',
-          error: 'Failed to initialize theme'
-        });
-        toast.error('Failed to initialize theme');
+        console.error('Error fetching theme:', error);
+        toast.error('Failed to load theme');
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    initializeTheme();
+    fetchTheme();
+  }, []);
 
-    return () => {
-      setLifecycleState({ status: 'initializing' });
-    };
-  }, [updateTheme]);
-
-  const handleStateTransition = async (newState: ThemeLifecycleState) => {
-    try {
-      setLifecycleState(newState);
-      
-      if (newState.status === 'deactivating' && theme?.id) {
-        await supabase
-          .from('theme_configuration')
-          .update({ last_sync: new Date().toISOString() })
-          .eq('id', theme.id);
-      }
-    } catch (error) {
-      console.error('Theme state transition error:', error);
-      toast.error('Failed to transition theme state');
-    }
-  };
-
-  return {
-    lifecycleState,
-    handleStateTransition
-  };
+  return { theme, isLoading };
 };
