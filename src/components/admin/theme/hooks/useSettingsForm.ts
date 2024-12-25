@@ -8,16 +8,11 @@ export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { data: themeSettings, isLoading, mutate: updateSetting, isUpdating } = useSettings();
+  const { data: settings, isLoading, mutate, isUpdating } = useSettings();
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
-      const updatedSettings = {
-        ...themeSettings,
-        ...settings
-      } as ThemeBase;
-      
-      await updateSetting(updatedSettings);
+      await mutate(settings as ThemeBase);
       toast.success("Theme settings updated");
     } catch (error) {
       console.error("Error updating settings:", error);
@@ -27,17 +22,20 @@ export const useSettingsForm = () => {
 
   const handleResetToDefault = async () => {
     try {
-      const defaultSettings: Partial<ThemeBase> = {
-        theme_mode: 'light',
-        preview_preferences: {
-          real_time_updates: true,
-          animation_enabled: true,
-          glass_effect_level: 'medium',
-          update_debounce_ms: 100
-        }
-      };
+      const { error } = await supabase
+        .from("theme_configuration")
+        .update({
+          theme_mode: 'light',
+          preview_preferences: {
+            real_time_updates: true,
+            animation_enabled: true,
+            glass_effect_level: 'medium',
+            update_debounce_ms: 100
+          }
+        })
+        .eq('id', settings?.id);
 
-      await updateSetting(defaultSettings as ThemeBase);
+      if (error) throw error;
       toast.success("Theme reset to defaults");
     } catch (error) {
       console.error("Error resetting theme:", error);
@@ -49,7 +47,7 @@ export const useSettingsForm = () => {
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   return {
-    settings: themeSettings as ThemeBase,
+    settings: settings as ThemeBase,
     isLoading,
     isSaving: isUpdating,
     logoFile,

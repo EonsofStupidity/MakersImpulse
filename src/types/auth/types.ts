@@ -1,3 +1,5 @@
+import { UserRole } from '@/types';
+
 export interface AuthUser {
   id: string;
   email: string;
