@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { toast } from "sonner";
 import { convertDbSettingsToTheme, DEFAULT_THEME_SETTINGS, applyThemeToDocument } from "../utils/themeUtils";
 

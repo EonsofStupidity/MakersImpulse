@@ -1,12 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types';
 
-interface ThemeAnimationPreviewProps {
+interface AnimationPreviewProps {
   colors: Partial<ThemeBase>;
 }
 
-export const ThemeAnimationPreview: React.FC<ThemeAnimationPreviewProps> = ({ colors }) => {
+export const AnimationPreview: React.FC<AnimationPreviewProps> = ({ colors }) => {
   return (
     <div className="space-y-4">
       <div>

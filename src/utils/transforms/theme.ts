@@ -1,4 +1,4 @@
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types';
 
 export const DEFAULT_THEME_SETTINGS: ThemeBase = {
   site_title: 'MakersImpulse',
@@ -84,3 +84,4 @@ export const applyThemeToDocument = (theme: ThemeBase) => {
   document.documentElement.style.setProperty('--box-shadow', theme.box_shadow);
   document.documentElement.style.setProperty('--backdrop-blur', theme.backdrop_blur);
 };
+

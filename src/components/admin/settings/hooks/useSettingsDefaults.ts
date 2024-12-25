@@ -39,8 +39,7 @@ export const DEFAULT_SETTINGS: ThemeBase = {
     update_debounce_ms: 100
   },
   inheritance_strategy: 'merge',
-  inherited_settings: {},
-  component_type: 'color'
+  inherited_settings: {}
 };
 
 export const useSettingsDefaults = () => {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { ThemeSyncState, ThemeBase } from '@/types/theme/core/types';
+import { ThemeSyncState, ThemeBase } from '@/types';
 import { useTheme } from '@/components/theme/ThemeContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';

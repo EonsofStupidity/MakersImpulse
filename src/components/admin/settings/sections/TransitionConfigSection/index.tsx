@@ -1,14 +1,14 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { CSSEffectsControl } from "../../components/CSSEffectsControl";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 interface TransitionConfigSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = ({ form }) => {
@@ -21,7 +21,7 @@ export const TransitionConfigSection: React.FC<TransitionConfigSectionProps> = (
     });
   };
 
-  const getFormValue = (field: keyof SettingsFormData): string | number => {
+  const getFormValue = (field: keyof ThemeBase): string | number => {
     const value = form.watch(field);
     if (typeof value === 'boolean') {
       return value ? 1 : 0;

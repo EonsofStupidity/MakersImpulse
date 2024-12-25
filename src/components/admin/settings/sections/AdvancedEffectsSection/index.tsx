@@ -1,13 +1,13 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { CSSEffectsControl } from "../../components/CSSEffectsControl";
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 
 interface AdvancedEffectsSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const AdvancedEffectsSection: React.FC<AdvancedEffectsSectionProps> = ({ form }) => {

@@ -1,17 +1,17 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { Card } from "@/components/ui/card";
 import { ThemeFormHeader } from "./ThemeFormHeader";
 import { ThemeFormContent } from "./ThemeFormContent";
 
-interface ThemeFormContainerProps {
+interface ThemeSettingsFormContainerProps {
   form: UseFormReturn<ThemeBase>;
   isSaving: boolean;
   onResetClick: () => void;
 }
 
-export const ThemeFormContainer: React.FC<ThemeFormContainerProps> = ({
+export const ThemeSettingsFormContainer: React.FC<ThemeSettingsFormContainerProps> = ({
   form,
   isSaving,
   onResetClick,

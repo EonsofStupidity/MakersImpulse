@@ -1,11 +1,10 @@
 import React from "react";
+import { UseFormReturn, ThemeBase } from '@/types';
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
 import { CSSEffectsControl } from "../../components/CSSEffectsControl";
 
 interface TextStylesSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const TextStylesSection: React.FC<TextStylesSectionProps> = ({ form }) => {

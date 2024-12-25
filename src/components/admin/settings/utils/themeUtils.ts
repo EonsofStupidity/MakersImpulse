@@ -1,4 +1,4 @@
-import { ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase } from '@/types';
 
 export const convertDbSettingsToTheme = (data: any): ThemeBase => {
   if (!data) {

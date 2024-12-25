@@ -4,8 +4,7 @@ import { toast } from "sonner";
 import { ColorPreview } from "./ColorPreview";
 import { TextPreview } from "./TextPreview";
 import { AnimationPreview } from "./AnimationPreview";
-import { AdvancedCSSEditor } from "../ThemeAdvancedCSSEditor";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 
 interface SettingsPreviewProps {
   settings: ThemeBase;
@@ -66,8 +65,10 @@ export const ThemePreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
           </motion.div>
         )}
 
-        <AdvancedCSSEditor
-          currentCSS={`/* Current Theme CSS Variables */
+        <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
+          <h4 className="text-sm font-medium text-white mb-2">Current Theme CSS Variables</h4>
+          <pre className="text-xs text-gray-400">
+            {`
 :root {
   --primary: ${settings.primary_color};
   --secondary: ${settings.secondary_color};
@@ -75,18 +76,10 @@ export const ThemePreview: React.FC<SettingsPreviewProps> = ({ settings }) => {
   --neon-cyan: ${settings.neon_cyan};
   --neon-pink: ${settings.neon_pink};
   --neon-purple: ${settings.neon_purple};
-}`}
-          onSave={(css) => {
-            const styleSheet = new CSSStyleSheet();
-            styleSheet.replaceSync(css);
-            document.adoptedStyleSheets = [styleSheet];
-            toast.success("CSS updated successfully");
-          }}
-          onReset={() => {
-            document.adoptedStyleSheets = [];
-            toast.success("CSS reset to default");
-          }}
-        />
+}
+            `}
+          </pre>
+        </div>
       </div>
     </AnimatePresence>
   );

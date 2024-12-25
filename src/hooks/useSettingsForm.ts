@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme/core/types";
+import { ThemeBase } from "@/types";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { transformDatabaseSettings } from "@/utils/transforms/settings";
 
 export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -48,13 +47,8 @@ export const useSettingsForm = () => {
   const handleLogoUpload = (file: File) => setLogoFile(file);
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
-  // Transform the raw settings data into our ThemeBase type
-  const transformedSettings = themeSettings?.value ? 
-    transformDatabaseSettings(themeSettings.value) : 
-    undefined;
-
   return {
-    settings: transformedSettings,
+    settings: themeSettings?.value as ThemeBase,
     isLoading,
     isSaving: isUpdating,
     logoFile,

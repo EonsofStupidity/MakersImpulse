@@ -1,11 +1,11 @@
 import React from 'react';
-import { ThemeBase } from '@/types/theme';
+import { ThemeBase } from '@/types';
 
-interface TextPreviewProps {
+interface ThemeTextPreviewProps {
   colors: Partial<ThemeBase>;
 }
 
-export const TextPreview: React.FC<TextPreviewProps> = ({ colors }) => {
+export const ThemeTextPreview: React.FC<ThemeTextPreviewProps> = ({ colors }) => {
   return (
     <div className="space-y-4">
       <div>

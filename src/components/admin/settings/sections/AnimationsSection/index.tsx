@@ -1,20 +1,31 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn } from "react-hook-form";
-import { SettingsFormData } from "@/types/theme";
+import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
 import { CSSEffectsControl } from "../../components/CSSEffectsControl";
-import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import { toast } from "sonner";
 
 interface AnimationsSectionProps {
-  form: UseFormReturn<SettingsFormData>;
+  form: UseFormReturn<ThemeBase>;
 }
 
 export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) => {
-  const [previewKey, setPreviewKey] = React.useState(0);
+  const [isEnabled, setIsEnabled] = React.useState(form.watch("animations_enabled") || false);
 
-  const triggerPreview = () => {
-    setPreviewKey(prev => prev + 1);
+  const handleAnimationToggle = (checked: boolean) => {
+    setIsEnabled(checked);
+    form.setValue("animations_enabled", checked);
+  };
+
+  const handleDurationChange = (value: number[]) => {
+    form.setValue("default_animation_duration", value[0]);
+  };
+
+  const handleTransitionTypeChange = (value: TransitionType) => {
+    form.setValue("transition_type", value);
   };
 
   return (
@@ -23,84 +34,48 @@ export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) =>
         Animations & Transitions
       </AccordionTrigger>
       <AccordionContent className="space-y-6 pt-4">
-        <div className="grid gap-6">
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white">Page Transitions</h3>
-            <CSSEffectsControl
-              label="Transition Type"
-              type="select"
-              value={form.watch("transition_type") || "fade"}
-              options={[
-                { label: "Fade", value: "fade" },
-                { label: "Slide", value: "slide" },
-                { label: "Scale", value: "scale" }
-              ]}
-              onChange={(value) => {
-                form.setValue("transition_type", value);
-                triggerPreview();
-              }}
-              description="Select the type of transition between pages"
-            />
-            <CSSEffectsControl
-              label="Duration"
-              type="slider"
-              value={parseFloat(form.watch("transition_duration"))}
-              min={0.1}
-              max={1}
-              step={0.1}
-              onChange={(value) => {
-                form.setValue("transition_duration", value.toString());
-                triggerPreview();
-              }}
-              description="Adjust the duration of transitions in seconds"
-            />
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white">Element Animations</h3>
-            <CSSEffectsControl
-              label="Hover Scale"
-              type="slider"
-              value={parseFloat(form.watch("hover_scale"))}
-              min={1}
-              max={1.2}
-              step={0.01}
-              onChange={(value) => {
-                form.setValue("hover_scale", value.toString());
-                triggerPreview();
-              }}
-              description="Scale factor when hovering over elements"
-            />
-          </div>
-
-          <Card className="p-4 bg-gray-800/50 border border-white/10">
-            <h3 className="text-sm font-medium text-white mb-4">Preview</h3>
-            <div className="grid gap-4">
-              <motion.div
-                key={`preview-${previewKey}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ 
-                  duration: parseFloat(form.watch("transition_duration")),
-                  ease: "easeOut"
-                }}
-                className="bg-primary/10 p-4 rounded-lg"
-              >
-                <p className="text-primary">Transition Preview</p>
-              </motion.div>
-
-              <motion.button
-                whileHover={{ 
-                  scale: parseFloat(form.watch("hover_scale")),
-                  transition: { duration: 0.2 }
-                }}
-                className="bg-secondary/20 p-3 rounded-lg text-secondary w-full"
-              >
-                Hover Scale Preview
-              </motion.button>
-            </div>
-          </Card>
+        <div className="flex items-center justify-between">
+          <Label htmlFor="animations-toggle" className="text-lg font-medium">
+            Enable Animations
+          </Label>
+          <Switch
+            id="animations-toggle"
+            checked={isEnabled}
+            onCheckedChange={handleAnimationToggle}
+          />
         </div>
+
+        {isEnabled && (
+          <>
+            <div className="space-y-4">
+              <Label>Animation Duration (ms)</Label>
+              <Slider
+                defaultValue={[form.watch("default_animation_duration") || 300]}
+                max={1000}
+                step={50}
+                onValueChange={handleDurationChange}
+              />
+            </div>
+
+            <div className="space-y-4">
+              <Label>Transition Type</Label>
+              <Select
+                value={form.watch("transition_type") || "fade"}
+                onValueChange={handleTransitionTypeChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select transition type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fade">Fade</SelectItem>
+                  <SelectItem value="slide">Slide</SelectItem>
+                  <SelectItem value="scale">Scale</SelectItem>
+                  <SelectItem value="blur">Blur</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </>
+        )}
       </AccordionContent>
     </AccordionItem>
   );

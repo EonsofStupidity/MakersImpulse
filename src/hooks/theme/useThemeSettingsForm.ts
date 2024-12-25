@@ -26,7 +26,7 @@ export const useThemeSettingsForm = () => {
 
   const handleResetToDefault = async () => {
     try {
-      const defaultSettings = {
+      const defaultSettings: Partial<ThemeBase> = {
         theme_mode: 'light',
         preview_preferences: {
           real_time_updates: true,
@@ -34,9 +34,9 @@ export const useThemeSettingsForm = () => {
           glass_effect_level: 'medium',
           update_debounce_ms: 100
         }
-      } as ThemeBase;
+      };
 
-      await updateSetting(defaultSettings);
+      await updateSetting(defaultSettings as ThemeBase);
       toast.success("Theme reset to defaults");
     } catch (error) {
       console.error("Error resetting theme:", error);

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -8,7 +8,7 @@ export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase & Record<string, any>>("theme", "base");
+  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
@@ -27,20 +27,17 @@ export const useSettingsForm = () => {
 
   const handleResetToDefault = async () => {
     try {
-      const { error } = await supabase
-        .from("theme_configuration")
-        .update({
-          theme_mode: 'light',
-          preview_preferences: {
-            real_time_updates: true,
-            animation_enabled: true,
-            glass_effect_level: 'medium',
-            update_debounce_ms: 100
-          }
-        })
-        .eq('id', themeSettings?.id);
+      const defaultSettings: Partial<ThemeBase> = {
+        theme_mode: 'light',
+        preview_preferences: {
+          real_time_updates: true,
+          animation_enabled: true,
+          glass_effect_level: 'medium',
+          update_debounce_ms: 100
+        }
+      };
 
-      if (error) throw error;
+      await updateSetting(defaultSettings as ThemeBase);
       toast.success("Theme reset to defaults");
     } catch (error) {
       console.error("Error resetting theme:", error);

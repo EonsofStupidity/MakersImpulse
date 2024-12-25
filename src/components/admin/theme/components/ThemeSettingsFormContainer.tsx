@@ -1,7 +1,8 @@
 import React from "react";
 import { UseFormReturn } from "react-hook-form";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { Card } from "@/components/ui/card";
+
 import { ThemeFormHeader } from "./ThemeFormHeader";
 import { ThemeFormContent } from "./ThemeFormContent";
 
