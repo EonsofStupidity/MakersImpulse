@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
-export const useThemeLifecycle = () => {
+export const useThemeSetup = () => {
   const [theme, setTheme] = useState<ThemeBase | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,5 +29,5 @@ export const useThemeLifecycle = () => {
     fetchTheme();
   }, []);
 
-  return { theme, isLoading };
+  return { theme, setTheme, isLoading };
 };

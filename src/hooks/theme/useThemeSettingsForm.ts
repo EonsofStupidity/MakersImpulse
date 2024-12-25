@@ -9,13 +9,13 @@ export const useThemeSettingsForm = () => {
 
   useEffect(() => {
     if (settings) {
-      setTheme(settings as ThemeBase);
+      setTheme(settings as unknown as ThemeBase);
     }
   }, [settings]);
 
   const handleUpdate = async (updatedTheme: Partial<ThemeBase>) => {
     try {
-      await updateSettings({ ...theme, ...updatedTheme });
+      await updateSettings({ ...theme, ...updatedTheme } as ThemeBase);
       toast.success('Theme settings updated successfully');
     } catch (error) {
       console.error('Error updating theme settings:', error);
