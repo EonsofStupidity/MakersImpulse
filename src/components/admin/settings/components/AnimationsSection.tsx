@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
+import { UseFormReturn, ThemeBase } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
 interface AnimationsSectionProps {
