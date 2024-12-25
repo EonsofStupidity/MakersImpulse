@@ -1,6 +1,7 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn, ThemeBase } from "@/types";
+import { ThemeBase } from "@/types";
+import { UseFormReturn } from "@/types/theme/form";
 import { ParentThemeSelect } from "./theme-inheritance/ParentThemeSelect";
 import { InheritanceStrategySelect } from "./theme-inheritance/InheritanceStrategySelect";
 import { InheritanceStatus } from "./theme-inheritance/InheritanceStatus";
