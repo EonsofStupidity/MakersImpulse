@@ -259,6 +259,10 @@ export interface ThemeState {
   theme: ThemeBase;
   isLoading: boolean;
   error: string | null;
+  isDirty?: boolean;
+  lastSync?: string;
+  syncStatus?: string;
+  syncError?: string;
 }
 
 // Theme Styles Types
