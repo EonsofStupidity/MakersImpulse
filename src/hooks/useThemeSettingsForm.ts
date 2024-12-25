@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useSettings } from "@/hooks/useSettings";
-import { ThemeBase } from "@/types/theme";
+import { ThemeBase } from "@/types";
 import { toast } from "sonner";
 
 export const useThemeSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
+  const { settings, isLoading, updateSettings, isUpdating } = useSettings();
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
-      const updatedSettings = {
-        ...themeSettings?.value,
-        ...settings
-      } as ThemeBase;
-      
-      await updateSetting(updatedSettings);
+      await updateSettings(settings);
       toast.success("Theme settings updated");
     } catch (error) {
       console.error("Error updating settings:", error);
@@ -36,7 +31,7 @@ export const useThemeSettingsForm = () => {
         }
       };
 
-      await updateSetting(defaultSettings as ThemeBase);
+      await updateSettings(defaultSettings as ThemeBase);
       toast.success("Theme reset to defaults");
     } catch (error) {
       console.error("Error resetting theme:", error);
@@ -48,7 +43,7 @@ export const useThemeSettingsForm = () => {
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   return {
-    settings: themeSettings?.value as ThemeBase,
+    settings: settings as ThemeBase,
     isLoading,
     isSaving: isUpdating,
     logoFile,
