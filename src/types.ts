@@ -23,57 +23,6 @@ export interface ThemePreviewPreferences {
   update_debounce_ms: number;
 }
 
-export interface ThemeColors {
-  primary: string;
-  secondary: string;
-  accent: string;
-  text: {
-    primary: string;
-    secondary: string;
-    heading: string;
-    link: string;
-  };
-  neon: {
-    cyan: string;
-    pink: string;
-    purple: string;
-  };
-}
-
-export interface ThemeTypography {
-  fontFamily: {
-    heading: string;
-    body: string;
-  };
-  fontSize: {
-    base: string;
-  };
-  fontWeight: {
-    normal: string;
-    bold: string;
-  };
-  lineHeight: {
-    base: string;
-  };
-  letterSpacing: string;
-}
-
-export interface ThemeEffects {
-  borderRadius: string;
-  boxShadow: string;
-  backdropBlur: string;
-  shadowColor: string;
-}
-
-export interface ThemeSpacing {
-  unit: string;
-}
-
-export interface ThemeAnimations {
-  enabled: boolean;
-  duration: number;
-}
-
 export interface ThemeBase {
   id?: string;
   primary_color: string;
@@ -102,8 +51,6 @@ export interface ThemeBase {
   backdrop_blur: string;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
-  animations_enabled: boolean;
-  default_animation_duration: number;
   real_time_toggle?: boolean;
   component_type?: ComponentType;
   preview_preferences: ThemePreviewPreferences;
@@ -118,11 +65,54 @@ export interface ThemeBase {
   updated_by?: string;
   created_at?: string;
   created_by?: string;
-  colors: ThemeColors;
-  typography: ThemeTypography;
-  effects: ThemeEffects;
-  spacing: ThemeSpacing;
-  animations: ThemeAnimations;
+  animations_enabled: boolean;
+  default_animation_duration: number;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    text: {
+      primary: string;
+      secondary: string;
+      heading: string;
+      link: string;
+    };
+    neon: {
+      cyan: string;
+      pink: string;
+      purple: string;
+    };
+  };
+  typography: {
+    fontFamily: {
+      heading: string;
+      body: string;
+    };
+    fontSize: {
+      base: string;
+    };
+    fontWeight: {
+      normal: string;
+      bold: string;
+    };
+    lineHeight: {
+      base: string;
+    };
+    letterSpacing: string;
+  };
+  effects: {
+    borderRadius: string;
+    boxShadow: string;
+    backdropBlur: string;
+    shadowColor: string;
+  };
+  spacing: {
+    unit: string;
+  };
+  animations: {
+    enabled: boolean;
+    duration: number;
+  };
 }
 
 export interface CSSEffectsControlProps {
@@ -136,15 +126,6 @@ export interface CSSEffectsControlProps {
   max?: number;
   step?: number;
   className?: string;
-}
-
-export interface ThemeState extends ThemeBase {
-  isDirty: boolean;
-  lastSync: string | null;
-  syncStatus: 'idle' | 'syncing' | 'error';
-  syncError?: string;
-  isLoading: boolean;
-  error: string | null;
 }
 
 export interface BuildVolume {
