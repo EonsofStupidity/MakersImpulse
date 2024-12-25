@@ -12,6 +12,9 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
 
+// JSON Type
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
+
 // Re-export UseFormReturn
 export type UseFormReturn<T = any> = HookFormReturn<T>;
 
