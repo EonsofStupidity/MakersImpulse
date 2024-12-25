@@ -5,13 +5,13 @@ import { Card } from "@/components/ui/card";
 import { ThemeFormHeader } from "./ThemeFormHeader";
 import { ThemeFormContent } from "./ThemeFormContent";
 
-interface ThemeSettingsFormContainerProps {
+interface ThemeFormContainerProps {
   form: UseFormReturn<ThemeBase>;
   isSaving: boolean;
   onResetClick: () => void;
 }
 
-export const ThemeSettingsFormContainer: React.FC<ThemeSettingsFormContainerProps> = ({
+export const ThemeFormContainer: React.FC<ThemeFormContainerProps> = ({
   form,
   isSaving,
   onResetClick,
