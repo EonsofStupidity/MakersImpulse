@@ -256,3 +256,15 @@ export interface ContentWithAuthor {
   version: number;
   slug?: string;
 }
+
+export interface CSSEffectsControlProps {
+  label: string;
+  type: 'input' | 'select' | 'slider';
+  value: string | number;
+  onChange: (value: string | number) => void;
+  description?: string;
+  options?: Array<{ label: string; value: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+}
