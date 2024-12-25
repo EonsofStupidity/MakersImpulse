@@ -13,51 +13,39 @@ export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' |
 // JSON Type
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
+// Theme Validation Types
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+// Theme State Types
+export interface ThemeState {
+  theme: ThemeBase;
+  isLoading: boolean;
+  error: string | null;
+  isDirty?: boolean;
+  lastSync?: string;
+  syncStatus?: string;
+  syncError?: string;
+}
+
+// Theme Sync State
+export interface ThemeSyncState {
+  status: 'pending' | 'syncing' | 'completed' | 'error';
+  lastSync?: string;
+  error?: string;
+}
+
 // Theme Base
 export interface ThemeBase {
   id?: string;
-  typography?: {
-    fontFamilyHeading: string;
-    fontFamilyBody: string;
-    fontSizeBase: string;
-    fontWeightNormal: string;
-    fontWeightBold: string;
-    lineHeightBase: string;
-    letterSpacing: string;
-  };
-  effects?: {
-    borderRadius: string;
-    spacingUnit: string;
-    transitionDuration: string;
-    shadowColor: string;
-    hoverScale: string;
-    boxShadow: string;
-    backdropBlur: string;
-  };
-  spacing?: {
-    unit: string;
-    scale: Record<string, string>;
-  };
-  animations?: {
-    enabled: boolean;
-    duration: number;
-    type: TransitionType;
-  };
-  colors?: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    text: {
-      primary: string;
-      secondary: string;
-      heading: string;
-    };
-    neon: {
-      cyan: string;
-      pink: string;
-      purple: string;
-    };
-  };
   primary_color: string;
   secondary_color: string;
   accent_color: string;
@@ -107,6 +95,51 @@ export interface ThemeBase {
   created_by?: string;
 }
 
+// Theme Styles
+export interface ThemeStyles {
+  '--primary-color': string;
+  '--secondary-color': string;
+  '--accent-color': string;
+  '--text-primary-color': string;
+  '--text-secondary-color': string;
+  '--text-link-color': string;
+  '--text-heading-color': string;
+  '--neon-cyan': string;
+  '--neon-pink': string;
+  '--neon-purple': string;
+  '--font-family-heading': string;
+  '--font-family-body': string;
+  '--font-size-base': string;
+  '--font-weight-normal': string;
+  '--font-weight-bold': string;
+  '--line-height-base': string;
+  '--letter-spacing': string;
+  '--border-radius': string;
+  '--spacing-unit': string;
+  '--transition-duration': string;
+  '--shadow-color': string;
+  '--hover-scale': string;
+  '--box-shadow': string;
+  '--backdrop-blur': string;
+}
+
+// Auth Types
+export interface AuthUser {
+  id: string;
+  email: string;
+  displayName?: string;
+  username?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  role: UserRole;
+  avatar_url?: string;
+  last_seen?: string;
+  metadata?: Record<string, unknown>;
+}
+
 // Build Types
 export interface BuildVolume {
   x: number;
@@ -141,34 +174,6 @@ export interface Build {
   created_at: string;
 }
 
-export type BuildFormData = Omit<Build, 'id' | 'created_at'> & {
-  buildVolume: BuildVolume;
-  userId: string;
-};
-
-export interface BuildQueryParams {
-  userId?: string;
-  sort?: string;
-  order?: 'asc' | 'desc';
-}
-
-// Auth Types
-export interface AuthUser {
-  id: string;
-  email: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: UserRole;
-  avatar_url?: string;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
-
 // Content Types
 export interface ContentWithAuthor {
   id: string;
@@ -187,6 +192,31 @@ export interface ContentWithAuthor {
   metadata?: Json;
   version: number;
   slug?: string;
+}
+
+// Profile Types
+export interface Profile {
+  id: string;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  created_at?: string;
+  updated_at?: string;
+  role?: UserRole;
+  last_seen?: string;
+  metadata?: Record<string, unknown>;
+}
+
+// Settings Types
+export interface Settings extends ThemeBase {
+  category: SettingType;
+  key: string;
+  value: Json;
+  metadata?: Json;
+  is_encrypted?: boolean;
 }
 
 // Form Types
@@ -208,76 +238,17 @@ export type UseFormReturn<T> = {
   setFocus: (name: keyof T) => void;
 };
 
-// CSS Effects Control Props
-export interface CSSEffectsControlProps {
-  label: string;
-  type: string;
-  value: string | number;
-  onChange: (value: string | number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-  options?: Array<{ label: string; value: string }>;
-  description?: string;
-  className?: string;
-}
-
-// Profile Types
-export interface Profile {
-  id: string;
-  username?: string;
-  display_name?: string;
-  avatar_url?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  created_at?: string;
-  updated_at?: string;
-  role?: UserRole;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// Add missing UserTableRowActionsProps
+// Props Types
 export interface UserTableRowActionsProps {
   user: Profile;
 }
 
-// Add missing BuildFormContainerProps
 export interface BuildFormContainerProps {
-  onSubmit: (data: BuildFormData) => void;
+  onSubmit: (data: Build) => void;
 }
 
-// Add missing BuildImagesSectionProps
 export interface BuildImagesSectionProps {
   images: BuildImage[];
   onImagesChange: (images: BuildImage[]) => void;
-}
-
-// Theme State Types
-export interface ThemeState {
-  theme: ThemeBase;
-  isLoading: boolean;
-  error: string | null;
-  isDirty?: boolean;
-  lastSync?: string;
-  syncStatus?: string;
-  syncError?: string;
-}
-
-// Theme Styles Types
-export interface ThemeStyles {
-  colors: Record<string, string>;
-  typography: Record<string, string>;
-  spacing: Record<string, string>;
-  effects: Record<string, string>;
-}
-
-// Settings Types
-export interface Settings extends ThemeBase {
-  category: SettingType;
-  key: string;
-  value: Json;
-  metadata?: Json;
-  is_encrypted?: boolean;
+  form: UseFormReturn<Build>;
 }

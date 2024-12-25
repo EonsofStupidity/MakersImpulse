@@ -1,33 +1,29 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { Build, BuildFormData, BuildVolume } from "@/types";
-import { BuildBasicSection } from "./BuildBasicSection";
-import { BuildVolumeSection } from "./BuildVolumeSection";
-import { BuildImagesSection } from "./BuildImagesSection";
-import { FormActions } from "./FormActions";
+import React from 'react';
+import { UseFormReturn, BuildFormData, BuildImagesSectionProps } from '@/types';
+import BuildBasicSection from "./BuildBasicSection";
+import BuildVolumeSection from "./BuildVolumeSection";
+import BuildImagesSection from "./BuildImagesSection";
+import FormActions from "./FormActions";
 
 interface BuildFormContainerProps {
-  initialData?: BuildFormData;
+  form: UseFormReturn<BuildFormData>;
   onSubmit: (data: BuildFormData) => void;
 }
 
-const BuildFormContainer: React.FC<BuildFormContainerProps> = ({ initialData, onSubmit }) => {
-  const form = useForm<BuildFormData>({
-    defaultValues: initialData,
-  });
-
-  const handleSubmit = (data: BuildFormData) => {
-    onSubmit(data);
-  };
-
+export const BuildFormContainer: React.FC<BuildFormContainerProps> = ({
+  form,
+  onSubmit
+}) => {
   return (
-    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
       <BuildBasicSection form={form} />
       <BuildVolumeSection form={form} />
-      <BuildImagesSection form={form} />
-      <FormActions isSubmitting={form.formState.isSubmitting} />
+      <BuildImagesSection 
+        images={form.watch('images')}
+        onImagesChange={(images) => form.setValue('images', images)}
+        form={form}
+      />
+      <FormActions />
     </form>
   );
 };
-
-export default BuildFormContainer;
