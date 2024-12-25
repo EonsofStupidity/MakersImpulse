@@ -19,10 +19,10 @@ export interface ThemeBase {
   typography?: {
     fontFamilyHeading: string;
     fontFamilyBody: string;
-    fontSizeBase: string | number;
-    fontWeightNormal: string | number;
-    fontWeightBold: string | number;
-    lineHeightBase: string | number;
+    fontSizeBase: string;
+    fontWeightNormal: string;
+    fontWeightBold: string;
+    lineHeightBase: string;
     letterSpacing: string;
   };
   effects?: {
@@ -30,9 +30,9 @@ export interface ThemeBase {
     spacingUnit: string;
     transitionDuration: string;
     shadowColor: string;
-    hoverScale: string | number;
+    hoverScale: string;
     boxShadow: string;
-    backdropBlur: string | number;
+    backdropBlur: string;
   };
   spacing?: {
     unit: string;
@@ -70,10 +70,10 @@ export interface ThemeBase {
   neon_purple: string;
   font_family_heading: string;
   font_family_body: string;
-  font_size_base: string | number;
-  font_weight_normal: string | number;
-  font_weight_bold: string | number;
-  line_height_base: string | number;
+  font_size_base: string;
+  font_weight_normal: string;
+  font_weight_bold: string;
+  line_height_base: string;
   letter_spacing: string;
   border_radius: string;
   spacing_unit: string;
@@ -103,6 +103,8 @@ export interface ThemeBase {
   favicon_url?: string;
   updated_at?: string;
   updated_by?: string;
+  created_at?: string;
+  created_by?: string;
 }
 
 // Build Types
@@ -150,39 +152,21 @@ export interface BuildQueryParams {
   order?: 'asc' | 'desc';
 }
 
-// Settings Types
-export interface Settings {
+// Auth Types
+export interface AuthUser {
   id: string;
-  category: SettingType;
-  key: string;
-  value: Json;
+  email: string;
+  displayName?: string;
+  username?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  role: UserRole;
+  avatar_url?: string;
+  last_seen?: string;
   metadata?: Record<string, unknown>;
-  is_encrypted?: boolean;
-  created_at?: string;
-  updated_at?: string;
-  created_by?: string;
-  updated_by?: string;
-}
-
-export type SettingsFormData = ThemeBase;
-
-// Theme State Types
-export interface ThemeState extends ThemeBase {
-  isDirty?: boolean;
-  lastSync?: Date | null;
-  syncStatus?: 'idle' | 'syncing' | 'error';
-  syncError?: string;
-}
-
-export interface ThemeLifecycleState {
-  status: 'initializing' | 'ready' | 'error' | 'deactivating';
-  error?: string;
-}
-
-export interface ThemeSyncState {
-  status: 'pending' | 'syncing' | 'completed' | 'error';
-  last_sync: string;
-  error?: string;
 }
 
 // Content Types
@@ -205,58 +189,24 @@ export interface ContentWithAuthor {
   slug?: string;
 }
 
-// Theme Styles
-export interface ThemeStyles {
-  colors: Record<string, string>;
-  typography: Record<string, string>;
-  spacing: Record<string, string>;
-  effects: Record<string, string>;
-}
-
-// Application Settings
-export interface ApplicationSettings extends ThemeBase {
-  // Add any additional application settings here
-}
-
-// Schema
-export const buildSchema = {};
-
 // Form Types
 export type UseFormReturn<T> = {
-  watch: (name?: string) => any;
-  setValue: (name: string, value: any) => void;
+  watch: (name?: keyof T | (keyof T)[]) => any;
+  setValue: (name: keyof T, value: any) => void;
   getValues: () => T;
   reset: (values?: T) => void;
-  getFieldState: (name: string) => any;
-  setError: (name: string, error: any) => void;
+  getFieldState: (name: keyof T) => any;
+  setError: (name: keyof T, error: any) => void;
   clearErrors: () => void;
-  trigger: (name?: string) => Promise<boolean>;
+  trigger: (name?: keyof T) => Promise<boolean>;
   formState: any;
   control: any;
   handleSubmit: (onSubmit: (data: T) => void) => (e: React.FormEvent) => void;
-  resetField: (name: string) => void;
-  unregister: (name: string) => void;
-  register: (name: string) => void;
-  setFocus: (name: string) => void;
+  resetField: (name: keyof T) => void;
+  unregister: (name: keyof T) => void;
+  register: (name: keyof T) => void;
+  setFocus: (name: keyof T) => void;
 };
-
-// Auth Types
-export interface AuthUser {
-  id: string;
-  email: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: UserRole;
-  avatar_url?: string;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-  created_at?: string; // For backward compatibility
-}
 
 // CSS Effects Control Props
 export interface CSSEffectsControlProps {
@@ -296,4 +246,10 @@ export interface UserTableRowActionsProps {
 // Add missing BuildFormContainerProps
 export interface BuildFormContainerProps {
   onSubmit: (data: BuildFormData) => void;
+}
+
+// Add missing BuildImagesSectionProps
+export interface BuildImagesSectionProps {
+  images: BuildImage[];
+  onImagesChange: (images: BuildImage[]) => void;
 }
