@@ -32,7 +32,9 @@ export const useThemeSettings = (themeId: string) => {
       }
     };
 
-    fetchTheme();
+    if (themeId) {
+      fetchTheme();
+    }
   }, [themeId]);
 
   return { theme, loading, error };
