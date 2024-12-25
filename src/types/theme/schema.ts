@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ThemeMode, TransitionType } from '../types';
+import { ThemeMode, TransitionType } from '@/types';
 
 export const settingsSchema = z.object({
   primary_color: z.string(),

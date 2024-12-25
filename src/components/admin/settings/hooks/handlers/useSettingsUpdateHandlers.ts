@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Settings, SettingsResponse } from "@/types/theme";
+import { Settings } from "@/types";
 import { toast } from "sonner";
 
 export const useSettingsUpdateHandlers = () => {
