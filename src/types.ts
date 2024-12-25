@@ -65,6 +65,50 @@ export interface ThemeBase {
   updated_by?: string;
   created_at?: string;
   created_by?: string;
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    text: {
+      primary: string;
+      secondary: string;
+      heading: string;
+    };
+    neon: {
+      cyan: string;
+      pink: string;
+      purple: string;
+    };
+  };
+  typography?: {
+    fontFamily: {
+      heading: string;
+      body: string;
+    };
+    fontSize: {
+      base: string;
+    };
+    fontWeight: {
+      normal: string;
+      bold: string;
+    };
+    lineHeight: {
+      base: string;
+    };
+    letterSpacing: string;
+  };
+  effects?: {
+    borderRadius: string;
+    boxShadow: string;
+    backdropBlur: string;
+  };
+  spacing?: {
+    unit: string;
+  };
+  animations?: {
+    enabled: boolean;
+    duration: number;
+  };
 }
 
 export interface ThemeState extends ThemeBase {
@@ -168,7 +212,7 @@ export interface AuthUser {
 }
 
 // Form Types
-export { UseFormReturn } from 'react-hook-form';
+export type { UseFormReturn } from 'react-hook-form';
 
 // Settings Types
 export interface Settings extends ThemeBase {
