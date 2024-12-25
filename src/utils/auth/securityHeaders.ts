@@ -6,6 +6,9 @@ export const applySecurityHeaders = async () => {
     
     const { data, error } = await supabase.functions.invoke('security-headers', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
     });
     
     if (error) {

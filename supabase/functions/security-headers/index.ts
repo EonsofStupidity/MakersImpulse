@@ -2,7 +2,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
@@ -19,17 +19,18 @@ const securityHeaders = {
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
-    console.log('Applying security headers...');
+    console.log('Applying security headers...')
     
+    // Return success response with all headers
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         message: 'Security headers applied',
-        success: true 
-      }), 
+        success: true
+      }),
       {
         headers: {
           ...corsHeaders,
@@ -37,22 +38,23 @@ serve(async (req) => {
           'Content-Type': 'application/json'
         }
       }
-    );
+    )
   } catch (error) {
-    console.error('Error in security-headers function:', error);
+    console.error('Error in security-headers function:', error)
     
+    // Return error response with CORS headers
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         error: error.message,
-        success: false 
-      }), 
+        success: false
+      }),
       {
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'application/json'
         },
         status: 400
       }
-    );
+    )
   }
-});
+})
