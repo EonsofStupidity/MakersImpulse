@@ -26,6 +26,57 @@ export interface ThemePreviewPreferences {
   update_debounce_ms: number;
 }
 
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  accent: string;
+  text: {
+    primary: string;
+    secondary: string;
+    heading: string;
+    link: string;
+  };
+  neon: {
+    cyan: string;
+    pink: string;
+    purple: string;
+  };
+}
+
+export interface ThemeTypography {
+  fontFamily: {
+    heading: string;
+    body: string;
+  };
+  fontSize: {
+    base: string;
+  };
+  fontWeight: {
+    normal: string;
+    bold: string;
+  };
+  lineHeight: {
+    base: string;
+  };
+  letterSpacing: string;
+}
+
+export interface ThemeEffects {
+  borderRadius: string;
+  boxShadow: string;
+  backdropBlur: string;
+  shadowColor: string;
+}
+
+export interface ThemeSpacing {
+  unit: string;
+}
+
+export interface ThemeAnimations {
+  enabled: boolean;
+  duration: number;
+}
+
 export interface ThemeBase {
   id?: string;
   primary_color: string;
@@ -70,6 +121,11 @@ export interface ThemeBase {
   updated_by?: string;
   created_at?: string;
   created_by?: string;
+  colors: ThemeColors;
+  typography: ThemeTypography;
+  effects: ThemeEffects;
+  spacing: ThemeSpacing;
+  animations: ThemeAnimations;
 }
 
 export interface ThemeState extends ThemeBase {
@@ -79,34 +135,6 @@ export interface ThemeState extends ThemeBase {
   syncError?: string;
   isLoading: boolean;
   error: string | null;
-}
-
-export interface ThemeStyles {
-  [key: string]: string;
-}
-
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-  code: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors?: ThemeValidationError[];
-}
-
-export interface CSSEffectsControlProps {
-  label: string;
-  type: 'input' | 'slider' | 'select';
-  value: string | number;
-  onChange: (value: string | number) => void;
-  description?: string;
-  min?: number;
-  max?: number;
-  step?: number;
-  options?: { label: string; value: string }[];
-  className?: string;
 }
 
 // Build Types
