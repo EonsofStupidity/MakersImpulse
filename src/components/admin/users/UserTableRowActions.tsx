@@ -18,7 +18,6 @@ export const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTabl
         .eq('id', userId);
 
       if (error) throw error;
-
       onRoleChange(userId, newRole);
       toast.success('User role updated successfully');
     } catch (error) {
@@ -28,12 +27,13 @@ export const UserTableRowActions = ({ userId, userRole, onRoleChange }: UserTabl
   };
 
   return (
-    <div className="flex space-x-2">
-      <Button onClick={() => handleRoleChange('admin')} disabled={userRole === 'admin'}>
-        Promote to Admin
-      </Button>
-      <Button onClick={() => handleRoleChange('subscriber')} disabled={userRole === 'subscriber'}>
-        Demote to Subscriber
+    <div className="flex items-center gap-2">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => handleRoleChange(userRole === 'admin' ? 'subscriber' : 'admin')}
+      >
+        {userRole === 'admin' ? 'Remove Admin' : 'Make Admin'}
       </Button>
     </div>
   );
