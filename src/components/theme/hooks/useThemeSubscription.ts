@@ -8,7 +8,7 @@ export const useThemeSubscription = (onThemeChange: (theme: ThemeBase) => void) 
       .on(
         'postgres_changes',
         {
-          event: 'UPDATE',
+          event: '*',
           schema: 'public',
           table: 'theme_configuration'
         },
@@ -20,7 +20,7 @@ export const useThemeSubscription = (onThemeChange: (theme: ThemeBase) => void) 
       .subscribe();
 
     return () => {
-      void supabase.removeChannel(channel);
+      channel.unsubscribe();
     };
   }, [onThemeChange]);
 };

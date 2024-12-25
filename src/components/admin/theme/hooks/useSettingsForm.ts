@@ -8,12 +8,12 @@ export const useSettingsForm = () => {
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [faviconFile, setFaviconFile] = useState<File | null>(null);
   
-  const { setting: themeSettings, isLoading, updateSetting, isUpdating } = useSettings<ThemeBase>("theme", "base");
+  const { data: themeSettings, isLoading, mutate: updateSetting, isUpdating } = useSettings();
 
   const handleSettingsUpdate = async (settings: Partial<ThemeBase>) => {
     try {
       const updatedSettings = {
-        ...themeSettings?.value,
+        ...themeSettings,
         ...settings
       } as ThemeBase;
       
@@ -49,7 +49,7 @@ export const useSettingsForm = () => {
   const handleFaviconUpload = (file: File) => setFaviconFile(file);
 
   return {
-    settings: themeSettings?.value as ThemeBase,
+    settings: themeSettings as ThemeBase,
     isLoading,
     isSaving: isUpdating,
     logoFile,

@@ -1,6 +1,5 @@
 import { ThemeBase, ThemeState } from '@/types';
 
-// Function to transform theme data into a format suitable for the application
 export const transformThemeData = (theme: ThemeBase): ThemeState => {
   return {
     ...theme,
@@ -8,6 +7,8 @@ export const transformThemeData = (theme: ThemeBase): ThemeState => {
     lastSync: null,
     syncStatus: 'idle',
     syncError: undefined,
+    isLoading: false,
+    error: null
   };
 };
 
