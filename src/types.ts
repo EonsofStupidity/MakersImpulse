@@ -23,6 +23,24 @@ export interface ThemePreviewPreferences {
   update_debounce_ms: number;
 }
 
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code?: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
+
+export interface ThemeSyncState {
+  lastSync: string | null;
+  syncStatus: 'idle' | 'syncing' | 'error';
+  syncError?: string;
+  status?: 'idle' | 'syncing' | 'error';
+}
+
 export interface ThemeBase {
   id?: string;
   primary_color: string;
@@ -113,19 +131,6 @@ export interface ThemeBase {
     enabled: boolean;
     duration: number;
   };
-}
-
-export interface CSSEffectsControlProps {
-  label: string;
-  type: 'input' | 'select' | 'slider';
-  value: string | number;
-  onChange: (value: string | number) => void;
-  description?: string;
-  options?: Array<{ label: string; value: string }>;
-  min?: number;
-  max?: number;
-  step?: number;
-  className?: string;
 }
 
 export interface BuildVolume {
@@ -244,20 +249,4 @@ export interface ContentWithAuthor {
 
 export interface ThemeStyles {
   [key: string]: string;
-}
-
-export interface ThemeValidationError {
-  field: string;
-  message: string;
-}
-
-export interface ThemeValidationResult {
-  isValid: boolean;
-  errors: ThemeValidationError[];
-}
-
-export interface ThemeSyncState {
-  lastSync: string | null;
-  syncStatus: 'idle' | 'syncing' | 'error';
-  syncError?: string;
 }
