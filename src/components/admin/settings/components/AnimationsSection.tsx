@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { UseFormReturn, ThemeBase } from "@/types";
+import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 
@@ -12,7 +13,7 @@ interface AnimationsSectionProps {
 }
 
 export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) => {
-  const [isEnabled, setIsEnabled] = useState(form.watch("animations_enabled") || false);
+  const [isEnabled, setIsEnabled] = React.useState(form.watch("animations_enabled") || false);
 
   const handleAnimationToggle = (checked: boolean) => {
     setIsEnabled(checked);
