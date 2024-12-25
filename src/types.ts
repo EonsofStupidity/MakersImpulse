@@ -91,6 +91,29 @@ export interface ThemeBase {
       purple: string;
     };
   };
+  typography?: {
+    fontFamilyHeading: string;
+    fontFamilyBody: string;
+    fontSizeBase: string;
+    fontWeightNormal: string;
+    fontWeightBold: string;
+    lineHeightBase: string;
+    letterSpacing: string;
+  };
+  effects?: {
+    borderRadius: string;
+    shadowColor: string;
+    hoverScale: string;
+    boxShadow: string;
+    backdropBlur: string;
+  };
+  spacing?: {
+    unit: string;
+  };
+  animations?: {
+    enabled: boolean;
+    duration: number;
+  };
 }
 
 // Theme State Types
