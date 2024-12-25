@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ThemeValidationError, ThemeValidationResult, ThemeBase } from '@/types/theme/core/types';
+import { ThemeBase, ThemeValidationError, ThemeValidationResult } from '@/types';
 
 export const useThemeValidation = () => {
   const validateTheme = useCallback((theme: Partial<ThemeBase>): ThemeValidationResult => {

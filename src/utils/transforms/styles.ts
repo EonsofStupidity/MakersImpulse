@@ -1,4 +1,4 @@
-import { ThemeStyles } from '@/types/styles/theme';
+import { ThemeStyles } from '@/types';
 import { ThemeAnimation } from '@/types/animations/theme';
 
 export const transformStateToAnimation = (styles: ThemeStyles): ThemeAnimation => {

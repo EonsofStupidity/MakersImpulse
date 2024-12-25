@@ -1,5 +1,5 @@
-import { ThemeState } from '@/types/state/theme';
-import { ThemeStyles } from '@/types/styles/theme';
+import { ThemeState } from '@/types';
+import { ThemeStyles } from '@/types';
 
 export const transformStateToStyles = (state: ThemeState): ThemeStyles => {
   return {
@@ -15,18 +15,18 @@ export const transformStateToStyles = (state: ThemeState): ThemeStyles => {
     '--neon-purple': state.neon_purple,
     '--font-family-heading': state.font_family_heading,
     '--font-family-body': state.font_family_body,
-    '--font-size-base': state.font_size_base as any,
+    '--font-size-base': state.font_size_base,
     '--font-weight-normal': state.font_weight_normal,
     '--font-weight-bold': state.font_weight_bold,
     '--line-height-base': state.line_height_base,
     '--letter-spacing': state.letter_spacing,
-    '--border-radius': state.border_radius as any,
-    '--spacing-unit': state.spacing_unit as any,
+    '--border-radius': state.border_radius,
+    '--spacing-unit': state.spacing_unit,
     '--transition-duration': state.transition_duration,
     '--shadow-color': state.shadow_color,
     '--hover-scale': state.hover_scale,
     '--box-shadow': state.box_shadow,
-    '--backdrop-blur': state.backdrop_blur as any
+    '--backdrop-blur': state.backdrop_blur,
   };
 };
 

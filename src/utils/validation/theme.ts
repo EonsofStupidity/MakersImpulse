@@ -1,4 +1,4 @@
-import { ThemeBase, ThemeValidationError, ThemeValidationResult } from '@/types/theme/core/types';
+import { ThemeBase, ThemeValidationError, ThemeValidationResult } from '@/types';
 
 export const useThemeValidation = () => {
   const validateTheme = (theme: Partial<ThemeBase>): ThemeValidationResult => {
@@ -108,3 +108,4 @@ export const useThemeValidation = () => {
     validateTheme
   };
 };
+
