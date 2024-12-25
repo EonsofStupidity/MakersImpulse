@@ -194,7 +194,7 @@ export interface AuthUser {
 
 // Form Types
 export type UseFormReturn<T> = {
-  watch: (name?: keyof T | (keyof T)[]) => any;
+  watch: UseFormWatch<T>;
   setValue: (name: keyof T, value: any) => void;
   getValues: () => T;
   reset: (values?: T) => void;
@@ -210,6 +210,8 @@ export type UseFormReturn<T> = {
   register: (name: keyof T) => void;
   setFocus: (name: keyof T) => void;
 };
+
+type UseFormWatch<T> = (names?: keyof T | (keyof T)[]) => any;
 
 // Props Types
 export interface UserTableRowActionsProps {

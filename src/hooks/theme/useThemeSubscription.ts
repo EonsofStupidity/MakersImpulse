@@ -4,15 +4,18 @@ import { useEffect } from 'react';
 
 export const useThemeSubscription = (setTheme: (theme: ThemeBase) => void) => {
   useEffect(() => {
-    const subscription = supabase
-      .from('theme_configuration')
-      .on('UPDATE', (payload) => {
+    const channel = supabase.channel('theme_changes')
+      .on('postgres_changes', { 
+        event: 'UPDATE', 
+        schema: 'public', 
+        table: 'theme_configuration' 
+      }, (payload) => {
         setTheme(payload.new as unknown as ThemeBase);
       })
       .subscribe();
 
     return () => {
-      subscription.unsubscribe();
+      supabase.removeChannel(channel);
     };
   }, [setTheme]);
 };

@@ -1,9 +1,9 @@
 import React from 'react';
-import { UseFormReturn, BuildFormData, BuildImagesSectionProps } from '@/types';
-import BuildBasicSection from "./BuildBasicSection";
-import BuildVolumeSection from "./BuildVolumeSection";
-import BuildImagesSection from "./BuildImagesSection";
-import FormActions from "./FormActions";
+import { UseFormReturn, BuildFormData } from '@/types';
+import { BuildBasicSection } from "./BuildBasicSection";
+import { BuildVolumeSection } from "./BuildVolumeSection";
+import { BuildImagesSection } from "./BuildImagesSection";
+import { FormActions } from "./FormActions";
 
 interface BuildFormContainerProps {
   form: UseFormReturn<BuildFormData>;
@@ -23,7 +23,7 @@ export const BuildFormContainer: React.FC<BuildFormContainerProps> = ({
         onImagesChange={(images) => form.setValue('images', images)}
         form={form}
       />
-      <FormActions />
+      <FormActions isSubmitting={false} />
     </form>
   );
 };
