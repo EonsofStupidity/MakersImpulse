@@ -13,53 +13,6 @@ export type SettingType = 'theme' | 'system' | 'user';
 // JSON Type
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-// Auth Types
-export interface AuthUser {
-  id: string;
-  email: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: UserRole;
-  avatar_url?: string;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// Profile Types
-export interface Profile {
-  id: string;
-  username?: string;
-  display_name?: string;
-  avatar_url?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  created_at?: string;
-  updated_at?: string;
-  role?: UserRole;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
-
-// CSS Effects Control Props
-export interface CSSEffectsControlProps {
-  label: string;
-  type: string;
-  value: string | number;
-  onChange: (value: string | number) => void;
-  min?: number;
-  max?: number;
-  step?: number;
-  options?: Array<{ label: string; value: string }>;
-  description?: string;
-  className?: string;
-}
-
 // Theme Base
 export interface ThemeBase {
   id?: string;
@@ -283,3 +236,20 @@ export type UseFormReturn<T> = {
   register: (name: string) => void;
   setFocus: (name: string) => void;
 };
+
+// Auth Types
+export interface AuthUser {
+  id: string;
+  email: string;
+  displayName?: string;
+  username?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  createdAt: Date;
+  updatedAt: Date;
+  role: UserRole;
+  avatar_url?: string;
+  last_seen?: string;
+  metadata?: Record<string, unknown>;
+}
