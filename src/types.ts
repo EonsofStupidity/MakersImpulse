@@ -139,7 +139,7 @@ export interface Build {
   created_at: string;
 }
 
-export interface BuildFormData extends Omit<Build, 'id' | 'created_at'> {}
+export type BuildFormData = Omit<Build, 'id' | 'created_at'>;
 
 export interface BuildQueryParams {
   userId?: string;
@@ -250,6 +250,36 @@ export interface AuthUser {
   updatedAt: Date;
   role: UserRole;
   avatar_url?: string;
+  last_seen?: string;
+  metadata?: Record<string, unknown>;
+}
+
+// CSS Effects Control Props
+export interface CSSEffectsControlProps {
+  label: string;
+  type: string;
+  value: string | number;
+  onChange: (value: string | number) => void;
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: Array<{ label: string; value: string }>;
+  description?: string;
+  className?: string;
+}
+
+// Profile Types
+export interface Profile {
+  id: string;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  created_at?: string;
+  updated_at?: string;
+  role?: UserRole;
   last_seen?: string;
   metadata?: Record<string, unknown>;
 }
