@@ -4,92 +4,82 @@ import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
 import { CSSEffectsControl } from "./CSSEffectsControl";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Card } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { toast } from "sonner";
 
-interface ThemeAnimationsSectionProps {
+interface AnimationsSectionProps {
   form: UseFormReturn<ThemeBase>;
 }
 
-export const ThemeAnimationsSection: React.FC<ThemeAnimationsSectionProps> = ({ form }) => {
-  const handleToggleChange = (field: "real_time_toggle" | "animations_enabled", value: boolean) => {
-    form.setValue(field, value);
-    toast.success(`${field === "real_time_toggle" ? "Real-time updates" : "Animations"} ${value ? "enabled" : "disabled"}`);
+export const AnimationsSection: React.FC<AnimationsSectionProps> = ({ form }) => {
+  const [isEnabled, setIsEnabled] = React.useState(form.watch("animations_enabled") || false);
+
+  const handleAnimationToggle = (checked: boolean) => {
+    setIsEnabled(checked);
+    form.setValue("animations_enabled", checked);
+  };
+
+  const handleDurationChange = (value: number[]) => {
+    form.setValue("default_animation_duration", value[0]);
+  };
+
+  const handleTransitionTypeChange = (value: TransitionType) => {
+    form.setValue("transition_type", value);
+  };
+
+  const handleValueChange = (value: string | number): number => {
+    return typeof value === 'string' ? parseInt(value, 10) : value;
   };
 
   return (
     <AccordionItem value="animations">
       <AccordionTrigger className="text-lg font-semibold text-white">
-        Animations & Real-time Updates
+        Animations & Transitions
       </AccordionTrigger>
       <AccordionContent className="space-y-6 pt-4">
-        <Card className="p-4 space-y-6 bg-gray-800/50 border border-white/10">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="real-time-toggle" className="text-sm font-medium text-white">
-                Real-time Updates
-              </Label>
-              <Switch
-                id="real-time-toggle"
-                checked={form.watch("real_time_toggle") ?? true}
-                onCheckedChange={(checked) => handleToggleChange("real_time_toggle", checked)}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="animations-toggle" className="text-lg font-medium">
+            Enable Animations
+          </Label>
+          <Switch
+            id="animations-toggle"
+            checked={isEnabled}
+            onCheckedChange={handleAnimationToggle}
+          />
+        </div>
+
+        {isEnabled && (
+          <>
+            <div className="space-y-4">
+              <Label>Animation Duration (ms)</Label>
+              <Slider
+                defaultValue={[form.watch("default_animation_duration") || 300]}
+                max={1000}
+                step={50}
+                onValueChange={handleDurationChange}
               />
             </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="animations-enabled" className="text-sm font-medium text-white">
-                Enable Animations
-              </Label>
-              <Switch
-                id="animations-enabled"
-                checked={form.watch("animations_enabled") ?? true}
-                onCheckedChange={(checked) => handleToggleChange("animations_enabled", checked)}
-              />
-            </div>
-          </div>
 
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white">Animation Settings</h3>
-            <CSSEffectsControl
-              label="Default Animation Duration (ms)"
-              type="slider"
-              value={form.watch("default_animation_duration") || 300}
-              min={100}
-              max={1000}
-              step={50}
-              onChange={(value) => form.setValue("default_animation_duration", value)}
-              description="Set the default duration for all animations"
-            />
-            <CSSEffectsControl
-              label="Transition Type"
-              type="select"
-              value={form.watch("transition_type") || "fade"}
-              options={[
-                { label: "Fade", value: "fade" },
-                { label: "Slide", value: "slide" },
-                { label: "Scale", value: "scale" },
-                { label: "Blur", value: "blur" }
-              ]}
-              onChange={(value) => form.setValue("transition_type", value as TransitionType)}
-              description="Select the type of transition between elements"
-            />
-          </div>
-
-          {form.watch("animations_enabled") && (
-            <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
-              <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
-              <div className="space-y-4">
-                <div
-                  className="p-4 bg-primary/10 rounded-lg transition-all"
-                  style={{
-                    transitionDuration: `${form.watch("default_animation_duration")}ms`,
-                  }}
-                >
-                  <p className="text-primary text-sm">Animation Preview</p>
-                </div>
-              </div>
+            <div className="space-y-4">
+              <Label>Transition Type</Label>
+              <Select
+                value={form.watch("transition_type") || "fade"}
+                onValueChange={handleTransitionTypeChange}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select transition type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fade">Fade</SelectItem>
+                  <SelectItem value="slide">Slide</SelectItem>
+                  <SelectItem value="scale">Scale</SelectItem>
+                  <SelectItem value="blur">Blur</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
-          )}
-        </Card>
+          </>
+        )}
       </AccordionContent>
     </AccordionItem>
   );
