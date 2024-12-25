@@ -13,23 +13,6 @@ export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' |
 // JSON Type
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
-// Auth Types
-export interface AuthUser {
-  id: string;
-  email: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: UserRole;
-  avatar_url?: string;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
-
 // Theme Types
 export interface ThemePreviewPreferences {
   real_time_updates: boolean;
@@ -84,6 +67,42 @@ export interface ThemeBase {
   created_by?: string;
 }
 
+export interface ThemeState extends ThemeBase {
+  isDirty: boolean;
+  lastSync: string | null;
+  syncStatus: 'idle' | 'syncing' | 'error';
+  syncError?: string;
+  isLoading: boolean;
+  error: string | null;
+}
+
+export interface ThemeStyles {
+  [key: string]: string;
+}
+
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code: string;
+}
+
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors?: ThemeValidationError[];
+}
+
+export interface CSSEffectsControlProps {
+  label: string;
+  type: 'input' | 'slider' | 'select';
+  value: string | number;
+  onChange: (value: string | number) => void;
+  description?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: { label: string; value: string }[];
+}
+
 // Build Types
 export interface BuildVolume {
   x: number;
@@ -120,85 +139,27 @@ export interface Build {
 
 export interface BuildFormData extends Omit<Build, 'id' | 'user_id' | 'created_at'> {}
 
-// Profile Types
-export interface Profile {
+export interface BuildQueryParams {
+  userId?: string;
+  limit?: number;
+  offset?: number;
+  sortBy?: string;
+  sortOrder?: 'asc' | 'desc';
+}
+
+// Auth Types
+export interface AuthUser {
   id: string;
+  email: string;
+  displayName?: string;
   username?: string;
-  display_name?: string;
-  avatar_url?: string;
   bio?: string;
   website?: string;
   location?: string;
-  created_at?: string;
-  updated_at?: string;
-  role?: UserRole;
+  createdAt: Date;
+  updatedAt: Date;
+  role: UserRole;
+  avatar_url?: string;
   last_seen?: string;
   metadata?: Record<string, unknown>;
 }
-
-// Content Types
-export interface ContentWithAuthor {
-  id: string;
-  title: string;
-  content: Json;
-  type: string;
-  status: ContentStatus;
-  created_by: {
-    display_name: string;
-  };
-  updated_by: {
-    display_name: string;
-  };
-  created_at: string;
-  updated_at: string;
-  metadata?: Json;
-  version: number;
-  slug?: string;
-}
-
-// Settings Types
-export interface Settings extends ThemeBase {
-  category: SettingType;
-  key: string;
-  value: Json;
-  metadata?: Json;
-  is_encrypted?: boolean;
-}
-
-// Props Types
-export interface UserTableRowActionsProps {
-  user: Profile;
-  onRoleChange: (userId: string, newRole: UserRole) => void;
-}
-
-export interface BuildFormContainerProps {
-  form: UseFormReturn<BuildFormData>;
-  onSubmit: (data: BuildFormData) => void;
-}
-
-export interface BuildImagesSectionProps {
-  images: BuildImage[];
-  onImagesChange: (images: BuildImage[]) => void;
-  form: UseFormReturn<BuildFormData>;
-}
-
-// Form Types
-export type UseFormReturn<T> = {
-  watch: UseFormWatch<T>;
-  setValue: (name: keyof T, value: any) => void;
-  getValues: () => T;
-  reset: (values?: T) => void;
-  getFieldState: (name: keyof T) => any;
-  setError: (name: keyof T, error: any) => void;
-  clearErrors: () => void;
-  trigger: (name?: keyof T) => Promise<boolean>;
-  formState: any;
-  control: any;
-  handleSubmit: (onSubmit: (data: T) => void) => (e: React.FormEvent) => void;
-  resetField: (name: keyof T) => void;
-  unregister: (name: keyof T) => void;
-  register: (name: keyof T) => void;
-  setFocus: (name: keyof T) => void;
-};
-
-type UseFormWatch<T> = (names?: keyof T | (keyof T)[]) => any;
