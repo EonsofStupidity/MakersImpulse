@@ -2,8 +2,8 @@ import React, { memo } from "react";
 import { Card } from "@/components/ui/card";
 import { ThemeColorPreview } from "./ThemeColorPreview";
 import { ThemeTextPreview } from "./ThemeTextPreview";
-import { ThemeAnimationPreview } from "./ThemeAnimationPreview";
-import { ThemeBase } from "@/types/theme";
+import { AnimationPreview } from "./AnimationPreview";
+import { ThemeBase } from "@/types";
 
 interface PreviewContainerProps {
   settings: ThemeBase;
@@ -24,7 +24,7 @@ export const ThemePreviewContainer = memo(({ settings }: PreviewContainerProps) 
 
       <div>
         <h3 className="text-lg font-medium text-white mb-4">Animation Preview</h3>
-        <ThemeAnimationPreview colors={settings} />
+        <AnimationPreview colors={settings} />
       </div>
     </Card>
   );

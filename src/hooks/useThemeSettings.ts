@@ -1,6 +1,6 @@
-import { ThemeBase, ThemeState } from '@/types';
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { ThemeBase } from '@/types';
 import { toast } from 'sonner';
 
 export const useThemeSettings = (themeId: string) => {
@@ -15,14 +15,14 @@ export const useThemeSettings = (themeId: string) => {
 
       try {
         const { data, error: fetchError } = await supabase
-          .from('themes')
+          .from('theme_configuration')
           .select('*')
           .eq('id', themeId)
           .single();
 
         if (fetchError) throw fetchError;
 
-        setTheme(data);
+        setTheme(data as ThemeBase);
       } catch (err) {
         console.error('Error fetching theme:', err);
         setError('Failed to load theme settings');

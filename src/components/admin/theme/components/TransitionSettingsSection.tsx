@@ -1,9 +1,9 @@
 import React from "react";
-import { UseFormReturn, ThemeBase } from '@/types';
-import { CSSEffectsControl } from './CSSEffectsControl';
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { UseFormReturn, ThemeBase, TransitionType } from "@/types";
+import { CSSEffectsControl } from "@/components/admin/settings/components/CSSEffectsControl";
 import { Card } from "@/components/ui/card";
+import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 interface TransitionSettingsSectionProps {
@@ -11,83 +11,47 @@ interface TransitionSettingsSectionProps {
 }
 
 export const TransitionSettingsSection: React.FC<TransitionSettingsSectionProps> = ({ form }) => {
-  const handleToggleChange = (field: "real_time_toggle" | "animations_enabled", value: boolean) => {
-    form.setValue(field, value);
-    toast.success(`${field === "real_time_toggle" ? "Real-time updates" : "Animations"} ${value ? "enabled" : "disabled"}`);
+  const handleTransitionChange = (value: string | number) => {
+    form.setValue("transition_type", value as TransitionType);
+    toast.success("Transition type updated");
+  };
+
+  const handleDurationChange = (value: string | number) => {
+    form.setValue("transition_duration", value.toString());
+    toast.success("Transition duration updated");
   };
 
   return (
-    <AccordionItem value="animations">
+    <AccordionItem value="transition-settings">
       <AccordionTrigger className="text-lg font-semibold text-white">
-        Animations & Real-time Updates
+        Transition Settings
       </AccordionTrigger>
       <AccordionContent className="space-y-6 pt-4">
-        <Card className="p-4 space-y-6 bg-gray-800/50 border border-white/10">
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label htmlFor="real-time-toggle" className="text-sm font-medium text-white">
-                Real-time Updates
-              </Label>
-              <Switch
-                id="real-time-toggle"
-                checked={form.watch("real_time_toggle") ?? true}
-                onCheckedChange={(checked) => handleToggleChange("real_time_toggle", checked)}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <Label htmlFor="animations-enabled" className="text-sm font-medium text-white">
-                Enable Animations
-              </Label>
-              <Switch
-                id="animations-enabled"
-                checked={form.watch("animations_enabled") ?? true}
-                onCheckedChange={(checked) => handleToggleChange("animations_enabled", checked)}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            <h3 className="text-sm font-medium text-white">Animation Settings</h3>
-            <CSSEffectsControl
-              label="Default Animation Duration (ms)"
-              type="slider"
-              value={form.watch("default_animation_duration") || 300}
-              min={100}
-              max={1000}
-              step={50}
-              onChange={(value) => form.setValue("default_animation_duration", value)}
-              description="Set the default duration for all animations"
-            />
-            <CSSEffectsControl
-              label="Transition Type"
-              type="select"
-              value={form.watch("transition_type") || "fade"}
-              options={[
-                { label: "Fade", value: "fade" },
-                { label: "Slide", value: "slide" },
-                { label: "Scale", value: "scale" },
-                { label: "Blur", value: "blur" }
-              ]}
-              onChange={(value) => form.setValue("transition_type", value as TransitionType)}
-              description="Select the type of transition between elements"
-            />
-          </div>
-
-          {form.watch("animations_enabled") && (
-            <div className="mt-4 p-4 bg-gray-900/50 rounded-lg border border-white/5">
-              <h4 className="text-sm font-medium text-white mb-2">Preview</h4>
-              <div className="space-y-4">
-                <div
-                  className="p-4 bg-primary/10 rounded-lg transition-all"
-                  style={{
-                    transitionDuration: `${form.watch("default_animation_duration")}ms`,
-                  }}
-                >
-                  <p className="text-primary text-sm">Animation Preview</p>
-                </div>
-              </div>
-            </div>
-          )}
+        <Card className="p-4 bg-gray-800/50 border border-white/10">
+          <h3 className="text-sm font-medium text-white">Transition Configuration</h3>
+          <CSSEffectsControl
+            label="Default Transition Type"
+            type="select"
+            value={form.watch("transition_type") || "fade"}
+            options={[
+              { label: "Fade", value: "fade" },
+              { label: "Slide", value: "slide" },
+              { label: "Scale", value: "scale" },
+              { label: "Blur", value: "blur" }
+            ]}
+            onChange={handleTransitionChange}
+            description="Select the default transition style for page changes"
+          />
+          <CSSEffectsControl
+            label="Transition Duration (ms)"
+            type="slider"
+            value={parseFloat(form.watch("transition_duration")) || 300}
+            min={100}
+            max={1000}
+            step={50}
+            onChange={handleDurationChange}
+            description="Adjust the duration of transitions in milliseconds"
+          />
         </Card>
       </AccordionContent>
     </AccordionItem>
