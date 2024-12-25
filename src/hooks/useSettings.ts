@@ -1,31 +1,35 @@
-import { Settings, SettingsFormData } from '@/types';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { UseQueryOptions, useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from 'sonner';
+import { ThemeBase } from '@/types';
 
 export const useSettings = () => {
   const fetchSettings = async () => {
-    const { data, error } = await supabase.from('settings').select('*');
+    const { data, error } = await supabase
+      .from('unified_settings')
+      .select('*')
+      .single();
     if (error) throw error;
     return data;
   };
 
-  const { data: settings, error: fetchError } = useQuery(['settings'], fetchSettings);
+  const { data: settings, error: fetchError } = useQuery({
+    queryKey: ['settings'],
+    queryFn: fetchSettings
+  });
 
-  const updateSettings = async (settingsData: SettingsFormData) => {
+  const updateSettings = async (settingsData: ThemeBase) => {
     const { error } = await supabase
-      .from('settings')
+      .from('unified_settings')
       .update(settingsData)
       .eq('id', settingsData.id);
     if (error) throw error;
-    toast.success('Settings updated successfully');
   };
 
-  const { mutate: updateSettingsMutate } = useMutation(updateSettings, {
+  const { mutate: updateSettingsMutate } = useMutation({
+    mutationFn: updateSettings,
     onError: (error) => {
       console.error('Error updating settings:', error);
-      toast.error('Failed to update settings');
-    },
+    }
   });
 
   return {

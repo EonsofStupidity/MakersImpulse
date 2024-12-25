@@ -28,7 +28,7 @@ export interface ThemeBase {
   effects?: {
     borderRadius: string;
     spacingUnit: string;
-    transitionDuration: string | number;
+    transitionDuration: string;
     shadowColor: string;
     hoverScale: string | number;
     boxShadow: string;
@@ -77,11 +77,11 @@ export interface ThemeBase {
   letter_spacing: string;
   border_radius: string;
   spacing_unit: string;
-  transition_duration: string | number;
+  transition_duration: string;
   shadow_color: string;
-  hover_scale: string | number;
+  hover_scale: string;
   box_shadow: string;
-  backdrop_blur: string | number;
+  backdrop_blur: string;
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   animations_enabled: boolean;
@@ -139,7 +139,10 @@ export interface Build {
   created_at: string;
 }
 
-export type BuildFormData = Omit<Build, 'id' | 'created_at'>;
+export type BuildFormData = Omit<Build, 'id' | 'created_at'> & {
+  buildVolume: BuildVolume;
+  userId: string;
+};
 
 export interface BuildQueryParams {
   userId?: string;
@@ -252,6 +255,7 @@ export interface AuthUser {
   avatar_url?: string;
   last_seen?: string;
   metadata?: Record<string, unknown>;
+  created_at?: string; // For backward compatibility
 }
 
 // CSS Effects Control Props
@@ -282,4 +286,14 @@ export interface Profile {
   role?: UserRole;
   last_seen?: string;
   metadata?: Record<string, unknown>;
+}
+
+// Add missing UserTableRowActionsProps
+export interface UserTableRowActionsProps {
+  user: Profile;
+}
+
+// Add missing BuildFormContainerProps
+export interface BuildFormContainerProps {
+  onSubmit: (data: BuildFormData) => void;
 }

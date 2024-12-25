@@ -1,68 +1,74 @@
 import React from 'react';
-import { UseFormReturn } from 'react-hook-form';
-import { Card } from '@/components/ui/card';
-import ImageUploadZone from '@/components/uploads/ImageUploadZone';
-import { supabase } from '@/integrations/supabase/client';
-import type { BuildFormData, BuildImage } from '@/types/builds';
-import { toast } from 'sonner';
+import { useForm, Controller } from 'react-hook-form';
+import { BuildImage } from '@/types';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface BuildImagesSectionProps {
-  form: UseFormReturn<BuildFormData>;
+  images: BuildImage[];
+  onChange: (images: BuildImage[]) => void;
 }
 
-const BuildImagesSection: React.FC<BuildImagesSectionProps> = ({ form }) => {
-  const [images, setImages] = React.useState<File[]>([]);
-  const [isUploading, setIsUploading] = React.useState(false);
+export const BuildImagesSection: React.FC<BuildImagesSectionProps> = ({ images, onChange }) => {
+  const { control, handleSubmit } = useForm<{ images: BuildImage[] }>({
+    defaultValues: { images }
+  });
 
-  const handleImagesChange = async (newImages: File[]) => {
-    setImages(newImages);
-    setIsUploading(true);
-
-    try {
-      const uploadedImages: BuildImage[] = await Promise.all(
-        newImages.map(async (file) => {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Math.random().toString(36).substr(2, 9)}.${fileExt}`;
-          const filePath = `builds/${fileName}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from('media')
-            .upload(filePath, file);
-
-          if (uploadError) throw uploadError;
-
-          const { data } = supabase.storage
-            .from('media')
-            .getPublicUrl(filePath);
-
-          return {
-            url: data.publicUrl,
-            alt: file.name,
-            caption: '',
-          };
-        })
-      );
-
-      form.setValue('images', uploadedImages);
-      toast.success('Images uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading images:', error);
-      toast.error('Failed to upload images');
-    } finally {
-      setIsUploading(false);
-    }
+  const onSubmit = (data: { images: BuildImage[] }) => {
+    onChange(data.images);
   };
 
   return (
-    <Card className="p-6">
-      <h2 className="text-xl font-semibold mb-4">Images</h2>
-      <ImageUploadZone
-        images={images}
-        onImagesChange={handleImagesChange}
-        isUploading={isUploading}
-      />
-    </Card>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      {images.map((image, index) => (
+        <div key={index} className="flex items-center space-x-2">
+          <Controller
+            name={`images.${index}.url`}
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Image URL"
+                className="flex-1"
+              />
+            )}
+          />
+          <Controller
+            name={`images.${index}.type`}
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Image Type"
+                className="flex-1"
+              />
+            )}
+          />
+          <Controller
+            name={`images.${index}.alt`}
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Alt Text"
+                className="flex-1"
+              />
+            )}
+          />
+          <Controller
+            name={`images.${index}.caption`}
+            control={control}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Caption"
+                className="flex-1"
+              />
+            )}
+          />
+        </div>
+      ))}
+      <Button type="submit">Save Images</Button>
+    </form>
   );
 };
-
-export default BuildImagesSection;
