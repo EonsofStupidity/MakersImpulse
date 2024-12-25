@@ -8,7 +8,7 @@ export type UserRole = 'admin' | 'editor' | 'user' | 'subscriber';
 export type ContentStatus = 'draft' | 'published' | 'archived';
 export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
-export type SettingType = 'theme' | 'system' | 'user';
+export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
 
 // JSON Type
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
@@ -252,4 +252,28 @@ export interface BuildFormContainerProps {
 export interface BuildImagesSectionProps {
   images: BuildImage[];
   onImagesChange: (images: BuildImage[]) => void;
+}
+
+// Theme State Types
+export interface ThemeState {
+  theme: ThemeBase;
+  isLoading: boolean;
+  error: string | null;
+}
+
+// Theme Styles Types
+export interface ThemeStyles {
+  colors: Record<string, string>;
+  typography: Record<string, string>;
+  spacing: Record<string, string>;
+  effects: Record<string, string>;
+}
+
+// Settings Types
+export interface Settings extends ThemeBase {
+  category: SettingType;
+  key: string;
+  value: Json;
+  metadata?: Json;
+  is_encrypted?: boolean;
 }
