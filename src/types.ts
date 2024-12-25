@@ -81,20 +81,20 @@ export interface ThemeBase {
   typography?: {
     fontFamilyHeading: string;
     fontFamilyBody: string;
-    fontSizeBase: string;
-    fontWeightNormal: string;
-    fontWeightBold: string;
-    lineHeightBase: string;
+    fontSizeBase: string | number;
+    fontWeightNormal: string | number;
+    fontWeightBold: string | number;
+    lineHeightBase: string | number;
     letterSpacing: string;
   };
   effects?: {
     borderRadius: string;
     spacingUnit: string;
-    transitionDuration: string;
+    transitionDuration: string | number;
     shadowColor: string;
-    hoverScale: string;
+    hoverScale: string | number;
     boxShadow: string;
-    backdropBlur: string;
+    backdropBlur: string | number;
   };
   spacing?: {
     unit: string;
@@ -278,14 +278,8 @@ export type UseFormReturn<T> = {
   formState: any;
   control: any;
   handleSubmit: (onSubmit: (data: T) => void) => (e: React.FormEvent) => void;
+  resetField: (name: string) => void;
+  unregister: (name: string) => void;
+  register: (name: string) => void;
+  setFocus: (name: string) => void;
 };
-
-// Export all types from other modules
-export * from './types/auth/types';
-export * from './types/builds/types';
-export * from './types/content/types';
-export * from './types/database/core';
-export * from './types/database/settings';
-export * from './types/revisions/base';
-export * from './types/security';
-export * from './types/security/types';
