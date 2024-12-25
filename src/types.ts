@@ -16,21 +16,6 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 // Theme Base
 export interface ThemeBase {
   id?: string;
-  colors?: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    text: {
-      primary: string;
-      secondary: string;
-      heading: string;
-    };
-    neon: {
-      cyan: string;
-      pink: string;
-      purple: string;
-    };
-  };
   typography?: {
     fontFamilyHeading: string;
     fontFamilyBody: string;
@@ -57,6 +42,21 @@ export interface ThemeBase {
     enabled: boolean;
     duration: number;
     type: TransitionType;
+  };
+  colors?: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    text: {
+      primary: string;
+      secondary: string;
+      heading: string;
+    };
+    neon: {
+      cyan: string;
+      pink: string;
+      purple: string;
+    };
   };
   primary_color: string;
   secondary_color: string;
