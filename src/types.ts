@@ -101,6 +101,7 @@ export interface CSSEffectsControlProps {
   max?: number;
   step?: number;
   options?: { label: string; value: string }[];
+  className?: string;
 }
 
 // Build Types
@@ -145,6 +146,8 @@ export interface BuildQueryParams {
   offset?: number;
   sortBy?: string;
   sortOrder?: 'asc' | 'desc';
+  sort?: string;
+  order?: string;
 }
 
 // Auth Types
@@ -162,4 +165,68 @@ export interface AuthUser {
   avatar_url?: string;
   last_seen?: string;
   metadata?: Record<string, unknown>;
+}
+
+// Form Types
+export { UseFormReturn } from 'react-hook-form';
+
+// Settings Types
+export interface Settings extends ThemeBase {
+  category: SettingType;
+  key: string;
+  value: Json;
+  metadata?: Json;
+  is_encrypted?: boolean;
+}
+
+// Profile Types
+export interface Profile {
+  id: string;
+  username?: string;
+  display_name?: string;
+  avatar_url?: string;
+  bio?: string;
+  website?: string;
+  location?: string;
+  created_at?: string;
+  updated_at?: string;
+  role?: UserRole;
+  last_seen?: string;
+  metadata?: Record<string, unknown>;
+}
+
+// Props Types
+export interface UserTableRowActionsProps {
+  user: Profile;
+  onRoleChange: (userId: string, newRole: UserRole) => void;
+}
+
+export interface BuildFormContainerProps {
+  form: UseFormReturn<BuildFormData>;
+  onSubmit: (data: BuildFormData) => void;
+}
+
+export interface BuildImagesSectionProps {
+  images: BuildImage[];
+  onImagesChange: (images: BuildImage[]) => void;
+}
+
+// Content Types
+export interface ContentWithAuthor {
+  id: string;
+  title: string;
+  content: Json;
+  type: string;
+  status: ContentStatus;
+  created_by: {
+    display_name: string;
+  };
+  updated_by: {
+    display_name: string;
+  };
+  created_at: string;
+  updated_at: string;
+  metadata?: Json;
+  version: number;
+  slug?: string;
 }
