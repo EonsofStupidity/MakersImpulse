@@ -1,15 +1,17 @@
-import React, { memo } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { ThemeColorPreview } from "./preview/ThemeColorPreview";
 import { ThemeTextPreview } from "./preview/ThemeTextPreview";
-import { ThemeAnimationPreview } from "./preview/ThemeAnimationPreview";
-import { ThemeBase } from "@/types/theme";
+import { AnimationPreview } from "./preview/AnimationPreview";
+import { ThemeBase } from "@/types";
 
 interface ThemePreviewContainerProps {
   settings: ThemeBase;
+  logoFile?: File;
+  faviconFile?: File;
 }
 
-export const ThemePreviewContainer = memo(({ settings }: ThemePreviewContainerProps) => {
+export const ThemePreviewContainer = React.memo(({ settings }: ThemePreviewContainerProps) => {
   return (
     <Card className="p-6 space-y-8 bg-gray-800/50 border border-white/10">
       <div>
@@ -24,7 +26,7 @@ export const ThemePreviewContainer = memo(({ settings }: ThemePreviewContainerPr
 
       <div>
         <h3 className="text-lg font-medium text-white mb-4">Animation Preview</h3>
-        <ThemeAnimationPreview colors={settings} />
+        <AnimationPreview colors={settings} />
       </div>
     </Card>
   );
