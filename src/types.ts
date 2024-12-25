@@ -125,6 +125,19 @@ export interface ThemeBase {
   animations: ThemeAnimations;
 }
 
+export interface CSSEffectsControlProps {
+  label: string;
+  type: 'input' | 'select' | 'slider';
+  value: string | number;
+  onChange: (value: string | number) => void;
+  description?: string;
+  options?: Array<{ label: string; value: string }>;
+  min?: number;
+  max?: number;
+  step?: number;
+  className?: string;
+}
+
 export interface ThemeState extends ThemeBase {
   isDirty: boolean;
   lastSync: string | null;
@@ -257,14 +270,3 @@ export interface ContentWithAuthor {
   slug?: string;
 }
 
-export interface CSSEffectsControlProps {
-  label: string;
-  type: 'input' | 'select' | 'slider';
-  value: string | number;
-  onChange: (value: string | number) => void;
-  description?: string;
-  options?: Array<{ label: string; value: string }>;
-  min?: number;
-  max?: number;
-  step?: number;
-}
