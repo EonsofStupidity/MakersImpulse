@@ -9,6 +9,36 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          badge_icon: string | null
+          category: string | null
+          created_at: string | null
+          description: string | null
+          icon_color: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          badge_icon?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon_color?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          badge_icon?: string | null
+          category?: string | null
+          created_at?: string | null
+          description?: string | null
+          icon_color?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       active_2fa_sessions: {
         Row: {
           created_at: string | null
@@ -132,6 +162,84 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          category: Database["public"]["Enums"]["audit_category"]
+          correlation_id: string | null
+          created_at: string | null
+          duration_ms: number | null
+          error_code: string | null
+          error_message: string | null
+          event_type: string
+          id: string
+          ip_address: string | null
+          metadata: Json | null
+          new_state: Json | null
+          previous_state: Json | null
+          request_id: string | null
+          resource_id: string | null
+          resource_type: string | null
+          session_id: string | null
+          severity: Database["public"]["Enums"]["audit_severity"]
+          stack_trace: string | null
+          status_code: number | null
+          timestamp: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          category: Database["public"]["Enums"]["audit_category"]
+          correlation_id?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_state?: Json | null
+          previous_state?: Json | null
+          request_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          session_id?: string | null
+          severity: Database["public"]["Enums"]["audit_severity"]
+          stack_trace?: string | null
+          status_code?: number | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          category?: Database["public"]["Enums"]["audit_category"]
+          correlation_id?: string | null
+          created_at?: string | null
+          duration_ms?: number | null
+          error_code?: string | null
+          error_message?: string | null
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          metadata?: Json | null
+          new_state?: Json | null
+          previous_state?: Json | null
+          request_id?: string | null
+          resource_id?: string | null
+          resource_type?: string | null
+          session_id?: string | null
+          severity?: Database["public"]["Enums"]["audit_severity"]
+          stack_trace?: string | null
+          status_code?: number | null
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       auth_error_logs: {
         Row: {
           created_at: string | null
@@ -192,7 +300,50 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "auth_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      base_product: {
+        Row: {
+          cost_usd: number
+          created_at: string | null
+          id: string
+          image_url: string | null
+          manufacturer: string | null
+          name: string
+          summary: string | null
+          today_trending: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cost_usd: number
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          manufacturer?: string | null
+          name: string
+          summary?: string | null
+          today_trending?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cost_usd?: number
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          manufacturer?: string | null
+          name?: string
+          summary?: string | null
+          today_trending?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       base_themes: {
         Row: {
@@ -239,17 +390,26 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "base_themes_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       blog_posts: {
         Row: {
           author_id: string
           category: Database["public"]["Enums"]["post_category"] | null
+          category_id: string | null
           content: string
           excerpt: string | null
           featured_image: string | null
           id: string
           images: string[] | null
+          publication_status: string | null
           published_at: string | null
           rich_content: Json | null
           slug: string
@@ -262,11 +422,13 @@ export type Database = {
         Insert: {
           author_id: string
           category?: Database["public"]["Enums"]["post_category"] | null
+          category_id?: string | null
           content: string
           excerpt?: string | null
           featured_image?: string | null
           id?: string
           images?: string[] | null
+          publication_status?: string | null
           published_at?: string | null
           rich_content?: Json | null
           slug: string
@@ -279,11 +441,13 @@ export type Database = {
         Update: {
           author_id?: string
           category?: Database["public"]["Enums"]["post_category"] | null
+          category_id?: string | null
           content?: string
           excerpt?: string | null
           featured_image?: string | null
           id?: string
           images?: string[] | null
+          publication_status?: string | null
           published_at?: string | null
           rich_content?: Json | null
           slug?: string
@@ -295,11 +459,39 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "blog_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_posts_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "cms_categories"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "blog_posts_profiles_fk"
             columns: ["author_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_posts_profiles_fk"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -387,7 +579,36 @@ export type Database = {
           updated_by?: string | null
           version?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "cms_content_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "cms_content_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cms_content_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       cms_content_relationships: {
         Row: {
@@ -487,6 +708,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "cms_content_revisions_profiles_fk"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "cms_content_revisions_rollback_from_fkey"
             columns: ["rollback_from"]
             isOneToOne: false
@@ -533,6 +761,157 @@ export type Database = {
           updated_at?: string | null
         }
         Relationships: []
+      }
+      community_events: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          end_date: string | null
+          event_type: string
+          id: string
+          image_url: string | null
+          is_featured: boolean | null
+          registration_url: string | null
+          start_date: string
+          status: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_type: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          registration_url?: string | null
+          start_date: string
+          status?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          end_date?: string | null
+          event_type?: string
+          id?: string
+          image_url?: string | null
+          is_featured?: boolean | null
+          registration_url?: string | null
+          start_date?: string
+          status?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
+      community_highlights: {
+        Row: {
+          achievement_data: Json | null
+          content_reference_id: string | null
+          content_type: string | null
+          created_at: string | null
+          description: string | null
+          expires_at: string | null
+          highlight_type: string
+          id: string
+          is_active: boolean | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          achievement_data?: Json | null
+          content_reference_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          highlight_type: string
+          id?: string
+          is_active?: boolean | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          achievement_data?: Json | null
+          content_reference_id?: string | null
+          content_type?: string | null
+          created_at?: string | null
+          description?: string | null
+          expires_at?: string | null
+          highlight_type?: string
+          id?: string
+          is_active?: boolean | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_highlights_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_highlights_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      content_versions: {
+        Row: {
+          content: Json
+          content_id: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          metadata: Json | null
+          version_number: number
+        }
+        Insert: {
+          content: Json
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          version_number: number
+        }
+        Update: {
+          content?: Json
+          content_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          metadata?: Json | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_versions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "cms_content"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
       }
       enhanced_audit_logs: {
         Row: {
@@ -672,6 +1051,7 @@ export type Database = {
         Row: {
           author_id: string
           content: string
+          count: number | null
           created_at: string | null
           id: string
           thread_id: string
@@ -680,6 +1060,7 @@ export type Database = {
         Insert: {
           author_id: string
           content: string
+          count?: number | null
           created_at?: string | null
           id?: string
           thread_id: string
@@ -688,6 +1069,7 @@ export type Database = {
         Update: {
           author_id?: string
           content?: string
+          count?: number | null
           created_at?: string | null
           id?: string
           thread_id?: string
@@ -735,6 +1117,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_threads_profiles_fk"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -881,6 +1270,57 @@ export type Database = {
           },
         ]
       }
+      media_library: {
+        Row: {
+          alt_text: string | null
+          caption: string | null
+          created_at: string | null
+          file_name: string
+          file_type: string
+          id: string
+          updated_at: string | null
+          url: string
+          user_id: string | null
+        }
+        Insert: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          file_name: string
+          file_type: string
+          id?: string
+          updated_at?: string | null
+          url: string
+          user_id?: string | null
+        }
+        Update: {
+          alt_text?: string | null
+          caption?: string | null
+          created_at?: string | null
+          file_name?: string
+          file_type?: string
+          id?: string
+          updated_at?: string | null
+          url?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "media_library_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "media_library_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       mi3dp_attributes: {
         Row: {
           category_id: string | null
@@ -951,6 +1391,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_builds_user"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1023,6 +1470,7 @@ export type Database = {
         Row: {
           attributes: Json | null
           category: string
+          category_id: string | null
           compatibility: Json | null
           created_at: string | null
           description: string | null
@@ -1032,11 +1480,14 @@ export type Database = {
           name: string
           price: number | null
           subcategory: string | null
+          today_trending: string | null
           updated_at: string | null
+          value_rating: string | null
         }
         Insert: {
           attributes?: Json | null
           category: string
+          category_id?: string | null
           compatibility?: Json | null
           created_at?: string | null
           description?: string | null
@@ -1046,11 +1497,14 @@ export type Database = {
           name: string
           price?: number | null
           subcategory?: string | null
+          today_trending?: string | null
           updated_at?: string | null
+          value_rating?: string | null
         }
         Update: {
           attributes?: Json | null
           category?: string
+          category_id?: string | null
           compatibility?: Json | null
           created_at?: string | null
           description?: string | null
@@ -1060,9 +1514,19 @@ export type Database = {
           name?: string
           price?: number | null
           subcategory?: string | null
+          today_trending?: string | null
           updated_at?: string | null
+          value_rating?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "mi3dp_parts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "mi3dp_categories"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       mi3dp_taxonomies: {
         Row: {
@@ -1109,6 +1573,54 @@ export type Database = {
         }
         Relationships: []
       }
+      moderation_actions: {
+        Row: {
+          action_type: string
+          created_at: string | null
+          id: string
+          moderator_id: string | null
+          reason: string | null
+          status: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          action_type: string
+          created_at?: string | null
+          id?: string
+          moderator_id?: string | null
+          reason?: string | null
+          status?: string | null
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          action_type?: string
+          created_at?: string | null
+          id?: string
+          moderator_id?: string | null
+          reason?: string | null
+          status?: string | null
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "moderation_actions_moderator_id_fkey"
+            columns: ["moderator_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "moderation_actions_moderator_id_fkey"
+            columns: ["moderator_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       navigation_settings: {
         Row: {
           created_at: string | null
@@ -1136,6 +1648,81 @@ export type Database = {
         }
         Relationships: []
       }
+      performance_alerts: {
+        Row: {
+          alert_type: string
+          current_value: number
+          id: string
+          metadata: Json | null
+          threshold: number
+          triggered_at: string | null
+        }
+        Insert: {
+          alert_type: string
+          current_value: number
+          id?: string
+          metadata?: Json | null
+          threshold: number
+          triggered_at?: string | null
+        }
+        Update: {
+          alert_type?: string
+          current_value?: number
+          id?: string
+          metadata?: Json | null
+          threshold?: number
+          triggered_at?: string | null
+        }
+        Relationships: []
+      }
+      performance_budgets: {
+        Row: {
+          budget_value: number
+          created_at: string | null
+          id: string
+          metric_name: string
+          updated_at: string | null
+        }
+        Insert: {
+          budget_value: number
+          created_at?: string | null
+          id?: string
+          metric_name: string
+          updated_at?: string | null
+        }
+        Update: {
+          budget_value?: number
+          created_at?: string | null
+          id?: string
+          metric_name?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      performance_metrics: {
+        Row: {
+          id: string
+          metadata: Json | null
+          metric_type: string
+          timestamp: string | null
+          value: number
+        }
+        Insert: {
+          id?: string
+          metadata?: Json | null
+          metric_type: string
+          timestamp?: string | null
+          value: number
+        }
+        Update: {
+          id?: string
+          metadata?: Json | null
+          metric_type?: string
+          timestamp?: string | null
+          value?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1144,6 +1731,7 @@ export type Database = {
           banned_by: string | null
           bio: string | null
           created_at: string | null
+          current_level: number | null
           display_name: string | null
           email: string | null
           failed_login_attempts: number | null
@@ -1158,10 +1746,14 @@ export type Database = {
           lockout_until: string | null
           metadata: Json | null
           name: string | null
+          next_level_points: number | null
           onboarding_completed: boolean | null
           pin_enabled: boolean | null
           pin_hash: string | null
+          points: number | null
           role: Database["public"]["Enums"]["user_role"] | null
+          role_id: number | null
+          total_points: number | null
           two_factor_enabled: boolean | null
           two_factor_secret: string | null
           updated_at: string | null
@@ -1176,6 +1768,7 @@ export type Database = {
           banned_by?: string | null
           bio?: string | null
           created_at?: string | null
+          current_level?: number | null
           display_name?: string | null
           email?: string | null
           failed_login_attempts?: number | null
@@ -1190,10 +1783,14 @@ export type Database = {
           lockout_until?: string | null
           metadata?: Json | null
           name?: string | null
+          next_level_points?: number | null
           onboarding_completed?: boolean | null
           pin_enabled?: boolean | null
           pin_hash?: string | null
+          points?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          role_id?: number | null
+          total_points?: number | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
@@ -1208,6 +1805,7 @@ export type Database = {
           banned_by?: string | null
           bio?: string | null
           created_at?: string | null
+          current_level?: number | null
           display_name?: string | null
           email?: string | null
           failed_login_attempts?: number | null
@@ -1222,10 +1820,14 @@ export type Database = {
           lockout_until?: string | null
           metadata?: Json | null
           name?: string | null
+          next_level_points?: number | null
           onboarding_completed?: boolean | null
           pin_enabled?: boolean | null
           pin_hash?: string | null
+          points?: number | null
           role?: Database["public"]["Enums"]["user_role"] | null
+          role_id?: number | null
+          total_points?: number | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
@@ -1233,7 +1835,15 @@ export type Database = {
           visual_editor_enabled?: boolean | null
           website?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_role_id_fkey"
+            columns: ["role_id"]
+            isOneToOne: false
+            referencedRelation: "roles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       publishing_queue: {
         Row: {
@@ -1330,6 +1940,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "rate_limits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       recovery_codes: {
@@ -1407,6 +2024,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "redis_connection_states_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       revision_history: {
@@ -1436,6 +2060,21 @@ export type Database = {
           entity_type?: string
           id?: string
           revision_type?: string
+        }
+        Relationships: []
+      }
+      roles: {
+        Row: {
+          id: number
+          name: string
+        }
+        Insert: {
+          id?: number
+          name: string
+        }
+        Update: {
+          id?: number
+          name?: string
         }
         Relationships: []
       }
@@ -1565,6 +2204,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "security_logs_profiles_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       security_settings: {
@@ -1609,38 +2255,219 @@ export type Database = {
         }
         Relationships: []
       }
+      site_metrics: {
+        Row: {
+          id: string
+          metric_name: string
+          metric_value: Json
+          recorded_at: string | null
+        }
+        Insert: {
+          id?: string
+          metric_name: string
+          metric_value: Json
+          recorded_at?: string | null
+        }
+        Update: {
+          id?: string
+          metric_name?: string
+          metric_value?: Json
+          recorded_at?: string | null
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
+          accent_color: string | null
+          backdrop_blur: string | null
+          border_radius: string | null
+          box_shadow: string | null
           created_at: string | null
+          favicon_url: string | null
+          font_family_body: string | null
+          font_family_heading: string | null
+          font_size_base: string | null
+          font_weight_bold: string | null
+          font_weight_normal: string | null
+          hover_scale: string | null
           id: string
+          letter_spacing: string | null
+          line_height_base: string | null
+          logo_url: string | null
           metadata: Json | null
+          neon_cyan: string | null
+          neon_pink: string | null
+          neon_purple: string | null
+          primary_color: string | null
+          secondary_color: string | null
           security_settings: Json | null
           setting_key: string
           setting_type: string | null
           setting_value: string | null
+          shadow_color: string | null
+          site_title: string | null
+          spacing_unit: string | null
+          tagline: string | null
+          text_heading_color: string | null
+          text_link_color: string | null
+          text_primary_color: string | null
+          text_secondary_color: string | null
+          theme_mode: string | null
+          transition_duration: string | null
+          transition_type: string | null
           updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
+          accent_color?: string | null
+          backdrop_blur?: string | null
+          border_radius?: string | null
+          box_shadow?: string | null
           created_at?: string | null
+          favicon_url?: string | null
+          font_family_body?: string | null
+          font_family_heading?: string | null
+          font_size_base?: string | null
+          font_weight_bold?: string | null
+          font_weight_normal?: string | null
+          hover_scale?: string | null
           id?: string
+          letter_spacing?: string | null
+          line_height_base?: string | null
+          logo_url?: string | null
           metadata?: Json | null
+          neon_cyan?: string | null
+          neon_pink?: string | null
+          neon_purple?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
           security_settings?: Json | null
           setting_key: string
           setting_type?: string | null
           setting_value?: string | null
+          shadow_color?: string | null
+          site_title?: string | null
+          spacing_unit?: string | null
+          tagline?: string | null
+          text_heading_color?: string | null
+          text_link_color?: string | null
+          text_primary_color?: string | null
+          text_secondary_color?: string | null
+          theme_mode?: string | null
+          transition_duration?: string | null
+          transition_type?: string | null
           updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
+          accent_color?: string | null
+          backdrop_blur?: string | null
+          border_radius?: string | null
+          box_shadow?: string | null
           created_at?: string | null
+          favicon_url?: string | null
+          font_family_body?: string | null
+          font_family_heading?: string | null
+          font_size_base?: string | null
+          font_weight_bold?: string | null
+          font_weight_normal?: string | null
+          hover_scale?: string | null
           id?: string
+          letter_spacing?: string | null
+          line_height_base?: string | null
+          logo_url?: string | null
           metadata?: Json | null
+          neon_cyan?: string | null
+          neon_pink?: string | null
+          neon_purple?: string | null
+          primary_color?: string | null
+          secondary_color?: string | null
           security_settings?: Json | null
           setting_key?: string
           setting_type?: string | null
           setting_value?: string | null
+          shadow_color?: string | null
+          site_title?: string | null
+          spacing_unit?: string | null
+          tagline?: string | null
+          text_heading_color?: string | null
+          text_link_color?: string | null
+          text_primary_color?: string | null
+          text_secondary_color?: string | null
+          theme_mode?: string | null
+          transition_duration?: string | null
+          transition_type?: string | null
           updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: []
+      }
+      site_theme_availability: {
+        Row: {
+          created_at: string | null
+          enabled_at: string | null
+          enabled_by: string | null
+          id: string
+          is_default: boolean | null
+          metadata: Json | null
+          notes: string | null
+          status:
+            | Database["public"]["Enums"]["theme_availability_status"]
+            | null
+          theme_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          notes?: string | null
+          status?:
+            | Database["public"]["Enums"]["theme_availability_status"]
+            | null
+          theme_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          enabled_at?: string | null
+          enabled_by?: string | null
+          id?: string
+          is_default?: boolean | null
+          metadata?: Json | null
+          notes?: string | null
+          status?:
+            | Database["public"]["Enums"]["theme_availability_status"]
+            | null
+          theme_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "site_theme_availability_enabled_by_fkey"
+            columns: ["enabled_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "site_theme_availability_enabled_by_fkey"
+            columns: ["enabled_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
+            foreignKeyName: "site_theme_availability_theme_id_fkey"
+            columns: ["theme_id"]
+            isOneToOne: false
+            referencedRelation: "theme_base_configuration"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       theme_access_control: {
         Row: {
@@ -1684,6 +2511,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_access_control_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -1734,6 +2568,7 @@ export type Database = {
           is_active: boolean | null
           metadata: Json | null
           name: string
+          settings: Json | null
           updated_at: string | null
           version: number
         }
@@ -1745,6 +2580,7 @@ export type Database = {
           is_active?: boolean | null
           metadata?: Json | null
           name: string
+          settings?: Json | null
           updated_at?: string | null
           version?: number
         }
@@ -1756,6 +2592,7 @@ export type Database = {
           is_active?: boolean | null
           metadata?: Json | null
           name?: string
+          settings?: Json | null
           updated_at?: string | null
           version?: number
         }
@@ -1766,6 +2603,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_base_configuration_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -2101,6 +2945,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "theme_inheritance_log_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "theme_inheritance_log_child_theme_id_fkey"
             columns: ["child_theme_id"]
             isOneToOne: false
@@ -2249,6 +3100,13 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "theme_presets_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
       theme_snapshots: {
@@ -2324,6 +3182,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "theme_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "theme_versions_theme_id_fkey"
@@ -2410,11 +3275,71 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "unified_settings_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "unified_settings_updated_by_fkey"
             columns: ["updated_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "unified_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_achievements: {
+        Row: {
+          achievement_id: string | null
+          completed_at: string | null
+          display_settings: Json | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          achievement_id?: string | null
+          completed_at?: string | null
+          display_settings?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          achievement_id?: string | null
+          completed_at?: string | null
+          display_settings?: Json | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -2486,6 +3411,48 @@ export type Database = {
           },
         ]
       }
+      user_audit_logs: {
+        Row: {
+          action: string
+          created_at: string | null
+          details: Json | null
+          id: string
+          metadata: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string | null
+          details?: Json | null
+          id?: string
+          metadata?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       user_theme_preferences: {
         Row: {
           created_at: string | null
@@ -2516,7 +3483,38 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_theme_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
+      }
+      wizard_help_content: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          order_index: number | null
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          order_index?: number | null
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          order_index?: number | null
+          title?: string
+        }
+        Relationships: []
       }
       workflow_templates: {
         Row: {
@@ -2561,17 +3559,37 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "workflow_templates_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "workflow_templates_profiles_fk"
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "workflow_templates_profiles_fk"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_roles_view"
+            referencedColumns: ["user_id"]
+          },
         ]
       }
     }
     Views: {
-      [_ in never]: never
+      user_roles_view: {
+        Row: {
+          role_name: string | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       append_blog_image: {
@@ -2612,11 +3630,41 @@ export type Database = {
         }
         Returns: Json
       }
+      get_user_role: {
+        Args: {
+          user_id: string
+        }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
+      has_role: {
+        Args: {
+          user_id: string
+          role_names: string[]
+        }
+        Returns: boolean
+      }
       initialize_user_gamification: {
         Args: {
           user_id: string
         }
         Returns: undefined
+      }
+      log_audit_event: {
+        Args: {
+          p_category: Database["public"]["Enums"]["audit_category"]
+          p_severity: Database["public"]["Enums"]["audit_severity"]
+          p_event_type: string
+          p_action: string
+          p_resource_type?: string
+          p_resource_id?: string
+          p_previous_state?: Json
+          p_new_state?: Json
+          p_metadata?: Json
+          p_error_code?: string
+          p_error_message?: string
+          p_stack_trace?: string
+        }
+        Returns: string
       }
       log_security_event: {
         Args: {
@@ -2779,8 +3827,24 @@ export type Database = {
           }
     }
     Enums: {
+      audit_category:
+        | "authentication"
+        | "authorization"
+        | "data_access"
+        | "system"
+        | "security"
+        | "performance"
+        | "user_action"
+        | "configuration"
+      audit_severity: "info" | "warn" | "error" | "critical"
       content_status: "draft" | "published" | "archived"
-      content_type: "page" | "component" | "template" | "workflow"
+      content_type:
+        | "page"
+        | "component"
+        | "template"
+        | "workflow"
+        | "hero"
+        | "feature"
       post_category:
         | "Guides"
         | "Reviews"
@@ -2798,6 +3862,7 @@ export type Database = {
         | "notification"
         | "workflow"
       setting_value_type: "string" | "number" | "boolean" | "json"
+      theme_availability_status: "available" | "disabled" | "preview"
       theme_component_type:
         | "color"
         | "typography"
@@ -2809,7 +3874,7 @@ export type Database = {
       theme_mode_type: "light" | "dark" | "system"
       theme_property_type: "mandatory" | "optional"
       transition_type: "fade" | "slide" | "scale" | "blur"
-      user_role: "subscriber" | "maker" | "admin" | "super_admin"
+      user_role: "subscriber" | "maker" | "admin" | "super_admin" | "moderator"
       workflow_stage_type:
         | "approval"
         | "review"
