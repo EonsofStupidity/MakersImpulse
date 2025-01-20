@@ -861,6 +861,36 @@ export type Database = {
           },
         ]
       }
+      content_migration_log: {
+        Row: {
+          content_type: string
+          id: string
+          metadata: Json | null
+          migrated_at: string | null
+          new_content_id: string
+          original_id: string
+          status: string | null
+        }
+        Insert: {
+          content_type: string
+          id?: string
+          metadata?: Json | null
+          migrated_at?: string | null
+          new_content_id: string
+          original_id: string
+          status?: string | null
+        }
+        Update: {
+          content_type?: string
+          id?: string
+          metadata?: Json | null
+          migrated_at?: string | null
+          new_content_id?: string
+          original_id?: string
+          status?: string | null
+        }
+        Relationships: []
+      }
       content_versions: {
         Row: {
           content: Json
@@ -1735,7 +1765,6 @@ export type Database = {
           display_name: string | null
           email: string | null
           failed_login_attempts: number | null
-          failed_pin_attempts: number | null
           gamification_enabled: boolean | null
           id: string
           is_banned: boolean | null
@@ -1748,16 +1777,14 @@ export type Database = {
           name: string | null
           next_level_points: number | null
           onboarding_completed: boolean | null
-          pin_enabled: boolean | null
-          pin_hash: string | null
           points: number | null
-          role: Database["public"]["Enums"]["user_role"] | null
+          role: Database["public"]["Enums"]["user_role"]
           role_id: number | null
           total_points: number | null
           two_factor_enabled: boolean | null
           two_factor_secret: string | null
           updated_at: string | null
-          username: string | null
+          username: string
           visual_editor_enabled: boolean | null
           website: string | null
         }
@@ -1772,7 +1799,6 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           failed_login_attempts?: number | null
-          failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id: string
           is_banned?: boolean | null
@@ -1785,16 +1811,14 @@ export type Database = {
           name?: string | null
           next_level_points?: number | null
           onboarding_completed?: boolean | null
-          pin_enabled?: boolean | null
-          pin_hash?: string | null
           points?: number | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role"]
           role_id?: number | null
           total_points?: number | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
-          username?: string | null
+          username: string
           visual_editor_enabled?: boolean | null
           website?: string | null
         }
@@ -1809,7 +1833,6 @@ export type Database = {
           display_name?: string | null
           email?: string | null
           failed_login_attempts?: number | null
-          failed_pin_attempts?: number | null
           gamification_enabled?: boolean | null
           id?: string
           is_banned?: boolean | null
@@ -1822,16 +1845,14 @@ export type Database = {
           name?: string | null
           next_level_points?: number | null
           onboarding_completed?: boolean | null
-          pin_enabled?: boolean | null
-          pin_hash?: string | null
           points?: number | null
-          role?: Database["public"]["Enums"]["user_role"] | null
+          role?: Database["public"]["Enums"]["user_role"]
           role_id?: number | null
           total_points?: number | null
           two_factor_enabled?: boolean | null
           two_factor_secret?: string | null
           updated_at?: string | null
-          username?: string | null
+          username?: string
           visual_editor_enabled?: boolean | null
           website?: string | null
         }
@@ -2689,7 +2710,7 @@ export type Database = {
           text_link_color: string | null
           text_primary_color: string | null
           text_secondary_color: string | null
-          theme_mode: Database["public"]["Enums"]["theme_mode_type"] | null
+          theme_mode: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration: string | null
           transition_type: string | null
           updated_at: string | null
@@ -2734,7 +2755,7 @@ export type Database = {
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
-          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
           transition_type?: string | null
           updated_at?: string | null
@@ -2779,7 +2800,7 @@ export type Database = {
           text_link_color?: string | null
           text_primary_color?: string | null
           text_secondary_color?: string | null
-          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
+          theme_mode?: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration?: string | null
           transition_type?: string | null
           updated_at?: string | null
@@ -3205,8 +3226,11 @@ export type Database = {
           device_hash: string
           device_name: string
           expires_at: string
+          failed_pin_attempts: number | null
           id: string
+          last_pin_attempt: string | null
           last_used: string | null
+          pin_hash: string | null
           user_id: string | null
         }
         Insert: {
@@ -3214,8 +3238,11 @@ export type Database = {
           device_hash: string
           device_name: string
           expires_at: string
+          failed_pin_attempts?: number | null
           id?: string
+          last_pin_attempt?: string | null
           last_used?: string | null
+          pin_hash?: string | null
           user_id?: string | null
         }
         Update: {
@@ -3223,8 +3250,11 @@ export type Database = {
           device_hash?: string
           device_name?: string
           expires_at?: string
+          failed_pin_attempts?: number | null
           id?: string
+          last_pin_attempt?: string | null
           last_used?: string | null
+          pin_hash?: string | null
           user_id?: string | null
         }
         Relationships: []
@@ -3457,21 +3487,18 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
-          theme_mode: Database["public"]["Enums"]["theme_mode_type"] | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
           id?: string
-          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
           id?: string
-          theme_mode?: Database["public"]["Enums"]["theme_mode_type"] | null
           updated_at?: string | null
           user_id?: string
         }
@@ -3711,23 +3738,15 @@ export type Database = {
         }
         Returns: Json
       }
-      setup_pin:
-        | {
-            Args: {
-              p_user_id: string
-              p_pin: string
-            }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_user_id: string
-              p_pin: string
-              p_ip_address?: string
-              p_user_agent?: string
-            }
-            Returns: Json
-          }
+      setup_pin: {
+        Args: {
+          p_user_id: string
+          p_pin: string
+          p_ip_address?: string
+          p_user_agent?: string
+        }
+        Returns: Json
+      }
       update_site_settings: {
         Args: {
           p_site_title: string
@@ -3794,7 +3813,7 @@ export type Database = {
           text_link_color: string | null
           text_primary_color: string | null
           text_secondary_color: string | null
-          theme_mode: Database["public"]["Enums"]["theme_mode_type"] | null
+          theme_mode: Database["public"]["Enums"]["theme_mode"] | null
           transition_duration: string | null
           transition_type: string | null
           updated_at: string | null
@@ -3808,23 +3827,23 @@ export type Database = {
         }
         Returns: Json
       }
-      verify_pin_login:
-        | {
-            Args: {
-              p_user_id: string
-              p_pin: string
-            }
-            Returns: boolean
-          }
-        | {
-            Args: {
-              p_user_id: string
-              p_pin: string
-              p_ip_address?: string
-              p_user_agent?: string
-            }
-            Returns: Json
-          }
+      verify_device_pin: {
+        Args: {
+          p_device_id: string
+          p_pin: string
+          p_user_id: string
+        }
+        Returns: Json
+      }
+      verify_pin_login: {
+        Args: {
+          p_user_id: string
+          p_pin: string
+          p_ip_address?: string
+          p_user_agent?: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       audit_category:
@@ -3837,14 +3856,19 @@ export type Database = {
         | "user_action"
         | "configuration"
       audit_severity: "info" | "warn" | "error" | "critical"
+      component_type: "color" | "typography" | "layout" | "animation" | "effect"
       content_status: "draft" | "published" | "archived"
       content_type:
         | "page"
+        | "build"
+        | "guide"
+        | "part"
         | "component"
         | "template"
         | "workflow"
         | "hero"
         | "feature"
+      pin_verification_status: "success" | "failed" | "locked"
       post_category:
         | "Guides"
         | "Reviews"
@@ -3853,6 +3877,7 @@ export type Database = {
         | "Critical"
         | "3D Printer"
         | "3D Printer Hardware"
+      setting_category: "theme" | "system" | "user" | "security" | "performance"
       setting_type:
         | "theme"
         | "security"
@@ -3871,7 +3896,6 @@ export type Database = {
         | "effect"
       theme_inheritance_strategy: "override" | "merge" | "replace"
       theme_mode: "light" | "dark" | "system"
-      theme_mode_type: "light" | "dark" | "system"
       theme_property_type: "mandatory" | "optional"
       transition_type: "fade" | "slide" | "scale" | "blur"
       user_role: "subscriber" | "maker" | "admin" | "super_admin" | "moderator"
