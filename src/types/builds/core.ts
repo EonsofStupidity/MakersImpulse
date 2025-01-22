@@ -23,13 +23,13 @@ export interface BuildImage {
 
 export interface Build {
   id: string;
-  userId: string;
+  user_id: string;
   name: string;
   description?: string;
-  buildVolume: BuildVolume;
+  build_volume: BuildVolume;
   parts: BuildPart[];
   images: BuildImage[];
-  createdAt: string;
+  created_at: string;
 }
 
 // Query parameters for build listing
