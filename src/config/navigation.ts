@@ -1,11 +1,4 @@
-export interface NavigationItem {
-  id: string;
-  label: string;
-  path: string;
-  icon?: string;
-  requiresAuth?: boolean;
-  adminOnly?: boolean;
-}
+import { NavigationItem } from '@/types/core/navigation';
 
 export const mainNavigation: NavigationItem[] = [
   {
