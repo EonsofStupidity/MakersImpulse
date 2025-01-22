@@ -13,8 +13,7 @@ export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
 
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
-
+import { Json } from '@/types/core/json';
 export type UseFormReturn<T = any> = HookFormReturn<T>;
 
 export interface ThemePreviewPreferences {
@@ -148,20 +147,6 @@ export interface Settings extends ThemeBase {
   is_encrypted?: boolean;
 }
 
-export interface Profile {
-  id: string;
-  username?: string;
-  display_name?: string;
-  avatar_url?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  created_at?: string;
-  updated_at?: string;
-  role?: UserRole;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
 
 export interface UserTableRowActionsProps {
   onRoleChange: (userId: string, newRole: UserRole) => void;

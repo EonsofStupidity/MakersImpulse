@@ -9,7 +9,7 @@ export const componentContentSchema = z.object({
     props: z.record(z.any()).optional(),
     styles: z.record(z.any()).optional()
   }),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  status: z.enum(["draft", "published", "archived"] as const).default("draft"),
   metadata: z.record(z.any()).optional()
 });
 
@@ -25,7 +25,7 @@ export const pageContentSchema = z.object({
       ogImage: z.string().optional()
     }).optional()
   }),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  status: z.enum(["draft", "published", "archived"] as const).default("draft"),
   metadata: z.record(z.any()).optional()
 });
 
