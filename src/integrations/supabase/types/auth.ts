@@ -1,21 +1,6 @@
-import { Json } from './base';
+import { Json } from '@/types/core/json';
 import { Database } from './base';
-
-export type UserRole = Database['public']['Enums']['user_role'];
-
-export interface Profile {
-  id: string;
-  username?: string;
-  display_name?: string;
-  avatar_url?: string;
-  role?: UserRole;
-  created_at?: string;
-  updated_at?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  metadata?: Json;
-}
+import { Profile } from '@/types/core/auth';
 
 export interface Session {
   id: string;

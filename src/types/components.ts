@@ -1,4 +1,4 @@
-export type ComponentType = 
+export type BuildComponentType = 
   | 'bearings'
   | 'extruders'
   | 'addons'
