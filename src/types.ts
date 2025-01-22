@@ -1,13 +1,14 @@
 import { UseFormReturn as HookFormReturn } from 'react-hook-form';
 
 // Core Types
+import { UserRole } from '@/types/core/auth';
+import { ContentStatus } from '@/types/core/content';
+
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
 export type ComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
-export type UserRole = 'subscriber' | 'maker' | 'admin' | 'super_admin';
-export type ContentStatus = 'draft' | 'published' | 'archived';
 export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
@@ -133,50 +134,9 @@ export interface ThemeBase {
   };
 }
 
-export interface BuildVolume {
-  x: number;
-  y: number;
-  z: number;
-  units: string;
-}
+import { Build, BuildVolume, BuildPart, BuildImage, BuildQueryParams } from '@/types/builds/core';
 
-export interface BuildPart {
-  id: string;
-  name: string;
-  quantity: number;
-  notes?: string;
-  attributes?: Record<string, unknown>;
-}
-
-export interface BuildImage {
-  url: string;
-  type: string;
-  alt?: string;
-  caption?: string;
-}
-
-export interface Build {
-  id: string;
-  user_id: string;
-  name: string;
-  description?: string;
-  build_volume: BuildVolume;
-  parts: BuildPart[];
-  images: BuildImage[];
-  created_at: string;
-}
-
-export interface BuildFormData extends Omit<Build, 'id' | 'created_at'> {}
-
-export interface BuildQueryParams {
-  userId?: string;
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  sortOrder?: 'asc' | 'desc';
-  sort?: string;
-  order?: string;
-}
+export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {}
 
 export interface AuthUser {
   id: string;
