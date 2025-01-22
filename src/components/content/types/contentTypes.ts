@@ -1,29 +1,5 @@
 import { z } from "zod";
-
-export type ContentType = "template" | "page" | "component" | "workflow";
-
-export type ContentStatus = "draft" | "published" | "archived";
-
-export interface ContentWithAuthor {
-  id: string;
-  title: string;
-  type: ContentType;
-  content: any;
-  metadata?: any;
-  slug?: string;
-  status: ContentStatus;
-  version: number;
-  created_by: { 
-    id: string;
-    display_name: string;
-  };
-  updated_by?: { 
-    id: string;
-    display_name: string;
-  };
-  created_at: string;
-  updated_at?: string;
-}
+import { ContentType, ContentStatus, ContentWithAuthor } from '@/types/core/content';
 
 export const componentContentSchema = z.object({
   title: z.string(),

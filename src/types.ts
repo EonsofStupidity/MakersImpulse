@@ -232,21 +232,6 @@ export interface BuildImagesSectionProps {
   onImagesChange: (images: BuildImage[]) => void;
 }
 
-export interface ContentWithAuthor {
-  id: string;
-  title: string;
-  content: Json;
-  type: string;
-  status: ContentStatus;
-  created_by: string;
-  updated_by: string;
-  created_at: string;
-  updated_at: string;
-  metadata?: Json;
-  version: number;
-  slug?: string;
-}
-
 export interface ThemeStyles {
   [key: string]: string;
 }

@@ -3,11 +3,3 @@ export type ComponentType =
   | 'extruders'
   | 'addons'
   | 'other';
-
-export interface NavigationItem {
-  title: string;
-  href: string;
-  icon?: React.ComponentType;
-  requiresAuth?: boolean;
-  children?: NavigationItem[];
-}
