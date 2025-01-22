@@ -22,3 +22,33 @@ export interface ContentWithAuthor {
   created_at: string;
   updated_at?: string;
 }
+
+export interface ComponentContent {
+  title: string;
+  type: "component";
+  content: {
+    componentType: string;
+    props?: Record<string, any>;
+    styles?: Record<string, any>;
+  };
+  status?: ContentStatus;
+  metadata?: Record<string, any>;
+}
+
+export interface PageContent {
+  title: string;
+  type: "page";
+  content: {
+    body: string;
+    seo?: {
+      title?: string;
+      description?: string;
+      keywords?: string[];
+      ogImage?: string;
+    };
+  };
+  status?: ContentStatus;
+  metadata?: Record<string, any>;
+  id?: string;
+  version?: number;
+}

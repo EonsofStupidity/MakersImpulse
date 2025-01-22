@@ -7,7 +7,6 @@ import { ContentStatus } from '@/types/core/content';
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
 export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
-export type ComponentType = 'color' | 'typography' | 'layout' | 'animation' | 'effect';
 export type GlassEffectLevel = 'low' | 'medium' | 'high';
 export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
 export type CSSValue = `${number}${CSSUnit}` | string;
