@@ -1,31 +1,36 @@
-import { UseFormReturn as HookFormReturn } from 'react-hook-form';
+import { Json } from './json';
 
-// Core Types
-import { UserRole } from '@/types/core/auth';
-import { ContentStatus } from '@/types/core/content';
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type TransitionType = 'fade' | 'slide' | 'scale' | 'blur';
+export type ThemeInheritanceStrategy = 'merge' | 'override' | 'replace';
+export type GlassEffectLevel = 'low' | 'medium' | 'high';
 
-import { 
-  ThemeMode,
-  TransitionType,
-  ThemeInheritanceStrategy,
-  GlassEffectLevel,
-  ThemeBase
-} from '@/types/core/theme';
+export interface ThemePreviewPreferences {
+  real_time_updates: boolean;
+  animation_enabled: boolean;
+  glass_effect_level: GlassEffectLevel;
+  update_debounce_ms: number;
+}
 
-export type {
-  ThemeMode,
-  TransitionType,
-  ThemeInheritanceStrategy,
-  GlassEffectLevel
-};
-export type CSSUnit = 'px' | 'rem' | 'em' | 'vh' | 'vw' | '%' | '';
-export type CSSValue = `${number}${CSSUnit}` | string;
-export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
+export interface ThemeValidationError {
+  field: string;
+  message: string;
+  code?: string;
+}
 
-import { Json } from '@/types/core/json';
-export type UseFormReturn<T = any> = HookFormReturn<T>;
+export interface ThemeValidationResult {
+  isValid: boolean;
+  errors: ThemeValidationError[];
+}
 
-export interface Settings extends ThemeBase {
+export interface ThemeSyncState {
+  lastSync: string | null;
+  syncStatus: 'idle' | 'syncing' | 'error';
+  syncError?: string;
+  status?: 'idle' | 'syncing' | 'error';
+}
+
+export interface ThemeBase {
   id?: string;
   primary_color: string;
   secondary_color: string;
@@ -54,7 +59,6 @@ export interface Settings extends ThemeBase {
   theme_mode: ThemeMode;
   transition_type: TransitionType;
   real_time_toggle?: boolean;
-  component_type?: ComponentType;
   preview_preferences: ThemePreviewPreferences;
   parent_theme_id?: string | null;
   inheritance_strategy?: ThemeInheritanceStrategy;
@@ -115,38 +119,4 @@ export interface Settings extends ThemeBase {
     enabled: boolean;
     duration: number;
   };
-}
-
-import { Build, BuildVolume, BuildPart, BuildImage, BuildQueryParams } from '@/types/builds/core';
-
-export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {}
-
-import { Profile, AuthUser } from '@/types/core/auth';
-
-export interface Settings extends ThemeBase {
-  category: SettingType;
-  key: string;
-  value: Json;
-  metadata?: Json;
-  is_encrypted?: boolean;
-}
-
-
-export interface UserTableRowActionsProps {
-  onRoleChange: (userId: string, newRole: UserRole) => void;
-  user: Profile;
-}
-
-export interface BuildFormContainerProps {
-  form: UseFormReturn<BuildFormData>;
-  onSubmit: (data: BuildFormData) => void;
-}
-
-export interface BuildImagesSectionProps {
-  images: BuildImage[];
-  onImagesChange: (images: BuildImage[]) => void;
-}
-
-export interface ThemeStyles {
-  [key: string]: string;
 }

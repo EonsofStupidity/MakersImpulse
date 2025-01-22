@@ -1,2 +1,2 @@
-import { ComponentType } from '@/types/core/content';
+import { ComponentType } from '@/types/core/components';
 export type { ComponentType };
