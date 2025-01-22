@@ -138,21 +138,7 @@ import { Build, BuildVolume, BuildPart, BuildImage, BuildQueryParams } from '@/t
 
 export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {}
 
-export interface AuthUser {
-  id: string;
-  email: string;
-  displayName?: string;
-  username?: string;
-  bio?: string;
-  website?: string;
-  location?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  role: UserRole;
-  avatar_url?: string;
-  last_seen?: string;
-  metadata?: Record<string, unknown>;
-}
+import { Profile, AuthUser } from '@/types/core/auth';
 
 export interface Settings extends ThemeBase {
   category: SettingType;
