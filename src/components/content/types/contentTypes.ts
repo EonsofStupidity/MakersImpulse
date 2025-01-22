@@ -26,7 +26,7 @@ export const pageContentSchema = z.object({
     }).optional()
   }),
   status: z.enum(["draft", "published", "archived"] as const).default("draft"),
-  metadata: z.record(z.any()).optional()
+  metadata: z.record(z.unknown()).optional()
 });
 
 

@@ -44,20 +44,6 @@ export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {
 import { Profile, AuthUser } from '@/types/core/auth';
 
 
-export interface UserTableRowActionsProps {
-  onRoleChange: (userId: string, newRole: UserRole) => void;
-  user: Profile;
-}
-
-export interface BuildFormContainerProps {
-  form: UseFormReturn<BuildFormData>;
-  onSubmit: (data: BuildFormData) => void;
-}
-
-export interface BuildImagesSectionProps {
-  images: BuildImage[];
-  onImagesChange: (images: BuildImage[]) => void;
-}
 
 export interface ThemeStyles {
   [key: string]: string;
