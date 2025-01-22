@@ -26,100 +26,20 @@ import { Json } from '@/types/core/json';
 export type UseFormReturn<T = any> = HookFormReturn<T>;
 
 export interface Settings extends ThemeBase {
-  id?: string;
-  primary_color: string;
-  secondary_color: string;
-  accent_color: string;
-  text_primary_color: string;
-  text_secondary_color: string;
-  text_link_color: string;
-  text_heading_color: string;
-  neon_cyan: string;
-  neon_pink: string;
-  neon_purple: string;
-  font_family_heading: string;
-  font_family_body: string;
-  font_size_base: string;
-  font_weight_normal: string;
-  font_weight_bold: string;
-  line_height_base: string;
-  letter_spacing: string;
-  border_radius: string;
-  spacing_unit: string;
-  transition_duration: string;
-  shadow_color: string;
-  hover_scale: string;
-  box_shadow: string;
-  backdrop_blur: string;
-  theme_mode: ThemeMode;
-  transition_type: TransitionType;
-  real_time_toggle?: boolean;
+  category: SettingType;
+  key: string;
+  value: Json;
+  metadata?: Json;
+  is_encrypted?: boolean;
   component_type?: ComponentType;
-  preview_preferences: ThemePreviewPreferences;
-  parent_theme_id?: string | null;
-  inheritance_strategy?: ThemeInheritanceStrategy;
-  inherited_settings?: Json;
-  site_title?: string;
-  tagline?: string;
-  logo_url?: string;
-  favicon_url?: string;
-  updated_at?: string;
-  updated_by?: string;
-  created_at?: string;
-  created_by?: string;
-  animations_enabled: boolean;
-  default_animation_duration: number;
-  colors: {
-    primary: string;
-    secondary: string;
-    accent: string;
-    text: {
-      primary: string;
-      secondary: string;
-      heading: string;
-      link: string;
-    };
-    neon: {
-      cyan: string;
-      pink: string;
-      purple: string;
-    };
-  };
-  typography: {
-    fontFamily: {
-      heading: string;
-      body: string;
-    };
-    fontSize: {
-      base: string;
-    };
-    fontWeight: {
-      normal: string;
-      bold: string;
-    };
-    lineHeight: {
-      base: string;
-    };
-    letterSpacing: string;
-  };
-  effects: {
-    borderRadius: string;
-    boxShadow: string;
-    backdropBlur: string;
-    shadowColor: string;
-  };
-  spacing: {
-    unit: string;
-  };
-  animations: {
-    enabled: boolean;
-    duration: number;
-  };
 }
 
 import { Build, BuildVolume, BuildPart, BuildImage, BuildQueryParams } from '@/types/builds/core';
 
-export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {}
+export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {
+  buildVolume: BuildVolume;
+  userId: string;
+}
 
 import { Profile, AuthUser } from '@/types/core/auth';
 

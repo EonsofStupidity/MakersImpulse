@@ -6,11 +6,11 @@ export const componentContentSchema = z.object({
   type: z.literal("component"),
   content: z.object({
     componentType: z.string(),
-    props: z.record(z.any()).optional(),
-    styles: z.record(z.any()).optional()
+    props: z.record(z.unknown()).optional(),
+    styles: z.record(z.unknown()).optional()
   }),
   status: z.enum(["draft", "published", "archived"] as const).default("draft"),
-  metadata: z.record(z.any()).optional()
+  metadata: z.record(z.unknown()).optional()
 });
 
 export const pageContentSchema = z.object({

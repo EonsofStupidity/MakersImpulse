@@ -28,11 +28,11 @@ export interface ComponentContent {
   type: "component";
   content: {
     componentType: string;
-    props?: Record<string, any>;
-    styles?: Record<string, any>;
+    props?: Record<string, unknown>;
+    styles?: Record<string, unknown>;
   };
   status?: ContentStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, Json>;
 }
 
 export interface PageContent {
