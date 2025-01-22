@@ -43,14 +43,6 @@ export interface BuildFormData extends Omit<Build, 'id' | 'createdAt'> {
 
 import { Profile, AuthUser } from '@/types/core/auth';
 
-export interface Settings extends ThemeBase {
-  category: SettingType;
-  key: string;
-  value: Json;
-  metadata?: Json;
-  is_encrypted?: boolean;
-}
-
 
 export interface UserTableRowActionsProps {
   onRoleChange: (userId: string, newRole: UserRole) => void;
