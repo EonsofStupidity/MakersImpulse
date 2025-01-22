@@ -7,7 +7,7 @@ export const getFilteredNavigation = (session: Session | null) => {
   return mainNavigation.filter((item: NavigationItem) => !item.requiresAuth || session);
 };
 
-export const getNavigationItemIcon = (Icon: any) => {
+export const getNavigationItemIcon = (Icon: React.ComponentType | undefined) => {
   return Icon ? <Icon className="w-4 h-4 mr-2" /> : null;
 };
 

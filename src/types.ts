@@ -23,7 +23,7 @@ export type CSSValue = `${number}${CSSUnit}` | string;
 export type SettingType = 'theme' | 'system' | 'user' | 'content' | 'workflow' | 'security' | 'notification';
 
 import { Json } from '@/types/core/json';
-export type UseFormReturn<T = any> = HookFormReturn<T>;
+export type UseFormReturn<T = unknown> = HookFormReturn<T>;
 
 export interface Settings extends ThemeBase {
   category: SettingType;

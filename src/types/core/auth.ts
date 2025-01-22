@@ -15,7 +15,7 @@ export interface AuthUser {
   updatedAt: Date;
   user_metadata?: {
     avatar_url?: string;
-    [key: string]: any;
+    [key: string]: Json;
   };
 }
 

@@ -48,7 +48,7 @@ export interface PageContent {
     };
   };
   status?: ContentStatus;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, Json>;
   id?: string;
   version?: number;
 }
